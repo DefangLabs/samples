@@ -15,6 +15,8 @@ jobs:
       - name: Run Checks
         id: checks
         run: |
+          ./scripts/check-sample-files.sh
+          echo "Completed checks successfully"
           ./scripts/check-sample-files.sh > checklist.txt
           echo "CHECKLIST=$(cat checklist.txt | base64)" >> $GITHUB_ENV
 
