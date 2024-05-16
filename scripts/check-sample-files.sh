@@ -1,9 +1,10 @@
 #!/bin/bash
 
-for dir in ./samples/*/
-do
+for dir in ./samples/*/; do
   if [[ ! -f "${dir}compose.yaml" ]]; then
-    echo " - [ ] add compose.yaml to ${dir}"
+    if [ ! -f "${dir}/Pulumi.yaml" ]; then
+      echo " - [ ] add compose.yaml to ${dir}"
+    fi
   fi
   if [[ ! -f "${dir}README.md" ]]; then
     echo " - [ ] add README.md to ${dir}"
