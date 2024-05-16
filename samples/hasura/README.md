@@ -25,3 +25,13 @@ If you want to edit the database, permissions, or any other Hasura settings such
 3. Setup a password for hasura by typing `defang config set HASURA_GRAPHQL_ADMIN_SECRET` and adding a password you would like to login with.
 2. Type `defang compose up` in the CLI.
 3. Your app will be running within a few minutes.
+
+---
+
+Title: GraphQL API with Hasura + Postgres
+
+Short Description: A sample project demonstrating how to deploy Hasura with Defang and connect it to a Postgres database
+
+Tags: hasura, graphql, postgres, database
+
+Languages: sql, graphql

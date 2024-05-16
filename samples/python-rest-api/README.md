@@ -18,3 +18,13 @@ Endpoint to fetch average interest rates from the Fiscal Data Treasury API.
 1. Open the terminal and type `defang login`
 2. Type `defang compose up` in the CLI
 3. Your app should be up and running with Defang in minutes!
+
+---
+
+Title: Fetch and Return JSON
+
+Short Description: A Flask application that fetches average interest rates from the Fiscal Data Treasury API
+
+Tags: flask, rest, python
+
+Languages: python

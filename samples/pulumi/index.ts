@@ -6,7 +6,7 @@ import { DefangService } from "@defang-io/pulumi-defang/lib";
 
 const service1 = new DefangService("service1", {
   build: {
-    context: "../nodejs/Basic Service",
+    context: "../nodejs-http",
   },
   ports: [{ mode: "ingress", target: 3000  }],
 });

@@ -19,3 +19,13 @@ Plus, make sure that you have properly set your environment variables like `AWS_
 1. Open the terminal and type `defang login`
 2. Type `defang compose up` in the CLI
 3. Now your application will be launched
+
+---
+
+Title: Django + Postgres
+
+Short Description: A customer relationship management list project developed using Python Django framework, offering a starting point to help you quickly build your customer management system
+
+Tags: django, postgres
+
+Languages: python, sql
