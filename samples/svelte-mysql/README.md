@@ -36,3 +36,13 @@ If you want to edit the database, such that you can deploy them to production, y
 1. Open the terminal and type `defang login`
 2. Type `defang compose up` in the CLI.
 3. Your app will be running within a few minutes.
+
+---
+
+Title: Svelte, Node.js, and MySQL
+
+Short Description: A full-stack application using Svelte for the frontend, Node.js for the backend, and MySQL for the database
+
+Tags: svelte, nodejs, mysql, full-stack
+
+Languages: javascript, sql, nodejs, typescript
