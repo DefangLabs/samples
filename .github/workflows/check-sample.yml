@@ -36,7 +36,7 @@ jobs:
             });
 
             let newBody;
-            const body = pullRequest.body;
+            const body = pullRequest.body || "";
             console.log('@@ BODY: ', body);
             const markerIndex = body.indexOf(marker);
 
