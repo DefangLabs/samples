@@ -13,3 +13,13 @@ If you have environment variables configured for your [own cloud account](https:
 ```sh
 defang compose up
 ```
+
+---
+
+Title: Node.js HTTP Server
+
+Short Description: A simple Node.js application that creates an HTTP server
+
+Tags: node.js, http, server
+
+Languages: nodejs
