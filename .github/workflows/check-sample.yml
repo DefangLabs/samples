@@ -18,6 +18,7 @@ jobs:
           ./scripts/check-sample-files.sh
           echo "Completed checks successfully"
           ./scripts/check-sample-files.sh > checklist.txt
+          echo "CHECKLIST=$(cat checklist.txt | base64)"
           echo "CHECKLIST=$(cat checklist.txt | base64)" >> $GITHUB_ENV
 
       - name: Add checklist to PR description
