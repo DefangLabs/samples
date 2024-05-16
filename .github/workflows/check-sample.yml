@@ -30,6 +30,11 @@ jobs:
             
             // Read the checklist from the file
             const checklist = fs.readFileSync('checklist.txt', 'utf8').trim();
+
+            if (!checklist) {
+                console.log("Checklist is empty. Exiting script.");
+                return;
+            }
             
             // Get the current PR
             const { data: pullRequest } = await github.rest.pulls.get({
@@ -40,7 +45,6 @@ jobs:
 
             let newBody;
             const body = pullRequest.body || "";
-            console.log('@@ BODY: ', body);
             const markerIndex = body.indexOf(marker);
 
             if (markerIndex !== -1) {
