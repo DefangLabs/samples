@@ -13,3 +13,13 @@ If you have environment variables configured for your [own cloud account](https:
 ```sh
 defang compose up
 ```
+
+---
+
+Title: ImgProxy
+
+Short Description: A fast and secure standalone server for resizing and converting remote images
+
+Tags: imgproxy, images, server
+
+Languages: 

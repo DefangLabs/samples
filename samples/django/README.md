@@ -1,4 +1,10 @@
-This is a simple example of how to run Django on Defang. It is a simple Todo app that uses SQLite as the database (so data is *not* persisted between deployments). We will be putting together an example with a managed database soon.
+# Django
+
+This is a simple example of how to run Django on Defang. It is a simple Todo app that uses SQLite as the database.
+
+### NOTE
+
+This sample is a simple Django app that uses SQLite as the database, which will be reset every time you deploy. **It is not production-ready**. For production use cases, you should check out the Django + Postgres sample.
 
 The app includes a management command which is run on startup to create a superuser with the username `admin` and password `admin`. This means you can login to the admin interface at `/admin/` and see the Django admin interface without any additional steps. The `example_app` is already registered and the `Todo` model is already set up to be managed in the admin interface.
 
@@ -19,3 +25,13 @@ Plus, make sure that you have properly set your environment variables like `AWS_
 2. Open the terminal and type `defang login`
 3. Type `defang compose up` in the CLI
 4. Now your application will be launched
+
+---
+
+Title: Django
+
+Short Description: A simple Django app that uses SQLite as the database 
+
+Tags: django, sqlite
+
+Languages: python

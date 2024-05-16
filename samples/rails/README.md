@@ -18,3 +18,14 @@ Plus, make sure that you have properly set your environment variables like `AWS_
 1. Open the terminal and type `defang login`
 2. Type `defang compose up` in the CLI
 3. Now your application will be launched
+
+---
+
+Title: Ruby on Rails 
+
+Short Description: A basic member list project developed using Ruby on Rails
+
+Tags: ruby, rails
+
+Languages: ruby
+

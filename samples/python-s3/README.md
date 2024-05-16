@@ -13,3 +13,13 @@ and then enter the value when prompted.
 ## Testing
 curl -X POST -H 'Content-Type: application/json' -d '{ "first_name" : "jane", "last_name" : "doe" }' https://xxxxxx/upload
 curl https://xxxxxx/download
+
+---
+
+Title: Python, Flask, and AWS S3
+
+Short Description: An app that demonstrates how to upload and download files from AWS S3 using Python and Flask
+
+Tags: python, flask, s3
+
+Languages: python

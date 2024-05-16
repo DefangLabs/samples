@@ -19,3 +19,13 @@ This Flask application is designed to inspect and return detailed information ab
 1. Open the terminal and type `defang login`
 2. Type `defang compose up` in the CLI
 3. Your app should be up and running with Defang in minutes!
+
+---
+
+Title: Flask Request Inspector API
+
+Short Description: A Flask application that inspects and returns detailed information about HTTP requests
+
+Tags: flask, http
+
+Languages: python

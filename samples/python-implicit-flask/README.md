@@ -1,6 +1,5 @@
-# Simple Form Submission Flask App
-
-This Flask application provides a basic example of handling form submissions. It displays an HTML form where users can input their first name. Upon submission, the application greets the user by name on a new page. Note that alognside your .py file, include a requirements.txt so that the Dockerfile can install the necessary packages with pip. 
+# Music Recommendation API
+This Music Recommendation API provides artist recommendations based on collaborative filtering using the Alternating Least Squares (ALS) algorithm from the implicit library. The dataset utilized is from Last.fm. Note that alognside your .py file, include a requirements.txt so that the Dockerfile can install the necessary packages with pip. 
 
 
 ## Essential Setup Files
@@ -15,3 +14,13 @@ This Flask application provides a basic example of handling form submissions. It
 1. Open the terminal and type `defang login`
 2. Type `defang compose up` in the CLI
 3. Your app should be up and running with Defang in minutes!
+
+---
+
+Title: Music Recommendation API
+
+Short Description: A Music Recommendation API that provides artist recommendations based on collaborative filtering using the ALS algorithm from the implicit library
+
+Tags: music, recommendation, api, collaborative filtering, implicit library
+
+Languages: python

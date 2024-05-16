@@ -2,8 +2,8 @@
 
 for dir in ./samples/*/
 do
-  if [[ ! -f "${dir}compose.yml" ]]; then
-    echo " - [ ] add compose.yml to ${dir}"
+  if [[ ! -f "${dir}compose.yaml" ]]; then
+    echo " - [ ] add compose.yaml to ${dir}"
   fi
   if [[ ! -f "${dir}README.md" ]]; then
     echo " - [ ] add README.md to ${dir}"

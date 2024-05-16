@@ -39,3 +39,13 @@ This guide demonstrates how to deploy Mistral using VLM. You'll need a Hugging F
 - The UI uses Next.js and Vercel's AI SDK for seamless integration.
 
 By following these steps, you should be able to deploy Mistral along with a custom UI on AWS, using GPU capabilities for enhanced performance.
+
+---
+
+Title: Mistral with vLLM
+
+Short Description: Deploy Mistral with a custom UI using VLM
+
+Tags: mistral, vllm, ai, nextjs
+
+Languages: nodejs, typescript
