@@ -15,22 +15,19 @@ jobs:
       - name: Run Checks
         id: checks
         run: |
-          ./scripts/check-sample-files.sh
-          echo "Completed checks successfully"
           ./scripts/check-sample-files.sh > checklist.txt
-          echo "CHECKLIST=$(cat checklist.txt | base64)"
-          echo "CHECKLIST=$(cat checklist.txt | base64)" >> $GITHUB_ENV
 
       - name: Add checklist to PR description
         uses: actions/github-script@v5
-        env:
-          CHECKLIST: ${{ env.CHECKLIST }}
         with:
           script: |
+            const fs = require('fs');
             const pr_number = context.issue.number;
-            const checklist = Buffer.from(process.env.CHECKLIST, 'base64').toString('utf8');
             const marker = '--- CHECKLIST ---';
-
+            
+            // Read the checklist from the file
+            const checklist = fs.readFileSync('checklist.txt', 'utf8').trim();
+            
             // Get the current PR
             const { data: pullRequest } = await github.rest.pulls.get({
                 owner: context.repo.owner,
