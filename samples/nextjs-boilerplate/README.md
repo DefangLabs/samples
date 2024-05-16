@@ -1,3 +1,5 @@
+# Next.js Boilerplate
+
 This template is a boilerplate project developed using Next.js, offering a starting point to help you quickly build your website. We have prepared all the necessary files for deployment. By spending just a few minutes setting up the environment, as detailed in the prerequisites, and executing the commands in our step-by-step guide, your website will be ready to go live in no time!
 
 ## Essential Setup Files
@@ -14,3 +16,13 @@ Plus, make sure that you have properly set your environment variables like `AWS_
 1. Open the terminal and type `defang login`
 2. Type `defang compose up` in the CLI
 3. Now your application will be launched
+
+---
+
+Title: Next.js Boilerplate
+
+Short Description: A boilerplate project developed using Next.js, offering a starting point to help you quickly build your website
+
+Tags: next.js, react, boilerplate, website
+
+Languages: nodejs, typescript
