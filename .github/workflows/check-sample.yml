@@ -4,7 +4,6 @@ on:
   pull_request:
     paths:
       - 'samples/**'
-      - '.github/workflows/check-sample.yml'
 
 jobs:
   check_samples:
@@ -13,19 +12,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Make script executable
-        run: chmod +x ./scripts/check-sample-files.sh
-
       - name: Run Checks
         id: checks
         run: |
-          checklist=$(./scripts/check-sample-files.sh | base64)
-          echo "checklist=$checklist" >> $GITHUB_ENV
+          ./scripts/check-sample-files.sh > checklist.txt
+          echo "CHECKLIST=$(cat checklist.txt | base64)" >> $GITHUB_ENV
 
       - name: Add checklist to PR description
         uses: actions/github-script@v5
         env:
-          CHECKLIST: ${{ env.checklist }}
+          CHECKLIST: ${{ env.CHECKLIST }}
         with:
           script: |
             const pr_number = context.issue.number;
