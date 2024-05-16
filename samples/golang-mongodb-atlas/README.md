@@ -23,3 +23,10 @@ mongodb+srv://<username>:<pwd>@host
 1. Open the terminal and type `defang login`
 2. Type `defang compose up` in the CLI
 3. Your app should be up and running with Defang in minutes!
+
+---
+
+Title: Go MongoDB Atlas
+Short Description: A simple Go application that manages tasks with MongoDB Atlas
+Tags: go, mongodb, atlas, task manager
+Languages: go

@@ -1,6 +1,6 @@
-# Express Request Inspector
-This Node.js application, built with Express.js, is designed to inspect and display detailed information about incoming HTTP requests. It supports all HTTP methods and provides insights into the request path, method, headers, query parameters, and body. Note alongside your project, you should also include a package.json file that includes the relevant metadata such as package dependencies, scripts, project verrsions so that the Dockerfile can install necessary dependencies. 
+# Node.js Express
 
+This Node.js application, built with Express.js, is designed to inspect and display detailed information about incoming HTTP requests. It supports all HTTP methods and provides insights into the request path, method, headers, query parameters, and body. Note alongside your project, you should also include a package.json file that includes the relevant metadata such as package dependencies, scripts, project verrsions so that the Dockerfile can install necessary dependencies. 
 
 
 ## Essential Setup Files
@@ -15,3 +15,10 @@ This Node.js application, built with Express.js, is designed to inspect and disp
 1. Open the terminal and type `defang login`
 2. Type `defang compose up` in the CLI
 3. Your app should be up and running with Defang in minutes!
+
+--- 
+
+Title: Node.js Express
+Short Description: A Node.js application that inspects and displays detailed information about incoming HTTP requests
+Tags: nodejs, express, http, request, inspector
+Languages: nodejs

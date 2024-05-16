@@ -47,3 +47,10 @@ curl 'https://raphaeltm-bot--8080.prod1.defang.dev/' \
   -H 'content-type: application/json' \
   --data-raw $'{"message":"This is your bot speaking. We\'ll be landing in 10 minutes. Please fasten your seatbelts."}'
 ```
+
+---
+
+Title: Go Slackbot
+Short Description: A simple Slackbot that posts messages to a Slack channel
+Tags: go, slack, bot
+Languages: go

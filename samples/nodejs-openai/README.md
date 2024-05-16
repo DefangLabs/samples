@@ -1,3 +1,4 @@
+# Node.js OpenAI Sample
 
 ## Setup
 This sample requires an API key to access the OpenAI API. The name of the config value is referenced in the docker-compose.yml file.
@@ -18,3 +19,10 @@ or
 ```
 cat prompt.txt | curl -H "Content-Type: application/text" -d @- https://xxxxxxxx/prompt
 ```
+
+---
+
+Title: Node.js OpenAI
+Short Description: A simple Node.js application that interacts with the OpenAI API
+Tags: nodejs, openai, api
+Languages: nodejs

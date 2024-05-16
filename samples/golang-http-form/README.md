@@ -18,3 +18,11 @@ This Go application demonstrates a simple form submission using the standard net
 1. Open the terminal and type `defang login`
 2. Type `defang compose up` in the CLI
 3. Your app should be up and running with Defang in minutes!
+
+---
+
+Title: Go HTTP Form
+Short Description: A simple Go application that demonstrates form submission using the net/http library
+Tags: go, http, form
+Languages: go
+

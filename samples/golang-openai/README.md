@@ -18,3 +18,10 @@ or
 ```
 cat prompt.txt | curl -H "Content-Type: application/text" -d @- https://xxxxxxxx/prompt
 ```
+
+---
+
+Title: Go OpenAI
+Short Description: A simple Go application that interacts with the OpenAI API
+Tags: go, openai, chatgpt
+Languages: go
