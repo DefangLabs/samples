@@ -17,6 +17,9 @@ defang compose up
 ---
 
 Title: Node.js Chatroom
+
 Short Description: A minimal chat application that shows how to use Socket.IO with Node.js
+
 Tags: nodejs, chat, socket.io
+
 Languages: nodejs
