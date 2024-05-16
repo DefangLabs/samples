@@ -32,7 +32,7 @@ jobs:
             const checklist = fs.readFileSync('checklist.txt', 'utf8').trim();
 
             console.log('@@ CheckList @@');
-            console.log(JSON.stringify(checklist);
+            console.log(JSON.stringify(checklist));
 
             if (!checklist) {
                 console.log("Checklist is empty. Exiting script.");
