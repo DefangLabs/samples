@@ -2,7 +2,7 @@
 
 for dir in ./samples/*/; do
   if [[ ! -f "${dir}compose.yaml" ]]; then
-    if [ ! -f "${dir}/Pulumi.yaml" ]; then
+    if find "${dir}" -name 'Pulumi.yaml' -exec false {} +; then
       echo " - [ ] add compose.yaml to ${dir}"
     fi
   fi
