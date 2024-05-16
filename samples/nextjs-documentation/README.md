@@ -20,6 +20,9 @@ Plus, make sure that you have properly set your environment variables like `AWS_
 ---
 
 Title: Next.js Documentation
+
 Short Description: A documentation starter project developed using Nextra designed to streamline the creation of your documentation
+
 Tags: nextjs, documentation, nextra, knowledgebase
+
 Languages: javascript, typescript
