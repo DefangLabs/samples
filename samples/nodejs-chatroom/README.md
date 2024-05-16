@@ -1,4 +1,4 @@
-# Minimal Chat App
+# Node.js Chatroom App
 
 This is a minimal chat application that shows how to use Socket.IO with Node.js with minimal code deployed with Defang.
 
@@ -13,3 +13,10 @@ If you have environment variables configured for your [own cloud account](https:
 ```sh
 defang compose up
 ```
+
+---
+
+Title: Node.js Chatroom
+Short Description: A minimal chat application that shows how to use Socket.IO with Node.js
+Tags: nodejs, chat, socket.io
+Languages: nodejs

@@ -1,3 +1,5 @@
+# Next.js Documentation
+
 This template is a documentation starter project developed using Nextra, designed to streamline the creation of your documentation and quickly build a digital knowledgebase. You can add content easily by simply adding markdown files. This code-free solution requires no adjustments to the basic structure. We have prepared all the essential files for deployment. By spending just a few minutes setting up the environment, as detailed in the prerequisites, and executing the commands in our step-by-step guide, your website will be ready to go live in no time!
 
 ## Essential Setup Files
@@ -14,3 +16,10 @@ Plus, make sure that you have properly set your environment variables like `AWS_
 1. Open the terminal and type `defang login`
 2. Type `defang compose up` in the CLI
 3. Now your application will be launched
+
+---
+
+Title: Next.js Documentation
+Short Description: A documentation starter project developed using Nextra designed to streamline the creation of your documentation
+Tags: nextjs, documentation, nextra, knowledgebase
+Languages: javascript, typescript
