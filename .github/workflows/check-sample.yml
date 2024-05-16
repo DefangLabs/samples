@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'samples/**'
+      - '.github/workflows/check-sample.yml'
 
 jobs:
   check_samples:
