@@ -31,3 +31,13 @@ For development, we use a local container. This can be seen in the compose.yml a
 1. Open the terminal and type `defang login`
 2. Type `defang compose up` in the CLI
 3. Your app should be up and running with Defang in minutes!
+
+---
+
+Title: Sveltekit + MongoDB
+
+Short Description: A full-stack application using Sveltekit for the frontend and MongoDB for the database
+
+Tags: sveltekit, mongodb, full-stack
+
+Languages: javascript, nodejs

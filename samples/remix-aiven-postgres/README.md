@@ -39,3 +39,12 @@ pulumi config set --secret aivenBillingGroupId <BillingGroupId>
 
 Now, run `pulumi up` to deploy your application to Defang and Aiven! Head to the [portal](https://portal.defang.dev) to check on status, or run `defang services`.
 
+---
+
+Title: Full Stack Defang + Pulumi Example w/ Remix and Postgres
+
+Short Description: A full stack example using Remix, Prisma, and Aiven
+
+Tags: full stack, remix, prisma, aiven, postgres, pulumi
+
+Languages: nodejs, sql, typescript
