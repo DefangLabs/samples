@@ -12,18 +12,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Make script executable
+        run: chmod +x ./scripts/check-sample-files.sh
+
       - name: Run Checks
         id: checks
         run: |
-          checklist=$(./scripts/check-sample-files.sh)
+          checklist=$(./scripts/check-sample-files.sh | base64)
           echo "checklist=$checklist" >> $GITHUB_ENV
 
       - name: Add checklist to PR description
         uses: actions/github-script@v5
+        env:
+          CHECKLIST: ${{ env.checklist }}
         with:
           script: |
             const pr_number = context.issue.number;
-            const checklist = process.env.checklist;
+            const checklist = Buffer.from(process.env.CHECKLIST, 'base64').toString('utf8');
             const marker = '--- CHECKLIST ---';
 
             // Get the current PR
