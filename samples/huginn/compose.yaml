@@ -1,0 +1,27 @@
+version: '3.7'
+name: huginn
+services:
+  huginn:
+    image: ghcr.io/huginn/huginn
+    restart: unless-stopped
+    ports:
+      - target: 3000
+        published: 3000
+        mode: ingress
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: '2G'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 10
+      start_period: 30s
+    environment:
+      - DATABASE_ADAPTER=postgresql
+      - DATABASE_NAME
+      - DATABASE_USERNAME
+      - DATABASE_PASSWORD
+      - DATABASE_HOST
