@@ -25,4 +25,4 @@ Short Description: A documentation starter project developed using Nextra design
 
 Tags: nextjs, documentation, nextra, knowledgebase
 
-Languages: javascript, typescript
+Languages: nodejs, javascript, typescript
