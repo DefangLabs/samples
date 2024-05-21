@@ -1,0 +1,10 @@
+<div class="chat-room">
+    <ul id="messages">
+      <li *ngFor="let message of messages">{{message}}</li>
+    </ul>
+    <form (submit)="sendMessage($event)">
+      <input [(ngModel)]="message" name="message" required>
+      <button type="submit">Send</button>
+    </form>
+  </div>
+  
