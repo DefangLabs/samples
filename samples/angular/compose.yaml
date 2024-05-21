@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+  app:
+    build: .
+    ports:
+      - target: 3000
+        mode: ingress
+        published: 80
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          memory: 64M
