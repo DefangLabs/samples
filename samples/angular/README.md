@@ -34,7 +34,9 @@ For development, we use a local container. This can be seen in the Dockerfile an
 ---
 
 Title: Angular + Node.js
+
 Short Description: A full-stack application using Angular for the frontend and Node.js with Socket.IO for the backend, containerized with Docker.
+
 Tags: angular, nodejs, Socket.IO
 
 Languages: typescript, javascript
