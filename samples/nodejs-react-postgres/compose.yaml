@@ -1,0 +1,46 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:15
+    init: true
+    restart: always
+    environment:
+    - POSTGRES_DB=mydatabase
+    - POSTGRES_USER=myuser
+    - POSTGRES_PASSWORD=mypassword
+    ports:
+      - mode: host
+        target: 5432
+        published: 5432
+    healthcheck:
+      test: ["CMD-SHELL", "PGUSER=myuser PGPASSWORD=mypassword pg_isready -q -d mydatabase"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+  todo_list:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports: 
+      - mode: ingress
+        target: 3000
+    deploy:
+      resources:
+        reservations:
+          memory: 2GB
+    depends_on:
+      - server
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - target: 3010
+        mode: ingress
+        published: 3010
+    environment:
+      - DB_HOST=db
+    depends_on:
+      - db
+ 
