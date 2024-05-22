@@ -3,10 +3,14 @@
 This sample project demonstrates how to deploy Hasura with Defang and connect it to a Postgres database. We also demonstrate how to run a Postgres container during development and how to switch over to a managed postgres service like RDS, Neon, or others in production. If you want to get a compatible database ready to go really quickly for free, [Neon](https://neon.tech/) is a quick and easy way to go. The sample populates the database with some sample data so you can quickly start playing with the Hasura console. It sets wide open permissions on the tables as well so you can start querying or mutating the data right away.
 
 ## Prerequisites
-1. Download <a href="https://github.com/defang-io/defang">Defang CLI</a>
+
+1. Download [Defang CLI](https://github.com/defang-io/defang)
 2. Have a managed database service configured and have the connection string ready.
-3. (optional) If you are using <a href="https://docs.defang.io/docs/concepts/defang-byoc">Defang BYOC</a>, make sure you have properly <a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html">authenticated your AWS account</a>.
-4. (optional) [Install the Hasura CLI](https://hasura.io/docs/latest/hasura-cli/install-hasura-cli/) to create migrations and update metadata for your Hasura GraphQL api.
+3. (Optional) If you are using [Defang BYOC](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html) authenticated with your AWS account
+4. (Optional - for local development) [Docker CLI](https://docs.docker.com/engine/install/)
+5. (Optional) [Install the Hasura CLI](https://hasura.io/docs/latest/hasura-cli/install-hasura-cli/) to create migrations and update metadata for your Hasura GraphQL api.
+
+
 
 ## Development
 
