@@ -20,6 +20,8 @@ jobs:
         run: |
           ./scripts/check-sample-files.sh > checklist.txt
           ./scripts/check-modified-samples.sh > modified.txt
+          echo "@@ MODIFIED @@"
+          cat modified.txt
 
       - name: Add checklist to PR description
         uses: actions/github-script@v5
