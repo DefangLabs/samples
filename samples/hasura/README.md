@@ -4,7 +4,7 @@ This sample project demonstrates how to deploy Hasura with Defang and connect it
 
 ## Prerequisites
 
-1. Download [Defang CLI](https://github.com/defang-io/defang)
+1. Download [Defang CLI](https://github.com/DefangLabs/defang)
 2. Have a managed database service configured and have the connection string ready.
 3. (Optional) If you are using [Defang BYOC](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html) authenticated with your AWS account
 4. (Optional - for local development) [Docker CLI](https://docs.docker.com/engine/install/)
