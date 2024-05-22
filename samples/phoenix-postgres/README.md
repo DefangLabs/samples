@@ -1,6 +1,6 @@
-# Phoenix
+# Phoenix + Postgres
 
-**TODO: BASIC DESCRIPTION**
+This is a sample Phoenix application that uses a PostgreSQL database. The sample doesn't add anything to the database, but is based off of the default Phoenix getting started instructions which add a postgres database to the application.
 
 ## Prerequisites
 1. Download <a href="https://github.com/defang-io/defang">Defang CLI</a>
@@ -9,7 +9,11 @@
 
 ## Development
 
-**TODO: DEV DESCRIPTION**
+To run the application locally, you can use the following command:
+
+```bash
+docker compose -f compose.yaml -f compose.dev.yaml up
+```
 
 ## Deploying
 1. Open the terminal and type `defang login`

@@ -1,0 +1,7 @@
+version: '3.9'
+name: phoenix
+services:
+  phoenix:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
