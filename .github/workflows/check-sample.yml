@@ -79,7 +79,8 @@ jobs:
             
             // read the modified samples
             let modified = fs.readFileSync('modified.txt', 'utf8').trim();
-            let error = false;
+
+            console.log('@@ modified: ', modified);
 
             if(!modified) {
               return;
