@@ -19,6 +19,7 @@ jobs:
         id: checks
         run: |
           ./scripts/check-sample-files.sh > checklist.txt
+          ./scripts/check-modified-samples.sh > modified.txt
 
       - name: Add checklist to PR description
         uses: actions/github-script@v5
@@ -68,4 +69,26 @@ jobs:
 
             if(error) {
               throw new Error("Incomplete samples checklist. Please fix the issues and try again.");
+            }
+
+      - name: Create / Update Template Repo
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            // read the modified samples
+            let modified = fs.readFileSync('modified.txt', 'utf8').trim();
+            let error = false;
+
+            if(!modified) {
+              return;
+            }
+
+            const modifiedSamples = modified.split('\n').map(s => s.split('/')?.[1])
+
+            // for earch sample, create or update the template repo
+            for(const sample of modifiedSamples) {
+              const templateRepo = `sample-${sample}-template`;
+              console.log(`Creating or updating template repo: ${templateRepo}`);
             }
