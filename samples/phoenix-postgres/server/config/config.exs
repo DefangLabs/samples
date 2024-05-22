@@ -13,7 +13,7 @@ config :defang,
 
 # Configures the endpoint
 config :defang, DefangWeb.Endpoint,
-  url: [host: "localhost"],
+  url: [host: "0.0.0.0"],
   adapter: Bandit.PhoenixAdapter,
   render_errors: [
     formats: [html: DefangWeb.ErrorHTML, json: DefangWeb.ErrorJSON],
