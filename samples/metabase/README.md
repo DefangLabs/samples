@@ -4,9 +4,9 @@ Metabase is a simple and powerful analytics tool which lets anyone learn and mak
 
 
 ## Prerequisites
-1. Download <a href="https://github.com/defang-io/defang">Defang CLI</a>
+1. Download [Defang CLI](https://github.com/DefangLabs/defang)
 2. Have a managed database service configured and have the connection details ready.
-3. (optional) If you are using <a href="https://docs.defang.io/docs/concepts/defang-byoc">Defang BYOC</a>, make sure you have properly <a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html">authenticated your AWS account</a>.
+3. (optional) If you are using [Defang BYOC](https://docs.defang.io/docs/concepts/defang-byoc), make sure you have properly [authenticated your AWS account](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html).
 
 ## Local
 

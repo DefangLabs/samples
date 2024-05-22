@@ -3,9 +3,9 @@
 Defang is the easiest way to deploy containerized apps like this Phoenix + Postgres sample to AWS. This is a sample Phoenix application that uses a PostgreSQL database. The sample doesn't add anything to the database, but is based off of the default Phoenix getting started instructions which add a postgres database to the application.
 
 ## Prerequisites
-1. Download <a href="https://github.com/defang-io/defang">Defang CLI</a>
-2. Have a managed database service configured and have the connection string ready.
-3. (optional) If you are using <a href="https://docs.defang.io/docs/concepts/defang-byoc">Defang BYOC</a>, make sure you have properly <a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html">authenticated your AWS account</a>.
+1. Download [Defang CLI](https://github.com/defang-io/defang)
+2. (Optional) If you are using [Defang BYOC](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html) authenticated with your AWS account
+3. (Optional for local development) [Docker CLI](https://docs.docker.com/engine/install/)
 
 ## Development
 
