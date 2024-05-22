@@ -15,10 +15,10 @@ To run the application locally, you can use the following command:
 docker compose -f compose.yaml -f compose.dev.yaml up
 ```
 
-This will run Phoenix in development mode. If you need to run any commands in the container, you can use the following command:
+This will run Phoenix in development mode. If you need to run any commands in the container, after you have run the command above and started the container, you can run the command in a new terminal:
 
 ```bash
-docker compose -f compose.yaml -f compose.dev.yaml run --rm phoenix <command>
+docker compose -f compose.yaml -f compose.dev.yaml exec phoenix bash
 ```
 
 ## Deploying
