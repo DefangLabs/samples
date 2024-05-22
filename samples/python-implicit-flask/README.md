@@ -3,12 +3,12 @@ This Music Recommendation API provides artist recommendations based on collabora
 
 
 ## Essential Setup Files
-1. A <a href="https://docs.docker.com/develop/develop-images/dockerfile_best-practices/">Dockerfile</a>.
-2. A <a href="https://docs.defang.io/docs/concepts/compose">compose file</a> to define and run multi-container Docker applications (this is how Defang identifies services to be deployed). (compose.yaml file)
+1. A [Dockerfile](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/).
+2. A [compose file](https://docs.defang.io/docs/concepts/compose) to define and run multi-container Docker applications (this is how Defang identifies services to be deployed). (compose.yaml file)
 
 ## Prerequisite
-1. Download <a href="https://github.com/defang-io/defang">Defang CLI</a>
-2. If you are using <a href="https://docs.defang.io/docs/concepts/defang-byoc">Defang BYOC</a>, make sure you have properly <a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html">authenticated your AWS account (optional)</a>
+1. Download [Defang CLI](https://github.com/DefangLabs/defang)
+2. If you are using [Defang BYOC](https://docs.defang.io/docs/concepts/defang-byoc), make sure you have properly [authenticated your AWS account (optional)](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)
 
 ## A Step-by-Step Guide
 1. Open the terminal and type `defang login`
