@@ -3,7 +3,9 @@ services:
     build:
       dockerfile: dev.Dockerfile
     ports:
-      - "4000:4000"
+      - target: 4000
+        mode: ingress
+        published: 4000
     volumes:
       - ./server:/app
     environment:
@@ -16,7 +18,12 @@ services:
     image: postgres:16
     ports:
       - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: server_dev
+      POSTGRES_DB: defang_dev
+
+volumes:
+  postgres_data:

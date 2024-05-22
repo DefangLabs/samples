@@ -1,9 +1,9 @@
-defmodule Server.MixProject do
+defmodule Defang.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :server,
+      app: :defang,
       version: "0.1.0",
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -18,7 +18,7 @@ defmodule Server.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {Server.Application, []},
+      mod: {Defang.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end
@@ -74,10 +74,10 @@ defmodule Server.MixProject do
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
-      "assets.build": ["tailwind server", "esbuild server"],
+      "assets.build": ["tailwind defang", "esbuild defang"],
       "assets.deploy": [
-        "tailwind server --minify",
-        "esbuild server --minify",
+        "tailwind defang --minify",
+        "esbuild defang --minify",
         "phx.digest"
       ]
     ]

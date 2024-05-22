@@ -1,5 +1,5 @@
-defmodule Server.Repo do
+defmodule Defang.Repo do
   use Ecto.Repo,
-    otp_app: :server,
+    otp_app: :defang,
     adapter: Ecto.Adapters.Postgres
 end

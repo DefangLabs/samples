@@ -5,3 +5,18 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
+    # uncomment to add your own domain
+    # domainname: mydomain.com
+    ports:
+      - target: 4000
+        mode: ingress
+        published: 4000
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1024M
+    environment:
+      - PORT=4000
+      - SECRET_KEY_BASE
+      - DATABASE_URL

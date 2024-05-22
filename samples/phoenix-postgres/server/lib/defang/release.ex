@@ -1,9 +1,9 @@
-defmodule Server.Release do
+defmodule Defang.Release do
   @moduledoc """
   Used for executing DB release tasks when run in production without Mix
   installed.
   """
-  @app :server
+  @app :defang
 
   def migrate do
     load_app()
