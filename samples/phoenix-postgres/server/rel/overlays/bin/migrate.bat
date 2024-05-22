@@ -1,1 +1,1 @@
-call "%~dp0\server" eval Server.Release.migrate
+call "%~dp0\defang" eval Defang.Release.migrate

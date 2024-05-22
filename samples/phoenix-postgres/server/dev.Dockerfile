@@ -1,8 +1,8 @@
 # ---- Development Stage ----
-FROM elixir:1.16-alpine
+FROM hexpm/elixir:1.16.2-erlang-24.0.6-debian-buster-20240513-slim
 
 # Install build dependencies
-RUN apk add --no-cache build-base npm git python3 inotify-tools
+RUN apt-get update -y && apt-get install -y build-essential git inotify-tools
 
 # Prepare build dir
 WORKDIR /app

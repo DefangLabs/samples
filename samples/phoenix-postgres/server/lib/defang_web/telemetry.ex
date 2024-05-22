@@ -1,4 +1,4 @@
-defmodule ServerWeb.Telemetry do
+defmodule DefangWeb.Telemetry do
   use Supervisor
   import Telemetry.Metrics
 
@@ -52,23 +52,23 @@ defmodule ServerWeb.Telemetry do
       ),
 
       # Database Metrics
-      summary("server.repo.query.total_time",
+      summary("defang.repo.query.total_time",
         unit: {:native, :millisecond},
         description: "The sum of the other measurements"
       ),
-      summary("server.repo.query.decode_time",
+      summary("defang.repo.query.decode_time",
         unit: {:native, :millisecond},
         description: "The time spent decoding the data received from the database"
       ),
-      summary("server.repo.query.query_time",
+      summary("defang.repo.query.query_time",
         unit: {:native, :millisecond},
         description: "The time spent executing the query"
       ),
-      summary("server.repo.query.queue_time",
+      summary("defang.repo.query.queue_time",
         unit: {:native, :millisecond},
         description: "The time spent waiting for a database connection"
       ),
-      summary("server.repo.query.idle_time",
+      summary("defang.repo.query.idle_time",
         unit: {:native, :millisecond},
         description:
           "The time the connection spent waiting before being checked out for the query"
@@ -86,7 +86,7 @@ defmodule ServerWeb.Telemetry do
     [
       # A module, function and arguments to be invoked periodically.
       # This function must call :telemetry.execute/3 and a metric must be added above.
-      # {ServerWeb, :count_users, []}
+      # {DefangWeb, :count_users, []}
     ]
   end
 end

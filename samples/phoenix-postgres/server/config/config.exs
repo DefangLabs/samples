@@ -7,20 +7,20 @@
 # General application configuration
 import Config
 
-config :server,
-  ecto_repos: [Server.Repo],
+config :defang,
+  ecto_repos: [Defang.Repo],
   generators: [timestamp_type: :utc_datetime]
 
 # Configures the endpoint
-config :server, ServerWeb.Endpoint,
+config :defang, DefangWeb.Endpoint,
   url: [host: "localhost"],
   adapter: Bandit.PhoenixAdapter,
   render_errors: [
-    formats: [html: ServerWeb.ErrorHTML, json: ServerWeb.ErrorJSON],
+    formats: [html: DefangWeb.ErrorHTML, json: DefangWeb.ErrorJSON],
     layout: false
   ],
-  pubsub_server: Server.PubSub,
-  live_view: [signing_salt: "QfB7TYbt"]
+  pubsub_server: Defang.PubSub,
+  live_view: [signing_salt: "4yJHxbwE"]
 
 # Configures the mailer
 #
@@ -29,12 +29,12 @@ config :server, ServerWeb.Endpoint,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :server, Server.Mailer, adapter: Swoosh.Adapters.Local
+config :defang, Defang.Mailer, adapter: Swoosh.Adapters.Local
 
 # Configure esbuild (the version is required)
 config :esbuild,
   version: "0.17.11",
-  server: [
+  defang: [
     args:
       ~w(js/app.js --bundle --target=es2017 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
     cd: Path.expand("../assets", __DIR__),
@@ -44,7 +44,7 @@ config :esbuild,
 # Configure tailwind (the version is required)
 config :tailwind,
   version: "3.4.0",
-  server: [
+  defang: [
     args: ~w(
       --config=tailwind.config.js
       --input=css/app.css

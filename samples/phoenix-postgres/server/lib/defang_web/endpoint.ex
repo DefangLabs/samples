@@ -1,13 +1,13 @@
-defmodule ServerWeb.Endpoint do
-  use Phoenix.Endpoint, otp_app: :server
+defmodule DefangWeb.Endpoint do
+  use Phoenix.Endpoint, otp_app: :defang
 
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.
   # Set :encryption_salt if you would also like to encrypt it.
   @session_options [
     store: :cookie,
-    key: "_server_key",
-    signing_salt: "O6B9Sfdh",
+    key: "_defang_key",
+    signing_salt: "ck/VqFqV",
     same_site: "Lax"
   ]
 
@@ -21,9 +21,9 @@ defmodule ServerWeb.Endpoint do
   # when deploying your static files in production.
   plug Plug.Static,
     at: "/",
-    from: :server,
+    from: :defang,
     gzip: false,
-    only: ServerWeb.static_paths()
+    only: DefangWeb.static_paths()
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
@@ -31,7 +31,7 @@ defmodule ServerWeb.Endpoint do
     socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
     plug Phoenix.LiveReloader
     plug Phoenix.CodeReloader
-    plug Phoenix.Ecto.CheckRepoStatus, otp_app: :server
+    plug Phoenix.Ecto.CheckRepoStatus, otp_app: :defang
   end
 
   plug Phoenix.LiveDashboard.RequestLogger,
@@ -49,5 +49,5 @@ defmodule ServerWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
-  plug ServerWeb.Router
+  plug DefangWeb.Router
 end

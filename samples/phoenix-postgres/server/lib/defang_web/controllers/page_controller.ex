@@ -1,5 +1,5 @@
-defmodule ServerWeb.PageController do
-  use ServerWeb, :controller
+defmodule DefangWeb.PageController do
+  use DefangWeb, :controller
 
   def home(conn, _params) do
     # The home page is often custom made,
