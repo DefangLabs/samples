@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  sails:
+    build:
+      context: ./sails
+    ports:
+      - target: 1337
+        published: 1337
+        protocol: tcp
+        mode: ingress
+    volumes:
+      - ./sails:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      - NODE_ENV=production
+      - SOCKETS_ALLOW_ORIGINS=http://localhost:1337,http://sails:1337 # Add both localhost and service name
+      - SESSION_COOKIE_SECURE=false
+      - HTTP_TRUST_PROXY=false
+    command: sails lift --prod
