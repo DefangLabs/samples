@@ -79,21 +79,7 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const fs = require('fs');
+            const script = require('./scripts/template-manager.js')
+            const output = script({github, context});
+            console.log("@@ output", output)
             
-            // read the modified samples
-            let modified = fs.readFileSync('modified.txt', 'utf8').trim();
-
-            console.log('@@ modified: ', modified);
-
-            if(!modified) {
-              return;
-            }
-
-            const modifiedSamples = modified.split('\n').map(s => s.split('/')?.[1])
-
-            // for earch sample, create or update the template repo
-            for(const sample of modifiedSamples) {
-              const templateRepo = `sample-${sample}-template`;
-              console.log(`Creating or updating template repo: ${templateRepo}`);
-            }
