@@ -8,9 +8,10 @@ const fs = require('fs');
  * @param {Object} args.github - The GitHub object.
  * @param {import('@octokit/rest').Octokit} args.github.rest - The GitHub SDK instance.
  * @param {import('@actions/github').Context} args.context - The context of the GitHub action.
+ * @param {import('@actions/core')} args.core - The context of the GitHub action.
  * @returns {any} The value of the client payload.
  */
-module.exports = async ({ github, context }) => {
+module.exports = async ({ github, context, core }) => {
     async function getAllReposForOrg(org) {
         let repos = [];
         let page = 1;
@@ -59,10 +60,17 @@ module.exports = async ({ github, context }) => {
         const templateRepo = `sample-${sample}-template`;
         if (!repoNames.includes(templateRepo)) {
             console.log(`Creating template repo: ${templateRepo}`);
-        } else {
-            console.log(`Updating template repo: ${templateRepo}`);
+            await github.rest.repos.createForAuthenticatedUser({
+                name: templateRepo,
+                org: 'DefangLabs',
+                private: false,
+                is_template: true,
+            });
         }
     }
 
-    return context.payload.client_payload.value
+    return {
+        modifiedSamples,
+        repos
+    }
 }
