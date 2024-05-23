@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';  // Import FormsModule
-import { AppRoutingModule } from './app-routing.module';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+
 import { AppComponent } from './app.component';
 import { ChatRoomComponent } from './chat-room/chat-room.component';
 
@@ -12,14 +13,10 @@ import { ChatRoomComponent } from './chat-room/chat-room.component';
   ],
   imports: [
     BrowserModule,
-    FormsModule,  // Add FormsModule here
-    AppRoutingModule
+    FormsModule,
+    RouterModule.forRoot([])  // Initialize RouterModule
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule {
-  constructor() {
-    console.log('AppModule constructor called');
-  }
-}
+export class AppModule { }

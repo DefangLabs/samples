@@ -1,11 +1,35 @@
 version: "3.8"
+
 services:
-  app:
-    build: .
+  angular-frontend:
+    build:
+      context: ./frontend
+      args:
+        - SOCKET_IO_URL=http://backend:3000
+    ports:
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: ingress
+    environment:
+      - SOCKET_IO_URL=http://backend:3000
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          memory: 64M
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
       - target: 3000
+        published: 3000
+        protocol: tcp
         mode: ingress
-        published: 80
+    environment:
+      - PORT=3000
     restart: unless-stopped
     deploy:
       resources:
