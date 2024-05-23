@@ -22,7 +22,7 @@ This sample showcases how you could deploy a full-stack application with Defang 
 
 ## Development
 
-For development, we use a local container. This can be seen in the compose.yml and /src/routes/api/songs/+server.js file and the server.js file where we create a pool of connections. To run the sample locally after clonging the respository, you can run on docker by doing
+For development, we use a local container. This can be seen in the compose.yaml and /src/routes/api/songs/+server.js file and the server.js file where we create a pool of connections. To run the sample locally after clonging the respository, you can run on docker by doing
 
 1.  docker compose up --build
 
