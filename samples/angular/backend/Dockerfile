@@ -5,10 +5,10 @@ FROM node:20-alpine
 WORKDIR /app
 
 # Copy application dependency manifests to the container image.
-COPY package.json package-lock.json ./
+COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm ci
 
 # Copy the local code to the container image
 COPY . .

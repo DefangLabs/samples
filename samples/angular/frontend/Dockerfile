@@ -4,7 +4,7 @@ FROM node:20-alpine AS builder
 # Create and change to the app directory
 WORKDIR /app
 
-# Copy application dependency manifests to the container image.
+# Copy application dependency manifests to the container image
 COPY package.json package-lock.json ./
 
 # Install dependencies
