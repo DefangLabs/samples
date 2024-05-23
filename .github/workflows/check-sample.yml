@@ -77,6 +77,8 @@ jobs:
 
       - name: Create / Update Template Repo
         uses: actions/github-script@v7
+        env:
+          GITHUB_TOKEN: ${{ secrets.TEMPLATES_MANAGER_TOKEN }}
         with:
           script: |
             const script = require('./scripts/template-manager.js')
