@@ -35,8 +35,8 @@ app.get('/api', (req, res) => {
 });
 
 // All other routes should serve the Angular app
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+app.get('/', (req, res) => {
+  res.send("OK")
 });
 
 // Start the server
