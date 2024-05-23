@@ -80,6 +80,5 @@ jobs:
         with:
           script: |
             const script = require('./scripts/template-manager.js')
-            const output = script({github, context});
+            const output = script({github, context, core});
             console.log("@@ output", output)
-            
