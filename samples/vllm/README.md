@@ -25,7 +25,7 @@ This guide demonstrates how to deploy Mistral using VLM. You'll need a Hugging F
    defang compose up
    ```
 
-   The provided `docker-compose.yml` file includes the Mistral service. It's configured to run on an AWS instance with GPU support. The file also includes a UI service built with Next.js, utilizing Vercel's AI SDK.
+   The provided `docker-compose.yaml` file includes the Mistral service. It's configured to run on an AWS instance with GPU support. The file also includes a UI service built with Next.js, utilizing Vercel's AI SDK.
 
    > **OpenAI SDK:** We use the OpenAI sdk, but set the `baseURL` to our Mistral endpoint.
 

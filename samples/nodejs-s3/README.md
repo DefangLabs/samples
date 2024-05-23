@@ -1,6 +1,6 @@
 
 ## Setup
-This sample requires an API key to access AWS S3. The name of the config value is referenced in the docker-compose.yml file.
+This sample requires an API key to access AWS S3. The name of the config value is referenced in the docker-compose.yaml file.
 To provide a value for it, you can use the Defang CLI like this:
 
 ```
