@@ -1,6 +1,6 @@
 /**
  * Represents a sample Pulumi script that creates a DefangService.
- * This script matches the configuration in the compose.yml file.
+ * This script matches the configuration in the compose.yaml file.
  */
 import { DefangService } from "@defang-io/pulumi-defang/lib";
 
