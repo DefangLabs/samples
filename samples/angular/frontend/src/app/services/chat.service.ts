@@ -10,18 +10,20 @@ export class ChatService {
   private socket;
 
   constructor() {
-    console.log('ChatService constructor called');
+    console.log('Connecting to WebSocket:', environment.SOCKET_IO_URL);
     this.socket = io(environment.SOCKET_IO_URL);
   }
 
   sendMessage(message: string) {
+    console.log('Emit message:', message);
     this.socket.emit('message', message);
   }
 
-  receiveMessages(): Observable<string> {
+  getMessages(): Observable<string> {
     return new Observable(observer => {
-      this.socket.on('message', (data: string) => {
-        observer.next(data);
+      this.socket.on('message', (message: string) => {
+        console.log('Message received:', message);
+        observer.next(message);
       });
     });
   }

@@ -7,23 +7,24 @@ import { ChatService } from '../services/chat.service';
   styleUrls: ['./chat-room.component.scss']
 })
 export class ChatRoomComponent implements OnInit {
-  messages: string[] = [];
   message: string = '';
+  messages: string[] = [];
 
   constructor(private chatService: ChatService) {
-    console.log('ChatRoomComponent constructor called');
+    console.log('ChatRoomComponent constructor');
   }
 
-  ngOnInit() {
-    console.log('ChatRoomComponent ngOnInit called');
-    this.chatService.receiveMessages().subscribe((data: string) => {
-      this.messages.push(data);
+  ngOnInit(): void {
+    console.log('ChatRoomComponent initialized');
+    this.chatService.getMessages().subscribe((message: string) => {
+      console.log('New message received:', message);
+      this.messages.push(message);
     });
   }
 
-  sendMessage(event: Event): void {
-    event.preventDefault();
-    if (this.message) {
+  sendMessage(): void {
+    if (this.message.trim()) {
+      console.log('Sending message:', this.message);
       this.chatService.sendMessage(this.message);
       this.message = '';
     }
