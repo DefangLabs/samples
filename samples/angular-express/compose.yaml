@@ -1,5 +1,5 @@
 version: "3.8"
-
+name: angular-express
 services:
   angular-frontend:
     build:
@@ -9,7 +9,6 @@ services:
     ports:
       - target: 80
         published: 80
-        protocol: tcp
         mode: ingress
     environment:
       - SOCKET_IO_URL=http://backend:3000
@@ -25,7 +24,6 @@ services:
     ports:
       - target: 3000
         published: 3000
-        protocol: tcp
         mode: ingress
     environment:
       - PORT=3000

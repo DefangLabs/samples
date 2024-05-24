@@ -5,20 +5,15 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.dev
-      args:
-        - SOCKET_IO_URL=http://backend:3000
-    container_name: angular-frontend-dev
     volumes:
       - ./frontend:/app
       - /app/node_modules
     ports:
       - target: 4200
         published: 4200
-        protocol: tcp
         mode: ingress
     environment:
       - NODE_ENV=development
-      - SOCKET_IO_URL=http://backend:3000
     restart: unless-stopped
     deploy:
       resources:
@@ -29,14 +24,12 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile.dev
-    container_name: angular-backend-dev
     volumes:
       - ./backend:/usr/src/app
       - /usr/src/app/node_modules
     ports:
       - target: 3000
         published: 3000
-        protocol: tcp
         mode: ingress
     environment:
       - NODE_ENV=development
