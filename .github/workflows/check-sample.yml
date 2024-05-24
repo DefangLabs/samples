@@ -30,9 +30,13 @@ jobs:
             
             // Read the checklist from the file
             let checklist = fs.readFileSync('checklist.txt', 'utf8').trim();
+            let error = false;
 
             if(!checklist) {
               checklist = "✅"
+            }
+            else {
+              error = true;
             }
 
             // Get the current PR
@@ -61,3 +65,7 @@ jobs:
                 pull_number: pr_number,
                 body: newBody
             });
+
+            if(error) {
+              throw new Error("Incomplete samples checklist. Please fix the issues and try again.");
+            }

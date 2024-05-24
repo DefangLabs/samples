@@ -4,15 +4,15 @@ Metabase is a simple and powerful analytics tool which lets anyone learn and mak
 
 
 ## Prerequisites
-1. Download <a href="https://github.com/defang-io/defang">Defang CLI</a>
+1. Download [Defang CLI](https://github.com/DefangLabs/defang)
 2. Have a managed database service configured and have the connection details ready.
-3. (optional) If you are using <a href="https://docs.defang.io/docs/concepts/defang-byoc">Defang BYOC</a>, make sure you have properly <a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html">authenticated your AWS account</a>.
+3. (optional) If you are using [Defang BYOC](https://docs.defang.io/docs/concepts/defang-byoc), make sure you have properly [authenticated your AWS account](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html).
 
 ## Local
 
-For development, we use a Postgres container. The Postgres container is defined in the `compose.dev.yml` file. The Metabase container is defined in the `compose.yml` file, with some overrides in the `compose.dev.yml` file so it can correctly connect to the development database container. 
+For development, we use a Postgres container. The Postgres container is defined in the `compose.dev.yaml` file. The Metabase container is defined in the `compose.yaml` file, with some overrides in the `compose.dev.yaml` file so it can correctly connect to the development database container. 
 
-To start the development environment, run `docker compose -f ./compose.yml -f ./compose.dev.yml up`. This will start the Postgres container and the Metabase container. Metabase will be available at `http://localhost:3000`.
+To start the development environment, run `docker compose -f ./compose.yaml -f ./compose.dev.yaml up`. This will start the Postgres container and the Metabase container. Metabase will be available at `http://localhost:3000`.
 
 Since Metabase is a self contained application, there isn't an actual development process, but you can use the development environment to see how Metabase works.
 
