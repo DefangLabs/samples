@@ -1,0 +1,33 @@
+# Dependency directories
+node_modules
+npm-debug.log
+
+# Logs
+logs
+*.log
+
+# Directory for output files
+dist
+tmp
+
+# Environmental files
+.env
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional editor config files
+.editorconfig
+
+# IDEs and editors
+.idea
+.vscode
+*.sublime*
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
