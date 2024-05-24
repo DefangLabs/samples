@@ -4,7 +4,7 @@ This project demonstrates both client-side component rendering and hydration wit
 
 ## NOTE
 
-This sample showcases how you could deploy a full-stack application with Angular and Node.js using Defnag. The Docker setup ensures the app can be easily built and deployed. However, for production use cases, make sure to use appropriate database and security configurations.
+This sample showcases how you could deploy a full-stack application with Angular and Node.js using Defang. The Docker setup ensures the app can be easily built and deployed.
 
 ## Essential Setup Files
 
