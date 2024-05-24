@@ -4,6 +4,7 @@ services:
   sails:
     build:
       context: ./sails
+      dockerfile: Dockerfile.dev
     ports:
       - target: 1337
         published: 1337
@@ -14,4 +15,4 @@ services:
       - /usr/src/app/node_modules
     environment:
       - NODE_ENV=production
-    command: sails lift --prod
+    command: sails lift
