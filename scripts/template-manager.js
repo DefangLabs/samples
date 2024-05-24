@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const { exec } = require('child_process');
 
 /**
  * This function returns the value of the client payload from the context.
@@ -48,6 +49,16 @@ module.exports = async ({ github, context, core }) => {
         return;
     }
 
+    exec(`git config --global user.name 'GitHub Actions'`, (err, stdout, stderr) => {
+        if (err) {
+            throw new Error(`exec error: ${err}`);
+        }
+    });
+    exec(`git config --global user.email 'actions@github.com'`, (err, stdout, stderr) => {
+        if (err) {
+            throw new Error(`exec error: ${err}`);
+        }
+    });
 
     const repos = await getAllReposForOrg('DefangLabs');
     const repoNames = repos.map(r => r.name);
@@ -55,18 +66,30 @@ module.exports = async ({ github, context, core }) => {
 
     const modifiedSamples = modified.split('\n').map(s => s.split('/')?.[1])
 
-    // for earch sample, create or update the template repo
+    // for each sample, create or update the template repo
     for (const sample of modifiedSamples) {
         const templateRepo = `sample-${sample}-template`;
         if (!repoNames.includes(templateRepo)) {
             console.log(`Creating template repo: ${templateRepo}`);
-            await github.rest.repos.createForAuthenticatedUser({
+            await github.rest.repos.createInOrg({
                 name: templateRepo,
                 org: 'DefangLabs',
                 private: false,
                 is_template: true,
             });
         }
+
+        const currentBranch = process.env.GITHUB_REF.split('/').pop();
+        const isMain = currentBranch === 'main';
+        const branch = isMain ? 'main' : `test-${currentBranch}`;
+
+        exec(`git subtree push --prefix samples/${sample} git@github.com:DefangLabs/${templateRepo}.git ${branch} --squash`, (err, stdout, stderr) => {
+            console.log(`stdout: ${stdout}`);
+            console.log(`stderr: ${stderr}`);
+            if (err) {
+                throw new Error(`exec error: ${err}`);
+            }
+        });
     }
 
     return {
