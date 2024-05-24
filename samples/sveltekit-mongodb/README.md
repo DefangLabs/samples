@@ -8,13 +8,13 @@ This sample showcases how you could deploy a full-stack application with Defang 
 
 ## Essential Setup Files
 
-1. Download [Defang CLI] (https://github.com/defang-io/defang)
+1. Download [Defang CLI] (https://github.com/DefangLabs/defang)
 2. (optional) If you are using [Defang BYOC] (https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html) authenticated your AWS account.
 3. (optional for local development) [Docker CLI] (https://docs.docker.com/engine/install/)
 
 ## Prerequisite
 
-1. Download [Defang CLI] (https://github.com/defang-io/defang)
+1. Download [Defang CLI] (https://github.com/DefangLabs/defang)
 2. (optional) If you are using [Defang BYOC](https://docs.defang.io/docs/concepts/defang-byoc) make sure you have properly
 3. [Docker CLI] (https://docs.docker.com/engine/install/)
 
@@ -22,7 +22,7 @@ This sample showcases how you could deploy a full-stack application with Defang 
 
 ## Development
 
-For development, we use a local container. This can be seen in the compose.yml and /src/routes/api/songs/+server.js file and the server.js file where we create a pool of connections. To run the sample locally after clonging the respository, you can run on docker by doing
+For development, we use a local container. This can be seen in the compose.yaml and /src/routes/api/songs/+server.js file and the server.js file where we create a pool of connections. To run the sample locally after clonging the respository, you can run on docker by doing
 
 1.  docker compose up --build
 

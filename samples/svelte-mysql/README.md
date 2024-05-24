@@ -8,20 +8,20 @@ This sample showcases how you could deploy a full-stack application with Defang 
 
 ## Essential Setup Files
 
-1. Download [Defang CLI] (https://github.com/defang-io/defang)
+1. Download [Defang CLI] (https://github.com/DefangLabs/defang)
 2. (optional) If you are using [Defang BYOC] (https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html) authenticated your AWS account.
 3. (optional for local development) [Docker CLI] (https://docs.docker.com/engine/install/)
 
 ## Prerequisite
 
-1. Download [Defang CLI] (https://github.com/defang-io/defang)
+1. Download [Defang CLI] (https://github.com/DefangLabs/defang)
 2. (optional) If you are using [Defang BYOC](https://docs.defang.io/docs/concepts/defang-byoc) make sure you have properly
 3. [Docker CLI] (https://docs.docker.com/engine/install/)
 4. [NodeJS] (https://nodejs.org/en/download/package-manager)
 
 ## Development
 
-For development, we use a local container. This can be seen in the compose.yml file and the server.js file where we create a pool of connections. To run the sample locally after clonging the respository, you can run on docker by doing _docker compose up --build_ or run without using Docker by doing the following:
+For development, we use a local container. This can be seen in the compose.yaml file and the server.js file where we create a pool of connections. To run the sample locally after clonging the respository, you can run on docker by doing _docker compose up --build_ or run without using Docker by doing the following:
 
 1. run npm install to install the nodejs dependencies
 2. create an .env file on the svelte directory specifying the appropriate environment variables.
