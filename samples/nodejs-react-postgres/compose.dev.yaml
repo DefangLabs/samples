@@ -16,6 +16,8 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
+      args:
+        - REACT_APP_API_URL=http://localhost:3010
     ports: 
       - mode: ingress
         target: 3000
@@ -33,7 +35,7 @@ services:
         mode: ingress
         published: 3010
     environment:
-      - DB_HOST=db
+    - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
     volumes:
       - "./server:/app"
     depends_on:

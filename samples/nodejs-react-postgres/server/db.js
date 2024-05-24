@@ -1,11 +1,18 @@
 const Pool = require("pg").Pool;
 
+var parse = require('pg-connection-string').parse;
+
+var config = parse(process.env.DATABASE_URL)
+
 const pool = new Pool({
-    user: "myuser",
-    password: "mypassword",
-    database: "mydatabase",
-    host: process.env.DB_HOST,
-    port: 5432
+    user: config.user,
+    password: config.password,
+    database: config.database,
+    host: config.host,
+    port: config.port,
+    ssl: {
+        rejectUnauthorized: false
+    }
 })
 
 
