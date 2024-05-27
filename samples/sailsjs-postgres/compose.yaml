@@ -1,0 +1,34 @@
+version: "3"
+services:
+  app:
+    build: ./app
+    ports:
+      - target: 1337
+        published: 1337
+        mode: ingress
+    environment:
+      DATABASE_URL: postgres://todolist_user:password@db:5432/todolist_db
+    networks:
+      - app-network
+    deploy:
+      resources:
+        reservations:
+          memory: 500M
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: todolist_user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: todolist_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    ports:
+      - mode: host
+        target: 5432
+volumes:
+  postgres_data:
+networks:
+  app-network:
+    driver: bridge

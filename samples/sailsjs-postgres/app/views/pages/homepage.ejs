@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ToDo List</title>
+  <link rel="stylesheet" href="/styles/styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>ToDo List</h1>
+    <form id="taskForm">
+      <input type="text" id="taskInput" placeholder="Enter a new task" required>
+      <button type="submit">Add Task</button>
+    </form>
+    <ul id="taskList">
+      <% if (tasks && tasks.length > 0) { %>
+        <% tasks.forEach(function(task) { %>
+          <li data-id="<%= task.id %>">
+            <span><%= task.title %></span>
+            <button class="delete-button">Delete</button>
+          </li>
+        <% }) %>
+      <% } else { %>
+        <li id="noTasksMessage">No tasks found</li>
+      <% } %>
+    </ul>
+  </div>
+  <script src="/js/script.js"></script>
+</body>
+</html>
