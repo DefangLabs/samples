@@ -13,9 +13,6 @@ RUN npm install
 # Copy the local code to the container image
 COPY . .
 
-# Build the Angular app with the production environment
-ARG SOCKET_IO_URL=https://chrisyhjiang-backend--3000.prod1.defang.dev
-RUN sed -i "s|SOCKET_IO_URL: ''|SOCKET_IO_URL: '${SOCKET_IO_URL}'|g" src/environments/environment.prod.ts
 RUN npm run build -- --configuration production
 
 # Stage 2: Serve the Angular app with Caddy
