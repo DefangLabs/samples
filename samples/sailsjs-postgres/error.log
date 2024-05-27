@@ -1,0 +1,140 @@
+chris@Chriss-MacBook-Pro sailsjs-postgres % defang compose up
+WARNING missing compose directive: restart; assuming 'unless-stopped' (add 'restart' to silence) 
+WARNING unsupported compose directive: volumes       
+WARNING missing memory reservation; specify deploy.resources.reservations.memory to avoid out-of-memory errors 
+WARNING missing compose directive: restart; assuming 'unless-stopped' (add 'restart' to silence) 
+WARNING unsupported compose directive: depends_on    
+WARNING ingress port without healthcheck defaults to GET / HTTP/1.1 
+WARNING missing memory reservation; specify deploy.resources.reservations.memory to avoid out-of-memory errors 
+ * Compressing build context for app at /Users/chris/Documents/GitHub/samples/samples/sailsjs-postgres/app
+ ! The build context contains more than 10 files; use --debug or create .dockerignore
+ * Uploading build context for app
+WARNING service names were replaced in environment variable "DATABASE_URL": "postgres://todolist_user:password@Chrisyhjiang-db:5432/todolist_db" 
+WARNING Published ports are ignored in ingress mode  
+ * Deploying service db
+ * Deploying service app
+ * Monitor your services' status in the defang portal
+   - https://portal.defang.dev/service/db
+   - https://portal.defang.dev/service/app
+ * Service db is in state UPDATE_QUEUED and will be available at:
+   - chrisyhjiang-db.prod1.ecs.internal:3306
+ * Service app is in state BUILD_QUEUED and will be available at:
+   - https://chrisyhjiang-app--1337.prod1.defang.dev
+ * Tailing logs for deployment ID lh5qanyytjlc ; press Ctrl+C to detach:
+ * Press V to toggle verbose mode
+ * Verbose mode ON
+2024-05-27T15:23:24.497505-07:00 cd pulumi Update started for stack Chrisyhjiang-prod1
+2024-05-27T15:23:28.424614-07:00 cd pulumi warning: Updating service app
+2024-05-27T15:23:30.179202-07:00 cd pulumi warning: Updating service db
+2024-05-27T15:23:32.829989-07:00 app fabric status=BUILD_PROVISIONING
+2024-05-27T15:23:39.910565-07:00 db fabric status=TASK_PROVISIONING
+2024-05-27T15:23:41.924665-07:00 app fabric status=BUILD_PENDING
+2024-05-27T15:23:48.603832-07:00 db fabric status=TASK_PENDING
+2024-05-27T15:23:56.723366-07:00 app fabric status=BUILD_RUNNING
+2024-05-27T15:23:56.603863-07:00 app-image kaniko INFO[0000] Retrieving image manifest node:18
+2024-05-27T15:23:56.603984-07:00 app-image kaniko INFO[0000] Retrieving image library/node:18 from registry mirror 426819183542.dkr.ecr.us-west-2.amazonaws.com
+2024-05-27T15:23:56.719520-07:00 app-image kaniko INFO[0000] Retrieving image library/node:18 from registry mirror public.ecr.aws
+2024-05-27T15:23:56.719454-07:00 app-image kaniko WARN[0000] Failed to retrieve image library/node:18 from registry mirror 426819183542.dkr.ecr.us-west-2.amazonaws.com: unable to complete operation after 0 attempts, last error: GET https://426819183542.dkr.ecr.us-west-2.amazonaws.com/v2/library/node/manifests/18: MANIFEST_UNKNOWN: Requested image not found. Will try with the next mirror, or fallback to the default registry.
+2024-05-27T15:23:57.341339-07:00 app-image kaniko WARN[0000] Failed to retrieve image library/node:18 from registry mirror public.ecr.aws: unable to complete operation after 0 attempts, last error: GET https://public.ecr.aws/v2/library/node/manifests/18: NAME_UNKNOWN: The repository with name 'node' does not exist in the registry with id 'library'. Will try with the next mirror, or fallback to the default registry.
+2024-05-27T15:23:57.341388-07:00 app-image kaniko INFO[0000] Retrieving image node:18 from registry index.docker.io
+2024-05-27T15:23:57.953619-07:00 app-image kaniko INFO[0001] Retrieving image manifest node:18
+2024-05-27T15:23:57.953702-07:00 app-image kaniko INFO[0001] Returning cached image manifest
+2024-05-27T15:23:58.096573-07:00 app-image kaniko INFO[0001] Built cross stage deps: map[]
+2024-05-27T15:23:58.096607-07:00 app-image kaniko INFO[0001] Retrieving image manifest node:18
+2024-05-27T15:23:58.096611-07:00 app-image kaniko INFO[0001] Returning cached image manifest
+2024-05-27T15:23:58.096614-07:00 app-image kaniko INFO[0001] Retrieving image manifest node:18
+2024-05-27T15:23:58.096616-07:00 app-image kaniko INFO[0001] Returning cached image manifest
+2024-05-27T15:23:58.096734-07:00 app-image kaniko INFO[0001] Executing 0 build triggers
+2024-05-27T15:23:58.096981-07:00 app-image kaniko INFO[0001] Building stage 'node:18' [idx: '0', base-idx: '-1']
+2024-05-27T15:23:58.097044-07:00 app-image kaniko INFO[0001] Resolving srcs [package*.json]...
+2024-05-27T15:23:58.098684-07:00 app-image kaniko INFO[0001] Checking for cached layer 993944650415.dkr.ecr.us-west-2.amazonaws.com/kaniko-build/cache:71ab7556909043dfd6d97a45d08e2d1ace1d07e94d670dc9657a4e830c627aff...
+2024-05-27T15:23:58.265458-07:00 app-image kaniko INFO[0001] Using caching version of cmd: RUN npm install
+2024-05-27T15:23:58.270635-07:00 app-image kaniko INFO[0001] Cmd: EXPOSE
+2024-05-27T15:23:58.270689-07:00 app-image kaniko INFO[0001] Adding exposed port: 1337/tcp
+2024-05-27T15:23:58.270696-07:00 app-image kaniko INFO[0001] Unpacking rootfs as cmd COPY package*.json ./ requires it.
+2024-05-27T15:24:11.771714-07:00 app-image kaniko INFO[0015] WORKDIR /usr/src/app
+2024-05-27T15:24:11.771771-07:00 app-image kaniko INFO[0015] Cmd: workdir
+2024-05-27T15:24:11.771777-07:00 app-image kaniko INFO[0015] Changed working directory to /usr/src/app
+2024-05-27T15:24:11.771786-07:00 app-image kaniko INFO[0015] Creating directory /usr/src/app with uid -1 and gid -1
+2024-05-27T15:24:11.771931-07:00 app-image kaniko INFO[0015] Taking snapshot of files...
+2024-05-27T15:24:11.773019-07:00 app-image kaniko INFO[0015] Resolving srcs [package*.json]...
+2024-05-27T15:24:11.774445-07:00 app-image kaniko INFO[0015] COPY package*.json ./
+2024-05-27T15:24:11.774476-07:00 app-image kaniko INFO[0015] Resolving srcs [package*.json]...
+2024-05-27T15:24:11.775755-07:00 app-image kaniko INFO[0015] Taking snapshot of files...
+2024-05-27T15:24:11.782885-07:00 app-image kaniko INFO[0015] RUN npm install
+2024-05-27T15:24:11.782905-07:00 app-image kaniko INFO[0015] Found cached layer, extracting to filesystem
+2024-05-27T15:24:12.707453-07:00 db ip-10-0-30-44 The files belonging to this database system will be owned by user "postgres".
+2024-05-27T15:24:12.707560-07:00 db ip-10-0-30-44 This user must also own the server process.
+2024-05-27T15:24:12.707606-07:00 db ip-10-0-30-44 The database cluster will be initialized with locale "en_US.utf8".
+2024-05-27T15:24:12.707612-07:00 db ip-10-0-30-44 The default database encoding has accordingly been set to "UTF8".
+2024-05-27T15:24:12.707617-07:00 db ip-10-0-30-44 The default text search configuration will be set to "english".
+2024-05-27T15:24:12.707972-07:00 db ip-10-0-30-44 Data page checksums are disabled.
+2024-05-27T15:24:12.708110-07:00 db ip-10-0-30-44 fixing permissions on existing directory /var/lib/postgresql/data ... ok
+2024-05-27T15:24:12.757816-07:00 db ip-10-0-30-44 creating subdirectories ... ok
+2024-05-27T15:24:12.758193-07:00 db ip-10-0-30-44 selecting dynamic shared memory implementation ... posix
+2024-05-27T15:24:12.861155-07:00 db ip-10-0-30-44 selecting default max_connections ... 100
+2024-05-27T15:24:13.383430-07:00 db fabric status=TASK_RUNNING
+2024-05-27T15:24:13.059763-07:00 db ip-10-0-30-44 selecting default shared_buffers ... 128MB
+2024-05-27T15:24:13.078306-07:00 db ip-10-0-30-44 selecting default time zone ... Etc/UTC
+2024-05-27T15:24:13.079570-07:00 db ip-10-0-30-44 creating configuration files ... ok
+2024-05-27T15:24:13.977083-07:00 db ip-10-0-30-44 running bootstrap script ... ok
+2024-05-27T15:24:15.861043-07:00 db ip-10-0-30-44 performing post-bootstrap initialization ... ok
+2024-05-27T15:24:15.392201-07:00 app-image kaniko INFO[0019] COPY . .
+2024-05-27T15:24:15.401717-07:00 app-image kaniko INFO[0019] Taking snapshot of files...
+2024-05-27T15:24:15.424548-07:00 app-image kaniko INFO[0019] EXPOSE 1337
+2024-05-27T15:24:15.424587-07:00 app-image kaniko INFO[0019] Cmd: EXPOSE
+2024-05-27T15:24:15.424602-07:00 app-image kaniko INFO[0019] Adding exposed port: 1337/tcp
+2024-05-27T15:24:15.424662-07:00 app-image kaniko INFO[0019] No files changed in this command, skipping snapshotting.
+2024-05-27T15:24:15.424668-07:00 app-image kaniko INFO[0019] CMD ["node", "app.js"]
+2024-05-27T15:24:15.424716-07:00 app-image kaniko INFO[0019] No files changed in this command, skipping snapshotting.
+2024-05-27T15:24:16.022004-07:00 db ip-10-0-30-44 syncing data to disk ... ok
+2024-05-27T15:24:16.022255-07:00 db ip-10-0-30-44 You can change this by editing pg_hba.conf or using the option -A, or
+2024-05-27T15:24:16.022263-07:00 db ip-10-0-30-44 --auth-local and --auth-host, the next time you run initdb.
+2024-05-27T15:24:16.022286-07:00 db ip-10-0-30-44 Success. You can now start the database server using:
+2024-05-27T15:24:16.022296-07:00 db ip-10-0-30-44     pg_ctl -D /var/lib/postgresql/data -l logfile start
+2024-05-27T15:24:16.197936-07:00 db ip-10-0-30-44 waiting for server to start....2024-05-27 22:24:16.197 UTC [48] LOG:  starting PostgreSQL 13.15 (Debian 13.15-1.pgdg120+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
+2024-05-27T15:24:16.200549-07:00 db ip-10-0-30-44 2024-05-27 22:24:16.200 UTC [48] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2024-05-27T15:24:16.208428-07:00 db ip-10-0-30-44 2024-05-27 22:24:16.208 UTC [49] LOG:  database system was shut down at 2024-05-27 22:24:15 UTC
+2024-05-27T15:24:16.262990-07:00 db ip-10-0-30-44 2024-05-27 22:24:16.262 UTC [48] LOG:  database system is ready to accept connections
+2024-05-27T15:24:16.300913-07:00 db ip-10-0-30-44  done
+2024-05-27T15:24:16.300988-07:00 db ip-10-0-30-44 server started
+2024-05-27T15:24:16.851354-07:00 db ip-10-0-30-44 CREATE DATABASE
+2024-05-27T15:24:16.853719-07:00 db ip-10-0-30-44 /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+2024-05-27T15:24:16.860668-07:00 db ip-10-0-30-44 waiting for server to shut down...2024-05-27 22:24:16.860 UTC [48] LOG:  received fast shutdown request
+2024-05-27T15:24:16.862607-07:00 db ip-10-0-30-44 .2024-05-27 22:24:16.862 UTC [48] LOG:  aborting any active transactions
+2024-05-27T15:24:16.872593-07:00 db ip-10-0-30-44 2024-05-27 22:24:16.872 UTC [48] LOG:  background worker "logical replication launcher" (PID 55) exited with exit code 1
+2024-05-27T15:24:16.874762-07:00 db ip-10-0-30-44 2024-05-27 22:24:16.874 UTC [50] LOG:  shutting down
+2024-05-27T15:24:16.896884-07:00 db ip-10-0-30-44 2024-05-27 22:24:16.896 UTC [48] LOG:  database system is shut down
+2024-05-27T15:24:16.022184-07:00 db ip-10-0-30-44 initdb: warning: enabling "trust" authentication for local connections
+2024-05-27T15:24:16.960973-07:00 db ip-10-0-30-44  done
+2024-05-27T15:24:16.961114-07:00 db ip-10-0-30-44 server stopped
+2024-05-27T15:24:16.963303-07:00 db ip-10-0-30-44 PostgreSQL init process complete; ready for start up.
+2024-05-27T15:24:17.057379-07:00 db ip-10-0-30-44 2024-05-27 22:24:17.057 UTC [1] LOG:  starting PostgreSQL 13.15 (Debian 13.15-1.pgdg120+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
+2024-05-27T15:24:17.058176-07:00 db ip-10-0-30-44 2024-05-27 22:24:17.058 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+2024-05-27T15:24:17.058209-07:00 db ip-10-0-30-44 2024-05-27 22:24:17.058 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+2024-05-27T15:24:17.061491-07:00 db ip-10-0-30-44 2024-05-27 22:24:17.061 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2024-05-27T15:24:17.066463-07:00 db ip-10-0-30-44 2024-05-27 22:24:17.066 UTC [63] LOG:  database system was shut down at 2024-05-27 22:24:16 UTC
+2024-05-27T15:24:17.072093-07:00 db ip-10-0-30-44 2024-05-27 22:24:17.072 UTC [1] LOG:  database system is ready to accept connections
+2024-05-27T15:25:13.997682-07:00 app-image kaniko INFO[0077] Pushing image to 993944650415.dkr.ecr.us-west-2.amazonaws.com/kaniko-build:app-image-4c2e58b4-x86_64
+2024-05-27T15:25:14.688706-07:00 app-image kaniko INFO[0078] Pushed 993944650415.dkr.ecr.us-west-2.amazonaws.com/kaniko-build@sha256:138ce63f12e3147aa3699d9ef708e5dbaf906ff183f58da0718dc901b7635421
+2024-05-27T15:25:30.930176-07:00 cd pulumi Update succeeded in 5m45.634995537s ; provisioning...
+2024-05-27T15:25:35.824842-07:00 app fabric status=TASK_PROVISIONING
+2024-05-27T15:25:44.579134-07:00 app fabric status=TASK_PENDING
+2024-05-27T15:26:26.671534-07:00 app fabric status=TASK_ACTIVATING
+2024-05-27T15:26:31.710475-07:00 app ip-10-0-74-83  info: ·• Auto-migrating...  (alter)
+2024-05-27T15:26:31.711359-07:00 app ip-10-0-74-83  info:    Hold tight, this could take a moment.
+2024-05-27T15:26:44.054809-07:00 app fabric status=TASK_RUNNING
+2024-05-27T15:27:10.340070-07:00 app ip-10-0-74-83 error: Failed to lift app: Error: Sails is taking too long to load.
+2024-05-27T15:27:10.340173-07:00 app ip-10-0-74-83 --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --
+2024-05-27T15:27:10.340179-07:00 app ip-10-0-74-83  Troubleshooting tips:
+2024-05-27T15:27:10.340186-07:00 app ip-10-0-74-83   -• Were you still reading/responding to an interactive prompt?
+2024-05-27T15:27:10.340190-07:00 app ip-10-0-74-83      (Whoops, sorry!  Please lift again and try to respond a bit more quickly.)
+2024-05-27T15:27:10.340199-07:00 app ip-10-0-74-83   -• Do you have a lot of stuff in `assets/`?  Grunt might still be running.
+2024-05-27T15:27:10.340204-07:00 app ip-10-0-74-83     (Try increasing the hook timeout.  Currently it is 40000.
+2024-05-27T15:27:10.340209-07:00 app ip-10-0-74-83      e.g. `sails lift --hookTimeout=80000`)
+2024-05-27T15:27:10.340224-07:00 app ip-10-0-74-83   -• Is `blueprints` a custom or 3rd party hook?
+2024-05-27T15:27:10.340229-07:00 app ip-10-0-74-83     (*If* `initialize()` is using a callback, make sure it's being called.)
+2024-05-27T15:27:10.340233-07:00 app ip-10-0-74-83 --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --
+2024-05-27T15:27:10.340243-07:00 app ip-10-0-74-83     at Timeout.tooLong [as _onTimeout] (/usr/src/app/node_modules/sails/lib/app/private/loadHooks.js:191:21)
+2024-05-27T15:27:10.340251-07:00 app ip-10-0-74-83     at listOnTimeout (node:internal/timers:569:17)
+2024-05-27T15:27:10.340255-07:00 app ip-10-0-74-83     at process.processTimers (node:internal/timers:512:7)
