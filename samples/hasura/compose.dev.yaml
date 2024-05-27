@@ -11,7 +11,7 @@ services:
     depends_on:
       - postgres
     restart: on-failure
-    environment: 
+    environment:
       - HASURA_GRAPHQL_DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
       - HASURA_GRAPHQL_ADMIN_SECRET=password
     volumes:
