@@ -4,15 +4,11 @@ services:
   angular-frontend:
     build:
       context: ./frontend
-      args:
-        - SOCKET_IO_URL=SOCKET_IO_URL=https://chrisyhjiang-backend--3000.prod1.defang.dev
     ports:
       - target: 80
         published: 80
         protocol: tcp
         mode: ingress
-    environment:
-      - SOCKET_IO_URL=SOCKET_IO_URL=https://chrisyhjiang-backend--3000.prod1.defang.dev
     restart: unless-stopped
     deploy:
       resources:
