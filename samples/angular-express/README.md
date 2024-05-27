@@ -23,7 +23,7 @@ This sample showcases how you could deploy a full-stack application with Angular
 
 For development, we use two local containers, one for the frontend Angular service and one for the backend service in Express. It also uses Caddy as a web server for serving static files. To run the sample locally after cloning the repository, you can run on Docker by doing:
 
-1. `docker-compose -f compose.dev.yaml up`
+1. `docker compose -f compose.dev.yaml up`
 
 ## A Step-by-Step Guide
 
