@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ToDo List</title>
   <link rel="stylesheet" href="/styles/styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.12.1/polyfill.min.js"></script>
 </head>
 <body>
   <div class="container">
@@ -26,10 +27,6 @@
       <% } %>
     </ul>
   </div>
-  <% if (process.env.NODE_ENV === 'production') { %>
-    <script src="/js/production.min.js"></script>
-  <% } else { %>
-    <script src="/js/script.js"></script>
-  <% } %>
+  <script src="/js/script.js"></script>
 </body>
 </html>
