@@ -1,20 +1,18 @@
-# Use the official Node.js 14 image as the base image
+# Use the official Node.js image
 FROM node:18
 
-# Set the working directory
+# Create and change to the app directory
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json
+# Install app dependencies
 COPY package*.json ./
+RUN npm ci
 
-# Install dependencies
-RUN npm install
-
-# Copy the rest of the application code
+# Copy app source code
 COPY . .
 
-# Expose port 1337
+# Expose the port the app runs on
 EXPOSE 1337
 
-# Start the application
-CMD ["node", "app.js"]
+# Start the app
+CMD ["npm", "start"]

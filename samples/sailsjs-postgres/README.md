@@ -1,6 +1,6 @@
 # Sailsjs + Postgres
 
-This sample project is a simple todolist app that demonstrates how to use Sailsjs with the Postgres database. To run your own postgres container, please have environment variable such as POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB instantiatated.
+This sample project is a simple todolist app that demonstrates how to use Sailsjs with the Postgres database. To run your own postgres container, please have environment variable such as POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB ready.
 
 ## Prerequisites
 
@@ -29,10 +29,10 @@ If you want to edit the database, permissions, or any other Hasura settings such
 
 ---
 
-Title: GraphQL API with Hasura + Postgres
+Title: Postgres + sailsjs
 
-Short Description: A sample project demonstrating how to deploy Hasura with Defang and connect it to a Postgres database
+Short Description: A sample project demonstrating how to deploy a project with Postgres + Sailsjs
 
-Tags: hasura, graphql, postgres, database
+Tags: Postgres, Sailsjs,
 
-Languages: sql, graphql
+Languages: sql, nodejs
