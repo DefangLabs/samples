@@ -5,15 +5,13 @@
   "description": "a Sails application",
   "keywords": [],
   "dependencies": {
-    "@sailshq/connect-redis": "^6.1.3",
-    "@sailshq/lodash": "^3.10.6",
-    "@sailshq/socket.io-redis": "^6.1.2",
     "grunt": "1.0.4",
     "sails": "^1.5.11",
     "sails-hook-grunt": "^5.0.0",
     "sails-hook-orm": "^4.0.3",
     "sails-hook-sockets": "^3.0.0",
-    "sails-postgresql": "^5.0.1"
+    "sails-postgresql": "^5.0.1",
+    "optimist": "^0.6.1"
   },
   "devDependencies": {
     "eslint": "5.16.0"
@@ -32,6 +30,6 @@
   "author": "chris",
   "license": "",
   "engines": {
-    "node": "^22.1"
+    "node": "^16.20.2"
   }
 }

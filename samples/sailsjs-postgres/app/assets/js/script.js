@@ -1,58 +1,52 @@
 document.addEventListener('DOMContentLoaded', function () {
-  console.log('DOM fully loaded and parsed'); // Debug log
-
   const taskForm = document.getElementById('taskForm');
   const taskInput = document.getElementById('taskInput');
   const taskList = document.getElementById('taskList');
   let isSubmitting = false;
 
-  console.log('Adding submit event listener'); // Debug log
+  taskForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    if (isSubmitting) return;
+    isSubmitting = true;
 
-  // Check if the listener has already been added
-  if (!taskForm.hasAttribute('listenerAdded')) {
-    taskForm.addEventListener('submit', async function (e) {
-      e.preventDefault();
-      if (isSubmitting) return; // Prevent multiple submissions
-      isSubmitting = true;
+    const taskTitle = taskInput.value.trim();
+    if (taskTitle) {
+      try {
+        const response = await fetch('/tasks', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ title: taskTitle })
+        });
 
-      console.log('Form submitted'); // Debug log
-
-      const taskTitle = taskInput.value.trim();
-      if (taskTitle) {
-        try {
-          const response = await fetch('/task', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ title: taskTitle })
-          });
+        if (response.ok) {
           const task = await response.json();
-          console.log('Task added:', task); // Debug log
           addTaskToList(task);
           taskInput.value = '';
-        } catch (error) {
-          console.error('Error adding task:', error);
-        } finally {
-          isSubmitting = false; // Reset the flag after submission is handled
+        } else {
+          const error = await response.json();
+          console.error('Error adding task:', error.details);
         }
-      } else {
-        isSubmitting = false; // Reset the flag if taskTitle is empty
+      } catch (error) {
+        console.error('Error adding task:', error);
+      } finally {
+        isSubmitting = false;
       }
-    });
-
-    taskForm.setAttribute('listenerAdded', 'true'); // Mark the form to prevent duplicate listeners
-  }
+    } else {
+      isSubmitting = false;
+    }
+  });
 
   taskList.addEventListener('click', async function (e) {
     if (e.target.classList.contains('delete-button')) {
       const li = e.target.parentElement;
       const taskId = li.getAttribute('data-id');
-      console.log('Deleting task with ID:', taskId); // Debug log
       try {
-        const response = await fetch(`/task/${taskId}`, {
+        const response = await fetch(`/tasks/${taskId}`, {
           method: 'DELETE'
         });
+
         if (response.ok) {
           li.remove();
           checkIfNoTasks();
@@ -68,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
   function addTaskToList(task) {
     const noTasksMessage = document.getElementById('noTasksMessage');
     if (noTasksMessage) {
-      noTasksMessage.remove(); // Remove the "No tasks found" message if it exists
+      noTasksMessage.remove();
     }
 
     const li = document.createElement('li');
@@ -78,7 +72,6 @@ document.addEventListener('DOMContentLoaded', function () {
       <button class="delete-button">Delete</button>
     `;
     taskList.appendChild(li);
-    console.log('Task appended to list:', task); // Debug log
   }
 
   function checkIfNoTasks() {

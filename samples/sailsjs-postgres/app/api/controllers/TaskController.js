@@ -1,26 +1,23 @@
 module.exports = {
-  // Fetch all tasks and render the homepage
-  async index(req, res) {
+  index: async function (req, res) {
     try {
-      const tasks = await Task.find(); // Fetch tasks from the database
-      return res.view('pages/homepage', { tasks }); // Pass tasks to the view
+      const tasks = await Task.find();
+      return res.view('pages/homepage', { tasks: tasks });
     } catch (err) {
       return res.serverError(err);
     }
   },
 
-  // Create a new task
-  async create(req, res) {
+  create: async function (req, res) {
     try {
-      const task = await Task.create(req.body).fetch();
-      return res.json(task);
+      const newTask = await Task.create(req.body).fetch();
+      return res.status(201).json(newTask);
     } catch (err) {
-      return res.serverError(err);
+      return res.status(500).json({ error: 'Internal Server Error', details: err.message });
     }
   },
 
-  // Delete a task
-  async destroy(req, res) {
+  destroy: async function (req, res) {
     try {
       const taskId = req.params.id;
       await Task.destroyOne({ id: taskId });

@@ -1,34 +1,24 @@
-version: "3"
+version: "3.8"
+
 services:
   app:
     build: ./app
     ports:
-      - target: 1337
-        published: 1337
-        mode: ingress
+      - "1337:1337"
     environment:
-      DATABASE_URL: postgres://todolist_user:password@db:5432/todolist_db
-    networks:
-      - app-network
-    deploy:
-      resources:
-        reservations:
-          memory: 500M
+      DATABASE_URL: "postgresql://tasklistdb_owner:zPl3KMOmq5jy@ep-autumn-wind-a5fvcs0v.us-east-2.aws.neon.tech/tasklistdb?sslmode=require"
+      SESSION_SECRET: "your_session_secret"
+    depends_on:
+      - db
+
   db:
     image: postgres:13
     environment:
-      POSTGRES_USER: todolist_user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: todolist_db
+      POSTGRES_USER: tasklistdb_owner
+      POSTGRES_PASSWORD: zPl3KMOmq5jy
+      POSTGRES_DB: tasklistdb
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - app-network
-    ports:
-      - mode: host
-        target: 5432
+
 volumes:
   postgres_data:
-networks:
-  app-network:
-    driver: bridge
