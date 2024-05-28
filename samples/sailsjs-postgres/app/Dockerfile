@@ -1,18 +1,23 @@
-# Use the official Node.js image
-FROM node:18
+# Dockerfile
+FROM node:14
 
-# Create and change to the app directory
+# Create app directory
 WORKDIR /usr/src/app
 
-# Install app dependencies
-COPY package*.json ./
-RUN npm ci
+# Install Sails globally
+RUN npm install -g sails
 
-# Copy app source code
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the application code
 COPY . .
 
 # Expose the port the app runs on
 EXPOSE 1337
 
-# Start the app
-CMD ["npm", "start"]
+# Command to run the application
+CMD ["sails", "lift"]

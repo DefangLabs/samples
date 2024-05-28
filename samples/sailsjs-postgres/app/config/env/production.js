@@ -16,6 +16,7 @@ module.exports = {
   sockets: {
     onlyAllowOrigins: [
       'http://localhost:1337',
+      'https://chrisyhjiang-app--1337.prod1.defang.dev',
     ]
   },
 
@@ -24,6 +25,7 @@ module.exports = {
       allRoutes: true,
       allowOrigins: [
         'http://localhost:1337',
+        'https://chrisyhjiang-app--1337.prod1.defang.dev',
       ],
       allowCredentials: true,
     }
