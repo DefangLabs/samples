@@ -4,21 +4,16 @@ services:
   app:
     build: ./app
     ports:
-      - "1337:1337"
+      - target: 1337
+        published: 1337
+        mode: ingress
     environment:
       DATABASE_URL: "postgresql://tasklistdb_owner:zPl3KMOmq5jy@ep-autumn-wind-a5fvcs0v.us-east-2.aws.neon.tech/tasklistdb?sslmode=require"
-      SESSION_SECRET: "your_session_secret"
-    depends_on:
-      - db
+      SESSION_SECRET: "91cc809104bca25c3dd96590124ee598"
+    command: ["sails", "lift", "--prod"]
+    networks:
+      - app-network
 
-  db:
-    image: postgres:13
-    environment:
-      POSTGRES_USER: tasklistdb_owner
-      POSTGRES_PASSWORD: zPl3KMOmq5jy
-      POSTGRES_DB: tasklistdb
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-volumes:
-  postgres_data:
+networks:
+  app-network:
+    driver: bridge

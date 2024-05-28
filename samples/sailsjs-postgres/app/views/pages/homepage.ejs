@@ -26,6 +26,10 @@
       <% } %>
     </ul>
   </div>
-  <script src="/js/script.js"></script>
+  <% if (process.env.NODE_ENV === 'production') { %>
+    <script src="/js/production.min.js"></script>
+  <% } else { %>
+    <script src="/js/script.js"></script>
+  <% } %>
 </body>
 </html>
