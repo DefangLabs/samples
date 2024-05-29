@@ -1,0 +1,15 @@
+version: '3'
+name: nextjs
+services:
+  sveltekit:
+    build:
+      context: ./sveltekit
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./sveltekit:/app
+      - /app/node_modules
+    ports:
+      - target: 3000
+        mode: ingress
+        published: 3000
+    command: npm run dev -- --port 3000 --host 0.0.0.0
