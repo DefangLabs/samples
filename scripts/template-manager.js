@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs');
-const { exec } = require('child_process');
+const { execSync } = require('child_process');
 
 /**
  * This function returns the value of the client payload from the context.
@@ -85,37 +85,24 @@ module.exports = async ({ github, context, core }) => {
         const isMain = currentBranch === 'main';
         const remoteBranch = isMain ? 'main' : `test-${currentBranch}`;
 
-        console.log('@@ push token exists? ', process.env.PUSH_TOKEN);
-
         const authedRemote = `https://x-access-token:${process.env.PUSH_TOKEN}@github.com/DefangLabs/${templateRepo}.git`
-
         const splitBranch = sample;
 
-        exec(`git subtree split --prefix samples/${sample} -b ${splitBranch}`, (err, stdout, stderr) => {
-            console.log(`stdout: ${stdout}`);
-            console.log(`stderr: ${stderr}`);
-            if (err) {
-                throw new Error(`exec error: ${err}`);
-            }
-        });
-
-        exec(`git checkout ${splitBranch}`, (err, stdout, stderr) => {
-            console.log(`stdout: ${stdout}`);
-            console.log(`stderr: ${stderr}`);
-            if (err) {
-                throw new Error(`exec error: ${err}`);
-            }
-        });
-
-
-        exec(`git push ${authedRemote} ${splitBranch}:${remoteBranch} --force`, (err, stdout, stderr) => {
-            console.log(`stdout: ${stdout}`);
-            console.log(`stderr: ${stderr}`);
-            if (err) {
-                throw new Error(`exec error: ${err}`);
-            }
-        });
-
+        try {
+            console.log('@@ about to split subtree: ', splitBranch);
+            const stdout1 = execSync(`git subtree split --prefix samples/${sample} -b ${splitBranch}`);
+            console.log(`stdout: ${stdout1.toString()}`);
+        
+            console.log('@@ about to checkout split branch: ', splitBranch);
+            const stdout2 = execSync(`git checkout ${splitBranch}`);
+            console.log(`stdout: ${stdout2.toString()}`);
+        
+            console.log('@@ about to push split branch: ', splitBranch);
+            const stdout3 = execSync(`git push ${authedRemote} ${splitBranch}:${remoteBranch} --force`);
+            console.log(`stdout: ${stdout3.toString()}`);
+        } catch (err) {
+            console.error(`exec error: ${err}`);
+        }
     }
 
     return {
