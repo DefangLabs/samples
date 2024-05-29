@@ -32,7 +32,7 @@ async function main() {
 
     const repos = await getAllReposForOrg('DefangLabs');
     
-    const templateRepoName = `sample-1-template`;
+    const templateRepoName = `sample-2-template`;
 
     const exists = repos.map(r => r.name).includes(templateRepoName);
     console.log(`@@ repo exists: ${exists}`);
