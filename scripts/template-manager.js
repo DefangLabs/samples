@@ -85,7 +85,7 @@ module.exports = async ({ github, context, core }) => {
         const isMain = currentBranch === 'main';
         const branch = isMain ? 'main' : `test-${currentBranch}`;
 
-        exec(`git subtree push --prefix samples/${sample} git@github.com:DefangLabs/${templateRepo}.git ${branch} --squash`, (err, stdout, stderr) => {
+        exec(`git subtree push --prefix samples/${sample} https://x-access-token:${process.env.PUSH_TOKEN}@github.com/DefangLabs/${templateRepo}.git ${branch}`, (err, stdout, stderr) => {
             console.log(`stdout: ${stdout}`);
             console.log(`stderr: ${stderr}`);
             if (err) {
