@@ -1,0 +1,66 @@
+# Node.js dependencies
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary directories
+tmp/
+temp/
+dist/
+build/
+
+# Compiled JavaScript
+*.d.ts
+*.js.map
+
+# Compiled CSS
+*.css
+*.css.map
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+
+# Coverage reports
+coverage/
+
+# Angular specific files
+.angular/
+.angular-cache/
+.sass-cache/
+
+# Generated files
+*.class
+*.war
+*.ear
+
+# NPM lock file
+package-lock.json
+
+# Angular build outputs
+out-tsc/
+aot/
+app.out/
+vendor/
+
+# Miscellaneous
+*.bak
+*.orig
+.angular
+
+.gitkeep
+.editorconfig
+.DS_Store
