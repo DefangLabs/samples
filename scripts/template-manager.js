@@ -79,6 +79,8 @@ module.exports = async ({ github, context, core }) => {
             });
         }
 
+        console.log(`Pushing to template repo: ${templateRepo}`);
+
         const currentBranch = process.env.GITHUB_REF.split('/').pop();
         const isMain = currentBranch === 'main';
         const branch = isMain ? 'main' : `test-${currentBranch}`;
