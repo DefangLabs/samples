@@ -1,0 +1,9 @@
+version: "3.8"
+services:
+  directus:
+    image: directus/directus:latest
+    environment:
+      KEY: XincwG21vHHaRy/NsaoHYlgIbBm5DThR44J1nOxf+ps=
+      DATABASE_URL: postgresql://tasklistdb_owner:zPl3KMOmq5jy@ep-autumn-wind-a5fvcs0v.us-east-2.aws.neon.tech/cache?sslmode=require
+    ports:
+      - "8055:8055"
