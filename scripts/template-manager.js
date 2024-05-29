@@ -81,18 +81,11 @@ module.exports = async ({ github, context, core }) => {
 
         console.log(`Pushing to template repo: ${templateRepo}`);
 
-        const currentBranch = process.env.GITHUB_REF.split('/').pop();
-        // console log all the environment variables that start with GITHUB
-
-        for (const key in process.env) {
-            if (key.startsWith('GITHUB')) {
-                console.log(`@@ ${key}: ${process.env[key]}`);
-            }
-        }
-
-        console.log(`@@ current branch: ${currentBranch}`);
+        const currentBranch = process.env.GITHUB_HEAD_REF.split('/').pop();
         const isMain = currentBranch === 'main';
         const branch = isMain ? 'main' : `test-${currentBranch}`;
+
+        console.log('@@ push token exists? ', process.env.PUSH_TOKEN);
 
         exec(`git subtree push --prefix samples/${sample} https://x-access-token:${process.env.PUSH_TOKEN}@github.com/DefangLabs/${templateRepo}.git ${branch}`, (err, stdout, stderr) => {
             console.log(`stdout: ${stdout}`);
