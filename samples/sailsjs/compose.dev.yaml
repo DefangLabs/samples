@@ -4,7 +4,6 @@ services:
   sails:
     build:
       context: ./sails
-      dockerfile: Dockerfile.dev
     ports:
       - target: 1337
         published: 1337
