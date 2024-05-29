@@ -83,22 +83,39 @@ module.exports = async ({ github, context, core }) => {
 
         const currentBranch = process.env.GITHUB_HEAD_REF.split('/').pop();
         const isMain = currentBranch === 'main';
-        const branch = isMain ? 'main' : `test-${currentBranch}`;
+        const remoteBranch = isMain ? 'main' : `test-${currentBranch}`;
 
         console.log('@@ push token exists? ', process.env.PUSH_TOKEN);
 
-        const cmd = `git subtree push --prefix samples/${sample} https://x-access-token:${process.env.PUSH_TOKEN}@github.com/DefangLabs/${templateRepo}.git ${branch}`;
+        const authedRemote = `https://x-access-token:${process.env.PUSH_TOKEN}@github.com/DefangLabs/${templateRepo}.git`
 
-        // add space between each char
-        console.log('@@ cmd: ', cmd.split('').join(' '));
+        const splitBranch = sample;
 
-        exec(cmd, (err, stdout, stderr) => {
+        exec(`git subtree split --prefix samples/${sample} -b ${splitBranch}`, (err, stdout, stderr) => {
             console.log(`stdout: ${stdout}`);
             console.log(`stderr: ${stderr}`);
             if (err) {
                 throw new Error(`exec error: ${err}`);
             }
         });
+
+        exec(`git checkout ${splitBranch}`, (err, stdout, stderr) => {
+            console.log(`stdout: ${stdout}`);
+            console.log(`stderr: ${stderr}`);
+            if (err) {
+                throw new Error(`exec error: ${err}`);
+            }
+        });
+
+
+        exec(`git push ${authedRemote} ${splitBranch}:${remoteBranch} --force`, (err, stdout, stderr) => {
+            console.log(`stdout: ${stdout}`);
+            console.log(`stderr: ${stderr}`);
+            if (err) {
+                throw new Error(`exec error: ${err}`);
+            }
+        });
+
     }
 
     return {
