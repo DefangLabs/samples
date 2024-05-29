@@ -1,0 +1,6 @@
+uwsgi
+fastapi
+uvicorn
+asyncpg
+databases
+
