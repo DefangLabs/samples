@@ -32,4 +32,4 @@ Short Description: A simple Go application that manages tasks with MongoDB Atlas
 
 Tags: go, mongodb, atlas, task manager
 
-Languages: go
+Languages: golang
