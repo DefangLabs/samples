@@ -1,9 +1,10 @@
 version: '3.9'
+name: fastapi
 services:
-  service1:
+  fastapi:
     restart: always
     build:
-      context: .
+      context: ./fastapi
       dockerfile: Dockerfile
     ports:
       - mode: ingress
