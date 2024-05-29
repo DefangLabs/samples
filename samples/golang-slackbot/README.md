@@ -56,4 +56,4 @@ Short Description: A simple Slackbot that posts messages to a Slack channel
 
 Tags: go, slack, bot
 
-Languages: go
+Languages: golang

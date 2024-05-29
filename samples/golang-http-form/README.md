@@ -27,5 +27,5 @@ Short Description: A simple Go application that demonstrates form submission usi
 
 Tags: go, http, form
 
-Languages: go
+Languages: golang
 

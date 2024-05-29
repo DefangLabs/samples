@@ -10,4 +10,4 @@ Short Description: A simple Go application that fetches fiscal data from an API
 
 Tags: go, http, fiscal data, api, rest
 
-Languages: go
+Languages: golang
