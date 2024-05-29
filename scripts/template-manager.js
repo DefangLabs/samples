@@ -49,10 +49,15 @@ module.exports = async ({ github, context, core }) => {
         return;
     }
 
+    const currentBranch = process.env.GITHUB_HEAD_REF.split('/').pop();
+    const isMain = currentBranch === 'main';
+    const remoteBranch = isMain ? 'main' : `pr-test/${currentBranch}`;
+
     try {
         execSync(`git config --global user.name 'GitHub Actions'`);
         execSync(`git config --global user.email 'actions@github.com'`);
         execSync(`git config --unset-all http.https://github.com/.extraheader`);
+        execSync(`git checkout -b ${currentBranch}`);
     } catch (err) {
         throw new Error(`exec error: ${err}`);
     }
@@ -66,9 +71,6 @@ module.exports = async ({ github, context, core }) => {
     // for each sample, create or update the template repo
     for (const sample of modifiedSamples) {
         const templateRepoName = `sample-${sample}-template`;
-        const currentBranch = process.env.GITHUB_HEAD_REF.split('/').pop();
-        const isMain = currentBranch === 'main';
-        const remoteBranch = isMain ? 'main' : `pr-test/${currentBranch}`;
 
         const authedRemote = `https://x-access-token:${process.env.PUSH_TOKEN}@github.com/DefangLabs/${templateRepoName}.git`
         const splitBranch = sample;
@@ -102,7 +104,7 @@ module.exports = async ({ github, context, core }) => {
             const stdout3 = execSync(`git push ${authedRemote} ${splitBranch}:${remoteBranch} --force`);
             console.log(`stdout: ${stdout3.toString()}`);
 
-            const stdout5 = execSync(`git checkout ${process.env.GITHUB_REF}`);
+            const stdout5 = execSync(`git checkout ${currentBranch}`);
             console.log(`stdout: ${stdout5.toString()}`);
         } catch (err) {
             console.error(`exec error: ${err}`);
