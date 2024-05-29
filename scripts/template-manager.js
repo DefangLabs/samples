@@ -84,21 +84,23 @@ module.exports = async ({ github, context, core }) => {
         const authedRemote = `https://x-access-token:${process.env.PUSH_TOKEN}@github.com/DefangLabs/${templateRepo}.git`
         const splitBranch = sample;
 
-        try {
-            console.log('@@ about to split subtree: ', splitBranch);
-            const stdout1 = execSync(`git subtree split --prefix samples/${sample} -b ${splitBranch}`);
-            console.log(`stdout: ${stdout1.toString()}`);
+        execSync(`git subtree push --prefix samples/${sample} ${authedRemote} sync-demo-${remoteBranch}`)
+
+        // try {
+        //     console.log('@@ about to split subtree: ', splitBranch);
+        //     const stdout1 = execSync(`git subtree split --prefix samples/${sample} -b ${splitBranch}`);
+        //     console.log(`stdout: ${stdout1.toString()}`);
         
-            console.log('@@ about to checkout split branch: ', splitBranch);
-            const stdout2 = execSync(`git checkout ${splitBranch}`);
-            console.log(`stdout: ${stdout2.toString()}`);
+        //     console.log('@@ about to checkout split branch: ', splitBranch);
+        //     const stdout2 = execSync(`git checkout ${splitBranch}`);
+        //     console.log(`stdout: ${stdout2.toString()}`);
         
-            console.log('@@ about to push split branch: ', splitBranch);
-            const stdout3 = execSync(`git push ${authedRemote} ${splitBranch}:${remoteBranch} --force`);
-            console.log(`stdout: ${stdout3.toString()}`);
-        } catch (err) {
-            console.error(`exec error: ${err}`);
-        }
+        //     console.log('@@ about to push split branch: ', splitBranch);
+        //     const stdout3 = execSync(`git push ${authedRemote} ${splitBranch}:${remoteBranch} --force`);
+        //     console.log(`stdout: ${stdout3.toString()}`);
+        // } catch (err) {
+        //     console.error(`exec error: ${err}`);
+        // }
     }
 
     return {
