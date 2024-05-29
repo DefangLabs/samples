@@ -14,4 +14,4 @@ services:
       - /usr/src/app/node_modules
     environment:
       - NODE_ENV=production
-    command: sails lift --prod
+    command: sails lift

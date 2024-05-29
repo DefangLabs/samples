@@ -6,6 +6,7 @@ npm-debug.log
 dist
 tmp
 .out-tsc
+.angular
 
 # IDEs and editors
 .idea

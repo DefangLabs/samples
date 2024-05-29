@@ -1,0 +1,27 @@
+# Ignore node modules
+node_modules
+
+# Ignore .svelte-kit folder
+.svelte-kit
+
+# Ignore build output
+build
+
+# Ignore .env files
+.env*
+
+# Ignore logs
+*.log
+
+# Ignore the npm debug log
+npm-debug.log*
+
+# Ignore IDE specific files
+.idea
+.vscode
+*.swp
+*.swo
+
+# Ignore OS specific files
+.DS_Store
+Thumbs.db

@@ -10,7 +10,7 @@ export class ChatService {
   private socket;
 
   constructor() {
-    console.log('Connecting to WebSocket:', environment.SOCKET_IO_URL);
+    console.log('Connecting to WebSocket!!!:', environment.SOCKET_IO_URL);
     this.socket = io(environment.SOCKET_IO_URL);
   }
 
