@@ -22,4 +22,4 @@ Short Description: A simple Go application that uploads and downloads files from
 
 Tags: go, s3, aws
 
-Languages: go
+Languages: golang

@@ -27,4 +27,4 @@ Short Description: A simple Go application that interacts with the OpenAI API
 
 Tags: go, openai, chatgpt
 
-Languages: go
+Languages: golang
