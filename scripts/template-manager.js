@@ -49,12 +49,12 @@ module.exports = async ({ github, context, core }) => {
         return;
     }
 
-    try {
-        execSync(`git config --global user.name 'GitHub Actions'`);
-        execSync(`git config --global user.email 'actions@github.com'`);
-    } catch (err) {
-        throw new Error(`exec error: ${err}`);
-    }
+    // try {
+    //     execSync(`git config --global user.name 'GitHub Actions'`);
+    //     execSync(`git config --global user.email 'actions@github.com'`);
+    // } catch (err) {
+    //     throw new Error(`exec error: ${err}`);
+    // }
 
     const repos = await getAllReposForOrg('DefangLabs');
     const repoNames = repos.map(r => r.name);
