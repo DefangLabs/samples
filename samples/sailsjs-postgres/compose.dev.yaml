@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  app:
+    build: ./app
+    ports:
+      - target: 1337
+        published: 1337
+        mode: ingress
+    environment:
+      DATABASE_URL: "postgresql://todolist_user:password@db:5432/todolist_db"
+      SESSION_SECRET: "91cc809104bca25c3dd96590124ee598"
+    command: ["sails", "lift"]
+    networks:
+      - app-network
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: todolist_user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: todolist_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    ports:
+      - target: 5432
+        mode: host
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge
