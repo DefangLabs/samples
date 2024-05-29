@@ -102,7 +102,7 @@ module.exports = async ({ github, context, core }) => {
             const stdout3 = execSync(`git push ${authedRemote} ${splitBranch}:${remoteBranch} --force`);
             console.log(`stdout: ${stdout3.toString()}`);
 
-            const stdout5 = execSync(`git checkout main`);
+            const stdout5 = execSync(`git checkout ${currentBranch}`);
             console.log(`stdout: ${stdout5.toString()}`);
         } catch (err) {
             console.error(`exec error: ${err}`);
