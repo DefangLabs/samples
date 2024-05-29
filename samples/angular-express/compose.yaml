@@ -28,3 +28,4 @@ services:
       resources:
         reservations:
           memory: 64M
+    command: npm run prod

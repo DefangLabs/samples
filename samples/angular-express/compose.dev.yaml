@@ -25,7 +25,6 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile.dev
     volumes:
       - ./backend:/usr/src/app
       - /usr/src/app/node_modules
@@ -41,6 +40,6 @@ services:
       resources:
         reservations:
           memory: 64M
-
+    command: npm run dev
 volumes:
   node_modules:
