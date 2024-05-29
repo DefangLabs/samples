@@ -19,17 +19,17 @@ This sample showcases how you could deploy a full-stack application with Angular
 3. [Node.js](https://nodejs.org/en/download/package-manager/)
 4. [Angular CLI](https://angular.io/cli)
 
+## A Step-by-Step Guide for deployment
+
+1. Open the terminal and type `defang login`
+2. Type `defang compose up` in the CLI
+3. Your app should be up and running with Defang in minutes!
+
 ## Development
 
 For development, we use two local containers, one for the frontend Angular service and one for the backend service in Express. It also uses Caddy as a web server for serving static files. To run the sample locally after cloning the repository, you can run on Docker by doing:
 
 1. `docker compose -f compose.dev.yaml up`
-
-## A Step-by-Step Guide
-
-1. Open the terminal and type `defang login`
-2. Type `defang compose up` in the CLI
-3. Your app should be up and running with Defang in minutes!
 
 ---
 
