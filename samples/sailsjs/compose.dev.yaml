@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  sails:
+    build:
+      context: ./sails
+    ports:
+      - target: 1337
+        published: 1337
+        protocol: tcp
+        mode: ingress
+    volumes:
+      - ./sails:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      - NODE_ENV=production
+    command: sails lift

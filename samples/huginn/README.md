@@ -11,9 +11,9 @@ Huginn is a system for building agents that perform automated tasks for you onli
 
 ## Local
 
-For development, we use a Postgres container. The Postgres container is defined in the `compose.dev.yml` file. The Huginn container is defined in the `compose.yml` file, with some overrides in the `compose.dev.yml` file so it can correctly connect to the local database container. 
+For development, we use a Postgres container. The Postgres container is defined in the `compose.dev.yaml` file. The Huginn container is defined in the `compose.yaml` file, with some overrides in the `compose.dev.yaml` file so it can correctly connect to the local database container. 
 
-To start the local environment, run `docker compose -f ./compose.yml -f ./compose.dev.yml up`. This will start the Postgres container and the Huginn container. Huginn will be available at `http://localhost:3000` with the username `admin` and password `password`. 
+To start the local environment, run `docker compose -f ./compose.yaml -f ./compose.dev.yaml up`. This will start the Postgres container and the Huginn container. Huginn will be available at `http://localhost:3000` with the username `admin` and password `password`. 
 
 ## Deploying
 
