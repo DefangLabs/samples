@@ -15,6 +15,3 @@ COPY . .
 
 # Expose the application port
 EXPOSE 1337
-
-# Start the application in production mode
-CMD ["sails", "lift", "--prod"]
