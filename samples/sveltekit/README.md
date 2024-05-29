@@ -24,7 +24,7 @@ To develop this app, you can run the sveltekit commands as you normally would on
 
 Title: Sveltekit
 
-Short Description: A sample project demonstrating how to deploy a minimal SvelteKit app with Defang.
+Short Description: A minimal SvelteKit app.
 
 Tags: sveltekit, typescript, javascript, svelte, nodejs, frontend
 
