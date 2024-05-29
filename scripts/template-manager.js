@@ -82,6 +82,14 @@ module.exports = async ({ github, context, core }) => {
         console.log(`Pushing to template repo: ${templateRepo}`);
 
         const currentBranch = process.env.GITHUB_REF.split('/').pop();
+        // console log all the environment variables that start with GITHUB
+
+        for (const key in process.env) {
+            if (key.startsWith('GITHUB')) {
+                console.log(`@@ ${key}: ${process.env[key]}`);
+            }
+        }
+
         console.log(`@@ current branch: ${currentBranch}`);
         const isMain = currentBranch === 'main';
         const branch = isMain ? 'main' : `test-${currentBranch}`;
