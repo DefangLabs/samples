@@ -77,6 +77,16 @@ module.exports = async ({ github, context, core }) => {
 
         const isNew = !repoNames.includes(templateRepoName);
 
+
+
+        console.log(
+            `@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@ sample: ${sample}
+@@ templateRepoName: ${templateRepoName}
+@@ isNew: ${isNew}
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@`
+        )
+
         if (isNew) {
             console.log(`Creating template repo: ${templateRepoName}`);
             await github.rest.repos.createInOrg({
@@ -92,15 +102,16 @@ module.exports = async ({ github, context, core }) => {
         try {
             const stdout1 = execSync(`git subtree split --prefix samples/${sample} -b ${splitBranch}`);
             console.log(`stdout: ${stdout1.toString()}`);
-        
+
             const stdout2 = execSync(`git checkout ${splitBranch}`);
             console.log(`stdout: ${stdout2.toString()}`);
-            
-            if(isNew) {
+
+            if (isNew) {
+                console.log(`@@ is ${sample} new? ${isNew} - Pushing to main branch`);
                 const stdout4 = execSync(`git push ${authedRemote} ${splitBranch}:main --force`);
                 console.log(`stdout: ${stdout4.toString()}`);
             }
-        
+
             const stdout3 = execSync(`git push ${authedRemote} ${splitBranch}:${remoteBranch} --force`);
             console.log(`stdout: ${stdout3.toString()}`);
 
