@@ -5,7 +5,7 @@ This is a sample of a basic Flask TODO app. The items are stored in memory and a
 ### NOTE:
 This sample is a simple Flask app that demonstrates how to create a TODO app using Flask. The items are stored in memory and are lost when the server is restarted. This sample is intended to provide a basic understanding of how to get started with Flask on Defang. **it is not intended for production use**. If you need something production ready, you should use a managed database like Postgres or MySQL.
 
-TODO: Add docs
+TODO: Add docs?
 
 ## Essential Setup Files
 1. A [Dockerfile](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/).
