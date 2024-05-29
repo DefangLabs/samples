@@ -23,7 +23,7 @@ This sample is a simple Flask app that demonstrates how to create a TODO app usi
 
 Title: Simple Flask App
 
-Short Description: A basic Flask todo
+Short Description: A basic Flask todo app
 
 Tags: flask, python
 

@@ -49,12 +49,13 @@ module.exports = async ({ github, context, core }) => {
         return;
     }
 
-    // try {
-    //     execSync(`git config --global user.name 'GitHub Actions'`);
-    //     execSync(`git config --global user.email 'actions@github.com'`);
-    // } catch (err) {
-    //     throw new Error(`exec error: ${err}`);
-    // }
+    try {
+        execSync(`git config --global user.name 'GitHub Actions'`);
+        execSync(`git config --global user.email 'actions@github.com'`);
+        execSync(`git config --unset-all http.https://github.com/.extraheader`);
+    } catch (err) {
+        throw new Error(`exec error: ${err}`);
+    }
 
     const repos = await getAllReposForOrg('DefangLabs');
     const repoNames = repos.map(r => r.name);
@@ -102,6 +103,7 @@ module.exports = async ({ github, context, core }) => {
             console.log(`stdout: ${stdout3.toString()}`);
         } catch (err) {
             console.error(`exec error: ${err}`);
+            throw new Error(`exec error: ${err}`);
         }
     }
 
