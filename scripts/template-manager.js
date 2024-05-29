@@ -64,42 +64,40 @@ module.exports = async ({ github, context, core }) => {
 
     // for each sample, create or update the template repo
     for (const sample of modifiedSamples) {
-        const templateRepo = `sample-${sample}-template`;
-        if (!repoNames.includes(templateRepo)) {
-            console.log(`Creating template repo: ${templateRepo}`);
-            await github.rest.repos.createInOrg({
-                name: templateRepo,
-                org: 'DefangLabs',
-                private: false,
-                is_template: true,
-            });
-            // set default branch to main
-            await github.rest.repos.update({
-                owner: 'DefangLabs',
-                repo: templateRepo,
-                default_branch: 'main'
-            });
-        }
-
-        console.log(`Pushing to template repo: ${templateRepo}`);
-
+        const templateRepoName = `sample-${sample}-template`;
         const currentBranch = process.env.GITHUB_HEAD_REF.split('/').pop();
         const isMain = currentBranch === 'main';
         const remoteBranch = isMain ? 'main' : `pr-test/${currentBranch}`;
 
-        const authedRemote = `https://x-access-token:${process.env.PUSH_TOKEN}@github.com/DefangLabs/${templateRepo}.git`
+        const authedRemote = `https://x-access-token:${process.env.PUSH_TOKEN}@github.com/DefangLabs/${templateRepoName}.git`
         const splitBranch = sample;
 
+        const isNew = !repoNames.includes(templateRepoName);
+
+        if (isNew) {
+            console.log(`Creating template repo: ${templateRepoName}`);
+            await github.rest.repos.createInOrg({
+                name: templateRepoName,
+                org: 'DefangLabs',
+                private: false,
+                is_template: true,
+            });
+        }
+
+        console.log(`Pushing to template repo: ${templateRepoName}`);
+
         try {
-            console.log('@@ about to split subtree: ', splitBranch);
             const stdout1 = execSync(`git subtree split --prefix samples/${sample} -b ${splitBranch}`);
             console.log(`stdout: ${stdout1.toString()}`);
         
-            console.log('@@ about to checkout split branch: ', splitBranch);
             const stdout2 = execSync(`git checkout ${splitBranch}`);
             console.log(`stdout: ${stdout2.toString()}`);
+            
+            if(isNew) {
+                const stdout4 = execSync(`git push ${authedRemote} ${splitBranch}:main --force`);
+                console.log(`stdout: ${stdout4.toString()}`);
+            }
         
-            console.log('@@ about to push split branch: ', splitBranch);
             const stdout3 = execSync(`git push ${authedRemote} ${splitBranch}:${remoteBranch} --force`);
             console.log(`stdout: ${stdout3.toString()}`);
         } catch (err) {
