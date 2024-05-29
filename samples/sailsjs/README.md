@@ -12,7 +12,7 @@ This sample demosntrates how to deploy a very basic Sailsjs sample with Defang. 
 
 For development, we use a local container. This can be seen in the compose.yaml document. To run the sample locally after cloning the respository, you can run on docker by doing the following:
 
-1. docker compose up --build
+1. docker compose -f compose.dev.yaml up --build
 
 ## Deploying
 
