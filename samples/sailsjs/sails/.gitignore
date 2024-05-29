@@ -91,3 +91,4 @@ public
 # Sails.js specific
 .sailsrc
 .sailsrc.js
+.tmp/
