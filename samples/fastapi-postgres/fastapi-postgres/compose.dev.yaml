@@ -1,0 +1,20 @@
+version: '3.9'
+services:
+  service1:
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - mode: ingress
+        target: 8000
+    depends_on:
+    - db
+  db:
+    image: postgres:15
+    init: true
+    restart: always
+    environment:
+    - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
+
+  
