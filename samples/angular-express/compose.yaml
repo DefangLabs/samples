@@ -1,0 +1,31 @@
+version: "3.8"
+name: angular-express
+services:
+  angular-frontend:
+    build:
+      context: ./frontend
+    ports:
+      - target: 80
+        published: 80
+        mode: ingress
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          memory: 64M
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - target: 3000
+        published: 3000
+        mode: ingress
+    environment:
+      - PORT=3000
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          memory: 64M
+    command: npm run prod
