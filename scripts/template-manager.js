@@ -87,6 +87,10 @@ module.exports = async ({ github, context, core }) => {
 
         console.log('@@ push token exists? ', process.env.PUSH_TOKEN);
 
+        const cmd = `git subtree push --prefix samples/${sample} https://x-access-token:${process.env.PUSH_TOKEN}@github.com/DefangLabs/${templateRepo}.git ${branch}`;
+        const cmdBase64 = Buffer.from(cmd).toString('base64');
+        console.log('@@ cmd b64: ', cmdBase64);
+
         exec(`git subtree push --prefix samples/${sample} https://x-access-token:${process.env.PUSH_TOKEN}@github.com/DefangLabs/${templateRepo}.git ${branch}`, (err, stdout, stderr) => {
             console.log(`stdout: ${stdout}`);
             console.log(`stderr: ${stderr}`);
