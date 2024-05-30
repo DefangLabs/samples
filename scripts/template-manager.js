@@ -49,11 +49,12 @@ module.exports = async ({ github, context, core }) => {
         return;
     }
 
-    const currentBranch = process.env.GITHUB_HEAD_REF.split('/').pop();
+    const currentBranch = process.env.GITHUB_HEAD_REF.split('/').pop() || 'main';
     const isMain = currentBranch === 'main';
     const remoteBranch = isMain ? 'main' : `pr-test/${currentBranch}`;
 
     try {
+        console.log('@@ preparing git')
         execSync(`git config --global user.name 'GitHub Actions'`);
         execSync(`git config --global user.email 'actions@github.com'`);
         execSync(`git config --unset-all http.https://github.com/.extraheader`);
