@@ -34,12 +34,6 @@ module.exports = async ({ github, context, core }) => {
         return repos;
     }
 
-    // console log the current working directory
-    console.log('@@ cwd: ', process.cwd());
-
-    // console log the contents of the current directory
-    console.log('@@ ls: ', fs.readdirSync(process.cwd()));
-
     // read the modified samples
     let modified = fs.readFileSync(path.join('modified.txt'), 'utf8').trim();
 
