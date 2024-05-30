@@ -58,11 +58,12 @@ module.exports = async ({ github, context, core }) => {
         execSync(`git config --global user.name 'GitHub Actions'`);
         execSync(`git config --global user.email 'actions@github.com'`);
         execSync(`git config --unset-all http.https://github.com/.extraheader`);
-        if (!isMain) {
-            execSync(`git fetch origin ${currentBranch}:${currentBranch}`);
+
+        if(!isMain) {
+            execSync(`git checkout -b ${remoteBranch}`);
         }
         else {
-            execSync(`git checkout -b ${currentBranch}`);
+            execSync(`git checkout ${currentBranch}`);
         }
     } catch (err) {
         throw new Error(`exec error: ${err}`);
