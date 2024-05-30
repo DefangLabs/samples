@@ -13,7 +13,7 @@ A basic Next.js app with a Dockerfile and docker-compose ready to deploy to AWS 
 
 Title: Next.js
 
-Short Description: A basic Next.js app with a Dockerfile and docker-compose ready to deploy to AWS with Defang
+Short Description: A basic Next.js app with a Dockerfile and compose.yaml
 
 Tags: next.js, react, docker, aws
 
