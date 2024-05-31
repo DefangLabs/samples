@@ -1,6 +1,6 @@
 # Next.js × Defang
 
-A basic Next.js app with a Dockerfile and docker-compose ready to deploy to AWS with [Defang](https://defang.io).
+A basic Next.js app with a Dockerfile and compose.yaml ready to deploy to AWS with [Defang](https://defang.io).
 
 ## Steps
 
@@ -12,6 +12,9 @@ A basic Next.js app with a Dockerfile and docker-compose ready to deploy to AWS 
 ---
 
 Title: Next.js
-Short Description: A basic Next.js app with a Dockerfile and docker-compose ready to deploy to AWS with Defang
+
+Short Description: A basic Next.js app.
+
 Tags: next.js, react, docker, aws
+
 Languages: nodejs, typescript

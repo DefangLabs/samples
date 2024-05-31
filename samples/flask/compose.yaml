@@ -1,9 +1,10 @@
 version: "3.9"
+name: flask
 services:
-  service1:
+  flask:
     restart: unless-stopped
     build:
-      context: .
+      context: ./flask
       dockerfile: Dockerfile
     deploy:
       resources:
