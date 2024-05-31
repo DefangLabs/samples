@@ -46,6 +46,7 @@ module.exports = async ({ github, context, core }) => {
     const currentBranch = process.env.GITHUB_HEAD_REF.split('/').pop() || 'main';
     const isMain = currentBranch === 'main';
     const remoteBranch = isMain ? 'main' : `pr-test/${currentBranch}`;
+    const workRef = 'workRef';
 
     try {
         console.log('@@ preparing git')
@@ -53,12 +54,9 @@ module.exports = async ({ github, context, core }) => {
         execSync(`git config --global user.email 'actions@github.com'`);
         execSync(`git config --unset-all http.https://github.com/.extraheader`);
 
-        if(!isMain) {
-            execSync(`git checkout -b ${remoteBranch}`);
-        }
-        else {
-            execSync(`git checkout ${currentBranch}`);
-        }
+        // this is a branch we'll use as our starting point from 
+        // which we'll split subtrees
+        execSync(`git checkout -b ${workRef}`);
     } catch (err) {
         throw new Error(`exec error: ${err}`);
     }
@@ -116,7 +114,8 @@ module.exports = async ({ github, context, core }) => {
             const stdout3 = execSync(`git push ${authedRemote} ${splitBranch}:${remoteBranch} --force`);
             console.log(`stdout: ${stdout3.toString()}`);
 
-            const stdout5 = execSync(`git checkout ${currentBranch}`);
+            // reset
+            const stdout5 = execSync(`git checkout ${workRef}`);
             console.log(`stdout: ${stdout5.toString()}`);
         } catch (err) {
             console.error(`exec error: ${err}`);
