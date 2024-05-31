@@ -13,8 +13,8 @@ Frontend: Basic HTML and JavaScript are used for the frontend to interact with t
 Environment: Designed to run in containerized environments using Docker, which ensures consistency across different development and production environments.
 
 ## Prerequisite
-1. Download <a href="https://github.com/defang-io/defang">Defang CLI</a>
-2. If you are using <a href="https://docs.defang.io/docs/concepts/defang-byoc">Defang BYOC</a>, make sure you have properly <a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html">authenticated your AWS account</a>
+1. Download [Defang CLI](https://github.com/DefangLabs/defang)
+2. If you are using [Defang BYOC](https://docs.defang.io/docs/concepts/defang-byoc), make sure you have properly [authenticated your AWS account](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)
 Plus, make sure that you have properly set all environment variables up
 3. There is a environment variable named MONGO_URI for the MONGODB connection string, in the compose file, be sure to put your mongodb URI, i.e. 
 mongodb+srv://<username>:<pwd>@host
@@ -32,4 +32,4 @@ Short Description: A simple Go application that manages tasks with MongoDB Atlas
 
 Tags: go, mongodb, atlas, task manager
 
-Languages: go
+Languages: golang

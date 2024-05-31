@@ -5,15 +5,15 @@ Huginn is a system for building agents that perform automated tasks for you onli
 
 ## Prerequisites
 
-1. Download [Defang CLI](https://github.com/defang-io/defang)
+1. Download [Defang CLI](https://github.com/DefangLabs/defang)
 2. Have a managed database service configured and have the connection details ready. Neon postgres is a good free option.
 3. (optional) If you are using [Defang BYOC](https://docs.defang.io/docs/concepts/defang-byoc), make sure you have properly [authenticated your AWS account](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html).
 
 ## Local
 
-For development, we use a Postgres container. The Postgres container is defined in the `compose.dev.yml` file. The Huginn container is defined in the `compose.yml` file, with some overrides in the `compose.dev.yml` file so it can correctly connect to the local database container. 
+For development, we use a Postgres container. The Postgres container is defined in the `compose.dev.yaml` file. The Huginn container is defined in the `compose.yaml` file, with some overrides in the `compose.dev.yaml` file so it can correctly connect to the local database container. 
 
-To start the local environment, run `docker compose -f ./compose.yml -f ./compose.dev.yml up`. This will start the Postgres container and the Huginn container. Huginn will be available at `http://localhost:3000` with the username `admin` and password `password`. 
+To start the local environment, run `docker compose -f ./compose.yaml -f ./compose.dev.yaml up`. This will start the Postgres container and the Huginn container. Huginn will be available at `http://localhost:3000` with the username `admin` and password `password`. 
 
 ## Deploying
 
