@@ -1,4 +1,5 @@
 version: '3.9'
+name: nodejs-react-postgres
 services:
   todo_list:
     build:
