@@ -2,16 +2,16 @@ version: '3.9'
 services:
   db:
     image: postgres:15
-    init: true
-    restart: always
+    restart: unless-stopped
     environment:
-      - POSTGRES_DB=mydatabase
-      - POSTGRES_USER=myuser
-      - POSTGRES_PASSWORD=mypassword
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     ports:
       - mode: host
         target: 5432
         published: 5432
+
   todo_list:
     build:
       context: ./client
@@ -24,9 +24,12 @@ services:
         published: 3000
     volumes: 
       - "./client:/code"
+      - /code/node_modules
     depends_on:
       - server
+      
   server:
+    restart: unless-stopped
     build:
       context: ./server
       dockerfile: Dockerfile
@@ -35,8 +38,9 @@ services:
         mode: ingress
         published: 3010
     environment:
-    - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
+    - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
     volumes:
       - "./server:/app"
+      - /app/node_modules
     depends_on:
       - db
