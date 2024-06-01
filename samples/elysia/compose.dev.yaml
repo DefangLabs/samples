@@ -1,0 +1,11 @@
+version: '3'
+name: elysia
+services:
+  elysia:
+    extends:
+      file: compose.yaml
+      service: elysia
+    volumes:
+      - ./elysia:/app
+      - /app/node_modules
+    command: bun dev
