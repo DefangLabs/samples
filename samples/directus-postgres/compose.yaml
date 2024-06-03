@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  directus:
+    image: directus/directus:10.11.2
+    container_name: directus
+    ports:
+      - target: 8055
+        published: 8055
+        mode: ingress
+    volumes:
+      - ./uploads:/directus/uploads
+      - ./extensions:/directus/extensions
+    environment:
+      SECRET: "replace-with-secure-random-value"
+      ADMIN_EMAIL: "admin@example.com"
+      ADMIN_PASSWORD: "d1r3ctu5"
+      DB_CLIENT: "pg"
+      DB_CONNECTION_STRING: "postgresql://tasklistdb_owner:zPl3KMOmq5jy@ep-curly-smoke-a5bpjk2r.us-east-2.aws.neon.tech/test?sslmode=require"
+      WEBSOCKETS_ENABLED: "true"
