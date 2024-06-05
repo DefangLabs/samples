@@ -7,7 +7,6 @@ This sample project demonstrates how to deploy Directus with Defang and connect 
 1. Download [Defang CLI](https://github.com/DefangLabs/defang)
 2. (Optional) If you are using [Defang BYOC](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html) authenticated with your AWS account
 3. (Optional - for local development) [Docker CLI](https://docs.docker.com/engine/install/)
-4. (Optional - for local development) [Neon CLI](https://neon.tech/docs/reference/neon-cli)
 
 ### Editing the database/permissions etc.
 
@@ -16,16 +15,20 @@ If you want to edit the database, permissions, or any other Directus settings su
 ## Deploying
 
 1. Open the terminal and type `defang login`
-2. Add your connection string as a defang config value by typing `defang config set HASURA_GRAPHQL_DATABASE_URL` and pasting your connection string (which should be in the format `postgres://username:password@host:port/dbname`)
-3. Have the env variables SECRET, ADMIN_EMAIL, ADMIN_PASSWORD, DB_CONNECTION_STRING ready
+2. Add your connection string to the `DB_CONNECTION_STRING` on `compose.yaml` (which should be in the format `postgres://username:password@host:port/dbname`)
+3. Setup all the env variables `SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `DB_CONNECTION_STRING` by typing defang config set SECRET ...
 4. Type `defang compose up` in the CLI.
 5. Your app will be running within a few minutes.
 
 ## Development
 
-For development, we use a PostgreSQL container. The PostgreSQL container is defined in the `compose.dev.yaml` file. The Directus container is defined in the `docker-compose.yaml` file, with some overrides in the `compose.dev.yaml` file so it can correctly connect to the development database container.
+`For development, we use a PostgreSQL container. The PostgreSQL container is defined in the`compose.dev.yaml`file. The Directus container is defined in the`docker-compose.yaml`file, with some overrides in the`compose.dev.yaml` file so it can correctly connect to the development database container.
 
-To start the development environment, run `docker-compose -f compose.dev.yaml up -d`. This will start the PostgreSQL container and the Directus container. The Directus console will be available at `http://localhost:8055` with the admin email `admin@example.com` and password `d1r3ctu5`. (you can change these as you may)
+To start the development environment, run
+`docker-compose -f compose.dev.yaml up -d`
+
+This will start the PostgreSQL container and the Directus container. The Directus console will be available at `http://localhost:8055` with the admin email `admin@example.com` and password `d1r3ctu5`. (you can change these as you may)
+
 **Note:** _If you want to make changes to your database, permissions, etc., you should use the Directus console to make those changes._
 
 ---
