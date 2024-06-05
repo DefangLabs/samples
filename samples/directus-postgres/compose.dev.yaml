@@ -1,18 +1,6 @@
-version: "3.8"
-
+version: "3.9"
+name: directus-postgres
 services:
-  postgres:
-    image: postgres:13
-    container_name: postgres
-    environment:
-      POSTGRES_USER: directus
-      POSTGRES_PASSWORD: directus
-      POSTGRES_DB: directus
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-
   directus:
     image: directus/directus:10.11.2
     container_name: directus
@@ -34,6 +22,18 @@ services:
       WEBSOCKETS_ENABLED: "true"
     depends_on:
       - postgres
+
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      POSTGRES_USER: directus
+      POSTGRES_PASSWORD: directus
+      POSTGRES_DB: directus
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
 
 volumes:
   postgres_data:
