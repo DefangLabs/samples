@@ -11,6 +11,9 @@ This sample project demonstrates how to deploy FastAPI with Defang.
 2. Type `defang compose up` in the CLI.
 3. Your app will be running within a few minutes.
 
+## Local Development
+1. Run `docker compose -f compose.dev.yaml up`
+
 ---
 
 Title: FastAPI & PostgreSQL
