@@ -3,7 +3,7 @@ name: Sample Request
 about: Suggest a sample
 title: "[Technolog(y/ies)] Sample"
 labels: ''
-assignees: raphaeltm
+assignees: 
 
 ---
 

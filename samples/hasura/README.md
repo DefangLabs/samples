@@ -27,8 +27,8 @@ If you want to edit the database, permissions, or any other Hasura settings such
 1. Open the terminal and type `defang login`
 2. Add your connection string as a defang config value by typing `defang config set HASURA_GRAPHQL_DATABASE_URL` and pasting your connection string (which should be in the format `postgres://username:password@host:port/dbname`)
 3. Setup a password for hasura by typing `defang config set HASURA_GRAPHQL_ADMIN_SECRET` and adding a password you would like to login with.
-2. Type `defang compose up` in the CLI.
-3. Your app will be running within a few minutes.
+4. Type `defang compose up` in the CLI.
+5. Your app will be running within a few minutes.
 
 ---
 
