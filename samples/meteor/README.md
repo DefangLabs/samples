@@ -18,15 +18,18 @@ If you want to edit the database, permissions, or any other Meteor settings such
 
 1. Open the terminal and type `defang login`
 2. Add your connection string as a defang config value by typing `defang config set MONGO_URL` and pasting your connection string (which should be in the format `mongodb://username:password@host:port/dbname`)
-3. Setup a password for Meteor by typing `defang config set METEOR_ADMIN_SECRET` and adding a password you would like to login with.
-4. Type `defang compose up` in the CLI.
-5. Your app will be running within a few minutes.
+3. Set up the environment variables `MONGO_URL` and `ROOT_URL` by typing in `defang config set MONGO_URL` and `defang config set `ROOT_URL`
+4. Type `defang compose up` in the CLI. 5. Your app will be running within a few minutes.
 
 ## Development
 
 For development, we use a MongoDB container. The MongoDB container is defined in the `compose.dev.yaml` file. The Meteor container is also defined in the `compose.dev.yaml` file so it can correctly connect to the development database container.
 
-To start the development environment, run `docker-compose up --build`. This will start the MongoDB container and the Meteor container. The Meteor application will be available at `http://localhost:3000`.
+To start the development environment, run
+
+`docker-compose up --build`.
+
+This will start the MongoDB container and the Meteor container. The Meteor application will be available at `http://localhost:3000`.
 
 ---
 
