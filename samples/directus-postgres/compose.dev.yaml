@@ -6,9 +6,6 @@ services:
     container_name: directus
     ports:
       - 8055:8055
-    volumes:
-      - ./uploads:/directus/uploads
-      - ./extensions:/directus/extensions
     environment:
       SECRET: "h3E2NJkDbn"
       ADMIN_EMAIL: "admin@example.com"
