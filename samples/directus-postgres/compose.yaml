@@ -8,10 +8,13 @@ services:
       - target: 8055
         published: 8055
         mode: ingress
+    volumes:
+      - ./uploads:/directus/uploads
+      - ./extensions:/directus/extensions
     environment:
       - SECRET
       - ADMIN_EMAIL
       - ADMIN_PASSWORD
-      - DB_CLIENT
+      - DB_CLIENT="pg"
       - DB_CONNECTION_STRING
       - WEBSOCKETS_ENABLED="true"
