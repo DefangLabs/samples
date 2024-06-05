@@ -16,9 +16,14 @@ If you want to edit the database, permissions, or any other Directus settings su
 
 1. Open the terminal and type `defang login`
 2. Add your connection string to the `DB_CONNECTION_STRING` on `compose.yaml` (which should be in the format `postgres://username:password@host:port/dbname`)
-3. Setup all the env variables `SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `DB_CONNECTION_STRING` by typing defang config set SECRET ...
-4. Type `defang compose up` in the CLI.
-5. Your app will be running within a few minutes.
+3. Setup all the env variables by doing the following
+
+   - `defang config set SECRET`
+   - `defang config set ADMIN_EMAIL`
+   - `defang config set ADMIN_PASSWORD`
+   - `defang config set DB_CONNECTION_STRING`
+
+4. Type `defang compose up` in the CLI. 5. Your app will be running within a few minutes.
 
 ## Development
 
