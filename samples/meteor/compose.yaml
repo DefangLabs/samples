@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  meteor:
+    build: .
+    container_name: meteor
+    platform: linux/amd64
+    environment:
+      - MONGO_URL=mongodb+srv://Chris:Defang12345@atlascluster.oo6gmyw.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster # your connection string
+      - ROOT_URL=https://chrisyhjiang-meteor--3000.prod1.defang.dev # your ROOT URL
+      - PORT=3000
+    ports:
+      - target: 3000
+        published: 3000
+        protocol: tcp
+        mode: ingress
