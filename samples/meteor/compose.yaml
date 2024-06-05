@@ -6,7 +6,7 @@ services:
     container_name: meteor
     platform: linux/amd64
     environment:
-      - MONGO_URL #your MONGODB URL
+      - MONGO_URL # your MONGODB URL
       - ROOT_URL # your ROOT URL
       - PORT=3000
     ports:
