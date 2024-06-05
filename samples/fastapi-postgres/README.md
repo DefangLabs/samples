@@ -13,10 +13,10 @@ This sample project demonstrates how to deploy FastAPI with Defang.
 
 ---
 
-Title: FastAPI&PostgreSQL
+Title: FastAPI & PostgreSQL
 
-Short Description: A sample project demonstrating how to deploy FastAPI with Neon as the with Defang
+Short Description: A sample project with FastAPI and PostgreSQL
 
-Tags: FastAPI，PostgreSQL
+Tags: FastAPI，PostgreSQL, Python, SQL
 
-Languages: Python, FastAPI
+Languages: Python, SQL

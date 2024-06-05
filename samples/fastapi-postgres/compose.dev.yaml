@@ -1,20 +1,28 @@
 version: '3.9'
+name: fastapi-postgres
+
 services:
-  service1:
-    restart: always
-    build:
-      context: .
-      dockerfile: Dockerfile
+  fastapi:
+    extends:
+      file: compose.yaml
+      service: fastapi
+    restart: unless-stopped
     ports:
-      - mode: ingress
-        target: 8000
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
+    volumes:
+      - ./fastapi:/app
     depends_on:
-    - db
+      - db
+    command: fastapi dev main.py --host 0.0.0.0
+
   db:
     image: postgres:15
-    init: true
-    restart: always
+    restart: unless-stopped
     environment:
-    - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
 
   

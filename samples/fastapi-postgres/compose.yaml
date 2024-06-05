@@ -1,13 +1,12 @@
 version: '3.9'
+name: fastapi-postgres
 services:
-  service1:
-    restart: always
+  fastapi:
     build:
-      context: .
+      context: ./fastapi
       dockerfile: Dockerfile
     ports:
       - mode: ingress
         target: 8000
     environment:
       - DATABASE_URL
-    # To use your production database connection string, use `defang config set DATABASE_URL`
