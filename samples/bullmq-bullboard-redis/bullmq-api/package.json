@@ -1,0 +1,16 @@
+{
+  "name": "bullmq-bullboard",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bullmq": "^5.7.15",
+    "express": "^4.19.2",
+    "ioredis": "^5.4.1"
+  }
+}

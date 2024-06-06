@@ -1,0 +1,38 @@
+version: '3.9'
+name: bullmq-bullboard-redis
+
+services:
+  bullmq-bullboard:
+    build:
+      context: ./bullmq-bullboard
+      dockerfile: Dockerfile
+    ports:
+      - mode: ingress
+        target: 3000
+        published: 3000
+    environment:
+      - REDIS=redis://bullmq-bullboard-redis:6379
+    depends_on:
+      - bullmq-bullboard-redis
+
+  bullmq-api:
+    build:
+      context: ./bullmq-api
+      dockerfile: Dockerfile
+    ports:
+      - mode: ingress
+        target: 3001
+        published: 3001
+    environment:
+      - REDIS=redis://bullmq-bullboard-redis:6379
+    depends_on:
+      - bullmq-bullboard-redis
+
+  bullmq-bullboard-redis:
+    image: redis:6.2
+    x-defang-redis: true
+    restart: unless-stopped
+    ports:
+      - mode: host
+        target: 6379
+    
