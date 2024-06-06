@@ -2,35 +2,29 @@ version: "3.9"
 name: directus-postgres
 services:
   directus:
-    image: directus/directus:10.11.2
-    container_name: directus
-    ports:
-      - 8055:8055
+    extends:
+      file: compose.yaml
+      service: directus
     environment:
-      SECRET: "h3E2NJkDbn"
-      ADMIN_EMAIL: "admin@example.com"
-      ADMIN_PASSWORD: "d1r3ctu5"
-      DB_CLIENT: "pg"
-      DB_HOST: "postgres"
-      DB_PORT: 5432
-      DB_DATABASE: "directus"
-      DB_USER: "directus"
-      DB_PASSWORD: "directus"
-      WEBSOCKETS_ENABLED: "true"
+      - SECRET=a-very-secret-key
+      - ADMIN_EMAIL=admin@example.com
+      - ADMIN_PASSWORD=password
+      - DB_CONNECTION_STRING=postgres://directus:directus@postgres:5432/directus
+    volumes:
+      - /directus/uploads
     depends_on:
       - postgres
+      - redis
+      - minio
 
   postgres:
-    image: postgres:13
-    container_name: postgres
+    image: postgres:16
     environment:
       POSTGRES_USER: directus
       POSTGRES_PASSWORD: directus
       POSTGRES_DB: directus
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
 
 volumes:
   postgres_data:
