@@ -1,9 +1,9 @@
-version: '3.9'
+cdoversion: "3.9"
 services:
   service1:
     restart: unless-stopped
     build:
-      context: .
+      context: ./app
       dockerfile: Dockerfile
     ports:
       - mode: ingress
