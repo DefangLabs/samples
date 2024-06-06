@@ -1,9 +1,9 @@
-version: '3.9'
+version: "3.9"
 services:
   app:
     restart: unless-stopped
     build:
-      context: .
+      context: ./app
       dockerfile: Dockerfile
     ports:
       - mode: ingress
@@ -11,4 +11,3 @@ services:
         published: 8080
     environment:
       - MONGO_URI=your mongo db URI connection string
-  
