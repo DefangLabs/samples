@@ -1,9 +1,9 @@
-version: '3.9'
+version: "3.9"
 name: documentstarter
 services:
   documentstarter:
     build:
-      context: .
+      context: ./app
       dockerfile: Dockerfile
     ports:
       - mode: ingress
