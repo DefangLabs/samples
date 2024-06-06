@@ -11,10 +11,11 @@ Install the Defang CLI by following the instructions in the [Defang CLI document
 You'll need to head to https://api.slack.com/apps to create a Slack App.
 
 Make sure to:
- * Give it the bot `chat:write` scope
- * Install the app to your workspace
- * Copy the Bot User OAuth Access Token
- * Invite your bot to the channel you want it to post to using the `@botname` command in the channel (this will allow you to invite it)
+
+- Give it the bot `chat:write` scope
+- Install the app to your workspace
+- Copy the Bot User OAuth Access Token
+- Invite your bot to the channel you want it to post to using the `@botname` command in the channel (this will allow you to invite it)
 
 ## Configure
 
@@ -50,7 +51,7 @@ curl 'https://raphaeltm-bot--8080.prod1.defang.dev/' \
 
 ---
 
-Title: Go Slackbot
+Title: Go & Slackbot
 
 Short Description: A simple Slackbot that posts messages to a Slack channel
 
