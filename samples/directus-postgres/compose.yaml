@@ -15,6 +15,6 @@ services:
       - SECRET
       - ADMIN_EMAIL
       - ADMIN_PASSWORD
-      - DB_CLIENT="pg"
       - DB_CONNECTION_STRING
       - WEBSOCKETS_ENABLED="true"
+      - DB_CLIENT="pg"
