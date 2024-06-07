@@ -1,14 +1,14 @@
-version: '3.9'
+version: "3.9"
 services:
   service1:
     restart: unless-stopped
     build:
-      context: .
+      context: ./app
       dockerfile: Dockerfile
     deploy:
       resources:
         reservations:
-          cpus: '1.0'
+          cpus: "1.0"
           memory: 2048M
           devices:
             - capabilities: ["gpu"]
