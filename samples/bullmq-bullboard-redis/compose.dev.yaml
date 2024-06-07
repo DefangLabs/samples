@@ -6,9 +6,13 @@ services:
     extends:
       file: compose.yaml
       service: board
+    volumes:
+      - ./board:/app
+      - /app/node_modules
     environment:
       - BOARD_PASSWORD=password
       - QUEUE=testqueue
+    command: npx nodemon index.mjs
 
   api:
     extends:
