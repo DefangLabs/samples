@@ -13,8 +13,5 @@ RUN npm ci
 # Copy the rest of the application source code
 COPY . .
 
-# Expose the port the app runs on
-EXPOSE 3000
-
 # Define the command to run the application
 CMD ["node", "index.mjs"]
