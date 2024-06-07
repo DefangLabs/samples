@@ -12,9 +12,8 @@ const myWorker = new Worker(process.env.QUEUE, async (job) => {
     console.log('@@ job id: ', job.id);
 }, { connection });
 
-import http from 'http';
 
-// healthcheck endpoint
+import http from 'http';
 const server = http.createServer((req, res) => {
     if (connection.status === 'ready') {
         res.writeHead(200);
