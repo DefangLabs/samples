@@ -1,0 +1,39 @@
+version: '3.9'
+name: bullmq-bullboard-redis
+
+services:
+  board:
+    extends:
+      file: compose.yaml
+      service: board
+    environment:
+      - BOARD_PASSWORD=password
+      - QUEUE=testqueue
+
+  api:
+    extends:
+      file: compose.yaml
+      service: api
+    volumes:
+      - ./api:/app
+      - /app/node_modules
+    environment:
+      - QUEUE=testqueue
+    command: npx nodemon index.mjs
+
+  worker:
+    extends:
+      file: compose.yaml
+      service: worker
+    volumes:
+      - ./worker:/app
+      - /app/node_modules
+    environment:
+      - QUEUE=testqueue
+    command: npx nodemon index.mjs
+
+  redis:
+    extends:
+      file: compose.yaml
+      service: redis
+    

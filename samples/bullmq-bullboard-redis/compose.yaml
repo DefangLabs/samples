@@ -1,34 +1,49 @@
 version: '3.9'
-name: bullmq-bullboard-redis
+name: bullmq
 
 services:
-  bullmq-bullboard:
+  board:
     build:
-      context: ./bullmq-bullboard
+      context: ./board
       dockerfile: Dockerfile
     ports:
       - mode: ingress
         target: 3000
         published: 3000
     environment:
-      - REDIS=redis://bullmq-bullboard-redis:6379
+      - REDIS=redis://redis:6379
+      - BOARD_PASSWORD
+      - QUEUE
     depends_on:
-      - bullmq-bullboard-redis
+      - redis
 
-  bullmq-api:
+  api:
     build:
-      context: ./bullmq-api
+      context: ./api
       dockerfile: Dockerfile
     ports:
       - mode: ingress
         target: 3001
         published: 3001
     environment:
-      - REDIS=redis://bullmq-bullboard-redis:6379
+      - REDIS=redis://redis:6379
+      - QUEUE
     depends_on:
-      - bullmq-bullboard-redis
+      - redis
 
-  bullmq-bullboard-redis:
+  worker:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile
+    environment:
+      - REDIS=redis://redis:6379
+      - QUEUE
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "127.0.0.1:3000"]
+    depends_on:
+      - redis
+
+  redis:
     image: redis:6.2
     x-defang-redis: true
     restart: unless-stopped

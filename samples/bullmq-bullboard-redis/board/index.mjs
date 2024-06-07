@@ -7,34 +7,31 @@ import { ExpressAdapter } from '@bull-board/express';
 import basicAuth from 'express-basic-auth';
 
 // BULL QUEUES
-
 const connectionString = process.env.REDIS;
 const connection = new IORedis(connectionString, {
     maxRetriesPerRequest: null
   });
 
-const myQueue = new Queue('myqueue', { connection });
-const myWorker = new Worker('myqueue', async (job) => {
-    console.log(job);
-}, { connection });
+const myQueue = new Queue(process.env.QUEUE, { connection });
 
 // BULL BOARD
 const serverAdapter = new ExpressAdapter();
 serverAdapter.setBasePath('/admin/queues');
 
-const { addQueue, removeQueue, setQueues, replaceQueues } = createBullBoard({
+const board = createBullBoard({
     queues: [new BullMQAdapter(myQueue)],
     serverAdapter: serverAdapter,
 });
 
 const app = express();
 
+// For health check
 app.get('/', async (req, res) => {
-    res.send('All good');
+    res.send('All good. Head to /board to see the dashboard.');
 });
 
-app.use('/admin/queues', basicAuth({
-    users: { 'admin': 'password' }, // replace with your username and password
+app.use('/board', basicAuth({
+    users: { 'admin': process.env.BOARD_PASSWORD }, // replace with your username and password
     challenge: true
 }), serverAdapter.getRouter());
 
