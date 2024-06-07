@@ -32,6 +32,8 @@ services:
       - redis
 
   worker:
+    deploy:
+      replicas: 2
     build:
       context: ./worker
       dockerfile: Dockerfile

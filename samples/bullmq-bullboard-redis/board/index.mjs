@@ -16,7 +16,7 @@ const myQueue = new Queue(process.env.QUEUE, { connection });
 
 // BULL BOARD
 const serverAdapter = new ExpressAdapter();
-serverAdapter.setBasePath('/admin/queues');
+serverAdapter.setBasePath('/board');
 
 const board = createBullBoard({
     queues: [new BullMQAdapter(myQueue)],
