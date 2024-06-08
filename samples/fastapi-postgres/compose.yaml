@@ -1,4 +1,3 @@
-version: '3.9'
 name: fastapi-postgres
 services:
   fastapi:
