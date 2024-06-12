@@ -61,7 +61,7 @@ module.exports = async ({ github, context, core }) => {
         throw new Error(`exec error: ${err}`);
     }
 
-    const repos = await getAllReposForOrg('DefangLabs');
+    const repos = await getAllReposForOrg('DefangSamples');
     const repoNames = repos.map(r => r.name);
     console.log('@@ repos: ', repoNames);
 
@@ -71,7 +71,7 @@ module.exports = async ({ github, context, core }) => {
     for (const sample of modifiedSamples) {
         const templateRepoName = `sample-${sample}-template`;
 
-        const authedRemote = `https://x-access-token:${process.env.PUSH_TOKEN}@github.com/DefangLabs/${templateRepoName}.git`
+        const authedRemote = `https://x-access-token:${process.env.PUSH_TOKEN}@github.com/DefangSamples/${templateRepoName}.git`
         const splitBranch = sample;
 
         const isNew = !repoNames.includes(templateRepoName);
@@ -90,7 +90,7 @@ module.exports = async ({ github, context, core }) => {
             console.log(`Creating template repo: ${templateRepoName}`);
             await github.rest.repos.createInOrg({
                 name: templateRepoName,
-                org: 'DefangLabs',
+                org: 'DefangSamples',
                 private: false,
                 is_template: true,
             });
