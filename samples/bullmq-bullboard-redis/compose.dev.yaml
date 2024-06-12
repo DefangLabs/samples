@@ -1,6 +1,3 @@
-version: '3.9'
-name: bullmq
-
 services:
   board:
     extends:
