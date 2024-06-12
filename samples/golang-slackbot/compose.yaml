@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 version: "3.9"
+=======
+>>>>>>> origin/main
 name: slack-invite-bot
 services:
   bot:
