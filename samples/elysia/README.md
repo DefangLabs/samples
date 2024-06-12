@@ -20,7 +20,7 @@ A basic [Elysia](https://elysiajs.com/) app running on [Bun](https://bun.sh/) wi
 
 ---
 
-Title: Elysia & Bun & Defang
+Title: Elysia & Bun
 
 Short Description: A basic Elysia app running on Bun with Defang.
 
