@@ -2,9 +2,11 @@
 
 This sample project demonstrates how to deploy a BullMQ message queue on top of managed Redis with a queue processor and a dashboard to monitor the queue.
 
-Once your app is up and running you can go to the `/admin/queues` route for the `bullmq-bullboard` service to see the BullBoard dashboard and use the username `admin` and the password you set in step 2 to log in.
+Once your app is up and running you can go to the `/board` route for the `board` service to see the Bull Board dashboard and use the username `admin` and the password you set to log in (see [Deploying](#deploying)).
 
-To add a job to the queue, you can go to the `/add` route of the `bullmq-api` service.
+To add a job to the queue, you can go to the `/add` route of the `api` service. This will use some default values so you can test things out. You can also see an example of a post request in the [sample http request](./api/add.test.http) file.
+
+The `worker` service is the queue processor that will process the jobs added to the queue. You can see in the `compose.yaml` file that the `worker` service is set to scale to 2 instances. This means that there will be 2 workers processing jobs from the queue. You can set this to your desired number of workers, but we wanted to show how you can increase the number of workers to handle more jobs.
 
 
 ## Prerequisites
