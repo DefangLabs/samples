@@ -4,7 +4,6 @@ In this example, we run a Remix application connected to a Postgres database usi
 
 ## Running Locally
 
-
 To run this example locally, you'll need to have a Postgres database. You can run one locally with Docker:
 
 ```
@@ -18,7 +17,6 @@ DATABASE_URL="postgresql://postgres:password@localhost:5432/postgres?schema=publ
 ```
 
 Then run `npm install` and `npm run dev` in the `remix` directory to start the application.
-
 
 ## Deploying to Defang
 
@@ -41,7 +39,7 @@ Now, run `pulumi up` to deploy your application to Defang and Aiven! Head to the
 
 ---
 
-Title: Full Stack Defang + Pulumi Example w/ Remix and Postgres
+Title: Full Stack Defang & Pulumi Example w/ Remix & Postgres
 
 Short Description: A full stack example using Remix, Prisma, and Aiven
 
