@@ -1,4 +1,3 @@
-version: '3.9'
 services:
   db:
     image: postgres:15
@@ -18,16 +17,16 @@ services:
       dockerfile: Dockerfile
       args:
         - REACT_APP_API_URL=http://localhost:3010
-    ports: 
+    ports:
       - mode: ingress
         target: 3000
         published: 3000
-    volumes: 
+    volumes:
       - "./client:/code"
       - /code/node_modules
     depends_on:
       - server
-      
+
   server:
     restart: unless-stopped
     build:
