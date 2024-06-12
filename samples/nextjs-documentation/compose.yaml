@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 version: "3.9"
+=======
+>>>>>>> origin/main
 name: documentstarter
 services:
   documentstarter:

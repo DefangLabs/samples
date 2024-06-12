@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 version: "3.9"
 
+=======
+>>>>>>> origin/main
 services:
   minimal:
     restart: unless-stopped

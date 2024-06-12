@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 version: "3.9"
+=======
+>>>>>>> origin/main
 services:
   service1:
     restart: unless-stopped

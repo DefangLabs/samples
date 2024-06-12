@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 version: "3.9"
+=======
+>>>>>>> origin/main
 services:
   db:
     image: postgres:14
@@ -21,7 +24,11 @@ services:
       retries: 5
       start_period: 30s
   django-crm:
+<<<<<<< HEAD
     build: ./app
+=======
+    build: .
+>>>>>>> origin/main
     ports:
       - mode: ingress
         target: 8000

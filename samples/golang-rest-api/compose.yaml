@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 version: "3.9"
+=======
+>>>>>>> origin/main
 services:
   app:
     restart: unless-stopped
