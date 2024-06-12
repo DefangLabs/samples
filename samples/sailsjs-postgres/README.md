@@ -23,13 +23,14 @@ Sailsjs with Defang and connect it to a Postgres database. Furthermore, we emons
 For development, we use a Postgres container. The Postgres container is defined in the `compose.dev.yaml` file. The Neon postgres container is defined in the `compose.yaml` file, with some overrides in the `compose.dev.yaml` file so it correctly connects to the development database container. To start your own, please have the env variables, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, and `SESSION_SECRET` ready.
 
 To start the development environment, run:
+
 ```
 docker compose -f compose.dev.yaml up --build
 ```
 
 ---
 
-Title: Postgres + sailsjs
+Title: Sailsjs & Postgres
 
 Short Description: A sample project demonstrating how to deploy a project with Postgres + Sailsjs
 

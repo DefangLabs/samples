@@ -33,7 +33,7 @@ For development, we use two local containers, one for the frontend Angular servi
 
 ---
 
-Title: Angular + Node.js
+Title: Angular & Node.js
 
 Short Description: A full-stack application using Angular for the frontend and Node.js with Socket.IO for the backend, containerized with Docker.
 
