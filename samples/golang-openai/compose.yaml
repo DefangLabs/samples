@@ -1,6 +1,6 @@
 cdoversion: "3.9"
 services:
-  golang-openai-:
+  app:
     restart: unless-stopped
     build:
       context: ./app
