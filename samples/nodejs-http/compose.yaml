@@ -1,5 +1,5 @@
 services:
-  minimal:
+  app:
     restart: unless-stopped
     build:
       context: ./app
