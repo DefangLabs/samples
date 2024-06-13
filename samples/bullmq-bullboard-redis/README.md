@@ -10,10 +10,12 @@ The `worker` service is the queue processor that will process the jobs added to 
 
 
 ## Prerequisites
+
 1. Download <a href="https://github.com/defang-io/defang">Defang CLI</a>
 2. (optional) If you are using <a href="https://docs.defang.io/docs/concepts/defang-byoc">Defang BYOC</a>, make sure you have properly <a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html">authenticated your AWS account</a>.
 
 ## Deploying
+
 1. Open the terminal and type `defang login`
 2. Run `defang config set BOARD_PASSWORD` to set the password for the BullBoard dashboard.
 3. Type `defang compose up` in the CLI.
@@ -21,6 +23,7 @@ The `worker` service is the queue processor that will process the jobs added to 
 
 
 ## Local Development
+
 1. Run `docker compose -f compose.dev.yaml up`
 
 ---
