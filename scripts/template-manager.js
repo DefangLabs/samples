@@ -54,14 +54,15 @@ module.exports = async ({ github, context, core }) => {
         execSync(`git config --global user.email 'actions@github.com'`);
         execSync(`git config --unset-all http.https://github.com/.extraheader`);
 
-        // this is a branch we'll use as our starting point from 
+        // this is a branch we'll use as our starting point from
         // which we'll split subtrees
         execSync(`git checkout -b ${workRef}`);
     } catch (err) {
         throw new Error(`exec error: ${err}`);
     }
 
-    const repos = await getAllReposForOrg('DefangSamples');
+    const templateOrg = 'DefangSamples';
+    const repos = await getAllReposForOrg(templateOrg);
     const repoNames = repos.map(r => r.name);
     console.log('@@ repos: ', repoNames);
 
@@ -71,7 +72,7 @@ module.exports = async ({ github, context, core }) => {
     for (const sample of modifiedSamples) {
         const templateRepoName = `sample-${sample}-template`;
 
-        const authedRemote = `https://x-access-token:${process.env.PUSH_TOKEN}@github.com/DefangSamples/${templateRepoName}.git`
+        const authedRemote = `https://x-access-token:${process.env.PUSH_TOKEN}@github.com/${templateOrg}/${templateRepoName}.git`
         const splitBranch = sample;
 
         const isNew = !repoNames.includes(templateRepoName);
@@ -90,7 +91,7 @@ module.exports = async ({ github, context, core }) => {
             console.log(`Creating template repo: ${templateRepoName}`);
             await github.rest.repos.createInOrg({
                 name: templateRepoName,
-                org: 'DefangSamples',
+                org: templateOrg,
                 private: false,
                 is_template: true,
             });
