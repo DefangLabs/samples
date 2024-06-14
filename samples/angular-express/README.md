@@ -1,4 +1,4 @@
-# Angular + Node.js
+# Angular & Node.js
 
 This project demonstrates both client-side component rendering and hydration with Angular, as well as server-side rendering with Node.js and Socket.IO for real-time communication. It also includes Docker configurations for easy deployment.
 
