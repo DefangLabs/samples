@@ -1,4 +1,4 @@
-# Elysia × Bun × Defang
+# Elysia & Bun
 
 A basic [Elysia](https://elysiajs.com/) app running on [Bun](https://bun.sh/) with a Dockerfile and compose.yaml ready to deploy to AWS with [Defang](https://defang.io).
 

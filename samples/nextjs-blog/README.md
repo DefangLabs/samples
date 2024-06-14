@@ -1,4 +1,4 @@
-# Next.js Blog Starter
+# Next.js Blog
 
 This template is a starter project developed using Next.js designed to make it easy to launch a blog. It offers an excellent starting point to help you publish your content by simply modifying the MDX files included in `_posts` directory. We have prepared all the necessary files for deployment. By spending just a few minutes setting up the environment, as detailed in the prerequisites, and executing the commands in our step-by-step guide, your website will be ready to go live in no time!
 

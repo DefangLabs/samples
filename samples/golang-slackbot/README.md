@@ -1,4 +1,4 @@
-# Slackbot
+# Go & Slack API
 
 This is a simple slackbot that takes a request and posts the message from the body to a slack channel.
 
@@ -51,7 +51,7 @@ curl 'https://raphaeltm-bot--8080.prod1.defang.dev/' \
 
 ---
 
-Title: Go & Slackbot
+Title: Go & Slack API
 
 Short Description: A simple Slackbot that posts messages to a Slack channel
 

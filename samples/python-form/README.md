@@ -1,4 +1,4 @@
-# Simple Form Submission Flask App
+# Flask & Form Submission
 
 This Flask application provides a basic example of handling form submissions. It displays an HTML form where users can input their first name. Upon submission, the application greets the user by name on a new page. Note that alognside your .py file, include a requirements.txt so that the Dockerfile can install the necessary packages with pip.
 

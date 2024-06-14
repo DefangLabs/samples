@@ -1,4 +1,4 @@
-# Go MongoDB Atlas sample
+# Go & MongoDB Atlas
 
 ## Overview
 

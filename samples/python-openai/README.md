@@ -1,4 +1,4 @@
-# Python OpenAI
+# Python & Flask & OpenAI
 
 ## Setup
 

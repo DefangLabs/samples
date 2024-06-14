@@ -1,4 +1,4 @@
-# Fetch and Return JSON
+# Python & REST API
 
 This Flask application fetches average interest rates from the Fiscal Data Treasury API. It provides endpoints to check the status of the API and to retrieve the latest average interest rates. Note that alognside your .py file, include a requirements.txt so that the Dockerfile can install the necessary packages with pip.
 
@@ -25,7 +25,7 @@ Endpoint to fetch average interest rates from the Fiscal Data Treasury API.
 
 ---
 
-Title: Python Fetch and Return JSON
+Title: Python & REST API
 
 Short Description: A Flask application that fetches average interest rates from the Fiscal Data Treasury API
 

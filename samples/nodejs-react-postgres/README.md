@@ -1,4 +1,4 @@
-# About this project
+# React & Node.js & PostgreSQL
 
 This sample project demonstrates how to deploy a full-stack application using React for the frontend, Node.js for the backend, and PostgreSQL for the database. The project uses Docker to containerize the services, making it easy to run in both development and production environments.
 
