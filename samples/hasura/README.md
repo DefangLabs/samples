@@ -31,7 +31,7 @@ If you want to edit the database, permissions, or any other Hasura settings such
 
 ---
 
-Title: GraphQL API with Hasura & Postgres
+Title: Hasura & Postgres
 
 Short Description: A sample project demonstrating how to deploy Hasura with Defang and connect it to a Postgres database
 
