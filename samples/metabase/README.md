@@ -1,4 +1,4 @@
-# Metabase + Postgres
+# Metabase & Postgres
 
 Metabase is a simple and powerful analytics tool which lets anyone learn and make decisions from their company’s data. This sample demonstrates how to deploy Metabase with Defang. In development, we run a postgres container and in production, we use a managed postgres service. To build the sample, we used Neon, because of their simplicity and generous free tier.
 

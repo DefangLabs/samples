@@ -1,4 +1,4 @@
-# GraphQL API with Hasura + Postgres
+# Hasura & Postgres
 
 This sample project demonstrates how to deploy Hasura with Defang and connect it to a Postgres database. We also demonstrate how to run a Postgres container during development and how to switch over to a managed postgres service like RDS, Neon, or others in production. If you want to get a compatible database ready to go really quickly for free, [Neon](https://neon.tech/) is a quick and easy way to go. The sample populates the database with some sample data so you can quickly start playing with the Hasura console. It sets wide open permissions on the tables as well so you can start querying or mutating the data right away.
 

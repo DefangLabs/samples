@@ -1,4 +1,4 @@
-# Sveltekit + MongoDB
+# Sveltekit & MongoDB
 
 This is a project that demonstrate both client side component rendering and hydration as well as serverside rendering with external API route configuration. Furthermore, there is also a mongodb connection (not hosted on the atlas) to cache the queried results.
 

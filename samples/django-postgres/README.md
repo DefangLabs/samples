@@ -1,4 +1,4 @@
-# Django + Postgres
+# Django & Postgres
 
 This template is a customer relationship management list project developed using Python Django framework, offering a starting point to help you quickly build your customer management system. We use PostgreSQL as the database. We have prepared all the essential files for deployment. By spending less than 10 minutes setting up the environment, as detailed in the prerequisites, and executing the commands in our step-by-step guide, your website will be ready to go live to the world!
 
