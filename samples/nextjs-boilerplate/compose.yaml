@@ -1,7 +1,6 @@
-version: "3.9"
 name: nextjs-boilerplate
 services:
-  service1:
+  app:
     build:
       context: ./app
       dockerfile: Dockerfile
