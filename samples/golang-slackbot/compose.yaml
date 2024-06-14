@@ -1,4 +1,3 @@
-version: "3.9"
 name: slack-invite-bot
 services:
   bot:

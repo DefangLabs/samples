@@ -1,4 +1,3 @@
-cdoversion: "3.9"
 services:
   app:
     restart: unless-stopped
