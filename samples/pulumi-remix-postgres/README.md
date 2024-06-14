@@ -1,4 +1,4 @@
-# Defang & Pulumi
+# Pulumi & Remix & Postgres
 
 In this example, we run a Remix application connected to a Postgres database using Prisma as an ORM. When we deploy our service to [Defang](https://defang.io/), we also deploy a Postgres service and database using [Aiven](https://aiven.io/) so we can run our full application in the cloud.
 
@@ -39,7 +39,7 @@ Now, run `pulumi up` to deploy your application to Defang and Aiven! Head to the
 
 ---
 
-Title: Full Stack Defang & Pulumi Example w/ Remix & Postgres
+Title: Pulumi & Remix & Postgres
 
 Short Description: A full stack example using Remix, Prisma, and Aiven
 
