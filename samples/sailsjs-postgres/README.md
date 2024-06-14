@@ -1,4 +1,4 @@
-# Sailsjs + Postgres
+# Sailsjs & Postgres
 
 This sample project demonstrates how to deploy
 
