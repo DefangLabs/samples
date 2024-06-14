@@ -1,8 +1,7 @@
-name: slack-invite-bot
 services:
   bot:
     build:
-      context: .
+      context: ./app
       dockerfile: Dockerfile
     ports:
       - mode: ingress

@@ -1,4 +1,4 @@
-# Angular + Node.js
+# Angular & Node.js
 
 This project demonstrates both client-side component rendering and hydration with Angular, as well as server-side rendering with Node.js and Socket.IO for real-time communication. It also includes Docker configurations for easy deployment.
 
@@ -33,7 +33,7 @@ For development, we use two local containers, one for the frontend Angular servi
 
 ---
 
-Title: Angular + Node.js
+Title: Angular & Node.js
 
 Short Description: A full-stack application using Angular for the frontend and Node.js with Socket.IO for the backend, containerized with Docker.
 
