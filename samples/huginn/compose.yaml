@@ -1,4 +1,3 @@
-name: huginn
 services:
   huginn:
     image: ghcr.io/huginn/huginn
