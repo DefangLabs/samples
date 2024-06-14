@@ -1,4 +1,4 @@
-# Node.js OpenAI Sample
+# Node.js & OpenAI
 
 ## Setup
 

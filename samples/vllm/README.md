@@ -1,4 +1,4 @@
-# Deploying Mistral with vLLM
+# Mistral & vLLM
 
 This guide demonstrates how to deploy Mistral using VLM. You'll need a Hugging Face token to begin.
 
@@ -41,7 +41,7 @@ By following these steps, you should be able to deploy Mistral along with a cust
 
 ---
 
-Title: Mistral with vLLM
+Title: Mistral & vLLM
 
 Short Description: Deploy Mistral with a custom UI using VLM
 

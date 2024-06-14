@@ -1,4 +1,4 @@
-# Next.js × Defang
+# Next.js
 
 A basic Next.js app with a Dockerfile and compose.yaml ready to deploy to AWS with [Defang](https://defang.io).
 

@@ -1,4 +1,4 @@
-# Go Simple Form Submission App
+# Go HTTP Form
 
 This Go application demonstrates a simple form submission using the standard net/http library. Users can input their first name into a form, and upon submission, they will be greeted personally by the application.
 

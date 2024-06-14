@@ -1,4 +1,4 @@
-## Setup
+# Python & Flask & AWS S3
 
 This sample requires an API key to access AWS S3. The name of the config values is referenced in the compose.yaml file.
 To provide a value for it, you can use the Defang CLI like this:

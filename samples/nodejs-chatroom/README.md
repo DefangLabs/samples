@@ -1,4 +1,4 @@
-# Node.js Chatroom App
+# Node.js & SocketIO
 
 This is a minimal chat application that shows how to use Socket.IO with Node.js with minimal code deployed with Defang.
 
