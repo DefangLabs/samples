@@ -2,7 +2,7 @@ services:
   app:
     restart: unless-stopped
     build:
-      context: .
+      context: ./app
       dockerfile: Dockerfile
     ports:
       - mode: ingress

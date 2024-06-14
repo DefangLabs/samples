@@ -1,4 +1,4 @@
-# Minimal Node.js example
+# Node.js HTTP Server
 
 This example shows how to build a minimal Node.js application using the [Node.js](https://nodejs.org/) runtime.
 

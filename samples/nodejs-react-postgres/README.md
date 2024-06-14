@@ -1,4 +1,5 @@
-# About this project
+# React & Node.js & PostgreSQL
+
 This sample project demonstrates how to deploy a full-stack application using React for the frontend, Node.js for the backend, and PostgreSQL for the database. The project uses Docker to containerize the services, making it easy to run in both development and production environments.
 
 In this sample, we have set up the essential files you need to deploy in production using [Neon](https://neon.tech/) to host your database. We use a connection string to connect Neon to your code. By replacing the pre-configured connection string at .env and at the compose file to yours, you will be ready to deploy this sample with Neon.
@@ -14,6 +15,7 @@ In this sample, we have set up the essential files you need to deploy in product
 To start the development environment, run `docker compose -f ./compose.yaml -f ./compose.dev.yaml up`. This will start the Postgres container, the React container, and the NodeJS container. The development container (compose.dev.yaml) will override the production container (compose.yaml).
 
 Or run without using Docker by doing the following:
+
 1. run npm install to install the nodejs dependencies in both the `client` directory and the `server` directory
 2. create or modify the .env file in both the `client` directory and the `server` directory with localhost, or create a .env.local to override the .env file.
 3. run npm start
@@ -28,7 +30,7 @@ Or run without using Docker by doing the following:
 
 ---
 
-Title: React, Node.js, and PostgreSQL
+Title: React & Node.js & PostgreSQL
 
 Short Description: A full-stack to-do list application
 
