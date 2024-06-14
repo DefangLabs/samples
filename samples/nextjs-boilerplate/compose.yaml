@@ -1,4 +1,3 @@
-name: nextjs-boilerplate
 services:
   app:
     build:

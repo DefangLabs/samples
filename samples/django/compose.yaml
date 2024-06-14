@@ -1,4 +1,3 @@
-name: defang-django
 services:
   django:
     build:
