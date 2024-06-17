@@ -4,11 +4,11 @@
  */
 import { DefangService } from "@defang-io/pulumi-defang/lib";
 
-const service1 = new DefangService("service1", {
+const nodejs = new DefangService("nodejs", {
   build: {
-    context: "../nodejs-http",
+    context: "./app",
   },
   ports: [{ mode: "ingress", target: 3000  }],
 });
 
-export const fqdn = service1.fqdn;
+export const fqdn = nodejs.fqdn;
