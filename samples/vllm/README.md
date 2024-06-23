@@ -1,6 +1,6 @@
 # Mistral & vLLM
 
-This guide demonstrates how to deploy Mistral using VLM. You'll need a Hugging Face token to begin.
+This guide demonstrates how to deploy Mistral using vLLM. You'll need a Hugging Face token to begin.
 
 ## Prerequisites
 
@@ -43,8 +43,8 @@ By following these steps, you should be able to deploy Mistral along with a cust
 
 Title: Mistral & vLLM
 
-Short Description: Deploy Mistral with a custom UI using VLM
+Short Description: Deploy Mistral with a custom UI using vLLM
 
-Tags: mistral, vllm, ai, nextjs
+Tags: mistral, vllm, ai, nextjs, gpu
 
 Languages: nodejs, typescript
