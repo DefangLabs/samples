@@ -8,7 +8,7 @@ services:
         target: 3000
         published: 3000
     environment:
-      - REDIS=redis://redis:6379
+      - REDIS=redis://redisx.lio.ecs.internal:6379
       - BOARD_PASSWORD
       - QUEUE
     depends_on:
@@ -23,7 +23,7 @@ services:
         target: 3001
         published: 3001
     environment:
-      - REDIS=redis://redis:6379
+      - REDIS=redis://redisx.lio.ecs.internal:6379
       - QUEUE
     depends_on:
       - redis
@@ -35,18 +35,17 @@ services:
       context: ./worker
       dockerfile: Dockerfile
     environment:
-      - REDIS=redis://redis:6379
+      - REDIS=redis://redisx.lio.ecs.internal:6379
       - QUEUE
     healthcheck:
       test: ["CMD", "wget", "-q", "--spider", "127.0.0.1:3000"]
     depends_on:
       - redis
 
-  redis:
+  redisx:
     image: redis:6.2
     x-defang-redis: true
     restart: unless-stopped
     ports:
       - mode: host
         target: 6379
-    
