@@ -1,8 +1,7 @@
-name: teamlist
 services:
   rails:
     build:
-      context: .
+      context: ./app
       dockerfile: Dockerfile
     environment:
       SECRET_KEY_BASE: example # set your own key here.

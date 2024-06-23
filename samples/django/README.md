@@ -11,16 +11,19 @@ The app includes a management command which is run on startup to create a superu
 The Dockerfile and compose files are already set up for you and are ready to be deployed. Serving is done using [Gunicorn](https://gunicorn.org/) and uses [WhiteNoise](https://whitenoise.readthedocs.io/en/latest/) for static files. The `CSRF_TRUSTED_ORIGINS` setting is configured to allow the app to run on a `defang.dev` subdomain.
 
 ## Essential Setup Files
+
 1. A [Dockerfile](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) to describe the basic image of your applications.
 2. A [docker-compose file](https://docs.defang.io/docs/concepts/compose) to define and run multi-container Docker applications.
 3. A [.dockerignore](https://docs.docker.com/build/building/context/#dockerignore-files) file to comply with the size limit (10MB).
 
 ## Prerequisite
+
 1. Download [Defang CLI](https://github.com/DefangLabs/defang)
 2. If you are using [Defang BYOC](https://docs.defang.io/docs/concepts/defang-byoc), make sure you have properly [authenticated your AWS account](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)
-Plus, make sure that you have properly set your environment variables like `AWS_PROFILE`, `AWS_REGION`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`.
+   Plus, make sure that you have properly set your environment variables like `AWS_PROFILE`, `AWS_REGION`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`.
 
 ## A Step-by-Step Guide
+
 1. (optional) If you are using Defang BYOC, make sure to update the `CSRF_TRUSTED_ORIGINS` setting in the `settings.py` file to include an appropriate domain.
 2. Open the terminal and type `defang login`
 3. Type `defang compose up` in the CLI
@@ -30,7 +33,7 @@ Plus, make sure that you have properly set your environment variables like `AWS_
 
 Title: Django
 
-Short Description: A simple Django app that uses SQLite as the database 
+Short Description: A simple Django app that uses SQLite as the database
 
 Tags: django, sqlite
 

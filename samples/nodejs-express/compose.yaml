@@ -1,8 +1,8 @@
 services:
-  service1:
+  app:
     restart: unless-stopped
     build:
-      context: .
+      context: ./app
     ports:
       - mode: ingress
         target: 3000

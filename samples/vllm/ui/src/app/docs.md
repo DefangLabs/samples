@@ -169,7 +169,7 @@ You can find the latest version of the Defang CLI on the [releases page](https:/
 - This message is displayed when you run `defang compose up` and the Compose file declares a `port` that does not specify a port `mode`. By default, Defang will keep the port private. If you want to expose the port to the public internet, you should specify the `mode` as `ingress`:
 ```
 services:
-  service1:
+  app:
     ports:
       - target: 80
         mode: ingress
@@ -188,7 +188,7 @@ services:
 - This message is displayed when you run `defang compose up` and the Compose file declares a `resource` with `limits` but no `reservations`. Defang will use the `limits` as `reservations` to ensure the container has enough resources. Specify `reservations` if you want to silence the warning or reserve a different amount of resources:
 ```
 services:
-  service1:
+  app:
     deploy:
       resources:
         reservations:
@@ -200,7 +200,7 @@ services:
 - This message is displayed when you run `defang compose up` and the Compose file declares an `ingress` with a `port` but no `healthcheck`. Defang will assume the default healthcheck of `GET / HTTP/1.1` to ensure the port is healthy. Specify a `healthcheck` if you want to silence the warning or use a different healthcheck:
 ```
 services:
-  service1:
+  app:
     deploy:
       healthcheck:
         test: ["CMD", "curl", "-f", "http://localhost:80/health"]
@@ -210,7 +210,7 @@ services:
 - This message is displayed when you run `defang compose up` and the Compose file doesn't specify a `memory` reservation. If available, Defang will use the `memory` limit as the `memory` reservation. Specify a `memory` reservation if you want to silence the warning or reserve a different amount of memory:
 ```
 services:
-  service1:
+  app:
     deploy:
       resources:
         reservations:

@@ -1,8 +1,7 @@
-name: documentstarter
 services:
   documentstarter:
     build:
-      context: .
+      context: ./app
       dockerfile: Dockerfile
     ports:
       - mode: ingress
