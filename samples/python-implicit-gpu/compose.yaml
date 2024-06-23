@@ -1,0 +1,18 @@
+services:
+  app:
+    restart: unless-stopped
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    deploy:
+      resources:
+        reservations:
+          cpus: "1.0"
+          memory: 2048M
+          devices:
+            - capabilities: ["gpu"]
+    ports:
+      - mode: ingress
+        target: 5000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]

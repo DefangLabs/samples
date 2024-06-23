@@ -1,8 +1,7 @@
-name: sveltekit
 services:
   sveltekit:
     build:
-      context: .
+      context: ./app
       dockerfile: Dockerfile
       args:
         MONGODB_URI: "mongodb://mongo:27017/musicdb"

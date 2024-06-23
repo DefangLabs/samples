@@ -1,4 +1,4 @@
-# Svelte, Node.js, and MySQL
+# Svelte & Node.js & MySQL
 
 This sample project demonstrates how to deploy a full-stack application using Svelte for the frontend, Node.js for the backend, and MySQL for the database. The project uses Docker to containerize the services, making it easy to run in both development and production environments.
 
@@ -39,7 +39,7 @@ If you want to edit the database, such that you can deploy them to production, y
 
 ---
 
-Title: Svelte, Node.js, and MySQL
+Title: Svelte & Node.js & MySQL
 
 Short Description: A full-stack application using Svelte for the frontend, Node.js for the backend, and MySQL for the database
 
