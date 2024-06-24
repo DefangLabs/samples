@@ -1,5 +1,6 @@
 services:
   sveltekit:
+    restart: unless-stopped
     build:
       context: ./app
       dockerfile: Dockerfile
@@ -16,6 +17,7 @@ services:
       - mongo
 
   mongo:
+    restart: unless-stopped
     image: mongo:latest
     ports:
       - mode: host

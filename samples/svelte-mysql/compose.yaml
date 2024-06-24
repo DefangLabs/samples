@@ -1,5 +1,6 @@
 services:
   db:
+    restart: unless-stopped
     image: mysql:latest
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: true
@@ -13,8 +14,8 @@ services:
         target: 3306
 
   app:
-    build: ./app
     restart: unless-stopped
+    build: ./app
     environment:
       DATABASE_HOST: db
       DATABASE_USER: admin
