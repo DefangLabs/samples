@@ -1,0 +1,40 @@
+services:
+  board:
+    extends:
+      file: compose.yaml
+      service: board
+    volumes:
+      - ./board:/app
+      - /app/node_modules
+    environment:
+      - BOARD_PASSWORD=password
+      - QUEUE=testqueue
+    command: npx nodemon index.mjs
+
+  api:
+    extends:
+      file: compose.yaml
+      service: api
+    volumes:
+      - ./api:/app
+      - /app/node_modules
+    environment:
+      - QUEUE=testqueue
+    command: npx nodemon index.mjs
+
+  worker:
+    extends:
+      file: compose.yaml
+      service: worker
+    volumes:
+      - ./worker:/app
+      - /app/node_modules
+    environment:
+      - QUEUE=testqueue
+    command: npx nodemon index.mjs
+
+  redis:
+    extends:
+      file: compose.yaml
+      service: redis
+    
