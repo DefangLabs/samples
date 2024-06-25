@@ -24,6 +24,6 @@ Title: Python & Implicit & GPU
 
 Short Description: A Music Recommendation API that provides artist recommendations based on collaborative filtering using the ALS algorithm from the implicit library using a GPU.
 
-Tags: music, recommendation, api, collaborative filtering, implicit library
+Tags: music, recommendation, api, collaborative filtering, implicit library, gpu
 
 Languages: python
