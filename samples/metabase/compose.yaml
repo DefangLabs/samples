@@ -1,5 +1,6 @@
 services:
   metabase:
+    restart: unless-stopped
     image: "metabase/metabase:latest"
     ports:
       - mode: ingress

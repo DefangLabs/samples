@@ -8,7 +8,7 @@ on:
 jobs:
   check_samples:
     runs-on: ubuntu-latest
-    permissions: 
+    permissions:
       contents: write
       pull-requests: write
     steps:
@@ -26,6 +26,11 @@ jobs:
           echo "@@ MODIFIED @@"
           cat modified.txt
 
+      - name: Validate Compose Files with Defang CLI
+        run: |
+          . <(curl -Ls https://s.defang.io/install)
+          cat modified.txt | xargs -n1 defang compose config -C > /dev/null
+
       - name: Add checklist to PR description
         uses: actions/github-script@v5
         with:
@@ -33,13 +38,13 @@ jobs:
             const fs = require('fs');
             const pr_number = context.issue.number;
             const marker = '## Samples Checklist';
-            
+
             // Read the checklist from the file
             let checklist = fs.readFileSync('checklist.txt', 'utf8').trim();
             let error = false;
 
             if(!checklist) {
-              checklist = "✅"
+              checklist = "✅ All good!"
             }
             else {
               error = true;
