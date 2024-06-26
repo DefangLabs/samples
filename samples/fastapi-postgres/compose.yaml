@@ -1,5 +1,6 @@
 services:
   fastapi:
+    restart: unless-stopped
     build:
       context: ./fastapi
       dockerfile: Dockerfile

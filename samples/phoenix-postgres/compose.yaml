@@ -1,5 +1,6 @@
 services:
   phoenix:
+    restart: unless-stopped
     build:
       context: ./server
       dockerfile: Dockerfile

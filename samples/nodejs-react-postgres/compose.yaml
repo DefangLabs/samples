@@ -1,5 +1,6 @@
 services:
   todo_list:
+    restart: unless-stopped
     build:
       context: ./client
       dockerfile: Dockerfile
@@ -16,6 +17,7 @@ services:
     depends_on:
       - server
   server:
+    restart: unless-stopped
     build:
       context: ./server
       dockerfile: Dockerfile
