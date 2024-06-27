@@ -1,5 +1,6 @@
 services:
   documentstarter:
+    restart: unless-stopped
     build:
       context: ./app
       dockerfile: Dockerfile

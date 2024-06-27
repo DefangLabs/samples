@@ -1,5 +1,6 @@
 services:
   board:
+    restart: unless-stopped
     build:
       context: ./board
       dockerfile: Dockerfile
@@ -15,6 +16,7 @@ services:
       - redis
 
   api:
+    restart: unless-stopped
     build:
       context: ./api
       dockerfile: Dockerfile
@@ -29,6 +31,7 @@ services:
       - redis
 
   worker:
+    restart: unless-stopped
     deploy:
       replicas: 2
     build:

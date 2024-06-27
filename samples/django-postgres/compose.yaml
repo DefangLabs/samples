@@ -1,5 +1,6 @@
 services:
   db:
+    restart: unless-stopped
     image: postgres:14
     volumes: ["./tmp/postgres:/var/lib/postgresql/data/"]
     environment:
@@ -18,9 +19,9 @@ services:
       interval: 1m30s
       timeout: 30s
       retries: 5
-      start_period: 30s
   django-crm:
-    build: .
+    restart: unless-stopped
+    build: ./app
     ports:
       - mode: ingress
         target: 8000
