@@ -1,5 +1,6 @@
 services:
   hasura:
+    restart: unless-stopped
     build:
       dockerfile: Dockerfile
       context: ./hasura
