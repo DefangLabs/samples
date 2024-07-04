@@ -9,7 +9,6 @@ services:
     environment:
       DATABASE_URL:
       SESSION_SECRET:
-      DEBUG:
     command: ["sails", "lift", "--prod"]
     networks:
       - app-network
