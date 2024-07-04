@@ -9,6 +9,7 @@ services:
     environment:
       DATABASE_URL: "postgresql://tasklistdb_owner:zPl3KMOmq5jy@ep-autumn-wind-a5fvcs0v.us-east-2.aws.neon.tech/tasklistdb?sslmode=require"
       SESSION_SECRET: "91cc809104bca25c3dd96590124ee598"
+      DEBUG:
     command: ["sails", "lift", "--prod"]
     networks:
       - app-network
