@@ -1,12 +1,12 @@
-version: '3.8'
-
 services:
-  meteor:
-    build: .
-    container_name: meteor
-    environment:
-      - MONGO_URL=mongodb+srv://Chris:Defang12345@atlascluster.oo6gmyw.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster
-      - ROOT_URL=http://your-production-domain.com
-      - PORT=3000
+  app:
+    restart: unless-stopped
+    build:
+      context: ./app
+      dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - mode: ingress
+        target: 8080
+        published: 8080
+    environment:
+      - MONGO_URI=your mongo db URI connection string
