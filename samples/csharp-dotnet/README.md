@@ -1,6 +1,6 @@
 # ASP.NET Core & JavaScript Task Manager
 
-This project demonstrates a simple task manager application using ASP.NET Core for the backend and JavaScript for client-side component rendering. It also includes Docker configurations for easy deployment.
+This project is a simple task manager application using ASP.NET Core for the backend and JavaScript for client-side component rendering. We show case how to deploy it to both defang and docker for both prod and dev environments.
 
 ## NOTE
 
