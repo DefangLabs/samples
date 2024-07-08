@@ -1,5 +1,7 @@
 # Langchain & flask
 
+This sample shows how to deploy a flask app that uses Langchain on to AWS via Defang.
+
 ## Prerequisites
 
 1. Download [Defang CLI](https://github.com/DefangLabs/defang)
