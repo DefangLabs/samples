@@ -3,7 +3,7 @@ version: "3.8"
 services:
   langchain-app:
     build:
-      context: .
+      context: ./app
       dockerfile: Dockerfile
     environment:
       - OPENAI_API_KEY
