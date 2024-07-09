@@ -1,28 +1,28 @@
-version: "3.8"
+version: "3"
 
 services:
   meteor-app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - target: 3000
-        published: 3000
-        protocol: tcp
-        mode: ingress
+      - "3000:3000"
     environment:
-      MONGO_URL: mongodb://mongo:27017/meteor
-      ROOT_URL: http://localhost:3000
-      PORT: 3000
+      - ROOT_URL=http://localhost:3000
+      - MONGO_URL=mongodb://mongo:27017/meteorapp
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: meteor run --allow-superuser
     depends_on:
       - mongo
 
   mongo:
     image: mongo:latest
-    ports:
-      - target: 27017
-        published: 27017
-        protocol: tcp
-        mode: host
     volumes:
       - mongo-data:/data/db
+    ports:
+      - "27017:27017"
+
 volumes:
   mongo-data:

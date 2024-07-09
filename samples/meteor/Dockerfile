@@ -1,38 +1,26 @@
-# Use an official Meteor runtime as a parent image
-FROM geoffreybooth/meteor-base:latest
+# Build stage
+FROM zcloudws/meteor-build:2.11.0 as builder
 
-# Set the working directory
-WORKDIR /app
+USER root
 
-# Install Node.js
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
-    apt-get install -y nodejs
+RUN mkdir -p /build/source && chown zcloud:zcloud -R /build
 
-# Copy only the package.json and package-lock.json first
-COPY package*.json ./
+USER zcloud
 
-# Install Node.js dependencies
-RUN meteor npm install
-RUN meteor npm install --save @babel/runtime
+COPY --chown=zcloud:zcloud . /build/source
 
-# Copy the rest of the application
-COPY . .
+RUN cd /build/source && \
+    meteor npm install && \
+    meteor build --directory ../app-build
 
-# Set METEOR_ALLOW_SUPERUSER to avoid permission issues
-ENV METEOR_ALLOW_SUPERUSER=true
+# Clean image with builded app
+FROM zcloudws/meteor-node-mongodb-runtime:2.11.0
 
-# Build the Meteor app
-RUN meteor build --directory /app/build --server-only
+COPY --from=builder /build/app-build/bundle /home/zcloud/app
 
-# Change to the server bundle directory and install server dependencies
-WORKDIR /app/build/bundle/programs/server
-RUN npm install
+RUN cd /home/zcloud/app/programs/server && npm install
 
-# Change back to the app directory
-WORKDIR /app
+WORKDIR /home/zcloud/app
 
-# Expose the port the app runs on
-EXPOSE 3000
-
-# Define the command to run the app
-CMD ["node", "/app/build/bundle/main.js"]
+# Entrypoint from image
+ENTRYPOINT ["/scripts/startup.sh"]
