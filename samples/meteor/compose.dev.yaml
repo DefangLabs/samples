@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  meteor-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - ROOT_URL=http://localhost:3000
+      - MONGO_URL=mongodb://mongo:27017/meteorapp
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: meteor run --allow-superuser
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:latest
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - "27017:27017"
+
+volumes:
+  mongo-data:
