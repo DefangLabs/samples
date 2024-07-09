@@ -4,7 +4,10 @@ services:
   meteor-app:
     build: .
     ports:
-      - "3000:3000"
+      - target: 3000
+        published: 3000
+        protocol: tcp
+        mode: ingress
     environment:
       - ROOT_URL=http://localhost:3000
       - MONGO_URL=mongodb://mongo:27017/meteorapp
