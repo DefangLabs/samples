@@ -10,6 +10,6 @@ services:
         mode: ingress
     deploy:
       resources:
-        limits:
+        reservations:
           cpus: '0.50'
           memory: 512M

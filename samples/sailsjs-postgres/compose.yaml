@@ -12,6 +12,10 @@ services:
     command: ["sails", "lift", "--prod"]
     networks:
       - app-network
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      memory: 256M
 
 networks:
   app-network:

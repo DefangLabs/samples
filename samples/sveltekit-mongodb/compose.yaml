@@ -15,6 +15,10 @@ services:
       - "3000:3000"
     depends_on:
       - mongo
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      memory: 256M
 
   mongo:
     restart: unless-stopped
@@ -26,6 +30,10 @@ services:
       - mongo-data:/data/db
     environment:
       MONGO_INITDB_DATABASE: musicdb
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      memory: 256M
 
 volumes:
   mongo-data:
