@@ -12,7 +12,7 @@ services:
         published: 4000
     deploy:
       resources:
-        limits:
+        reservations:
           cpus: '0.5'
           memory: 1024M
     environment:

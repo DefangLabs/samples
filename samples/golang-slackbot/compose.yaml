@@ -10,3 +10,7 @@ services:
     environment:
       - SLACK_TOKEN
       - SLACK_CHANNEL_ID
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      memory: 256M
