@@ -1,6 +1,6 @@
 # Langchain & flask
 
-This sample shows how to deploy a flask app that uses Langchain on to AWS via Defang.
+This sample is an endpoint that tells programming jokes and shows how to deploy a flask app that uses Langchain on to AWS via Defang.
 
 ## Prerequisites
 
@@ -31,6 +31,6 @@ Title: Flask & Langchain
 
 Short Description: A sample project demonstrating how to deploy langchain with flask on defang
 
-Tags: Langchain, AI
+Tags: Langchain & AI
 
 Languages: Flask
