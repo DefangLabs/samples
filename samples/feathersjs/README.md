@@ -4,18 +4,18 @@ This sample project demonstrates how to deploy a FeathersJS application on to AW
 
 ## Prerequisites
 
-1. Download [Defang CLI](https://github.com/DefangLabs/defang) (optional, if using Defang for deployment)
+1. Download [Defang CLI](https://github.com/DefangLabs/defang) (for Defang deployment)
 2. (Optional - for local development) [Docker CLI](https://docs.docker.com/engine/install/)
 3. (Optional - for local development) [Node.js](https://nodejs.org/en/download/)
 
 ### Development
 
-For development, we use Docker to containerize the FeathersJS application. The Docker Compose configuration is defined in the `docker-compose.dev.yml` file.
+For development, we use Docker to containerize the FeathersJS application. The Docker Compose configuration is defined in the `compose.dev.yaml` file.
 
 To start the development environment, run:
 
 ```sh
-docker-compose -f compose.dev.yml up --build
+docker-compose -f compose.dev.yaml up --build
 ```
 
 # Deploying
