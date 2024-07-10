@@ -4,7 +4,7 @@ This project is a simple task manager application using ASP.NET Core for the bac
 
 ## NOTE
 
-This sample showcases how you could deploy a full-stack application with ASP.NET Core and JavaScript using Defang. The Docker setup ensures the app can be easily built and deployed.
+This sample showcases how you could deploy a full-stack application with ASP.NET Core and JavaScript using Defang. The Docker setup ensures the app can be easily built and tested during development.
 
 ## Essential Setup Files
 
@@ -36,6 +36,6 @@ Title: ASP.NET Core & JavaScript Task Manager
 
 Short Description: A full-stack application using ASP.NET Core for the backend and JavaScript for the frontend, containerized with Docker.
 
-Tags: aspnetcore, javascript, Docker
+Tags: aspnetcore & javascript & Docker
 
 Languages: csharp, javascript
