@@ -34,7 +34,7 @@ For development, we use two local containers, one for the frontend service and o
 
 Title: ASP.NET Core & JavaScript Task Manager
 
-Short Description: A full-stack application using ASP.NET Core for the backend and JavaScript for the frontend, containerized with Docker.
+Short Description: A task manager using ASP.NET Core for the backend and JavaScript for the frontend, containerized with Docker.
 
 Tags: aspnetcore & javascript & Docker
 
