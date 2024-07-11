@@ -26,6 +26,11 @@ services:
       timeout: 2s
     image: postgres
     restart: always
+    ports:
+      - target: 5432
+        published: 5432
+        protocol: tcp
+        mode: host
     volumes:
       - "db_data:/var/lib/postgresql/data"
 volumes:

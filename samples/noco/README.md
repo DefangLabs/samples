@@ -1,6 +1,6 @@
 # NocoDB
 
-This sample demosntrates how to deploy a Nocodb instance with Defang. It takes you to the Nocodb web page for signups and registration.
+This sample demosntrates how to deploy a Nocodb instance with Defang. It takes you to the Nocodb web page for registration.
 
 ## Prerequisites
 
@@ -16,16 +16,16 @@ This sample demosntrates how to deploy a Nocodb instance with Defang. It takes y
 
 ## Development
 
-For development, we use a local container. This can be seen in the compose.yaml document. To run the sample locally after cloning the respository, you can run on docker by using the following command:
+For development, we use a local container. This can be seen in the compose.yaml document. To run the sample locally after cloning the respository, you can simply run the following command:
 
-1. docker compose -f compose.dev.yaml up --build
+1. `docker compose up --build`
 
 ---
 
-Title: Sailsjs
+Title: NocoDB
 
 Short Description: A User Interface by Nocodb
 
-Tags: Sailsjs
+Tags: NocoDB
 
-Languages: nodejs, javascript
+Languages: NocoDB, Docker
