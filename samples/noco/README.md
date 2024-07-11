@@ -24,7 +24,7 @@ For development, we use a local container. This can be seen in the compose.yaml 
 
 Title: Sailsjs
 
-Short Description: A short hello world application demosntrating how to deploy Sailsjs onto defang.
+Short Description: A User Interface by Nocodb
 
 Tags: Sailsjs
 
