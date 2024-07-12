@@ -15,7 +15,7 @@ For development, we use Docker to containerize the FeathersJS application. The D
 To start the development environment, run:
 
 ```sh
-docker-compose -f compose.dev.yaml up --build
+docker compose -f compose.dev.yaml up --build
 ```
 
 # Deploying
