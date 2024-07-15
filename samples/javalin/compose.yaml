@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  javalin-app:
+    build:
+      context: ./app
+    ports:
+      - target: 7000
+        published: 7000
+        protocol: tcp
+        mode: ingress
