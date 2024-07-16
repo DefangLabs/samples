@@ -27,6 +27,6 @@ Title: Go & OpenAI
 
 Short Description: A simple Go application that interacts with the OpenAI API
 
-Tags: go, openai, chatgpt
+Tags: Go, Openai, Chatgpt
 
 Languages: golang

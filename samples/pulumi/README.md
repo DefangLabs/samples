@@ -38,6 +38,6 @@ Title: Pulumi
 
 Short Description: A basic Pulumi example
 
-Tags: pulumi, nodejs, http, server
+Tags: pulumi, Node.js, http, server
 
-Languages: nodejs, typescript
+Languages: Node.js, typescript

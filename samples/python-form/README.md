@@ -24,6 +24,6 @@ Title: Flask & Form Submission
 
 Short Description: A Flask application that provides a basic example of handling form submissions
 
-Tags: flask, form, python
+Tags: Flask, Form, Python
 
-Languages: python
+Languages: Python

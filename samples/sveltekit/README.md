@@ -25,6 +25,6 @@ Title: Sveltekit
 
 Short Description: A minimal SvelteKit app running on Defang.
 
-Tags: sveltekit, typescript, javascript, svelte, nodejs, frontend
+Tags: Sveltekit, Typescript, Javascript, Svelte, Node.js, Frontend
 
-Languages: nodejs, typescript, javascript
+Languages: Node.js, Typescript, Javascript

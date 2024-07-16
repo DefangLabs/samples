@@ -26,6 +26,6 @@ Title: Next.js Boilerplate
 
 Short Description: A boilerplate project developed using Next.js, offering a starting point to help you quickly build your website
 
-Tags: next.js, react, boilerplate, website
+Tags: Next.js, React, Boilerplate, Website
 
-Languages: nodejs, typescript
+Languages: Nodejs, typescript

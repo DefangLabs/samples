@@ -26,6 +26,6 @@ Title: Sailsjs
 
 Short Description: A short hello world application demosntrating how to deploy Sailsjs onto defang.
 
-Tags: sailsjs
+Tags: Sailsjs
 
-Languages: nodejs, javascript
+Languages: Node.js, Javascript

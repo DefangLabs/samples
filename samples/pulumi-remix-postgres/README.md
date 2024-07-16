@@ -43,6 +43,6 @@ Title: Pulumi & Remix & Postgres
 
 Short Description: A full stack example using Remix, Prisma, and Aiven
 
-Tags: full stack, remix, prisma, aiven, postgres, pulumi
+Tags: full stack, Remix, Prisma, Aiven, PostgreSQL, pulumi
 
-Languages: nodejs, sql, typescript
+Languages: Node.js, sql, typescript

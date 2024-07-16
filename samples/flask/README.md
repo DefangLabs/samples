@@ -29,6 +29,6 @@ Title: Flask
 
 Short Description: A basic Flask todo app.
 
-Tags: flask, python
+Tags: Flask, Python
 
 Languages: python
