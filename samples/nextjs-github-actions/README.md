@@ -15,6 +15,6 @@ Title: Next.js & GitHub Actions
 
 Short Description: A basic Next.js app with a Dockerfile and docker-compose ready to deploy to AWS with Defang with GitHub Actions configured for CI/CD
 
-Tags: next.js, react, docker, github actions
+Tags: Next.js, React, Docker, Github actions
 
-Languages: nodejs, typescript
+Languages: Node.js, typescript

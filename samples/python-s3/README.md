@@ -21,6 +21,6 @@ Title: Python & Flask & AWS S3
 
 Short Description: An app that demonstrates how to upload and download files from AWS S3 using Python and Flask
 
-Tags: python, flask, s3
+Tags: Python, Flask, S3
 
-Languages: python
+Languages: Python

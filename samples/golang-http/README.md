@@ -8,6 +8,6 @@ Title: Go HTTP Server
 
 Short Description: A simple Go application that echoes back the request.
 
-Tags: go, http
+Tags: Go, Http
 
 Languages: golang

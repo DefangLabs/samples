@@ -24,6 +24,6 @@ Title: Node.js & Express
 
 Short Description: A Node.js application that inspects and displays detailed information about incoming HTTP requests
 
-Tags: nodejs, express, http, request, inspector
+Tags: Node.js, Express, Http, Request, Inspector
 
-Languages: nodejs
+Languages: Node.js

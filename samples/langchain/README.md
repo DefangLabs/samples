@@ -31,6 +31,6 @@ Title: Flask & Langchain
 
 Short Description: A sample project demonstrating how to deploy langchain with flask on defang
 
-Tags: langchain , flask , AI
+Tags: Langchain , Flask , AI
 
-Languages: Flask
+Languages: Flask, Python

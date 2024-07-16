@@ -29,6 +29,6 @@ Title: Metabase & Postgres
 
 Short Description: A simple metabase configuration with a Postgres database
 
-Tags: metabase, postgres, analytics, database
+Tags: Metabase, PostgreSQL, Analytics, Database
 
 Languages: sql

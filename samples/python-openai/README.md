@@ -28,6 +28,6 @@ Title: Python & Flask & OpenAI
 
 Short Description: An app that demonstrates how to use the OpenAI API with Python and Flask
 
-Tags: python, flask, openai, ai
+Tags: Python, Flask, OpenAI, AI
 
 Languages: python

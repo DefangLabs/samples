@@ -29,6 +29,6 @@ Title: Flask
 
 Short Description: A Flask application that inspects and returns detailed information about HTTP requests
 
-Tags: flask, http
+Tags: Flask, Http
 
 Languages: python
