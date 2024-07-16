@@ -20,6 +20,6 @@ Title: Node.js HTTP Server
 
 Short Description: A simple Node.js application that creates an HTTP server
 
-Tags: Node.js, Http, Server
+Tags: Node.js, http, Server
 
 Languages: Node.js
