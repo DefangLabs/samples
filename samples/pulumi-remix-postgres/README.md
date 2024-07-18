@@ -45,4 +45,4 @@ Short Description: A full stack example using Remix, Prisma, and Aiven
 
 Tags: full stack, Remix, Prisma, Aiven, PostgreSQL, pulumi
 
-Languages: Node.js, sql, typescript
+Languages: Node.js, SQL, typescript
