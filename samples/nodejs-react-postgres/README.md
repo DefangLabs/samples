@@ -36,4 +36,4 @@ Short Description: A full-stack to-do list application
 
 Tags: React, Node.js, Full-stack, PostgreSQL
 
-Languages: Node.js, javascript, sql
+Languages: Node.js, javascript, SQL
