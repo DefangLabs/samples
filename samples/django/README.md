@@ -35,6 +35,6 @@ Title: Django
 
 Short Description: A simple Django app that uses SQLite as the database
 
-Tags: Django, Sqlite
+Tags: Django, SQLite
 
-Languages: python
+Languages: Python
