@@ -28,4 +28,4 @@ Short Description: A boilerplate project developed using Next.js, offering a sta
 
 Tags: Next.js, React, Boilerplate, Website
 
-Languages: Nodejs, typescript
+Languages: Node.js, typescript

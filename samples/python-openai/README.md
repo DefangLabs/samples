@@ -30,4 +30,4 @@ Short Description: An app that demonstrates how to use the OpenAI API with Pytho
 
 Tags: Python, Flask, OpenAI, AI
 
-Languages: python
+Languages: Python

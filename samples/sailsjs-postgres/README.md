@@ -36,4 +36,4 @@ Short Description: A sample project demonstrating how to deploy a project with P
 
 Tags: PostgreSQL, Sailsjs,
 
-Languages: sql, nodejs
+Languages: SQL, Node.js

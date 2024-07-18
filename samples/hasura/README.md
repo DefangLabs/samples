@@ -37,4 +37,4 @@ Short Description: A sample project demonstrating how to deploy Hasura with Defa
 
 Tags: Hasura, Graphql, PostgreSQL, Database
 
-Languages: sql, graphql
+Languages: SQL, Graphql

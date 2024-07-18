@@ -32,4 +32,4 @@ Short Description: A customer relationship management list project developed usi
 
 Tags: Django, PostgreSQL
 
-Languages: python, sql
+Languages: Python, SQL
