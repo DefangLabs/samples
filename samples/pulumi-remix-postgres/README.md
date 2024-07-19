@@ -39,10 +39,10 @@ Now, run `pulumi up` to deploy your application to Defang and Aiven! Head to the
 
 ---
 
-Title: Pulumi & Remix & Postgres
+Title: Pulumi & Remix & PostgreSQL
 
-Short Description: A full stack example using Remix, Prisma, and Aiven
+Short Description: A full-stack example using Remix, Prisma, and Aiven.
 
-Tags: full stack, Remix, Prisma, Aiven, PostgreSQL, pulumi
+Tags: Full stack, Remix, Prisma, Aiven, PostgreSQL, Pulumi, Node.js
 
-Languages: Node.js, SQL, typescript
+Languages: TypeScript, SQL

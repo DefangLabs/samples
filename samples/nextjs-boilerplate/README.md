@@ -24,8 +24,8 @@ This template is a boilerplate project developed using Next.js, offering a start
 
 Title: Next.js Boilerplate
 
-Short Description: A boilerplate project developed using Next.js, offering a starting point to help you quickly build your website
+Short Description: A boilerplate project developed using Next.js, offering a starting point to help you quickly build your website.
 
-Tags: Next.js, React, Boilerplate, Website
+Tags: Next.js, React, Boilerplate, Website, Node.js
 
-Languages: Node.js, typescript
+Languages: TypeScript

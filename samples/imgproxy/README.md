@@ -22,4 +22,4 @@ Short Description: A fast and secure standalone server for resizing and converti
 
 Tags: Imgproxy, Images, Server
 
-Languages:
+Languages: N/A

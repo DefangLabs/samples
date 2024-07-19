@@ -25,10 +25,10 @@ This Go application demonstrates a simple form submission using the standard net
 
 ---
 
-Title: Go HTTP Form
+Title: Go http Form
 
-Short Description: A simple Go application that demonstrates form submission using the net/http library
+Short Description: A simple Go application that demonstrates form submission using the net/http library.
 
 Tags: Go, http, Form
 
-Languages: golang
+Languages: Go

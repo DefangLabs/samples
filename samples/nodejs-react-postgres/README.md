@@ -32,8 +32,8 @@ Or run without using Docker by doing the following:
 
 Title: React & Node.js & PostgreSQL
 
-Short Description: A full-stack to-do list application
+Short Description: A full-stack to-do list application.
 
 Tags: React, Node.js, Full-stack, PostgreSQL
 
-Languages: Node.js, javascript, SQL
+Languages: JavaScript, SQL

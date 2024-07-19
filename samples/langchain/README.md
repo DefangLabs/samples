@@ -27,10 +27,10 @@ This will start a Docker container wi. th the flask app which will display the r
 
 ---
 
-Title: Flask & Langchain
+Title: Flask & LangChain
 
-Short Description: A sample project demonstrating how to deploy langchain with flask on defang
+Short Description: A sample project demonstrating how to deploy LangChain with Flask on Defang.
 
-Tags: LangChain , Flask , AI
+Tags: LangChain, Flask, AI
 
-Languages: Flask, Python
+Languages: Python

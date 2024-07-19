@@ -34,10 +34,10 @@ For development, we use a local container. This can be seen in the compose.yaml 
 
 ---
 
-Title: Sveltekit & MongoDB
+Title: SvelteKit & MongoDB
 
-Short Description: A full-stack application using Sveltekit for the frontend and MongoDB for the database
+Short Description: A full-stack application using SvelteKit for the frontend and MongoDB for the database.
 
-Tags: Sveltekit, MongoDB, Full-stack
+Tags: SvelteKit, MongoDB, Full-stack, Node.js
 
-Languages: Node.js, JavaScript
+Languages: JavaScript

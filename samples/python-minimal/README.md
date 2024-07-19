@@ -27,8 +27,8 @@ This Flask application is designed to inspect and return detailed information ab
 
 Title: Flask
 
-Short Description: A Flask application that inspects and returns detailed information about HTTP requests
+Short Description: A Flask application that inspects and returns detailed information about http requests.
 
 Tags: Flask, http
 
-Languages: python
+Languages: Python

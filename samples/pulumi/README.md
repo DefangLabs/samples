@@ -40,4 +40,4 @@ Short Description: A basic Pulumi example
 
 Tags: pulumi, Node.js, http, server
 
-Languages: Node.js, typescript
+Languages: Node.js, TypeScript

@@ -33,10 +33,10 @@ docker compose -f compose.yaml -f compose.dev.yaml exec phoenix bash
 
 ---
 
-Title: Phoenix & Postgres
+Title: Phoenix & PostgreSQL
 
 Short Description: A sample Phoenix application that uses a PostgreSQL database.
 
-Tags: Phoenix, Postgres, Database, Elixir
+Tags: Phoenix, PostgreSQL, Database, Elixir
 
-Languages: elixir
+Languages: Elixir

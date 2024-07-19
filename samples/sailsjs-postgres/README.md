@@ -30,10 +30,10 @@ docker compose -f compose.dev.yaml up --build
 
 ---
 
-Title: Sailsjs & Postgres
+Title: Sails.js & PostgreSQL
 
-Short Description: A sample project demonstrating how to deploy a project with Postgres + Sailsjs
+Short Description: A sample project demonstrating how to deploy a project with PostgreSQL and Sails.js.
 
-Tags: PostgreSQL, Sailsjs,
+Tags: PostgreSQL, Sails.js
 
-Languages: SQL, Node.js
+Languages: SQL, JavaScript
