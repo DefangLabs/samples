@@ -45,4 +45,4 @@ Short Description: A full-stack application using Svelte for the frontend, Node.
 
 Tags: Svelte, Node.js, MySQL, Full-stack
 
-Languages: Node.js, Javascript, SQL, typescript
+Languages: Node.js, JavaScript, SQL, typescript

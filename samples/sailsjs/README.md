@@ -28,4 +28,4 @@ Short Description: A short hello world application demosntrating how to deploy S
 
 Tags: Sailsjs
 
-Languages: Node.js, Javascript
+Languages: Node.js, JavaScript

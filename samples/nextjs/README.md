@@ -17,4 +17,4 @@ Short Description: A basic Next.js app.
 
 Tags: Next.js, React, Docker, AWS
 
-Languages: Node.js, typescript
+Languages: Node.js, TypeScript
