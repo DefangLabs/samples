@@ -18,8 +18,8 @@ defang compose up
 
 Title: Node.js & SocketIO
 
-Short Description: A minimal chat application that shows how to use Socket.IO with Node.js
+Short Description: A minimal chat application that shows how to use Socket.IO with Node.js.
 
 Tags: Node.js, Chat, Socket.IO
 
-Languages: Node.js
+Languages: JavaScript

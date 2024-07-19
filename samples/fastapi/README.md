@@ -31,4 +31,4 @@ Short Description: A sample project demonstrating how to deploy FastAPI with Def
 
 Tags: FastAPI, OpenAPI
 
-Languages: Python, FastAPI
+Languages: Python

@@ -39,4 +39,4 @@ Short Description: A full-stack application using Angular for the frontend and N
 
 Tags: Angular, Node.js, Socket.IO
 
-Languages: TypeScript, javascript
+Languages: TypeScript, JavaScript

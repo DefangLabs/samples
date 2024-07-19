@@ -15,6 +15,6 @@ Title: Next.js
 
 Short Description: A basic Next.js app.
 
-Tags: Next.js, React, Docker, AWS
+Tags: Next.js, React, Docker, AWS, Node.js
 
-Languages: Node.js, TypeScript
+Languages: TypeScript
