@@ -35,6 +35,6 @@ Title: Hasura & Postgres
 
 Short Description: A sample project demonstrating how to deploy Hasura with Defang and connect it to a Postgres database
 
-Tags: Hasura, Graphql, PostgreSQL, Database
+Tags: Hasura, GraphQL, PostgreSQL, Database
 
-Languages: SQL, Graphql
+Languages: SQL, GraphQL
