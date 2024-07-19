@@ -23,7 +23,7 @@ For development, first clone the project and navigate to its directory. After su
 docker compose up --build
 ```
 
-This will start a Docker container wi. th the flask app which will display the result of the langchain prompt.
+This will start a Docker container with the flask app which will display the result of the langchain prompt.
 
 ---
 
