@@ -29,6 +29,6 @@ Title: Go http Form
 
 Short Description: A simple Go application that demonstrates form submission using the net/http library.
 
-Tags: Go, http, Form
+Tags: Go, http
 
 Languages: Go
