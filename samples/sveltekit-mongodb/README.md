@@ -40,4 +40,4 @@ Short Description: A full-stack application using Sveltekit for the frontend and
 
 Tags: Sveltekit, MongoDB, Full-stack
 
-Languages: Node.js, Javascript
+Languages: Node.js, JavaScript

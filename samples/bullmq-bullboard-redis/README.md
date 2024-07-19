@@ -32,4 +32,4 @@ Short Description: A sample project with BullMQ, BullBoard, and Redis.
 
 Tags: BullMQ, BullBoard, Redis, Express, Node.js, Message Queue
 
-Languages: Node.Js, javascript
+Languages: Node.js, javascript
