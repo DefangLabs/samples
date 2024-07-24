@@ -20,6 +20,6 @@ Title: Node.js & SocketIO
 
 Short Description: A minimal chat application that shows how to use Socket.IO with Node.js.
 
-Tags: Node.js, Chat, Socket.IO
+Tags: Node.js, Chat, Socket.IO, JavaScript
 
-Languages: JavaScript
+Languages: nodejs

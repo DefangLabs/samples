@@ -31,4 +31,4 @@ Short Description: A basic Flask todo app.
 
 Tags: Flask, Python
 
-Languages: Python
+Languages: python

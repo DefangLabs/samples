@@ -27,6 +27,6 @@ Title: Next.js Blog
 
 Short Description: A starter project developed using Next.js designed to make it easy to launch a blog.
 
-Tags: Next.js, Blog, Node.js, React, MDX
+Tags: Next.js, Blog, Node.js, React, MDX, TypeScript, JavaScript
 
-Languages: TypeScript
+Languages: nodejs

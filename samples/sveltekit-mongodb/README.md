@@ -38,6 +38,6 @@ Title: SvelteKit & MongoDB
 
 Short Description: A full-stack application using SvelteKit for the frontend and MongoDB for the database.
 
-Tags: SvelteKit, MongoDB, Full-stack, Node.js
+Tags: SvelteKit, MongoDB, Full-stack, Node.js, JavaScript
 
-Languages: JavaScript
+Languages: nodejs
