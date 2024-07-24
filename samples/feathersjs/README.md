@@ -32,4 +32,4 @@ Short Description: A sample project demonstrating how to deploy a Feathers.js ap
 
 Tags: Feathers.js, Node.js, JavaScript
 
-Languages:nodejs
+Languages: nodejs
