@@ -30,6 +30,6 @@ Title: Django & PostgreSQL
 
 Short Description: A customer relationship management list project developed using the Python Django framework, offering a starting point to help you quickly build your customer management system.
 
-Tags: Django, PostgreSQL
+Tags: Django, PostgreSQL, Python, SQL
 
-Languages: Python, SQL
+Languages: python

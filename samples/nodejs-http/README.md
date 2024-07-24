@@ -22,4 +22,4 @@ Short Description: A simple Node.js application that creates an http server.
 
 Tags: Node.js, http, Server
 
-Languages: JavaScript
+Languages: nodejs

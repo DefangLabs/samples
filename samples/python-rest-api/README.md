@@ -31,4 +31,4 @@ Short Description: A Flask application that fetches average interest rates from 
 
 Tags: Flask, REST API, Python
 
-Languages: Python
+Languages: python
