@@ -26,8 +26,8 @@ cat prompt.txt | curl -H "Content-Type: application/text" -d @- https://xxxxxxxx
 
 Title: Python & Flask & OpenAI
 
-Short Description: An app that demonstrates how to use the OpenAI API with Python and Flask
+Short Description: An app that demonstrates how to use the OpenAI API with Python and Flask.
 
-Tags: python, flask, openai, ai
+Tags: Python, Flask, OpenAI, AI
 
-Languages: python
+Languages: Python

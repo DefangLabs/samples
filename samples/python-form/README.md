@@ -20,10 +20,10 @@ This Flask application provides a basic example of handling form submissions. It
 
 ---
 
-Title: Flask & Form Submission
+Title: Pulumi & Remix & PostgreSQL
 
-Short Description: A Flask application that provides a basic example of handling form submissions
+Short Description: A full-stack example using Remix, Prisma, and Aiven.
 
-Tags: flask, form, python
+Tags: Full stack, Remix, Prisma, Aiven, PostgreSQL, Pulumi, Node.js
 
-Languages: python
+Languages: TypeScript, SQL

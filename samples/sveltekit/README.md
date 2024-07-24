@@ -21,10 +21,10 @@ To develop this app, you can run the sveltekit commands as you normally would on
 
 ---
 
-Title: Sveltekit
+Title: SvelteKit
 
 Short Description: A minimal SvelteKit app running on Defang.
 
-Tags: sveltekit, typescript, javascript, svelte, nodejs, frontend
+Tags: SvelteKit, TypeScript, JavaScript, Svelte, Node.js, Frontend
 
-Languages: nodejs, typescript, javascript
+Languages: TypeScript, JavaScript

@@ -26,10 +26,10 @@ docker compose -f compose.dev.yaml up --build
 
 ---
 
-Title: FeathersJS
+Title: Feathers.js
 
-Short Description: A sample project demonstrating how to deploy a FeathersJS application using Defang. The application displays "DefangxFeathersjs" on the webpage.
+Short Description: A sample project demonstrating how to deploy a Feathers.js application using Defang. The application displays "DefangxFeathersjs" on the webpage.
 
-Tags: Feathersjs & nodejs
+Tags: Feathers.js, Node.js
 
-Languages: javascript, nodejs
+Languages: JavaScript, Node.js

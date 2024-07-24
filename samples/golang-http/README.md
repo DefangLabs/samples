@@ -4,10 +4,10 @@ A very simple example of a Go service that listens on a port and returns informa
 
 ---
 
-Title: Go HTTP Server
+Title: Go http Server
 
 Short Description: A simple Go application that echoes back the request.
 
-Tags: go, http
+Tags: Go, http
 
-Languages: golang
+Languages: Go

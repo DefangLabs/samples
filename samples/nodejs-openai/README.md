@@ -28,8 +28,8 @@ cat prompt.txt | curl -H "Content-Type: application/text" -d @- https://xxxxxxxx
 
 Title: Node.js & OpenAI
 
-Short Description: A simple Node.js application that interacts with the OpenAI API
+Short Description: A simple Node.js application that interacts with the OpenAI API.
 
-Tags: nodejs, openai, api
+Tags: Node.js, OpenAI, API
 
-Languages: nodejs
+Languages: JavaScript

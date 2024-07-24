@@ -26,10 +26,10 @@ This sample showcases how you could deploy a full-stack application with Defang 
 
 ---
 
-Title: Django & Postgres
+Title: Django & PostgreSQL
 
-Short Description: A customer relationship management list project developed using Python Django framework, offering a starting point to help you quickly build your customer management system
+Short Description: A customer relationship management list project developed using the Python Django framework, offering a starting point to help you quickly build your customer management system.
 
-Tags: django, postgres
+Tags: Django, PostgreSQL
 
-Languages: python, sql
+Languages: Python, SQL

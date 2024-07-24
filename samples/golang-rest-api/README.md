@@ -6,8 +6,8 @@ This is a simple HTTP server written in Go that serves two endpoints: / and /rat
 
 Title: Go & REST API
 
-Short Description: A simple Go application that fetches fiscal data from an API
+Short Description: A simple Go application that fetches fiscal data from an API.
 
-Tags: go, http, fiscal data, api, rest
+Tags: Go, http, Fiscal data, REST API
 
-Languages: golang
+Languages: Go
