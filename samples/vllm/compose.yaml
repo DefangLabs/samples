@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   mistral:
     restart: unless-stopped
@@ -5,29 +7,47 @@ services:
     ports:
       - mode: host
         target: 8000
-    command: ["--host", "0.0.0.0", "--model", "TheBloke/Mistral-7B-Instruct-v0.2-AWQ", "--quantization", "awq", "--dtype", "auto", "--tensor-parallel-size", "1", "--gpu-memory-utilization", ".95", "--max-model-len", "8000"]
+        published: 8000
+    command:
+      [
+        "--host",
+        "0.0.0.0",
+        "--model",
+        "TheBloke/Mistral-7B-Instruct-v0.2-AWQ",
+        "--quantization",
+        "awq",
+        "--dtype",
+        "auto",
+        "--tensor-parallel-size",
+        "1",
+        "--gpu-memory-utilization",
+        ".95",
+        "--max-model-len",
+        "8000",
+      ]
     deploy:
       resources:
         reservations:
-          cpus: '2.0'
+          cpus: "2.0"
           memory: 8192M
           devices:
             - capabilities: ["gpu"]
     healthcheck:
-      test: ["CMD", "curl", "http://localhost:8000/v1/models"]
+      test: ["CMD", "curl", "-f", "http://localhost:8000/v1/models"]
       interval: 5m
       timeout: 30s
       retries: 10
     environment:
-      - HF_TOKEN
+      - HF_TOKEN=${HF_TOKEN}
   ui:
     restart: unless-stopped
     build:
-      context: ui
+      context: ./ui
       dockerfile: Dockerfile
     ports:
       - mode: ingress
         target: 3000
+        published: 3000
     deploy:
       resources:
         reservations:
@@ -39,3 +59,9 @@ services:
       retries: 10
     environment:
       - OPENAI_BASE_URL=http://mistral:8000/v1/
+  meilisearch:
+    image: getmeili/meilisearch:latest
+    ports:
+      - "7700:7700"
+    environment:
+      MEILI_NO_ANALYTICS: "true"
