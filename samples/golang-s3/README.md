@@ -19,8 +19,8 @@ curl https://xxxxxx/download
 
 Title: Go & S3
 
-Short Description: A simple Go application that uploads and downloads files from AWS S3
+Short Description: A simple Go application that uploads and downloads files from AWS S3.
 
-Tags: go, s3, aws
+Tags: Go, S3, AWS
 
-Languages: golang
+Languages: Go

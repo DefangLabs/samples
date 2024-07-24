@@ -24,8 +24,8 @@ This template is a documentation starter project developed using Nextra, designe
 
 Title: Nextra
 
-Short Description: A documentation starter project developed using Nextra designed to streamline the creation of your documentation
+Short Description: A documentation starter project developed using Nextra designed to streamline the creation of your documentation.
 
-Tags: nextjs, documentation, nextra, knowledgebase
+Tags: Next.js, Documentation, Nextra, Knowledgebase, Node.js
 
-Languages: nodejs, javascript, typescript
+Languages: JavaScript, TypeScript

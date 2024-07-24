@@ -27,10 +27,10 @@ This will start a Docker container with the flask app which will display the res
 
 ---
 
-Title: Flask & Langchain
+Title: Flask & LangChain
 
-Short Description: A sample project demonstrating how to deploy langchain with flask on defang
+Short Description: A sample project demonstrating how to deploy LangChain with Flask on Defang.
 
-Tags: Langchain & Flask & AI
+Tags: LangChain, Flask, AI
 
-Languages: Flask
+Languages: Python

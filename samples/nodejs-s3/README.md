@@ -19,8 +19,8 @@ curl https://xxxxxx/download
 
 Title: Node.js & S3
 
-Short Description: A simple Node.js application that uploads and downloads files from AWS S3
+Short Description: A simple Node.js application that uploads and downloads files from AWS S3.
 
-Tags: nodejs, s3, aws
+Tags: Node.js, S3, AWS
 
-Languages: nodejs
+Languages: JavaScript

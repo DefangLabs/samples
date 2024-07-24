@@ -41,8 +41,8 @@ If you want to edit the database, such that you can deploy them to production, y
 
 Title: Svelte & Node.js & MySQL
 
-Short Description: A full-stack application using Svelte for the frontend, Node.js for the backend, and MySQL for the database
+Short Description: A full-stack application using Svelte for the frontend, Node.js for the backend, and MySQL for the database.
 
-Tags: svelte, nodejs, mysql, full-stack
+Tags: Svelte, Node.js, MySQL, Full-stack
 
-Languages: nodejs, javascript, sql, typescript
+Languages: JavaScript, TypeScript, SQL
