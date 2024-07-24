@@ -36,6 +36,6 @@ Title: ASP.NET Core & JavaScript Task Manager
 
 Short Description: A task manager using ASP.NET Core for the backend and JavaScript for the frontend, containerized with Docker.
 
-Tags: ASP.NET Core, JavaScript, C#, JavaScript
+Tags: ASP.NET Core, JavaScript, C#
 
-Languages: nodejs
+Languages: C#, JavaScript
