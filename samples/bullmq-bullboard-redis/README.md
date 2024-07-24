@@ -30,6 +30,6 @@ Title: BullMQ & BullBoard & Redis
 
 Short Description: A sample project with BullMQ, BullBoard, and Redis.
 
-Tags: BullMQ, BullBoard, Redis, Express, Node.js, Message Queue
+Tags: BullMQ, BullBoard, Redis, Express, Node.js, Message Queue, JavaScript
 
-Languages: JavaScript
+Languages: nodejs

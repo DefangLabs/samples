@@ -30,6 +30,6 @@ Title: Feathers.js
 
 Short Description: A sample project demonstrating how to deploy a Feathers.js application using Defang. The application displays "DefangxFeathersjs" on the webpage.
 
-Tags: Feathers.js, Node.js
+Tags: Feathers.js, Node.js, JavaScript
 
-Languages: JavaScript, Node.js
+Languages:nodejs

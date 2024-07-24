@@ -43,6 +43,6 @@ Title: Svelte & Node.js & MySQL
 
 Short Description: A full-stack application using Svelte for the frontend, Node.js for the backend, and MySQL for the database.
 
-Tags: Svelte, Node.js, MySQL, Full-stack
+Tags: Svelte, Node.js, MySQL, Full-stack, JavaScript, TypeScript, SQL
 
-Languages: JavaScript, TypeScript, SQL
+Languages: nodejs

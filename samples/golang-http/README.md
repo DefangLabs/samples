@@ -10,4 +10,4 @@ Short Description: A simple Go application that echoes back the request.
 
 Tags: Go, http
 
-Languages: Go
+Languages: golang

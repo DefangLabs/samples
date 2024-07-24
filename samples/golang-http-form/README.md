@@ -31,4 +31,4 @@ Short Description: A simple Go application that demonstrates form submission usi
 
 Tags: Go, http
 
-Languages: Go
+Languages: golang
