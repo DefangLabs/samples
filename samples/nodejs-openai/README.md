@@ -30,6 +30,6 @@ Title: Node.js & OpenAI
 
 Short Description: A simple Node.js application that interacts with the OpenAI API.
 
-Tags: Node.js, OpenAI, API
+Tags: Node.js, OpenAI, API, JavaScript
 
-Languages: JavaScript
+Languages: nodejs

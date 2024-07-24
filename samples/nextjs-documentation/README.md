@@ -26,6 +26,6 @@ Title: Nextra
 
 Short Description: A documentation starter project developed using Nextra designed to streamline the creation of your documentation.
 
-Tags: Next.js, Documentation, Nextra, Knowledgebase, Node.js
+Tags: Next.js, Documentation, Nextra, Knowledgebase, Node.js, JavaScript, TypeScript
 
-Languages: JavaScript, TypeScript
+Languages: nodejs

@@ -8,6 +8,6 @@ Title: Node.js & REST API
 
 Short Description: A simple Node.js application that creates a REST API and fetches data from the U.S. Department of the Treasury's Fiscal Data API.
 
-Tags: Node.js, REST API
+Tags: Node.js, REST API, JavaScript
 
-Languages: JavaScript
+Languages: nodejs

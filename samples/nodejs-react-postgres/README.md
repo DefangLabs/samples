@@ -34,6 +34,6 @@ Title: React & Node.js & PostgreSQL
 
 Short Description: A full-stack to-do list application.
 
-Tags: React, Node.js, Full-stack, PostgreSQL
+Tags: React, Node.js, Full-stack, PostgreSQL, JavaScript, SQL
 
-Languages: JavaScript, SQL
+Languages: nodejs

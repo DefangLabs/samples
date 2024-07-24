@@ -23,4 +23,4 @@ Short Description: A simple Go application that uploads and downloads files from
 
 Tags: Go, S3, AWS
 
-Languages: Go
+Languages: golang

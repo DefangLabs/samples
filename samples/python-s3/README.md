@@ -23,4 +23,4 @@ Short Description: An app that demonstrates how to upload and download files fro
 
 Tags: Python, Flask, AWS S3
 
-Languages: Python
+Languages: python

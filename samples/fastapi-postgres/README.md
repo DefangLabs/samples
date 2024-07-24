@@ -25,4 +25,4 @@ Short Description: A sample project with FastAPI and PostgreSQL
 
 Tags: FastAPI, PostgreSQL, Python, SQL
 
-Languages: Python, SQL
+Languages: python
