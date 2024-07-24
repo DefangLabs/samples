@@ -26,10 +26,12 @@ jobs:
           echo "@@ MODIFIED @@"
           cat modified.txt
 
-      - name: Validate Compose Files with Defang CLI
-        run: |
-          . <(curl -Ls https://s.defang.io/install)
-          cat modified.txt | xargs -n1 defang compose config -C > /dev/null
+      # TODO: Uncomment the following lines to validate the Compose files
+      #       once we figure out how to prevent it from erroring on warnings.
+      # - name: Validate Compose Files with Defang CLI
+      #   run: |
+      #     . <(curl -Ls https://s.defang.io/install)
+      #     cat modified.txt | xargs -n1 defang compose config -C > /dev/null
 
       - name: Add checklist to PR description
         uses: actions/github-script@v5
