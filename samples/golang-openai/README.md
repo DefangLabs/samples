@@ -25,8 +25,8 @@ cat prompt.txt | curl -H "Content-Type: application/text" -d @- https://xxxxxxxx
 
 Title: Go & OpenAI
 
-Short Description: A simple Go application that interacts with the OpenAI API
+Short Description: A simple Go application that interacts with the OpenAI API.
 
-Tags: go, openai, chatgpt
+Tags: Go, OpenAI, ChatGPT
 
 Languages: golang

@@ -1,6 +1,6 @@
 # FastAPI
 
-This sample project demonstrates how to deploy FastAPI with Defang. 
+This sample project demonstrates how to deploy FastAPI with Defang.
 
 ## Prerequisites
 
@@ -29,6 +29,6 @@ Title: FastAPI
 
 Short Description: A sample project demonstrating how to deploy FastAPI with Defang
 
-Tags: FastAPI, OpenAPI
+Tags: FastAPI, OpenAPI, Python
 
-Languages: Python, FastAPI
+Languages: python

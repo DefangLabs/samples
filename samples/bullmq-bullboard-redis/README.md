@@ -8,7 +8,6 @@ To add a job to the queue, you can go to the `/add` route of the `api` service. 
 
 The `worker` service is the queue processor that will process the jobs added to the queue. You can see in the `compose.yaml` file that the `worker` service is set to scale to 2 instances. This means that there will be 2 workers processing jobs from the queue. You can set this to your desired number of workers, but we wanted to show how you can increase the number of workers to handle more jobs.
 
-
 ## Prerequisites
 
 1. Download <a href="https://github.com/defang-io/defang">Defang CLI</a>
@@ -21,7 +20,6 @@ The `worker` service is the queue processor that will process the jobs added to 
 3. Type `defang compose up` in the CLI.
 4. Your app will be running within a few minutes.
 
-
 ## Local Development
 
 1. Run `docker compose -f compose.dev.yaml up`
@@ -32,6 +30,6 @@ Title: BullMQ & BullBoard & Redis
 
 Short Description: A sample project with BullMQ, BullBoard, and Redis.
 
-Tags: BullMQ, BullBoard, Redis, Express, Node.js, Message Queue
+Tags: BullMQ, BullBoard, Redis, Express, Node.js, Message Queue, JavaScript
 
-Languages: nodejs, javascript
+Languages: nodejs

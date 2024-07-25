@@ -25,10 +25,10 @@ Since Metabase is a self contained application, there isn't an actual developmen
 
 ---
 
-Title: Metabase & Postgres
+Title: Metabase & PostgreSQL
 
-Short Description: A simple metabase configuration with a Postgres database
+Short Description: A simple Metabase configuration with a PostgreSQL database.
 
-Tags: metabase, postgres, analytics, database
+Tags: Metabase, PostgreSQL, Analytics, Database
 
-Languages: sql
+Languages: SQL

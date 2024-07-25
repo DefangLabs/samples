@@ -31,10 +31,10 @@ If you want to edit the database, permissions, or any other Hasura settings such
 
 ---
 
-Title: Hasura & Postgres
+Title: Hasura & PostgreSQL
 
-Short Description: A sample project demonstrating how to deploy Hasura with Defang and connect it to a Postgres database
+Short Description: A sample project demonstrating how to deploy Hasura with Defang and connect it to a PostgreSQL database.
 
-Tags: hasura, graphql, postgres, database
+Tags: Hasura, GraphQL, PostgreSQL, Database
 
-Languages: sql, graphql
+Languages: SQL, GraphQL
