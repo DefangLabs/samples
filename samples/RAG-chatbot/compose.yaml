@@ -1,0 +1,10 @@
+version: "3"
+services:
+  rag-chatbot:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/usr/src/app
+    environment:
+      - PYTHONPATH=/usr/src/app
