@@ -12,6 +12,10 @@ services:
     ports:
       - mode: host
         target: 3306
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      memory: 256M
 
   app:
     restart: unless-stopped
@@ -25,6 +29,10 @@ services:
       - "3001:3001"
     depends_on:
       - db
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      memory: 256M
 
 volumes:
   mysql_data:

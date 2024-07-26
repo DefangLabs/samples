@@ -14,6 +14,10 @@ services:
       - QUEUE
     depends_on:
       - redis
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      memory: 256M
 
   api:
     restart: unless-stopped
@@ -29,6 +33,10 @@ services:
       - QUEUE
     depends_on:
       - redis
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      memory: 256M
 
   worker:
     restart: unless-stopped
@@ -44,6 +52,10 @@ services:
       test: ["CMD", "wget", "-q", "--spider", "127.0.0.1:3000"]
     depends_on:
       - redis
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      memory: 256M
 
   redisx:
     image: redis:6.2

@@ -10,3 +10,7 @@ services:
         published: 8080
     environment:
       - MONGO_URI=your mongo db URI connection string
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      memory: 256M

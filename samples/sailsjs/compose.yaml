@@ -14,3 +14,7 @@ services:
     environment:
       - NODE_ENV=production
     command: sails lift --prod
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      memory: 256M

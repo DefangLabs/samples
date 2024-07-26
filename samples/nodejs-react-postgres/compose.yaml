@@ -26,8 +26,8 @@ services:
         mode: ingress
         published: 3010
     environment:
-     - DATABASE_URL
-    # To use your production database connection string, use `defang config set DATABASE_URL`
-
-
-
+     - DATABASE_URL    # To use your production database connection string, use `defang config set DATABASE_URL`
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      memory: 256M
