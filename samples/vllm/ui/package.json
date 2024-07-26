@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@elastic/elasticsearch": "^8.14.0",
     "ai": "^2.2.36",
+    "langchain": "^0.2.11",
     "marked": "^13.0.2",
     "meilisearch": "^0.41.0",
     "next": "^14.1.1",
@@ -31,5 +31,8 @@
     "postcss": "^8",
     "tailwindcss": "^3.3.0",
     "typescript": "^5.5.4"
+  },
+  "resolutions": {
+    "@langchain/core": "0.1.5"
   }
 }

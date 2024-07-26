@@ -58,10 +58,5 @@ services:
       timeout: 2s
       retries: 10
     environment:
-      - OPENAI_BASE_URL=http://mistral:8000/v1/
-  meilisearch:
-    image: getmeili/meilisearch:latest
-    ports:
-      - "7700:7700"
-    environment:
-      MEILI_NO_ANALYTICS: "true"
+      - OPENAI_BASE_URL=https://api.openai.com/v1/
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
