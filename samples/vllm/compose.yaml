@@ -14,10 +14,8 @@ services:
           devices:
             - capabilities: ["gpu"]
     healthcheck:
-      test: ["CMD", "curl", "http://localhost:8000/v1/models"]
-      interval: 5m
-      timeout: 30s
-      retries: 10
+      test: ["CMD", "python3", "-c", "import sys, urllib.request;urllib.request.urlopen(sys.argv[1]).read()", "http://localhost:8000/health"]
+      interval: 1m
     environment:
       - HF_TOKEN
   ui:
