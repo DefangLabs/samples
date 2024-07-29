@@ -1,4 +1,7 @@
-flask
+Flask==2.0.1
+Werkzeug==2.0.3
+scikit-learn==0.24.2
+numpy==1.20.3
 transformers
 torch
 datasets
