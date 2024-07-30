@@ -20,8 +20,6 @@ This guide demonstrates how to deploy a Retrieval-Augmented Generation (RAG) cha
    defang compose up
    ```
 
-   The provided `compose.yaml` file includes the Mistral service. It's configured to run on an AWS instance with GPU support. The file also includes a UI service built with Next.js, utilizing Vercel's AI SDK.
-
    > **Changing the content:** The content for the bot is set in `rag_system.py`. You can edit the content there to change the behavior and information processed. Currently, the content is based off of the `docs.md` markdown file, which gives information about Defang.
 
 ---
