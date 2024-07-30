@@ -1,6 +1,12 @@
-from sklearn.feature_extraction.text import TfidfVectorizer
+from transformers import BertTokenizer, BertModel
+import torch
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+
+# Initialize BERT tokenizer and model
+tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+model = BertModel.from_pretrained('bert-base-uncased')
+
 
 knowledge_base = [
     {"id": 1, "text": "Defang is a radically simpler way for developers to build, deploy their apps to the cloud. Defang enables you to easily author cloud applications in any language, build and deploy to the cloud with a single command, and iterate quickly."},
@@ -44,35 +50,31 @@ knowledge_base = [
     {"id": 39, "text": "The message 'missing memory reservation; specify deploy.resources.reservations.memory to avoid out-of-memory errors' is displayed when you run defang compose up and the Compose file doesn't specify a memory reservation."}
 ]
 
-class SimpleRetriever:
-    def __init__(self, knowledge_base):
+def get_embedding(text):
+    inputs = tokenizer(text, return_tensors='pt', truncation=True, padding=True, max_length=512)
+    outputs = model(**inputs)
+    return outputs.last_hidden_state.mean(dim=1).detach().numpy()
+
+# Precompute embeddings for the knowledge base
+document_embeddings = [get_embedding(doc["text"]) for doc in knowledge_base]
+
+class EmbeddingRetriever:
+    def __init__(self, knowledge_base, document_embeddings):
         self.knowledge_base = knowledge_base
-        self.vectorizer = TfidfVectorizer().fit([doc["text"] for doc in knowledge_base])
-        self.doc_vectors = self.vectorizer.transform([doc["text"] for doc in knowledge_base])
+        self.document_embeddings = np.vstack(document_embeddings)
 
     def retrieve(self, query, top_k=2):
-        query_vector = self.vectorizer.transform([query])
-        similarities = cosine_similarity(query_vector, self.doc_vectors).flatten()
-        
-        # Debug: Print similarities
-        print(f"Similarities: {similarities}")
-        
-        # Sort by similarity scores
+        query_embedding = get_embedding(query)
+        similarities = cosine_similarity(query_embedding, self.document_embeddings).flatten()
         top_k_indices = similarities.argsort()[-top_k:][::-1]
-        # Debug: Print top_k_indices
-        print(f"Top K indices: {top_k_indices}")
-        
         return [self.knowledge_base[idx] for idx in top_k_indices]
 
 class SimpleGenerator:
     def generate(self, query, retrieved_docs):
-        # Debug: Print retrieved_docs
-        print(f"Retrieved Documents: {retrieved_docs}")
-        
         context = "\n".join([f"{idx + 1}. {doc['text']}" for idx, doc in enumerate(retrieved_docs)])
         return f"Based on the information available, here are the top results related to your query:\n{context}"
 
-retriever = SimpleRetriever(knowledge_base)
+retriever = EmbeddingRetriever(knowledge_base, document_embeddings)
 generator = SimpleGenerator()
 
 class RAGSystem:

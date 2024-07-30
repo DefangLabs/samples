@@ -1,9 +1,10 @@
-version: "3.8"
+version: "3"
 
 services:
-  rag-chatbot:
+  bot:
     build: .
     ports:
       - "5000:5000"
     environment:
       FLASK_APP: app.py
+    command: flask run --host=0.0.0.0
