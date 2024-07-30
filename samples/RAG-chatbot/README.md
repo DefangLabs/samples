@@ -8,7 +8,7 @@ This guide demonstrates how to deploy a Retrieval-Augmented Generation (RAG) cha
 
 ## Steps
 
-1. **Set the Hugging Face Token**
+1. **Parsing your knowledge base**
 
    First, find a way to parse your information into sentences, for the correct format, please refer to `rag_system.py` for guidance.
 
