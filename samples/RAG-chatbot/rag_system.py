@@ -1,11 +1,11 @@
-from transformers import BertTokenizer, BertModel
-import torch
+from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 
-# Initialize BERT tokenizer and model
-tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-model = BertModel.from_pretrained('bert-base-uncased')
+# Initialize SBERT model
+model = SentenceTransformer('all-MiniLM-L6-v2')
+
+# Knowledge base documents
 
 
 knowledge_base = [
@@ -51,20 +51,18 @@ knowledge_base = [
 ]
 
 def get_embedding(text):
-    inputs = tokenizer(text, return_tensors='pt', truncation=True, padding=True, max_length=512)
-    outputs = model(**inputs)
-    return outputs.last_hidden_state.mean(dim=1).detach().numpy()
+    return model.encode(text)
 
 # Precompute embeddings for the knowledge base
-document_embeddings = [get_embedding(doc["text"]) for doc in knowledge_base]
+document_embeddings = np.array([get_embedding(doc["text"]) for doc in knowledge_base])
 
 class EmbeddingRetriever:
     def __init__(self, knowledge_base, document_embeddings):
         self.knowledge_base = knowledge_base
-        self.document_embeddings = np.vstack(document_embeddings)
+        self.document_embeddings = document_embeddings
 
     def retrieve(self, query, top_k=2):
-        query_embedding = get_embedding(query)
+        query_embedding = get_embedding(query).reshape(1, -1)
         similarities = cosine_similarity(query_embedding, self.document_embeddings).flatten()
         top_k_indices = similarities.argsort()[-top_k:][::-1]
         return [self.knowledge_base[idx] for idx in top_k_indices]
