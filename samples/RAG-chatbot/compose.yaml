@@ -2,11 +2,14 @@ version: "3.8"
 
 services:
   rag-chatbot:
-    build: .
+    build:
+      context: .
+      shm_size: "16gb"
     ports:
       - target: 5000
         published: 5000
         protocol: tcp
-        mode: host
+        mode: ingress
     environment:
       FLASK_APP: app.py
+    command: flask run --host=0.0.0.0
