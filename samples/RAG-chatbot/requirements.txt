@@ -5,4 +5,4 @@ numpy==1.21.0
 sentence-transformers==2.1.0
 torch==1.10.0
 huggingface_hub==0.8.1
-openai
+openai==0.28
