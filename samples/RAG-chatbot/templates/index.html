@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .chat-container {
+            max-width: 600px;
+            margin: auto;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .chat-box {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .input-box {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .submit-btn {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <h2>RAG Chatbot</h2>
+        <div class="chat-box">
+            {% if query %}
+                <strong>You:</strong> {{ query }}<br>
+            {% endif %}
+            {% if response %}
+                <strong>Bot:</strong> {{ response }}
+            {% endif %}
+        </div>
+        <form method="post" action="/ask">
+            <input type="text" name="query" class="input-box" placeholder="Ask a question..." required>
+            <button type="submit" class="submit-btn">Send</button>
+        </form>
+    </div>
+</body>
+</html>
