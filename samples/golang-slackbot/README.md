@@ -53,8 +53,8 @@ curl 'https://raphaeltm-bot--8080.prod1.defang.dev/' \
 
 Title: Go & Slack API
 
-Short Description: A simple Slackbot that posts messages to a Slack channel
+Short Description: A simple Slackbot that posts messages to a Slack channel.
 
-Tags: go, slack, bot
+Tags: Go, Slack, Bot
 
 Languages: golang

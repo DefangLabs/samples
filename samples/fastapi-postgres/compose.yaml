@@ -9,3 +9,7 @@ services:
         target: 8000
     environment:
       - DATABASE_URL
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      memory: 256M

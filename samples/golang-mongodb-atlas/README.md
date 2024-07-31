@@ -37,6 +37,6 @@ Title: Go & MongoDB Atlas
 
 Short Description: A simple Go application that manages tasks with MongoDB Atlas
 
-Tags: go, mongodb, atlas, task manager
+Tags: Go, MongoDB, Atlas, Task manager
 
 Languages: golang

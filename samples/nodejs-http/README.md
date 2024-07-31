@@ -18,8 +18,8 @@ defang compose up
 
 Title: Node.js HTTP Server
 
-Short Description: A simple Node.js application that creates an HTTP server
+Short Description: A simple Node.js application that creates an http server.
 
-Tags: node.js, http, server
+Tags: Node.js, http, Server
 
 Languages: nodejs

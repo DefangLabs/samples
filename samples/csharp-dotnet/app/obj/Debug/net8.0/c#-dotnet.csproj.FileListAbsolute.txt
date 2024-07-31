@@ -1,0 +1,15 @@
+/Users/chris/Documents/GitHub/samples/samples/c#-dotnet/bin/Debug/net8.0/c#-dotnet
+/Users/chris/Documents/GitHub/samples/samples/c#-dotnet/bin/Debug/net8.0/c#-dotnet.deps.json
+/Users/chris/Documents/GitHub/samples/samples/c#-dotnet/bin/Debug/net8.0/c#-dotnet.runtimeconfig.json
+/Users/chris/Documents/GitHub/samples/samples/c#-dotnet/bin/Debug/net8.0/c#-dotnet.dll
+/Users/chris/Documents/GitHub/samples/samples/c#-dotnet/bin/Debug/net8.0/c#-dotnet.pdb
+/Users/chris/Documents/GitHub/samples/samples/c#-dotnet/obj/Debug/net8.0/c#-dotnet.GeneratedMSBuildEditorConfig.editorconfig
+/Users/chris/Documents/GitHub/samples/samples/c#-dotnet/obj/Debug/net8.0/c#-dotnet.AssemblyInfoInputs.cache
+/Users/chris/Documents/GitHub/samples/samples/c#-dotnet/obj/Debug/net8.0/c#-dotnet.AssemblyInfo.cs
+/Users/chris/Documents/GitHub/samples/samples/c#-dotnet/obj/Debug/net8.0/c#-dotnet.csproj.CoreCompileInputs.cache
+/Users/chris/Documents/GitHub/samples/samples/c#-dotnet/obj/Debug/net8.0/c#-dotnet.sourcelink.json
+/Users/chris/Documents/GitHub/samples/samples/c#-dotnet/obj/Debug/net8.0/c#-dotnet.dll
+/Users/chris/Documents/GitHub/samples/samples/c#-dotnet/obj/Debug/net8.0/refint/c#-dotnet.dll
+/Users/chris/Documents/GitHub/samples/samples/c#-dotnet/obj/Debug/net8.0/c#-dotnet.pdb
+/Users/chris/Documents/GitHub/samples/samples/c#-dotnet/obj/Debug/net8.0/c#-dotnet.genruntimeconfig.cache
+/Users/chris/Documents/GitHub/samples/samples/c#-dotnet/obj/Debug/net8.0/ref/c#-dotnet.dll
