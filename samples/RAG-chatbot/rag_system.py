@@ -1,48 +1,55 @@
-from sentence_transformers import SentenceTransformer
-from sklearn.metrics.pairwise import cosine_similarity
-import numpy as np
+import openai
 import json
+import os
+from sentence_transformers import SentenceTransformer
+import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
 
-# Load the knowledge base from the JSON file
-with open('knowledge_base.json', 'r') as f:
-    knowledge_base = json.load(f)
-
-# Initialize SBERT model
-model = SentenceTransformer('all-MiniLM-L6-v2')
-
-def get_embedding(text):
-    return model.encode(text)
-
-# Precompute embeddings for the knowledge base
-document_embeddings = np.array([get_embedding(doc["text"]) for doc in knowledge_base])
-
-class EmbeddingRetriever:
-    def __init__(self, knowledge_base, document_embeddings):
-        self.knowledge_base = knowledge_base
-        self.document_embeddings = document_embeddings
-
-    def retrieve(self, query, top_k=2):
-        query_embedding = get_embedding(query).reshape(1, -1)
-        similarities = cosine_similarity(query_embedding, self.document_embeddings).flatten()
-        top_k_indices = similarities.argsort()[-top_k:][::-1]
-        return [self.knowledge_base[idx] for idx in top_k_indices]
-
-class SimpleGenerator:
-    def generate(self, query, retrieved_docs):
-        context = "\n".join([f"{idx + 1}. {doc['text']}" for idx, doc in enumerate(retrieved_docs)])
-        return f"Based on the information available, here are the top results related to your query:\n{context}"
-
-retriever = EmbeddingRetriever(knowledge_base, document_embeddings)
-generator = SimpleGenerator()
+# Ensure you have set the OPENAI_API_KEY in your environment variables
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 class RAGSystem:
-    def __init__(self, retriever, generator):
-        self.retriever = retriever
-        self.generator = generator
+    def __init__(self, knowledge_base):
+        self.knowledge_base = knowledge_base
+        self.model = SentenceTransformer('all-MiniLM-L6-v2')
+        self.doc_embeddings = self.embed_knowledge_base()
+
+    def embed_knowledge_base(self):
+        docs = [doc["text"] for doc in self.knowledge_base]
+        return self.model.encode(docs, convert_to_tensor=True)
+
+    def retrieve(self, query):
+        query_embedding = self.model.encode([query], convert_to_tensor=True)
+        similarities = cosine_similarity(query_embedding, self.doc_embeddings)
+        most_similar_idx = np.argmax(similarities)
+        return self.knowledge_base[most_similar_idx]["text"]
+
+    def generate_response(self, query, context):
+        try:
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": query},
+                    {"role": "system", "content": context},
+                ]
+            )
+            return response.choices[0].message['content']
+        except Exception as e:
+            print(f"Error generating response from OpenAI: {e}")
+            raise
 
     def answer_query(self, query):
-        retrieved_docs = self.retriever.retrieve(query)
-        response = self.generator.generate(query, retrieved_docs)
-        return response
+        try:
+            context = self.retrieve(query)
+            response = self.generate_response(query, context)
+            return response
+        except Exception as e:
+            print(f"Error in answer_query: {e}")
+            return f"An error occurred while generating the response: {e}"
 
-rag_system = RAGSystem(retriever, generator)
+# Load knowledge base from a JSON file
+with open('knowledge_base.json', 'r') as kb_file:
+    knowledge_base = json.load(kb_file)
+
+rag_system = RAGSystem(knowledge_base)

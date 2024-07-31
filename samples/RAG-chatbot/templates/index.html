@@ -41,7 +41,7 @@
 <body>
     <div class="chat-container">
         <h2>RAG Chatbot</h2>
-        <div class="chat-box">
+        <div class="chat-box" id="chat-box">
             {% if query %}
                 <strong>You:</strong> {{ query }}<br>
             {% endif %}
@@ -49,10 +49,30 @@
                 <strong>Bot:</strong> {{ response }}
             {% endif %}
         </div>
-        <form method="post" action="/ask">
-            <input type="text" name="query" class="input-box" placeholder="Ask a question..." required>
+        <form id="chat-form">
+            <input type="text" id="query" class="input-box" placeholder="Ask a question..." required>
             <button type="submit" class="submit-btn">Send</button>
         </form>
+        <div id="response"></div>
     </div>
+
+    <script>
+        document.getElementById("chat-form").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            const query = document.getElementById("query").value;
+            const responseElement = document.getElementById("response");
+
+            const response = await fetch("/ask", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ query })
+            });
+
+            const data = await response.json();
+            responseElement.innerText = data.response;
+        });
+    </script>
 </body>
 </html>
