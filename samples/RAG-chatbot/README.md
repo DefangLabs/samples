@@ -1,33 +1,38 @@
-# Mistral & vLLM
+# Scikit RAG + OpenAI
 
-This guide demonstrates how to deploy a Retrieval-Augmented Generation (RAG) chatbot using Sentence-BERT (SBERT) and scikit-learn on to Defang.
+This sample demonstrates how to deploy a Flask-based Retrieval-Augmented Generation (RAG) chatbot using OpenAI's GPT model. The chatbot retrieves relevant documents from a knowledge base using scikit-learn and Sentence Transformers and then generates responses using OpenAI's GPT model.
 
 ## Prerequisites
 
-- Pre-parsed data into sentences.
+1. Download [Defang CLI](https://github.com/DefangLabs/defang)
+2. (Optional) If you are using [Defang BYOC](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html) authenticated with your AWS account
+3. (Optional - for local development) [Docker CLI](https://docs.docker.com/engine/install/)
 
-## Steps
+## Deploying
 
-1. **Parsing your knowledge base**
+1. Open the terminal and type `defang login`
+2. Type `defang compose up` in the CLI.
+3. Your app will be running within a few minutes.
 
-   First, find a way to parse your information into sentences, for the correct format, please refer to `rag_system.py` for guidance.
+## Local Development
 
-2. **Launch with Defang Compose**
+1. Clone the repository.
+2. Create a `.env` file in the root directory and set your OpenAI API key:
+3. Run the command `docker compose up --build` to spin up a docker container for this RAG chatbot
 
-   Run the following command to start the services:
+## Configuration
 
-   ```bash
-   defang compose up
-   ```
-
-   > **Changing the content:** The content for the bot is set in `rag_system.py`. You can edit the content there to change the behavior and information processed. Currently, the content is based off of the `docs.md` markdown file, which gives information about Defang.
+1. Knowledge base
+   - The knowledge base is acquired via parsing an sitemap located at "https://docs.defang.io/sitemap.xml".
+   - The file `scrape_sitemap.py` parses every webpage as specified into paragraphs and writes to `knowledge_base.json` for the RAG retrieval.
+   - To obtain your own knowledge base, either use another sitemap or write your own parsing scheme to parse into knowledge_base.json.
 
 ---
 
-Title: Scikit & SBERT & RAG
+Title: Scikit RAG + OpenAI
 
-Short Description: A RAG chatbot using Scikit and SBERT trained on the defang documentation
+Short Description: A short hello world application demonstrating how to deploy a Flask-based Retrieval-Augmented Generation (RAG) chatbot using OpenAI's GPT model onto Defang.
 
-Tags: RAG, Chatbot, SBERT, scikit-learn, Flask, AI, Docker, Python
+Tags: Flask, Scikit, Python, RAG, OpenAI, GPT, Machine Learning
 
 Languages: python
