@@ -1,0 +1,20 @@
+# Sample compose file.
+
+services:
+  app:
+    # uncomment to add your own domain
+    # domainname: example.com
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - target: 3000
+        published: 3000
+        mode: ingress
+    volumes:
+      - ./app:/app
+    environment:
+      POSTGRES_USER:
+      POSTGRES_PASSWORD:
+      POSTGRES_DB:
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/"]

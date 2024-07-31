@@ -1,0 +1,28 @@
+# Sample dev compose file. It can be helpful to provide this kind of file
+# for samples where a user may want to hot reload changes in the app, or
+# if it depends on stateful services like a database that isn't supported by Defang.
+
+services:
+  app:
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - target: 3000
+        published: 3000
+        mode: ingress
+    volumes:
+      - ./app:/app
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+
+volumes:
+  postgres_data:
