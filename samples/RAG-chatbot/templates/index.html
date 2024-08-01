@@ -5,18 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RAG Chatbot</title>
-    <!-- Add Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
             margin: 0;
             padding: 0;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(180deg, rgba(99, 109, 233, 1) 0%, rgba(90, 102, 214, 1) 50%, rgba(232, 91, 91, 1) 100%);
+            background: linear-gradient(311deg, rgba(63, 178, 175, .67), rgba(80, 54, 163, .67) 53%, rgba(9, 23, 76, .85)),
+                linear-gradient(54deg, hsla(4, 100%, 74%, .25), hsla(4, 100%, 74%, 0) 28%),
+                linear-gradient(241deg, rgba(228, 122, 255, .32), #d4f0f8 36%);
             color: #fff;
         }
 
@@ -24,7 +24,7 @@
             max-width: 600px;
             width: 100%;
             background-color: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(10px);
             border-radius: 15px;
             padding: 20px;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -34,18 +34,19 @@
             text-align: center;
             color: #fff;
             margin-bottom: 20px;
-            font-weight: 500;
+            font-weight: 300;
         }
 
         .chat-box {
             background-color: rgba(0, 0, 0, 0.2);
             padding: 15px;
             border-radius: 10px;
-            min-height: 100px;
+            min-height: 150px;
             max-height: 300px;
             overflow-y: auto;
             margin-bottom: 20px;
             color: #f5f5f5;
+            font-size: 16px;
             line-height: 1.6;
         }
 
@@ -56,6 +57,7 @@
             border-radius: 5px;
             margin-bottom: 10px;
             font-size: 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .submit-btn {
@@ -66,23 +68,26 @@
             cursor: pointer;
             border-radius: 5px;
             font-size: 16px;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .submit-btn:hover {
             background-color: #5a66d6;
+            transform: translateY(-2px);
         }
 
-        /* Spinner Styles */
-        .spinner {
+        .loading-spinner {
             display: none;
+            margin-left: 10px;
             width: 24px;
             height: 24px;
             border: 4px solid rgba(255, 255, 255, 0.3);
             border-top: 4px solid #fff;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 0 auto;
         }
 
         @keyframes spin {
@@ -105,49 +110,42 @@
         </div>
         <form id="chat-form">
             <input type="text" id="query" class="input-box" placeholder="Ask a question..." required>
-            <button type="submit" class="submit-btn">Send</button>
+            <button type="submit" class="submit-btn">
+                Send
+                <div class="loading-spinner" id="loading-spinner"></div>
+            </button>
         </form>
-        <div id="spinner" class="spinner"></div>
+        <div id="response"></div>
     </div>
 
     <script>
-        document.getElementById("chat-form").addEventListener("submit", async function(event) {
+        document.getElementById("chat-form").addEventListener("submit", async function (event) {
             event.preventDefault();
             const query = document.getElementById("query").value;
             const chatBox = document.getElementById("chat-box");
-            const spinner = document.getElementById("spinner");
+            const loadingSpinner = document.getElementById("loading-spinner");
 
-            // Add user query to chat box
-            const userQueryHTML = `<strong>You:</strong> ${query}<br>`;
-            chatBox.innerHTML += userQueryHTML;
-
-            // Show spinner
-            spinner.style.display = 'block';
+            // Show the loading spinner
+            loadingSpinner.style.display = "inline-block";
 
             const response = await fetch("/ask", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({
-                    query
-                })
+                body: JSON.stringify({ query })
             });
 
             const data = await response.json();
 
-            // Hide spinner
-            spinner.style.display = 'none';
+            // Hide the loading spinner
+            loadingSpinner.style.display = "none";
 
-            // Add bot response to chat box
-            const botResponseHTML = `<strong>Bot:</strong> ${data.response}<br>`;
-            chatBox.innerHTML += botResponseHTML;
+            // Append the query and response to the chat box
+            chatBox.innerHTML += `<strong>You:</strong> ${query}<br><strong>Bot:</strong> ${data.response}<br><br>`;
 
-            // Scroll to the bottom of the chat box
-            chatBox.scrollTop = chatBox.scrollHeight;
-
-            // Clear input box
-            document.getElementById("query").value = '';
+            // Clear the input field
+            document.getElementById("query").value = "";
         });
     </script>
 </body>
