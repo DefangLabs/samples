@@ -20,9 +20,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
+      POSTGRES_URL: postgres://postgres:password@postgres:5432/postgres
 
 volumes:
   postgres_data:

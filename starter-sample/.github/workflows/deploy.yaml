@@ -27,5 +27,11 @@ jobs:
     - name: Login to Defang
       run: defang login
 
+    - name: Deploy Config
+      run: . ./.github/workflows/scripts/config.sh
+      # # Example of setting environment variables
+      # env:
+      #   POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
+
     - name: Deploy
       run: defang compose up -v --detach

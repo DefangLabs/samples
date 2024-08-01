@@ -5,6 +5,7 @@ services:
     # uncomment to add your own domain
     # domainname: example.com
     build:
+      context: ./app
       dockerfile: Dockerfile
     ports:
       - target: 3000
@@ -13,9 +14,7 @@ services:
     volumes:
       - ./app:/app
     environment:
-      POSTGRES_USER:
-      POSTGRES_PASSWORD:
-      POSTGRES_DB:
+      POSTGRES_URL:
     healthcheck:
       # wget or curl required for healthchecks on services with a published port
       # this gets parsed by Defang and provided to the load balancers as well
