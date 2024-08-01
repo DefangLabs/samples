@@ -12,6 +12,8 @@ services:
         mode: ingress
     volumes:
       - ./app:/app
+    environment: #REMOVE_ME_AFTER_EDITING
+      POSTGRES_URL: postgres://postgres:password@postgres:5432/postgres
     depends_on:
       - postgres
 
@@ -20,7 +22,9 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_URL: postgres://postgres:password@postgres:5432/postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
 
 volumes:
   postgres_data:

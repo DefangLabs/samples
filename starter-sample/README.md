@@ -1,6 +1,6 @@
-# Phoenix & Postgres
+# Starter Sample #REMOVE_ME_AFTER_EDITING
 
-Defang is the easiest way to deploy containerized apps like this Phoenix + Postgres sample to AWS. This is a sample Phoenix application that uses a PostgreSQL database. The sample doesn't add anything to the database, but is based off of the default Phoenix getting started instructions which add a postgres database to the application.
+This is a sample that shows the rough structure of an actual Defang sample. This top paragraph should give a bit of context about the project and what it does. The rest of the README should be a guide on how to use the sample. #REMOVE_ME_AFTER_EDITING
 
 ## Prerequisites
 
@@ -13,30 +13,23 @@ Defang is the easiest way to deploy containerized apps like this Phoenix + Postg
 To run the application locally, you can use the following command:
 
 ```bash
-docker compose -f compose.yaml -f compose.dev.yaml up
-```
-
-This will run Phoenix in development mode. If you need to run any commands in the container, after you have run the command above and started the container, you can run the command in a new terminal:
-
-```bash
-docker compose -f compose.yaml -f compose.dev.yaml exec phoenix bash
+# This might be `docker compose -f compose.dev.yaml up` depending on the project. #REMOVE_ME_AFTER_EDITING
+docker compose up
 ```
 
 ## Deploying
 
 1. Open the terminal and type `defang login`
-2. Provide values for `SECRET_KEY_BASE` and `DATABASE_URL`
-   - `SECRET_KEY_BASE` is a secret key used by Phoenix to sign cookies and other things. You can generate one by running `docker compose -f compose.yaml -f compose.dev.yaml run --rm phoenix mix phx.gen.secret`
-   - `DATABASE_URL` is the connection string for your PostgreSQL database. It should look something like `ecto://username:password@hostname/dbname`
+2. Use the [`defang config`](https://docs.defang.io/docs/concepts/compose#configuration) command to setup environment variables. #REMOVE_ME_AFTER_EDITING
 3. Type `defang compose up` in the CLI.
 4. Your app will be running within a few minutes.
 
 ---
 
-Title: Phoenix & PostgreSQL
+Title: Sample Title #REMOVE_ME_AFTER_EDITING
 
-Short Description: A sample Phoenix application that uses a PostgreSQL database.
+Short Description: A short sentence or two describing the sample. #REMOVE_ME_AFTER_EDITING
 
-Tags: Phoenix, PostgreSQL, Database, Elixir
+Tags: Tags, That, Are, Not, Programming, Languages #REMOVE_ME_AFTER_EDITING
 
-Languages: Elixir
+Languages: Programming, Languages, Used #REMOVE_ME_AFTER_EDITING

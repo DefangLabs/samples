@@ -13,7 +13,7 @@ services:
         mode: ingress
     volumes:
       - ./app:/app
-    environment:
+    environment: #REMOVE_ME_AFTER_EDITING
       POSTGRES_URL:
     healthcheck:
       # wget or curl required for healthchecks on services with a published port
