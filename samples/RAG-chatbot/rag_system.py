@@ -21,6 +21,7 @@ class RAGSystem:
 
     @lru_cache(maxsize=128)
     def retrieve(self, query, similarity_threshold=0.5, max_docs=5):
+        print("Cache Miss for retrieve")
         query_embedding = self.model.encode([query], convert_to_tensor=True)
         similarities = cosine_similarity(query_embedding, self.doc_embeddings)[0]
         
@@ -41,6 +42,7 @@ class RAGSystem:
 
     @lru_cache(maxsize=128)
     def generate_response(self, query, context):
+        print("Cache Miss for generate_response")
         try:
             prompt = (
                 "You are a helpful assistant specializing in cloud application development. "
@@ -82,8 +84,16 @@ class RAGSystem:
             print(f"Error in answer_query: {e}")
             return "An error occurred while generating the response."
 
+    def cache_info(self):
+        print("Retrieve cache info:", self.retrieve.cache_info())
+        print("Generate response cache info:", self.generate_response.cache_info())
+
 # Load knowledge base from a JSON file
 with open('knowledge_base.json', 'r') as kb_file:
     knowledge_base = json.load(kb_file)
 
 rag_system = RAGSystem(knowledge_base)
+
+# Example usage
+rag_system.answer_query("What is Defang?")
+rag_system.cache_info()  # Check cache statistics
