@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,46 +8,76 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(180deg, rgba(99, 109, 233, 1) 0%, rgba(90, 102, 214, 1) 50%, rgba(232, 91, 91, 1) 100%);
+            color: #fff;
         }
+
         .chat-container {
             max-width: 600px;
-            margin: auto;
-            border: 1px solid #ddd;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
             padding: 20px;
-            border-radius: 10px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         }
+
+        h2 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
         .chat-box {
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            min-height: 100px;
+            margin-bottom: 20px;
+            color: #f5f5f5;
         }
+
         .input-box {
             width: calc(100% - 22px);
             padding: 10px;
-            border: 1px solid #ddd;
+            border: none;
             border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 16px;
         }
+
         .submit-btn {
             padding: 10px 20px;
             border: none;
-            background-color: #007bff;
+            background-color: #636ded;
             color: white;
             cursor: pointer;
             border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #5a66d6;
         }
     </style>
 </head>
+
 <body>
     <div class="chat-container">
         <h2>RAG Chatbot</h2>
         <div class="chat-box" id="chat-box">
             {% if query %}
-                <strong>You:</strong> {{ query }}<br>
+            <strong>You:</strong> {{ query }}<br>
             {% endif %}
             {% if response %}
-                <strong>Bot:</strong> {{ response }}
+            <strong>Bot:</strong> {{ response }}
             {% endif %}
         </div>
         <form id="chat-form">
@@ -57,7 +88,7 @@
     </div>
 
     <script>
-        document.getElementById("chat-form").addEventListener("submit", async function(event) {
+        document.getElementById("chat-form").addEventListener("submit", async function (event) {
             event.preventDefault();
             const query = document.getElementById("query").value;
             const responseElement = document.getElementById("response");
@@ -75,4 +106,5 @@
         });
     </script>
 </body>
+
 </html>

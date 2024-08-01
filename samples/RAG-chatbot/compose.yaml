@@ -14,3 +14,7 @@ services:
       FLASK_APP: app.py
       OPENAI_API_KEY: ${OPENAI_API_KEY} # Set your OpenAI API key here or in the .env file
     command: flask run --host=0.0.0.0
+    deploy:
+      resources:
+        reservations:
+          memory: 4G
