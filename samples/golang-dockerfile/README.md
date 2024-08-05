@@ -9,6 +9,6 @@ Title: Dockerfile for Golang
 
 Short Description: A basic Dockerfile example for Golang
 
-Tags: Go
+Tags: Go, Mixin
 
 Languages: golang

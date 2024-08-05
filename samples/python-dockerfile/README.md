@@ -9,6 +9,6 @@ Title: Dockerfile for Python
 
 Short Description: A basic Dockerfile example for Python
 
-Tags: Python
+Tags: Python, Mixin
 
 Languages: python

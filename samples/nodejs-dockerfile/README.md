@@ -9,6 +9,6 @@ Title: Dockerfile for NodeJS
 
 Short Description: A basic Dockerfile example for NodeJS
 
-Tags: Node.js
+Tags: Node.js, Mixin
 
 Languages: nodejs
