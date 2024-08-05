@@ -1,5 +1,5 @@
 services:
-  service1:
+  app:
     restart: always
     build:
       context: .
