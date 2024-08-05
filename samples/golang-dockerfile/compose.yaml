@@ -1,0 +1,16 @@
+services:
+  app:
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - mode: ingress
+        target: 8080
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      memory: 256M
+    #environment:
+    #  - API_KEY
+    #  - API_SECRET
