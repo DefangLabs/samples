@@ -20,6 +20,13 @@ The `worker` service is the queue processor that will process the jobs added to 
 3. Type `defang compose up` in the CLI.
 4. Your app will be running within a few minutes.
 
+## One click deployment
+
+1. Open the main [Defang](https://defang.io/) page
+2. Navigate to the samples section and search `BullMQ & BullBoard & Redis`
+3. Click the one-click deploy option. This will prompt you to create a repository and run a github action to deploy this project.
+4. To monitor your services' status in the defang portal, check out the Deploy step for the URL to the portal.
+
 ## Local Development
 
 1. Run `docker compose -f compose.dev.yaml up`
