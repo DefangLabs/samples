@@ -14,6 +14,13 @@ A basic [Elysia](https://elysiajs.com/) app running on [Bun](https://bun.sh/) wi
 2. Run `defang compose up`.
 3. Your app will be running within a few minutes.
 
+## One click deployment
+
+1. Open the main [Defang](https://defang.io/) page
+2. Navigate to the samples section and search `Elysia`
+3. Click the one-click deploy option. This will prompt you to create a repository and run a github action to deploy this project.
+4. To monitor your services' status in the defang portal, check out the Deploy step for the URL to the portal.
+
 ## Local Development
 
 1. Run `docker compose -f compose.dev.yaml up`

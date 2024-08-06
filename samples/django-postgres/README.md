@@ -18,11 +18,18 @@ This sample showcases how you could deploy a full-stack application with Defang 
 2. If you are using [Defang BYOC](https://docs.defang.io/docs/concepts/defang-byoc), make sure you have properly [authenticated your AWS account](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)
    Plus, make sure that you have properly set your environment variables like `AWS_PROFILE`, `AWS_REGION`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`.
 
-## A Step-by-Step Guide
+## A Step-by-Step Guide for Deployment
 
 1. Open the terminal and type `defang login`
 2. Type `defang compose up` in the CLI
 3. Now your application will be launched
+
+## One click deployment
+
+1. Open the main [Defang](https://defang.io/) page
+2. Navigate to the samples section and search `Django & Postgres`
+3. Click the one-click deploy option. This will prompt you to create a repository and run a github action to deploy this project.
+4. To monitor your services' status in the defang portal, check out the Deploy step for the URL to the portal.
 
 ---
 

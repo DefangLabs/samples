@@ -1,6 +1,6 @@
-# FastAPI
+# FastAPI & PostgreSQL
 
-This sample project demonstrates how to deploy FastAPI with Defang.
+This sample project demonstrates how to deploy FastAPI with PostgreSQL with Defang.
 
 ## Prerequisites
 
@@ -12,6 +12,13 @@ This sample project demonstrates how to deploy FastAPI with Defang.
 1. Open the terminal and type `defang login`
 2. Type `defang compose up` in the CLI.
 3. Your app will be running within a few minutes.
+
+## One click deployment
+
+1. Open the main [Defang](https://defang.io/) page
+2. Navigate to the samples section and search `FastAPI & PostgreSQL`
+3. Click the one-click deploy option. This will prompt you to create a repository and run a github action to deploy this project.
+4. To monitor your services' status in the defang portal, check out the Deploy step for the URL to the portal.
 
 ## Local Development
 

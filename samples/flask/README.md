@@ -23,11 +23,18 @@ This sample is a simple Flask app that demonstrates how to create a TODO app usi
 2. Type `defang compose up` in the CLI
 3. Your app should be up and running with Defang in minutes!
 
+## One click deployment
+
+1. Open the main [Defang](https://defang.io/) page
+2. Navigate to the samples section and search `flask`
+3. Click the one-click deploy option. This will prompt you to create a repository and run a github action to deploy this project.
+4. To monitor your services' status in the defang portal, check out the Deploy step for the URL to the portal.
+
 ---
 
 Title: Flask
 
-Short Description: A basic Flask todo app.
+Short Description: A basic Flask to o app.
 
 Tags: Flask, Python
 
