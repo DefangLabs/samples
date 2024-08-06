@@ -25,6 +25,13 @@ This sample showcases how you could deploy a full-stack application with Angular
 2. Type `defang compose up` in the CLI
 3. Your app should be up and running with Defang in minutes!
 
+## One click deployment
+
+1. Open the main [Defang](https://defang.io/) page
+2. Navigate to the samples section and search `Angular & Node.js`
+3. Click the one-click deploy option. This will prompt you to create a repository and run a github action to deploy this project.
+4. To monitor your services' status in the defang portal, check out the Deploy step for the URL to the portal.
+
 ## Development
 
 For development, we use two local containers, one for the frontend Angular service and one for the backend service in Express. It also uses Caddy as a web server for serving static files. To run the sample locally after cloning the repository, you can run on Docker by doing:
