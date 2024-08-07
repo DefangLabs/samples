@@ -1,5 +1,7 @@
 # Python & REST API
 
+[1-click deploy](https://github.com/new?template_name=sample-python-rest-api-template&template_owner=DefangSamples)
+
 This Flask application fetches average interest rates from the Fiscal Data Treasury API. It provides endpoints to check the status of the API and to retrieve the latest average interest rates. Note that alognside your .py file, include a requirements.txt so that the Dockerfile can install the necessary packages with pip.
 
 ## Features

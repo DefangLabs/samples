@@ -1,5 +1,7 @@
 # Flask
 
+[1-click deploy](https://github.com/new?template_name=sample-flask-template&template_owner=DefangSamples)
+
 This is a sample of a basic Flask TODO app. The items are stored in memory and are lost when the server is restarted, but it should give you a basic idea of how to get started with Flask on Defang. Note that alognside your .py file, include a requirements.txt so that the Dockerfile can install the necessary packages with pip.
 
 ### NOTE:
@@ -24,11 +26,6 @@ This sample is a simple Flask app that demonstrates how to create a TODO app usi
 3. Your app should be up and running with Defang in minutes!
 
 ## One click deployment
-
-1. Open the main [Defang](https://defang.io/) page
-2. Navigate to the samples section and search `flask`
-3. Click the one-click deploy option. This will prompt you to create a repository and run a github action to deploy this project.
-4. To monitor your services' status in the defang portal, check out the Deploy step for the URL to the portal.
 
 ---
 

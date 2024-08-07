@@ -1,5 +1,7 @@
 # Django
 
+[1-click deploy](https://github.com/new?template_name=sample-django-template&template_owner=DefangSamples)
+
 This is a simple example of how to run Django on Defang. It is a simple Todo app that uses SQLite as the database.
 
 ### NOTE
@@ -28,13 +30,6 @@ The Dockerfile and compose files are already set up for you and are ready to be 
 2. Open the terminal and type `defang login`
 3. Type `defang compose up` in the CLI
 4. Now your application will be launched
-
-## One click deployment
-
-1. Open the main [Defang](https://defang.io/) page
-2. Navigate to the samples section and search `Django`
-3. Click the one-click deploy option. This will prompt you to create a repository and run a github action to deploy this project.
-4. To monitor your services' status in the defang portal, check out the Deploy step for the URL to the portal.
 
 ---
 

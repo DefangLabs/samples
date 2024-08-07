@@ -1,5 +1,7 @@
 # Node.js & SocketIO
 
+[1-click deploy](https://github.com/new?template_name=sample-nodejs-chatroom-template&template_owner=DefangSamples)
+
 This is a minimal chat application that shows how to use Socket.IO with Node.js with minimal code deployed with Defang.
 
 ## Prerequisites

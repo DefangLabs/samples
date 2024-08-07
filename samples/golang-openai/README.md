@@ -1,3 +1,7 @@
+# Golang & OpenAI
+
+[1-click deploy](https://github.com/new?template_name=sample-golang-openai-template&template_owner=DefangSamples)
+
 ## Setup
 
 This sample requires an API key to access the OpenAI API. The name of the config value is referenced in the compose.yaml file.

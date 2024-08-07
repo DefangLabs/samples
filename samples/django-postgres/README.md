@@ -1,5 +1,7 @@
 # Django & Postgres
 
+[1-click deploy](https://github.com/new?template_name=sample-django-postgres-template&template_owner=DefangSamples)
+
 This template is a customer relationship management list project developed using Python Django framework, offering a starting point to help you quickly build your customer management system. We use PostgreSQL as the database. We have prepared all the essential files for deployment. By spending less than 10 minutes setting up the environment, as detailed in the prerequisites, and executing the commands in our step-by-step guide, your website will be ready to go live to the world!
 
 ## NOTE
@@ -23,13 +25,6 @@ This sample showcases how you could deploy a full-stack application with Defang 
 1. Open the terminal and type `defang login`
 2. Type `defang compose up` in the CLI
 3. Now your application will be launched
-
-## One click deployment
-
-1. Open the main [Defang](https://defang.io/) page
-2. Navigate to the samples section and search `Django & Postgres`
-3. Click the one-click deploy option. This will prompt you to create a repository and run a github action to deploy this project.
-4. To monitor your services' status in the defang portal, check out the Deploy step for the URL to the portal.
 
 ---
 

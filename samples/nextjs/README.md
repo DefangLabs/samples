@@ -1,5 +1,7 @@
 # Next.js
 
+[1-click deploy](https://github.com/new?template_name=sample-nextjs-template&template_owner=DefangSamples)
+
 A basic Next.js app with a Dockerfile and compose.yaml ready to deploy to AWS with [Defang](https://defang.io).
 
 ## Steps

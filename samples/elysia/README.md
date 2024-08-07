@@ -1,5 +1,7 @@
 # Elysia & Bun
 
+[1-click deploy](https://github.com/new?template_name=sample-elysia-template&template_owner=DefangSamples)
+
 A basic [Elysia](https://elysiajs.com/) app running on [Bun](https://bun.sh/) with a Dockerfile and compose.yaml ready to deploy to AWS with [Defang](https://defang.io).
 
 ## Prerequisites
@@ -13,13 +15,6 @@ A basic [Elysia](https://elysiajs.com/) app running on [Bun](https://bun.sh/) wi
 1. Run `defang login` if you are not yet logged in.
 2. Run `defang compose up`.
 3. Your app will be running within a few minutes.
-
-## One click deployment
-
-1. Open the main [Defang](https://defang.io/) page
-2. Navigate to the samples section and search `Elysia`
-3. Click the one-click deploy option. This will prompt you to create a repository and run a github action to deploy this project.
-4. To monitor your services' status in the defang portal, check out the Deploy step for the URL to the portal.
 
 ## Local Development
 

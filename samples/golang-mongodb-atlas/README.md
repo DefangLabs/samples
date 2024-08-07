@@ -1,5 +1,7 @@
 # Go & MongoDB Atlas
 
+[1-click deploy](https://github.com/new?template_name=sample-golang-mongodb-atlas-template&template_owner=DefangSamples)
+
 ## Overview
 
 This sample is is a web-based task manager designed to help users manage their tasks efficiently. It allows users to add, delete, and view tasks in a simple and intuitive interface. This application is ideal for anyone looking to enhance their productivity by keeping track of their daily activities. There is a go.mod file that includes dependencies for the Dockerfile to install

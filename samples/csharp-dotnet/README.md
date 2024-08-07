@@ -1,5 +1,7 @@
 # ASP.NET Core & JavaScript Task Manager
 
+[1-click deploy](https://github.com/new?template_name=sample-csharp-dotnet-template&template_owner=DefangSamples)
+
 This project is a simple task manager application using ASP.NET Core for the backend and JavaScript for client-side component rendering. We show case how to deploy it to both defang and docker for both prod and dev environments.
 
 ## NOTE
@@ -23,13 +25,6 @@ This sample showcases how you could deploy a full-stack application with ASP.NET
 1. Open the terminal and type `defang login`
 2. Type `defang compose up` in the CLI
 3. Your app should be up and running with Defang in minutes!
-
-## One click deployment
-
-1. Open the main [Defang](https://defang.io/) page
-2. Navigate to the samples section and search `ASP.NET`
-3. Click the one-click deploy option. This will prompt you to create a repository and run a github action to deploy this project.
-4. To monitor your services' status in the defang portal, check out the Deploy step for the URL to the portal.
 
 ## Development
 

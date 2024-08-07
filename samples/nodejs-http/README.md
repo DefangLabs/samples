@@ -1,5 +1,7 @@
 # Node.js HTTP Server
 
+[1-click deploy](https://github.com/new?template_name=sample-nodejs-http-template&template_owner=DefangSamples)
+
 This example shows how to build a minimal Node.js application using the [Node.js](https://nodejs.org/) runtime.
 
 ## Prerequisites

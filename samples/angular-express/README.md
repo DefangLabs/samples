@@ -1,5 +1,7 @@
 # Angular & Node.js
 
+[1-click deploy](https://github.com/new?template_name=sample-angular-express-template&template_owner=DefangSamples)
+
 This project demonstrates both client-side component rendering and hydration with Angular, as well as server-side rendering with Node.js and Socket.IO for real-time communication. It also includes Docker configurations for easy deployment.
 
 ## NOTE
@@ -24,13 +26,6 @@ This sample showcases how you could deploy a full-stack application with Angular
 1. Open the terminal and type `defang login`
 2. Type `defang compose up` in the CLI
 3. Your app should be up and running with Defang in minutes!
-
-## One click deployment
-
-1. Open the main [Defang](https://defang.io/) page
-2. Navigate to the samples section and search `Angular & Node.js`
-3. Click the one-click deploy option. This will prompt you to create a repository and run a github action to deploy this project.
-4. To monitor your services' status in the defang portal, check out the Deploy step for the URL to the portal.
 
 ## Development
 

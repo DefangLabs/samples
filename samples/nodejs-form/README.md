@@ -1,5 +1,7 @@
 # Node.js Express Form
 
+[1-click deploy](https://github.com/new?template_name=sample-nodejs-form-template&template_owner=DefangSamples)
+
 This is a basic Node.js application using the Express framework to demonstrate handling a form submission. The application serves an HTML form where users can input their first name and then greets them personally upon submission. Note alongside your project, you should also include a package.json file that includes the relevant metadata such as package dependencies, scripts, project verrsions so that the Dockerfile can install necessary dependencies.
 
 ## Essential Setup Files
