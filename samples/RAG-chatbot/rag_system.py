@@ -72,7 +72,7 @@ class RAGSystem:
                     {"role": "user", "content": normalized_query}
                 ],
                 temperature=0.5,
-                max_tokens=1024,  # Increase max_tokens to accommodate longer responses
+                max_tokens=1024,
                 top_p=1,
                 frequency_penalty=0,
                 presence_penalty=0
@@ -84,12 +84,14 @@ class RAGSystem:
             # Indicate cache usage
             cache_info = self.generate_response.cache_info()
             if cache_info.misses > 0:
-                print("No, this response is generated")
+                print("No, this response is generated") 
             else:
                 print("Yes, this response is cached")
             
-            return generated_response
-
+            # Concatenate the context with the generated response
+            final_response = f"**Context:**\n{context}\n\n**Response:**\n{generated_response}"
+            
+            return final_response
         except openai.error.OpenAIError as e:
             print(f"Error generating response from OpenAI: {e}")
             return "An error occurred while generating the response."
@@ -114,8 +116,3 @@ with open('knowledge_base.json', 'r') as kb_file:
     knowledge_base = json.load(kb_file)
 
 rag_system = RAGSystem(knowledge_base)
-
-# Example usage
-response = rag_system.answer_query("What is Defang?")
-print("Response:", response)
-rag_system.cache_info()  # Check cache statistics
