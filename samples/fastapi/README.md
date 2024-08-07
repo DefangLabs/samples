@@ -1,5 +1,7 @@
 # FastAPI
 
+[1-click deploy](https://github.com/new?template_name=sample-fastapi-template&template_owner=DefangSamples)
+
 This sample project demonstrates how to deploy FastAPI with Defang.
 
 ## Prerequisites

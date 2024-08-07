@@ -1,5 +1,7 @@
 # Next.js & GitHub Actions
 
+[1-click deploy](https://github.com/new?template_name=sample-nextjs-github-actions-template&template_owner=DefangSamples)
+
 A basic Next.js app with a Dockerfile and docker-compose ready to deploy to AWS with [Defang](https://defang.io) with GitHub Actions configured for CI/CD.
 
 ## Steps

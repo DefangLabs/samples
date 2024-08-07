@@ -1,5 +1,7 @@
 # Go HTTP Form
 
+[1-click deploy](https://github.com/new?template_name=sample-golang-http-form-template&template_owner=DefangSamples)
+
 This Go application demonstrates a simple form submission using the standard net/http library. Users can input their first name into a form, and upon submission, they will be greeted personally by the application.
 
 ## Features

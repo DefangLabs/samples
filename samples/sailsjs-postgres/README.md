@@ -1,5 +1,7 @@
 # Sailsjs & Postgres
 
+[1-click deploy](https://github.com/new?template_name=sample-sailsjs-postgres-template&template_owner=DefangSamples)
+
 This sample project demonstrates how to deploy
 
 Sailsjs with Defang and connect it to a Postgres database. Furthermore, we emonstrate how to run a local Postgres container during development vs a managed postgres service (Neon). For a quick database set up please go to [Neon](https://neon.tech/) and follow set up instructions. The sample starts with a no tasks in the database and allows us to add tasks on the fly. It sets wide open permissions on the tables as well so you can start querying or mutating the data right away.

@@ -1,5 +1,7 @@
 # Pulumi
 
+[1-click deploy](https://github.com/new?template_name=sample-pulumi-template&template_owner=DefangSamples)
+
 This basic example shows you how to use the Defang Pulumi provider to deploy the nodejs-http sample with Defang.
 
 ## Prerequisites

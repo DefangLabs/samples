@@ -1,5 +1,7 @@
 # Pulumi & Remix & Postgres
 
+[1-click deploy](https://github.com/new?template_name=sample-pulumi-remix-postgres-template&template_owner=DefangSamples)
+
 In this example, we run a Remix application connected to a Postgres database using Prisma as an ORM. When we deploy our service to [Defang](https://defang.io/), we also deploy a Postgres service and database using [Aiven](https://aiven.io/) so we can run our full application in the cloud.
 
 ## Running Locally

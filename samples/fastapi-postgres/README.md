@@ -1,6 +1,8 @@
-# FastAPI
+# FastAPI & PostgreSQL
 
-This sample project demonstrates how to deploy FastAPI with Defang.
+[1-click deploy](https://github.com/new?template_name=sample-fastapi-postgres-template&template_owner=DefangSamples)
+
+This sample project demonstrates how to deploy FastAPI with PostgreSQL with Defang.
 
 ## Prerequisites
 

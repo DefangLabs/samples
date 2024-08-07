@@ -1,5 +1,7 @@
 # Angular & Node.js
 
+[1-click deploy](https://github.com/new?template_name=sample-angular-express-template&template_owner=DefangSamples)
+
 This project demonstrates both client-side component rendering and hydration with Angular, as well as server-side rendering with Node.js and Socket.IO for real-time communication. It also includes Docker configurations for easy deployment.
 
 ## NOTE

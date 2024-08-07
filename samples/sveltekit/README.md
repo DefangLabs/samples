@@ -1,5 +1,7 @@
 # Sveltekit
 
+[1-click deploy](https://github.com/new?template_name=sample-sveltekit-template&template_owner=DefangSamples)
+
 This sample shows how to get a minimal SvelteKit app up and running with Defang.
 
 ## Prerequisites

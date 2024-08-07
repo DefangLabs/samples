@@ -1,5 +1,7 @@
 # Go & Slack API
 
+[1-click deploy](https://github.com/new?template_name=sample-golang-slackbot-template&template_owner=DefangSamples)
+
 This is a simple slackbot that takes a request and posts the message from the body to a slack channel.
 
 ## Prerequisites

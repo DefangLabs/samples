@@ -1,5 +1,7 @@
 # Python & Flask & OpenAI
 
+[1-click deploy](https://github.com/new?template_name=sample-python-openai-template&template_owner=DefangSamples)
+
 ## Setup
 
 This sample requires an API key to access the OpenAI API. The name of the config value is referenced in the compose.yaml file. To provide a value for it, you can use the Defang CLI like this:

@@ -1,5 +1,7 @@
 # Sailsjs
 
+[1-click deploy](https://github.com/new?template_name=sample-sailsjs-template&template_owner=DefangSamples)
+
 This sample demosntrates how to deploy a very basic Sailsjs sample with Defang. The sample simply outputs hello world on the webpage.
 
 ## Prerequisites

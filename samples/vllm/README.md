@@ -1,5 +1,7 @@
 # Mistral & vLLM
 
+[1-click deploy](https://github.com/new?template_name=sample-vllm-template&template_owner=DefangSamples)
+
 This guide demonstrates how to deploy Mistral using vLLM. You'll need a Hugging Face token to begin.
 
 ## Prerequisites

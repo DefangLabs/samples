@@ -1,5 +1,7 @@
 # ImgProxy
 
+[1-click deploy](https://github.com/new?template_name=sample-imgproxy-template&template_owner=DefangSamples)
+
 ImgProxy is a fast and secure standalone server for resizing and converting remote images. It's can be deployed using their official Docker image, as documented [here](https://docs.imgproxy.net/installation#docker).
 
 ## Prerequisites

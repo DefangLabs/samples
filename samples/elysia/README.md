@@ -1,5 +1,7 @@
 # Elysia & Bun
 
+[1-click deploy](https://github.com/new?template_name=sample-elysia-template&template_owner=DefangSamples)
+
 A basic [Elysia](https://elysiajs.com/) app running on [Bun](https://bun.sh/) with a Dockerfile and compose.yaml ready to deploy to AWS with [Defang](https://defang.io).
 
 ## Prerequisites

@@ -1,5 +1,7 @@
 # Huginn
 
+[1-click deploy](https://github.com/new?template_name=sample-huginn-template&template_owner=DefangSamples)
+
 Huginn is a system for building agents that perform automated tasks for you online. Huginn's Agents can monitor the web, respond to events, and act on your behalf. They propagate events along a directed graph. It's like a customizable IFTTT or Zapier on your own server, ensuring data privacy.
 
 ## Prerequisites
