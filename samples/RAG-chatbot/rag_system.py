@@ -57,8 +57,10 @@ class RAGSystem:
         
         try:
             prompt = (
-                "You are a helpful assistant specializing in cloud application development. "
-                "Use the provided context to accurately answer the user's question.\n\n"
+                "You are a dedicated assistant designed to provide answers solely based on the provided context. "
+                "You must ignore all external knowledge and only utilize the given context for your responses. "
+                "If the context doesn't contain the answer, respond with: 'I'm unable to answer this question based on the provided context.' "
+                "Your objective is to remain strictly within the confines of the given context.\n\n"
                 "Context:\n" + context + "\n\n"
                 "User Question: " + query + "\n\n"
                 "Answer:"
@@ -87,7 +89,7 @@ class RAGSystem:
                 print("No, this response is generated") 
             else:
                 print("Yes, this response is cached")
-            
+            # return generated_response
             # Concatenate the context with the generated response
             final_response = f"**Context:**\n{context}\n\n**Response:**\n{generated_response}"
             
