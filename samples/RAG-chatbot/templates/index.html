@@ -118,6 +118,8 @@
         <div id="response"></div>
     </div>
 
+    <!-- Include Marked.js for markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
         document.getElementById("chat-form").addEventListener("submit", async function (event) {
             event.preventDefault();
@@ -141,11 +143,15 @@
             // Hide the loading spinner
             loadingSpinner.style.display = "none";
 
-            // Append the query and response to the chat box
-            chatBox.innerHTML += `<strong>You:</strong> ${query}<br><strong>Bot:</strong> ${data.response}<br><br>`;
+            // Convert the response from markdown to HTML
+            const markdownContent = marked.parse(data.response);
+
+            // Append the query and response to the chat box, converting markdown to HTML
+            chatBox.innerHTML += `<strong>You:</strong> ${query}<br><strong>Bot:</strong> ${markdownContent}<br><br>`;
 
             // Clear the input field
             document.getElementById("query").value = "";
+            chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to the bottom
         });
     </script>
 </body>

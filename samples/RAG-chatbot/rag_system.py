@@ -72,7 +72,7 @@ class RAGSystem:
                     {"role": "user", "content": normalized_query}
                 ],
                 temperature=0.5,
-                max_tokens=300,
+                max_tokens=1024,  # Increase max_tokens to accommodate longer responses
                 top_p=1,
                 frequency_penalty=0,
                 presence_penalty=0
