@@ -89,11 +89,11 @@ class RAGSystem:
                 print("No, this response is generated") 
             else:
                 print("Yes, this response is cached")
-            # return generated_response
+            return generated_response
             # Concatenate the context with the generated response
-            final_response = f"**Context:**\n{context}\n\n**Response:**\n{generated_response}"
+            # final_response = f"**Context:**\n{context}\n\n**Response:**\n{generated_response}"
             
-            return final_response
+            # return final_response
         except openai.error.OpenAIError as e:
             print(f"Error generating response from OpenAI: {e}")
             return "An error occurred while generating the response."
