@@ -1,5 +1,16 @@
-# Use the official Node.js image as a base image
-FROM node:18-alpine
+# Use the slim version of Debian Bookworm as the base image
+FROM debian:bookworm-slim
+
+# Set environment variables to avoid interactive prompts during package installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install curl, Node.js 18.x, and npm
+RUN apt-get update && apt-get install -y \
+    curl \
+    && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory
 WORKDIR /app
