@@ -13,7 +13,7 @@ services:
       - BOARD_PASSWORD
       - QUEUE
     depends_on:
-      - redis
+      - redisx
     #deploy:
     #  resources:
     #    reservations:
@@ -32,7 +32,7 @@ services:
       - REDIS=redis://redisx:6379
       - QUEUE
     depends_on:
-      - redis
+      - redisx
     #deploy:
     #  resources:
     #    reservations:
@@ -51,7 +51,7 @@ services:
     healthcheck:
       test: ["CMD", "wget", "-q", "--spider", "127.0.0.1:3000"]
     depends_on:
-      - redis
+      - redisx
     #deploy:
     #  resources:
     #    reservations:

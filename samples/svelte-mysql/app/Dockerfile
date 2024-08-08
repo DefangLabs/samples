@@ -1,7 +1,16 @@
-# Dockerfile for Svelte frontend and Node.js backend
-
 # Stage 1: Build Svelte frontend
-FROM node:16-alpine as frontend
+FROM debian:bookworm-slim as frontend
+
+# Set environment variables to avoid interactive prompts during package installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install curl and Node.js 16.x
+RUN apt-get update && apt-get install -y \
+    curl \
+    && curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
+    && apt-get install -y nodejs \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /frontend
 
@@ -13,7 +22,18 @@ COPY frontend/ ./
 RUN npm install --legacy-peer-deps && npm run build
 
 # Stage 2: Build Node.js backend
-FROM node:16-alpine as backend
+FROM debian:bookworm-slim as backend
+
+# Set environment variables to avoid interactive prompts during package installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install curl and Node.js 16.x
+RUN apt-get update && apt-get install -y \
+    curl \
+    && curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
+    && apt-get install -y nodejs \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -24,7 +44,7 @@ COPY backend/ ./
 # Install dependencies
 RUN npm install
 
-# Copy the built Svelte files
+# Copy the built Svelte files from the frontend stage
 COPY --from=frontend /frontend/build ./public
 
 # Copy the backend source code
