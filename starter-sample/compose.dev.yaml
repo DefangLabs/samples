@@ -1,30 +1,31 @@
+#REMOVE_ME_AFTER_EDITING
 # Sample dev compose file. It can be helpful to provide this kind of file
 # for samples where a user may want to hot reload changes in the app, or
-# if it depends on stateful services like a database that isn't supported by Defang.
+# if it depends on stateful services like a database that isn't supported
+# by Defang, like MongoDB.
 
 services:
   app:
-    build:
-      dockerfile: Dockerfile
-    ports:
-      - target: 3000
-        published: 3000
-        mode: ingress
+    extends:
+      file: compose.yaml
+      service: app
     volumes:
       - ./app:/app
+    healthcheck: {}
     environment: #REMOVE_ME_AFTER_EDITING
-      POSTGRES_URL: postgres://postgres:password@postgres:5432/postgres
+      MONGODB_URI: mongodb://user:password@mongo:27017
     depends_on:
-      - postgres
+      - mongo
 
-  postgres:
-    image: postgres:16
+  #REMOVE_ME_AFTER_EDITING
+  mongo:
+    image: mongo:7
+    restart: always
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - mongo_data:/data/db
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: postgres
+      MONGO_INITDB_ROOT_USERNAME: user
+      MONGO_INITDB_ROOT_PASSWORD: password
 
 volumes:
-  postgres_data:
+  mongo_data:

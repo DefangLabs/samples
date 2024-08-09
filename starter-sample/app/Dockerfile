@@ -1,7 +1,7 @@
 # A sample dockerfile for a Node.js application.
 # Replace with an appropriate Dockerfile for your application.
 
-FROM node:20-alpine
+FROM node:20-bookworm-slim
 
 WORKDIR /app
 

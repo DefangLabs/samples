@@ -1,4 +1,4 @@
-# Sample compose file.
+# Sample compose file. #REMOVE_ME_AFTER_EDITING
 
 services:
   app:
@@ -11,10 +11,8 @@ services:
       - target: 3000
         published: 3000
         mode: ingress
-    volumes:
-      - ./app:/app
-    environment: #REMOVE_ME_AFTER_EDITING
-      POSTGRES_URL:
+    environment: # Secrets and env vars #REMOVE_ME_AFTER_EDITING
+      MONGODB_URI:
     healthcheck:
       # wget or curl required for healthchecks on services with a published port
       # this gets parsed by Defang and provided to the load balancers as well
