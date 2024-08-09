@@ -1,17 +1,12 @@
-name: deploy
+name: Deploy
 
 on:
   push:
     branches:
       - main
-      - pr-test/*
-
-concurrency:
-  group: deploy
-  cancel-in-progress: false
 
 jobs:
-  deploy:
+  test:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -22,4 +17,4 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Deploy
-      uses: DefangLabs/defang-github-action@v1
+      uses: DefangLabs/defang-github-action@v1.0.4
