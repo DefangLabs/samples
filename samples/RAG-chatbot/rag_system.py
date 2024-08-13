@@ -5,6 +5,7 @@ from sentence_transformers import SentenceTransformer
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 from functools import lru_cache
+import re
 
 # Ensure you have set the OPENAI_API_KEY in your environment variables
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -25,6 +26,21 @@ class RAGSystem:
         """
         return query.lower().strip()
 
+    def extract_keywords(self, query):
+        """
+        Extract keywords from the query using simple tokenization.
+        """
+        # Basic keyword extraction by splitting query into words
+        return re.findall(r'\b\w+\b', query.lower())
+
+    def fuzzy_match_about(self, query_keywords, about_text):
+        """
+        Check if any of the query keywords match the about text.
+        """
+        about_keywords = set(re.findall(r'\b\w+\b', about_text.lower()))
+        matches = set(query_keywords) & about_keywords
+        return len(matches)
+
     @lru_cache(maxsize=128)
     def retrieve(self, query, similarity_threshold=0.5, max_docs=5):
         # Normalize query for consistent caching
@@ -34,9 +50,18 @@ class RAGSystem:
         query_embedding = self.model.encode([normalized_query], convert_to_tensor=True)
         similarities = cosine_similarity(query_embedding, self.doc_embeddings)[0]
         
-        similar_indices = np.where(similarities >= similarity_threshold)[0]
-        sorted_indices = sorted(similar_indices, key=lambda i: similarities[i], reverse=True)
-        top_indices = sorted_indices[:max_docs]
+        query_keywords = self.extract_keywords(normalized_query)
+        relevance_scores = []
+
+        for i, doc in enumerate(self.knowledge_base):
+            # Fuzzy match with the 'about' field
+            about_score = self.fuzzy_match_about(query_keywords, doc.get('about', ''))
+            total_score = similarities[i] + about_score
+            relevance_scores.append((i, total_score))
+
+        # Sort based on the combined score
+        sorted_indices = sorted(relevance_scores, key=lambda x: x[1], reverse=True)
+        top_indices = [i for i, score in sorted_indices[:max_docs] if score >= similarity_threshold]
 
         retrieved_docs = [self.knowledge_base[i]["text"] for i in top_indices]
 
@@ -57,11 +82,13 @@ class RAGSystem:
         
         try:
             prompt = (
-                "You are a dedicated assistant designed to provide answers solely based on the provided context. "
-                "You must ignore all external knowledge and only utilize the given context for your responses. "
-                "If the context doesn't contain the answer, respond with: 'I'm unable to answer this question based on the provided context.' "
-                "Your objective is to remain strictly within the confines of the given context.\n\n"
-                "Context:\n" + context + "\n\n"
+                "You are a dedicated assistant designed to provide answers about Defang. "
+                "When the user says 'you', 'your', or any pronoun, interpret it as referring to Defang with context of Defang also. "
+                "If the user's question involves comparisons with or references to other services, you may use external knowledge. "
+                "However, if the question is strictly about Defang, you must ignore all external knowledge and only utilize the given context. "
+                "When generating the answer, please put the answer first and the justification later. "
+                "Your objective is to remain strictly within the confines of the given context unless comparisons to other services are explicitly mentioned. "
+                "\n\nContext:\n" + context + "\n\n"
                 "User Question: " + query + "\n\n"
                 "Answer:"
             )
@@ -73,8 +100,8 @@ class RAGSystem:
                     {"role": "system", "content": prompt},
                     {"role": "user", "content": normalized_query}
                 ],
-                temperature=0.5,
-                max_tokens=1024,
+                temperature=0.2,
+                max_tokens=2048,
                 top_p=1,
                 frequency_penalty=0,
                 presence_penalty=0
@@ -89,11 +116,11 @@ class RAGSystem:
                 print("No, this response is generated") 
             else:
                 print("Yes, this response is cached")
-            return generated_response
-            # Concatenate the context with the generated response
-            # final_response = f"**Context:**\n{context}\n\n**Response:**\n{generated_response}"
             
-            # return final_response
+            # Concatenate the context with the generated response
+            final_response = f"**Context:**\n{context}\n\n**Response:**\n{generated_response}"
+            
+            return final_response
         except openai.error.OpenAIError as e:
             print(f"Error generating response from OpenAI: {e}")
             return "An error occurred while generating the response."
@@ -118,3 +145,8 @@ with open('knowledge_base.json', 'r') as kb_file:
     knowledge_base = json.load(kb_file)
 
 rag_system = RAGSystem(knowledge_base)
+
+# Example usage
+response = rag_system.answer_query("What is Defang?")
+print("Response:", response)
+rag_system.cache_info()  # Check cache statistics
