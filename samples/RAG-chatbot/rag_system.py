@@ -87,6 +87,7 @@ class RAGSystem:
                 "If the user's question involves comparisons with or references to other services, you may use external knowledge. "
                 "However, if the question is strictly about Defang, you must ignore all external knowledge and only utilize the given context. "
                 "When generating the answer, please put the answer first and the justification later. "
+                "Any mentions of BYOD means BRING YOUR OWN DOMAIN and NOT BRING YOUR OWN DEVICE"
                 "Your objective is to remain strictly within the confines of the given context unless comparisons to other services are explicitly mentioned. "
                 "\n\nContext:\n" + context + "\n\n"
                 "User Question: " + query + "\n\n"
@@ -117,14 +118,17 @@ class RAGSystem:
             else:
                 print("Yes, this response is cached")
             
-            # Concatenate the context with the generated response
-            final_response = f"**Context:**\n{context}\n\n**Response:**\n{generated_response}"
+            return generated_response
             
-            return final_response
+            # Commented out for future debugging:
+            # Concatenate the context with the generated response
+            # final_response = f"**Context:**\n{context}\n\n**Response:**\n{generated_response}"
+            # return final_response
+
         except openai.error.OpenAIError as e:
             print(f"Error generating response from OpenAI: {e}")
             return "An error occurred while generating the response."
-
+    
     def answer_query(self, query):
         try:
             # Normalize query before use
@@ -145,8 +149,3 @@ with open('knowledge_base.json', 'r') as kb_file:
     knowledge_base = json.load(kb_file)
 
 rag_system = RAGSystem(knowledge_base)
-
-# Example usage
-response = rag_system.answer_query("What is Defang?")
-print("Response:", response)
-rag_system.cache_info()  # Check cache statistics

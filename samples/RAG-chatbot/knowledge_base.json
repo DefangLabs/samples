@@ -761,7 +761,7 @@
   },
   {
     "id": 153,
-    "about": "Max Resources",
+    "about": "Max Resources, Max CPUs, Max Memory, Max Replicas",
     "text": "* Services: 5 * CPUs: 2 * Memory: 8GB * Replicas: 2"
   },
   {
@@ -1363,5 +1363,10 @@
     "id": 273,
     "about": "Takeaways",
     "text": "Congratulations! You've successfully deployed a Slackbot using Defang. If you deployed this as an internal service, you could use it to send status updates, alerts, or other important messages to your team. The possibilities are endless!"
+  },
+  {
+    "id": 273,
+    "about": "BYOD - Bring Your Own Domain",
+    "text": ""
   }
 ]
