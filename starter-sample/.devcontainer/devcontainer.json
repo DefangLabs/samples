@@ -4,6 +4,7 @@
     "context": ".."
   },
   "features": {
-    "ghcr.io/defanglabs/devcontainer-feature/defang-cli:1.0.4": {}
+    "ghcr.io/defanglabs/devcontainer-feature/defang-cli:1.0.4": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
   }
 }
