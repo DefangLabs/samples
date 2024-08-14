@@ -17,7 +17,8 @@ class RAGSystem:
         self.doc_embeddings = self.embed_knowledge_base()
 
     def embed_knowledge_base(self):
-        docs = [doc["text"] for doc in self.knowledge_base]
+        # Combine the 'about' and 'text' fields for embedding
+        docs = [f'{doc["about"]}. {doc["text"]}' for doc in self.knowledge_base]
         return self.model.encode(docs, convert_to_tensor=True)
 
     def normalize_query(self, query):
@@ -26,48 +27,45 @@ class RAGSystem:
         """
         return query.lower().strip()
 
-    def extract_keywords(self, query):
-        """
-        Extract keywords from the query using simple tokenization.
-        """
-        # Basic keyword extraction by splitting query into words
-        return re.findall(r'\b\w+\b', query.lower())
-
-    def fuzzy_match_about(self, query_keywords, about_text):
-        """
-        Check if any of the query keywords match the about text.
-        """
-        about_keywords = set(re.findall(r'\b\w+\b', about_text.lower()))
-        matches = set(query_keywords) & about_keywords
-        return len(matches)
-
     @lru_cache(maxsize=128)
-    def retrieve(self, query, similarity_threshold=0.5, max_docs=5):
+    def retrieve(self, query, similarity_threshold=0.7, high_match_threshold=0.8, max_docs=5):
         # Normalize query for consistent caching
         normalized_query = self.normalize_query(query)
         print(f"Cache Access for retrieve: '{normalized_query}'")
-        
+
+        # Query embedding
         query_embedding = self.model.encode([normalized_query], convert_to_tensor=True)
+
+        # Calculate similarities
         similarities = cosine_similarity(query_embedding, self.doc_embeddings)[0]
-        
-        query_keywords = self.extract_keywords(normalized_query)
+
+        # Initialize relevance scores
         relevance_scores = []
 
         for i, doc in enumerate(self.knowledge_base):
-            # Fuzzy match with the 'about' field
-            about_score = self.fuzzy_match_about(query_keywords, doc.get('about', ''))
-            total_score = similarities[i] + about_score
-            relevance_scores.append((i, total_score))
+            # Calculate about and text similarities separately
+            about_similarity = cosine_similarity(query_embedding, self.model.encode([doc["about"]]))[0][0]
+            text_similarity = similarities[i]  # Already calculated
+            
+            # Give more weight to text similarity
+            combined_score = (0.3 * about_similarity) + (0.7 * text_similarity)
+            
+            # If either about or text similarity is above the high match threshold, prioritize it
+            if about_similarity >= high_match_threshold or text_similarity >= high_match_threshold:
+                combined_score = max(about_similarity, text_similarity)
+                
+            relevance_scores.append((i, combined_score))
 
-        # Sort based on the combined score
+        # Sort by combined score in descending order
         sorted_indices = sorted(relevance_scores, key=lambda x: x[1], reverse=True)
         top_indices = [i for i, score in sorted_indices[:max_docs] if score >= similarity_threshold]
 
-        retrieved_docs = [self.knowledge_base[i]["text"] for i in top_indices]
+        # Retrieve the most relevant documents, including both 'about' and 'text' fields
+        retrieved_docs = [f'{self.knowledge_base[i]["about"]}. {self.knowledge_base[i]["text"]}' for i in top_indices]
 
         if not retrieved_docs:
             max_index = np.argmax(similarities)
-            retrieved_docs.append(self.knowledge_base[max_index]["text"])
+            retrieved_docs.append(f'{self.knowledge_base[max_index]["about"]}. {self.knowledge_base[max_index]["text"]}')
 
         context = "\n\n".join(retrieved_docs)
         print("Retrieved Context:\n", context)
@@ -79,15 +77,15 @@ class RAGSystem:
         # Normalize query for consistent caching
         normalized_query = self.normalize_query(query)
         print(f"Cache Access for generate_response: '{normalized_query}'")
-        
+
         try:
             prompt = (
-                "You are a dedicated assistant designed to provide answers about Defang. "
+                "You are a dedicated assistant designed to provide positive answers about Defang. "
                 "When the user says 'you', 'your', or any pronoun, interpret it as referring to Defang with context of Defang also. "
                 "If the user's question involves comparisons with or references to other services, you may use external knowledge. "
                 "However, if the question is strictly about Defang, you must ignore all external knowledge and only utilize the given context. "
                 "When generating the answer, please put the answer first and the justification later. "
-                "Any mentions of BYOD means BRING YOUR OWN DOMAIN and NOT BRING YOUR OWN DEVICE"
+                "Any mentions of BYOD means BRING YOUR OWN DOMAIN and NOT BRING YOUR OWN DEVICE."
                 "Your objective is to remain strictly within the confines of the given context unless comparisons to other services are explicitly mentioned. "
                 "\n\nContext:\n" + context + "\n\n"
                 "User Question: " + query + "\n\n"
@@ -107,19 +105,19 @@ class RAGSystem:
                 frequency_penalty=0,
                 presence_penalty=0
             )
-            
+
             # Print the response generated by the model
             generated_response = response['choices'][0]['message']['content'].strip()
-            
+
             # Indicate cache usage
             cache_info = self.generate_response.cache_info()
             if cache_info.misses > 0:
-                print("No, this response is generated") 
+                print("No, this response is generated")
             else:
                 print("Yes, this response is cached")
-            
+
             return generated_response
-            
+
             # Commented out for future debugging:
             # Concatenate the context with the generated response
             # final_response = f"**Context:**\n{context}\n\n**Response:**\n{generated_response}"
@@ -128,7 +126,7 @@ class RAGSystem:
         except openai.error.OpenAIError as e:
             print(f"Error generating response from OpenAI: {e}")
             return "An error occurred while generating the response."
-    
+
     def answer_query(self, query):
         try:
             # Normalize query before use

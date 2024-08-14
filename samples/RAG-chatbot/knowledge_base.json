@@ -761,7 +761,7 @@
   },
   {
     "id": 153,
-    "about": "Max Resources, Max CPUs, Max Memory, Max Replicas",
+    "about": "Max Resources",
     "text": "* Services: 5 * CPUs: 2 * Memory: 8GB * Replicas: 2"
   },
   {
