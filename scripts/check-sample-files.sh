@@ -22,4 +22,13 @@ for dir in ./samples/*/; do
       echo " - [ ] add 'Languages:' to README.md in ${dir}"
     fi
   fi
+
+  # Check for #REMOVE_ME_AFTER_EDITING
+  matches=$(grep -rnH "#REMOVE_ME_AFTER_EDITING" $dir* | cut -d: -f1,2)
+
+  if [ -n "$matches" ]; then
+    echo "$matches" | while read -r line; do
+      echo " - [ ] $line contains #REMOVE_ME_AFTER_EDITING... did you forget to edit this section?"
+    done
+  fi
 done
