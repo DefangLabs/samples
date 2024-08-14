@@ -1,6 +1,11 @@
 #!/bin/bash
 
 for dir in ./samples/*/; do
+  # Echo the directory name
+  echo "Checking $dir"
+  echo "===================="
+  echo 
+  
   if [[ ! -f "${dir}compose.yaml" ]]; then
     if find "${dir}" -name 'Pulumi.yaml' -exec false {} +; then
       echo " - [ ] add compose.yaml to ${dir}"
