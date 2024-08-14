@@ -1,2 +1,3 @@
+#REMOVE_ME_AFTER_EDITING - This Dockerignore is for a basic node app. Modify as needed.
 node_modules
 npm-debug.log
