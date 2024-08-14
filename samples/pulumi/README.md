@@ -1,7 +1,6 @@
-# Pulumi 
+# Pulumi
 
 This basic example shows you how to use the Defang Pulumi provider to deploy the nodejs-http sample with Defang.
-
 
 ## Prerequisites
 
@@ -39,6 +38,6 @@ Title: Pulumi
 
 Short Description: A basic Pulumi example
 
-Tags: pulumi, node.js, http, server
+Tags: pulumi, Node.js, http, server, TypeScript
 
-Languages: nodejs, typescript
+Languages: nodejs

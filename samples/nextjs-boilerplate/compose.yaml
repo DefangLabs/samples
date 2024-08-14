@@ -7,3 +7,7 @@ services:
     ports:
       - mode: ingress
         target: 3000
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      memory: 256M

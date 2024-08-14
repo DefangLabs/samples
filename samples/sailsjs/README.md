@@ -22,10 +22,10 @@ For development, we use a local container. This can be seen in the compose.yaml 
 
 ---
 
-Title: Sailsjs
+Title: Sails.js
 
-Short Description: A short hello world application demosntrating how to deploy Sailsjs onto defang.
+Short Description: A short hello world application demonstrating how to deploy Sails.js onto Defang.
 
-Tags: Sailsjs
+Tags: Sails.js, Node.js
 
-Languages: nodejs, javascript
+Languages: nodejs

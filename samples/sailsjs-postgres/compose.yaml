@@ -7,11 +7,15 @@ services:
         published: 1337
         mode: ingress
     environment:
-      DATABASE_URL: "postgresql://tasklistdb_owner:zPl3KMOmq5jy@ep-autumn-wind-a5fvcs0v.us-east-2.aws.neon.tech/tasklistdb?sslmode=require"
-      SESSION_SECRET: "91cc809104bca25c3dd96590124ee598"
+      DATABASE_URL:
+      SESSION_SECRET:
     command: ["sails", "lift", "--prod"]
     networks:
       - app-network
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      memory: 256M
 
 networks:
   app-network:
