@@ -1,0 +1,14 @@
+services:
+  nocodb:
+    image: "nocodb/nocodb:0.252.0"
+    environment:
+      NC_DB: 
+      NC_S3_ENDPOINT:
+      NC_S3_BUCKET_NAME:
+      NC_S3_REGION:
+      NC_S3_ACCESS_KEY:
+      NC_S3_ACCESS_SECRET:
+    ports:
+      - target: 8080
+        published: 8080
+        mode: ingress

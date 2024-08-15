@@ -1,0 +1,24 @@
+services:
+  nocodb:
+    extends:
+      file: compose.yaml
+      service: nocodb
+    depends_on:
+      - postgres
+    environment:
+      NC_DB: pg://postgres:5432?u=postgres&p=password&d=nocodb
+    volumes:
+      - "nocodb_data:/usr/app/data"
+
+  postgres:
+    environment:
+      POSTGRES_DB: nocodb
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+    image: postgres:12
+    volumes:
+      - "postgres_data:/var/lib/postgresql/data"
+
+volumes:
+  postgres_data: {}
+  nocodb_data: {}
