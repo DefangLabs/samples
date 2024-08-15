@@ -1,6 +1,6 @@
 # Metabase & Postgres
 
-[1-click deploy](https://github.com/new?template_name=sample-metabase-template&template_owner=DefangSamples)
+[1-click deploy](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-metabase-template%26template_owner%3DDefangSamples)
 
 Metabase is a simple and powerful analytics tool which lets anyone learn and make decisions from their company’s data. This sample demonstrates how to deploy Metabase with Defang. In development, we run a postgres container and in production, we use a managed postgres service. To build the sample, we used Neon, because of their simplicity and generous free tier.
 

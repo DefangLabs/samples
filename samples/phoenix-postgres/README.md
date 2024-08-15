@@ -1,6 +1,6 @@
 # Phoenix & Postgres
 
-[1-click deploy](https://github.com/new?template_name=sample-phoenix-postgres-template&template_owner=DefangSamples)
+[1-click deploy](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-phoenix-postgres-template%26template_owner%3DDefangSamples)
 
 Defang is the easiest way to deploy containerized apps like this Phoenix + Postgres sample to AWS. This is a sample Phoenix application that uses a PostgreSQL database. The sample doesn't add anything to the database, but is based off of the default Phoenix getting started instructions which add a postgres database to the application.
 
