@@ -1,0 +1,31 @@
+#REMOVE_ME_AFTER_EDITING
+# Sample dev compose file. It can be helpful to provide this kind of file
+# for samples where a user may want to hot reload changes in the app, or
+# if it depends on stateful services like a database that isn't supported
+# by Defang, like MongoDB.
+
+services:
+  app:
+    extends:
+      file: compose.yaml
+      service: app
+    volumes:
+      - ./app:/app
+    healthcheck: {}
+    environment: #REMOVE_ME_AFTER_EDITING
+      MONGODB_URI: mongodb://user:password@mongo:27017
+    depends_on:
+      - mongo
+
+  #REMOVE_ME_AFTER_EDITING
+  mongo:
+    image: mongo:7
+    restart: always
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: user
+      MONGO_INITDB_ROOT_PASSWORD: password
+
+volumes:
+  mongo_data:
