@@ -1,5 +1,7 @@
 # Javalin Sample
 
+[1-click deploy](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-javalin-template%26template_owner%3DDefangSamples)
+
 This sample demonstrates how to deploy a very basic Javalin sample with Defang. The sample simply outputs "Defang x Javalin" on the webpage.
 
 ## Prerequisites
@@ -16,21 +18,11 @@ This sample demonstrates how to deploy a very basic Javalin sample with Defang. 
 
 ## Development
 
-For development, we use a local container. This can be seen in the compose.yaml document. To make changes to this sample, make sure that you have `openjdk@17` and `maven` installed. To run the sample locally after cloning the repository, you can run it on Docker by using the following command:
+For development, we use a local container. This can be seen in the compose.yaml file. To run the sample locally use the following command:
 
-1. Navigate to the `app` directory and build the project:
-
-   ```bash
-   cd app
-   mvn clean package
-   cd ../
-   ```
-
-2. From the project root directory, run:
-
-   ```bash
-   docker compose up --build
-   ```
+```bash
+docker compose up --build
+```
 
 ---
 
@@ -38,6 +30,6 @@ Title: Javalin
 
 Short Description: A short hello world application demonstrating how to deploy Javalin onto defang.
 
-Tags: Javalin & Java & Maven
+Tags: Javalin, Java, Maven
 
-Languages: java, javalin
+Languages: java
