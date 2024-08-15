@@ -12,7 +12,7 @@ This sample demonstrates how to deploy a Nocodb instance with Defang. It's an op
 
 ## Configuration
 
-For this sample, you will need to provide the following [configuration](https://docs.defang.io/docs/concepts/configuration):
+For this sample, you will need to provide the following [configuration](https://docs.defang.io/docs/concepts/configuration). Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
 
 ### `NC_DB`
 Postgres database URL. NocoDB uses an odd, custom format for this. It should look like this: `pg://my.pg.hostname.com:5432?u=postgres&p=password&d=nocodb&ssl=true`. [Neon](https://neon.tech/) has a free tier and is easy to set up.
