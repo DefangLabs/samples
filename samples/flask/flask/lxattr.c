@@ -17,12 +17,25 @@
 
 int main(int argc, char **argv)
 {
-    int result;
+    char xattrbuf[1024];
     char* path = argv[1];
-    if (lgetxattr(path, "security.capability", &result, sizeof(int)) != sizeof(int)) {
-        printf("lgetxattr wrong\n");
+    printf("Path    : %s\n", path);
+
+    int xattrlen = lgetxattr(path, "security.capability", xattrbuf, 1023);
+    if (xattrlen == -1) {
+        printf("lgetxattr errno : %d\n", errno);
+    } else {
+        xattrbuf[xattrlen]='\0';
+        printf("xattr : %s\n", xattrbuf);
     }
-    printf("%d\n", result);
-    printf("%d\n", errno);
+
+    char buf[1024];
+    ssize_t len = readlink(path, buf, 1023);
+    if (len == -1) {
+        printf("readlink errno : %d\n", errno);
+    } else {
+        buf[len]='\0';
+        printf("symlink : %s\n", buf);
+    }
     return 0;
 }

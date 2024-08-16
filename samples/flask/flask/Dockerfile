@@ -10,6 +10,7 @@ RUN apt-get update \
       build-essential \
       python3-dev \
       libcap2-bin \
+      attr \
       && rm -rf /var/lib/apt/lists/*
 
 # Copy the current directory contents into the container at /app
@@ -26,6 +27,10 @@ RUN capsh --print
 RUN gcc lxattr.c -o lxattr
 RUN ./lxattr /etc/alternatives/lzcmp
 RUN ./lxattr /usr/bin/newgidmap
+
+RUN getfattr --dump --recursive --no-dereference /etc/alternatives/lzcmp || true
+RUN getfattr --dump --recursive --no-dereference /usr/bin/newgidmap || true
+RUN getfattr --dump --recursive --no-dereference /etc/alternatives/ || true
 
 # Make port 5000 available to the world outside this container
 EXPOSE 5000
