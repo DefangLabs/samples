@@ -1,0 +1,34 @@
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# IntelliJ IDEA files
+.idea/
+*.iml
+
+# VS Code files
+.vscode/
+
+# macOS Finder metadata
+.DS_Store
+
+# Maven target directory
+target/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
