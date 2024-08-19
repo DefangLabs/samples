@@ -1,16 +1,5 @@
-# Use the slim version of Debian Bookworm as the base image
-FROM debian:bookworm-slim
-
-# Set environment variables to avoid interactive prompts during package installation
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Install curl, Node.js 18.x, and npm
-RUN apt-get update && apt-get install -y \
-    curl \
-    && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get install -y nodejs \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# Use the slim version of Node.js on Debian Bookworm as the base image
+FROM node:bookworm-slim
 
 # Set the working directory
 WORKDIR /app
@@ -24,9 +13,11 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-# Build the SvelteKit application
+# Set environment variable for MongoDB URI
 ARG MONGODB_URI
 ENV MONGODB_URI=$MONGODB_URI
+
+# Build the SvelteKit application
 RUN npm run build
 
 # Expose the port the app runs on
