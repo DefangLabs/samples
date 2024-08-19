@@ -1,16 +1,5 @@
 # Stage 1: Build the application
-FROM debian:bookworm-slim as build
-
-# Set environment variables to avoid interactive prompts during package installation
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Install curl and Node.js 20.x
-RUN apt-get update && apt-get install -y \
-    curl \
-    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+FROM node:bookworm as build
 
 WORKDIR /app
 
@@ -30,18 +19,7 @@ RUN npm run build
 RUN ls -l .svelte-kit/output
 
 # Stage 2: Run the application
-FROM debian:bookworm-slim
-
-# Set environment variables to avoid interactive prompts during package installation
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Install curl and Node.js 20.x
-RUN apt-get update && apt-get install -y \
-    curl \
-    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+FROM node:bookworm
 
 WORKDIR /app
 
