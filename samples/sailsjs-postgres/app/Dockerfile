@@ -1,5 +1,5 @@
 # Use the slim version of Node.js on Debian Bookworm as the base image
-FROM node:bookworm-slim
+FROM node:20-bookworm-slim
 
 # Create app directory
 WORKDIR /usr/src/app

@@ -1,5 +1,5 @@
 # Stage 1: Build the application
-FROM node:bookworm as build
+FROM node:20-bookworm-slim as build
 
 WORKDIR /app
 
@@ -19,7 +19,7 @@ RUN npm run build
 RUN ls -l .svelte-kit/output
 
 # Stage 2: Run the application
-FROM node:bookworm
+FROM node:20-bookworm-slim
 
 WORKDIR /app
 

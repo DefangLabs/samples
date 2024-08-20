@@ -1,5 +1,5 @@
 # Stage 1: Build Svelte frontend
-FROM node:bookworm-slim as frontend
+FROM node:20-bookworm-slim as frontend
 
 WORKDIR /frontend
 
@@ -11,7 +11,7 @@ COPY frontend/ ./
 RUN npm install --legacy-peer-deps && npm run build
 
 # Stage 2: Build Node.js backend
-FROM node:bookworm-slim as backend
+FROM node:20-bookworm-slim as backend
 
 WORKDIR /app
 

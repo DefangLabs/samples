@@ -1,5 +1,5 @@
 # Use the slim version of Node.js on Debian Bookworm as the base image
-FROM node:bookworm-slim
+FROM node:20-bookworm-slim
 
 # Set environment variables to avoid interactive prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
