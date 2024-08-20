@@ -9,6 +9,12 @@ services:
         published: 3042
         protocol: tcp
         mode: ingress
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3042/"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 120s # Increased start period
     deploy:
       resources:
         limits:

@@ -5,9 +5,7 @@
   "hotReload": true,
   "autoload": {
     "path": "services",
-    "exclude": [
-      "docs"
-    ]
+    "exclude": ["docs"]
   },
   "server": {
     "hostname": "{PLT_SERVER_HOSTNAME}",
