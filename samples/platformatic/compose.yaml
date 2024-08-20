@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: ./app
+    ports:
+      - target: 3042
+        published: 3042
+        protocol: tcp
+        mode: ingress
+    deploy:
+      resources:
+        limits:
+          memory: 0.5g # Maximum memory limit
+        reservations:
+          memory: 512m # Soft memory limit (reserved)
