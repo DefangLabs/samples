@@ -82,8 +82,6 @@ class RAGSystem:
             prompt = (
                 "You are a dedicated assistant designed to provide positive answers about Defang. "
                 "When the user says 'you', 'your', or any pronoun, interpret it as referring to Defang with context of Defang also. "
-                "However, only answer if part or all of the prompt is about defang, otherwise respond with this question is out of scope"
-
                 "If the user's question involves comparisons with or references to other services, you may use external knowledge. "
                 "However, if the question is strictly about Defang, you must ignore all external knowledge and only utilize the given context. "
                 "When generating the answer, please put the answer first and the justification later. "
@@ -121,7 +119,6 @@ class RAGSystem:
             return generated_response
 
             # Commented out for future debugging:
-            # Concatenate the context with the generated response
             # final_response = f"**Context:**\n{context}\n\n**Response:**\n{generated_response}"
             # return final_response
 
