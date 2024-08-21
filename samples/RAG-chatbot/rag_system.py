@@ -64,7 +64,7 @@ class RAGSystem:
         retrieved_docs = [f'{self.knowledge_base[i]["about"]}. {self.knowledge_base[i]["text"]}' for i in top_indices]
 
         if not retrieved_docs:
-            max_index = np.argmax(similarities)
+            max_index = np.argmax(similarities)v
             retrieved_docs.append(f'{self.knowledge_base[max_index]["about"]}. {self.knowledge_base[max_index]["text"]}')
 
         context = "\n\n".join(retrieved_docs)
@@ -84,6 +84,7 @@ class RAGSystem:
                 "When the user says 'you', 'your', or any pronoun, interpret it as referring to Defang with context of Defang also. "
                 "If the user's question involves comparisons with or references to other services, you may use external knowledge. "
                 "However, if the question is strictly about Defang, you must ignore all external knowledge and only utilize the given context. "
+                "However, only answer if the query is completely or partially about defang or defang's relations with other services, if the statement can be inferred about defang, please ask the user to clarify. Otherwise reply with the prompt is out of scope."
                 "When generating the answer, please put the answer first and the justification later. "
                 "Any mentions of BYOD means BRING YOUR OWN DOMAIN and NOT BRING YOUR OWN DEVICE."
                 "Your objective is to remain strictly within the confines of the given context unless comparisons to other services are explicitly mentioned. "
