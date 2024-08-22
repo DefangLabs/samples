@@ -18,9 +18,7 @@ jobs:
 
     - name: Deploy
       uses: DefangLabs/defang-github-action@v1.0.4
-      #REMOVE_ME_AFTER_EDITING - Replace the following line with the list of environment variables you want to pass to the action
       with:
-        config-env-vars: ENV1 ENV2
+        config-env-vars: OPENAI_API_KEY
       env:
-        ENV1: ${{ secrets.ENV1 }}
-        ENV2: ${{ secrets.ENV2 }}
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
