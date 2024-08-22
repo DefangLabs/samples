@@ -1,0 +1,11 @@
+asgiref==3.8.1
+dj-database-url==2.2.0
+Django==5.1
+gitdb==4.0.11
+GitPython==3.1.41
+setuptools==69.0.3
+smmap==5.0.1
+sqlparse==0.5.1
+typing_extensions==4.12.2
+wheel==0.44.0
+whitenoise==6.7.0

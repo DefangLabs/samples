@@ -1,2 +1,58 @@
-#REMOVE_ME_AFTER_EDITING - This Dockerignore is for a basic node app. Modify as needed.
-node_modules
+# Ignore compiled Python files
+*.pyc
+__pycache__/
+
+# Ignore the virtual environment
+venv/
+env/
+
+# Ignore the Django secret key
+*.secret_key
+
+# Ignore database files
+*.db
+*.sqlite3
+
+# Ignore static files
+staticfiles/
+
+# Ignore media files
+media/
+
+# Ignore log files
+*.log
+
+# Ignore IDE and editor files
+.vscode/
+.idea/
+*.code-workspace
+
+# Ignore local development settings
+local_settings.py
+
+# Ignore deployment files
+deploy/
+
+# Ignore sensitive information
+*.env
+*.env.*
+*.key
+
+# Ignore compiled JavaScript files
+*.js
+
+# Ignore compiled CSS files
+*.css
+
+# Ignore compiled HTML files
+*.html
+
+# Ignore compiled binary files
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Ignore package manager files
+node_modules/
+yarn-error.log

@@ -1,9 +1,3 @@
-#REMOVE_ME_AFTER_EDITING
-# Sample dev compose file. It can be helpful to provide this kind of file
-# for samples where a user may want to hot reload changes in the app, or
-# if it depends on stateful services like a database that isn't supported
-# by Defang, like MongoDB.
-
 services:
   app:
     extends:
@@ -12,13 +6,28 @@ services:
     volumes:
       - ./app:/app
     healthcheck: {}
+    environment:
+      REDIS_URL: redis://redis_service:6379
+      POSTGRES_URL: postgres://user:password@postgres_service:5432/db
     depends_on:
       - redis_service
+      - postgres_service
 
   redis_service:
     extends:
       file: compose.yaml
       service: redis_service
+  
+  postgres_service:
+    extends:
+      file: compose.yaml
+      service: postgres_service
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
-  mongo_data:
+  postgres_data:

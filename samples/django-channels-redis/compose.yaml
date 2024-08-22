@@ -12,7 +12,8 @@ services:
         published: 3000
         mode: ingress
     environment: # Secrets and env vars #REMOVE_ME_AFTER_EDITING
-      REDIS_URL: redis://redis_service:6379
+      REDIS_URL:
+      POSTGRES_URL:
     healthcheck:
       # wget or curl required for healthchecks on services with a published port
       # this gets parsed by Defang and provided to the load balancers as well
@@ -24,3 +25,10 @@ services:
     ports:
       - mode: host
         target: 6379
+
+  postgres_service:
+    image: postgres:16.4
+    x-defang-postgres: true
+    ports:
+      - mode: host
+        target: 5432
