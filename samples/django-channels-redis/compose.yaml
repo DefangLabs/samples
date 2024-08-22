@@ -1,0 +1,26 @@
+# Sample compose file. #REMOVE_ME_AFTER_EDITING
+
+services:
+  app:
+    # uncomment to add your own domain
+    # domainname: example.com
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - target: 3000
+        published: 3000
+        mode: ingress
+    environment: # Secrets and env vars #REMOVE_ME_AFTER_EDITING
+      REDIS_URL: redis://redis_service:6379
+    healthcheck:
+      # wget or curl required for healthchecks on services with a published port
+      # this gets parsed by Defang and provided to the load balancers as well
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/"]
+
+  redis_service:
+    image: redis:6.2
+    x-defang-redis: true
+    ports:
+      - mode: host
+        target: 6379
