@@ -1,5 +1,5 @@
 services:
-  rag-chatbot:
+  rag-chatbot-2:
     build:
       context: ./app
       shm_size: "16gb"
@@ -11,14 +11,8 @@ services:
     environment:
       FLASK_APP: app.py
       OPENAI_API_KEY: ${OPENAI_API_KEY} # Set your OpenAI API key here or in the .env file
-    command: gunicorn --bind 0.0.0.0:5000 app:app
+    command: flask run --host=0.0.0.0
     deploy:
       resources:
         reservations:
           memory: 4G
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s

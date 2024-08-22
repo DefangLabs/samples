@@ -311,8 +311,8 @@
   },
   {
     "id": 63,
-    "about": "Managed Redis Updates",
-    "text": "We first introduced this last month, but we've since rolled it out to everyone. We also added a sample that showcases the power of managed Redis: [BullMQ with Redis](https://github.com/DefangSamples/sample-bullmq-bullboard-redis-template). It demonstrates how you can use BullMQ and BullBoard with a managed Redis instance to create a powerful job queue system so you can easily build robust, scalable applications in AWS with Defang."
+    "about": "Managed redis and redis Updates",
+    "text": "We first introduced this last month, but we've since rolled it out to everyone. We also added a sample that showcases the power of managed redis and redis: [BullMQ with Redis](https://github.com/DefangSamples/sample-bullmq-bullboard-redis-template). It demonstrates how you can use BullMQ and BullBoard with a managed redis and redis instance to create a powerful job queue system so you can easily build robust, scalable applications in AWS with Defang."
   },
   {
     "id": 64,
@@ -340,14 +340,9 @@
     "text": "We’re excited to announce that ACME support is now available for Bring Your Own Domain (BYOD) in both Bring Your Own Cloud (BYOC) and Playground. This means you can easily add Let's Encrypt certificates to your custom domains, regardless of where your DNS is hosted. Defang will handle the certificate generation and automatic renewal for you. Nice and easy."
   },
   {
-    "id": 69,
-    "about": "Warnings for Stateful Services",
-    "text": "To help you avoid potential pitfalls, we’ve added warnings against deploying stateful services with Defang, since you shouldn't actually be deploying anything stateful with Defang. For example, we'll warn you if you try to deploy services with images like `postgres:<version>`, `redis:<version>`, `minio:<version>`, etc. In the near future we will be offering ways to run some stateful services using cloud providers' managed offerings. For example Redis, Postgres, and S3. Speaking of which..."
-  },
-  {
     "id": 70,
-    "about": "Managed Redis!",
-    "text": "Redis is such a versatile tool that can help with so many different use cases. So we've introduced Managed Redis! You can now specify the Redis image in your `compose.yaml` file and indicate that you want it managed by your cloud provider using `x-defang-redis: true` in your service definition."
+    "about": "Managed redis and redis!",
+    "text": "Redis is such a versatile tool that can help with so many different use cases. So we've introduced Managed redis and redis! You can now specify the Redis image in your `compose.yaml` file and indicate that you want it managed by your cloud provider using `x-defang-redis: true` in your service definition."
   },
   {
     "id": 71,
@@ -362,7 +357,7 @@
   {
     "id": 73,
     "about": "Upcoming Features, Managed Postgres, BYOC ECS Lifecycle Events",
-    "text": "We’re not stopping here! Here’s a sneak peek at what’s coming soon: Building on the momentum of Managed Redis, we’re introducing Managed Postgres. Soon you’ll be able to easily integrate a managed Postgres database into your deployment! Defang runs your services with ECS, and we're working on making it clearer what's happening under the hood. --- Stay tuned for more updates and improvements. As always, we appreciate your feedback and are committed to making Defang the easiest way to deploy your applications to the cloud. Go deploy something awesome! 🚀"
+    "text": "We’re not stopping here! Here’s a sneak peek at what’s coming soon: Building on the momentum of Managed redis and redis, we’re introducing Managed Postgres. Soon you’ll be able to easily integrate a managed Postgres database into your deployment! Defang runs your services with ECS, and we're working on making it clearer what's happening under the hood. --- Stay tuned for more updates and improvements. As always, we appreciate your feedback and are committed to making Defang the easiest way to deploy your applications to the cloud. Go deploy something awesome! 🚀"
   },
   {
     "id": 74,
