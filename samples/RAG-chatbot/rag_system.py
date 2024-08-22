@@ -64,7 +64,7 @@ class RAGSystem:
         retrieved_docs = [f'{self.knowledge_base[i]["about"]}. {self.knowledge_base[i]["text"]}' for i in top_indices]
 
         if not retrieved_docs:
-            max_index = np.argmax(similarities)v
+            max_index = np.argmax(similarities)
             retrieved_docs.append(f'{self.knowledge_base[max_index]["about"]}. {self.knowledge_base[max_index]["text"]}')
 
         context = "\n\n".join(retrieved_docs)

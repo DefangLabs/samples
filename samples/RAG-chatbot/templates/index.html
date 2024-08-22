@@ -10,7 +10,7 @@
             font-family: 'Helvetica Neue', Arial, sans-serif;
             margin: 0;
             padding: 0;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -21,8 +21,8 @@
         }
 
         .chat-container {
+            width: 90%;
             max-width: 600px;
-            width: 100%;
             background-color: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border-radius: 15px;
@@ -48,6 +48,8 @@
             color: #f5f5f5;
             font-size: 16px;
             line-height: 1.6;
+            word-wrap: break-word;
+            white-space: pre-wrap; /* Ensures text wraps correctly */
         }
 
         .input-box {
@@ -72,6 +74,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            width: 100%;
         }
 
         .submit-btn:hover {
@@ -126,6 +129,12 @@
             const query = document.getElementById("query").value;
             const chatBox = document.getElementById("chat-box");
             const loadingSpinner = document.getElementById("loading-spinner");
+            const inputBox = document.getElementById("query");
+            const submitButton = document.querySelector(".submit-btn");
+
+            // Disable input and submit button
+            inputBox.disabled = true;
+            submitButton.disabled = true;
 
             // Show the loading spinner
             loadingSpinner.style.display = "inline-block";
@@ -150,8 +159,13 @@
             chatBox.innerHTML += `<strong>You:</strong> ${query}<br><strong>Bot:</strong> ${markdownContent}<br><br>`;
 
             // Clear the input field
-            document.getElementById("query").value = "";
+            inputBox.value = "";
             chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to the bottom
+
+            // Re-enable input and submit button
+            inputBox.disabled = false;
+            submitButton.disabled = false;
+            inputBox.focus();
         });
     </script>
 </body>
