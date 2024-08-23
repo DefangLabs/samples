@@ -1,5 +1,5 @@
-# Use the official Node.js image as a base image
-FROM node:18-alpine
+# Use the slim version of Node.js v20 on Debian Bookworm as the base image
+FROM node:20-bookworm-slim
 
 # Set the working directory
 WORKDIR /app
@@ -13,9 +13,11 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-# Build the SvelteKit application
+# Set environment variable for MongoDB URI
 ARG MONGODB_URI
 ENV MONGODB_URI=$MONGODB_URI
+
+# Build the SvelteKit application
 RUN npm run build
 
 # Expose the port the app runs on
