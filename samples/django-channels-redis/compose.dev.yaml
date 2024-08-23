@@ -9,9 +9,11 @@ services:
     environment:
       REDIS_URL: redis://redis_service:6379
       POSTGRES_URL: postgres://user:password@postgres_service:5432/db
+      DEBUG: "True"
     depends_on:
       - redis_service
       - postgres_service
+    command: python manage.py runserver 0.0.0.0:8000
 
   redis_service:
     extends:
