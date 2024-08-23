@@ -31,4 +31,4 @@ RUN adduser --disabled-password --gecos '' django
 USER django
 
 # Start server
-CMD ["sh", "-c", "python manage.py migrate && gunicorn django_defang.wsgi:application --bind 0.0.0.0:8000"]
+CMD ["sh", "-c", "python manage.py migrate && daphne -b 0.0.0.0 -p 8000 django_defang.asgi:application"]

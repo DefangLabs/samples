@@ -15,6 +15,19 @@ from pathlib import Path
 import dj_database_url
 import urllib.parse
 
+
+# print redis and postgres urls
+print('@@@@@@@ DEBUG @@@@@@@')
+print(f'redis: {os.getenv("REDIS_URL", None)}')
+print(f'postgres: {os.getenv("POSTGRES_URL", None)}')
+print(f'postgres_password: {os.getenv("POSTGRES_PASSWORD", None)}')
+postgres_url = os.getenv("POSTGRES_URL", None)
+postgres_password = os.getenv("POSTGRES_PASSWORD", None)
+fixed_postgres_url = postgres_url.replace("password", postgres_password) if postgres_url and postgres_password else postgres_url
+print(f'fixed_postgres_url: {fixed_postgres_url}')
+print('@@@@@@@ DEBUG @@@@@@@')
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -82,10 +95,11 @@ WSGI_APPLICATION = "django_defang.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+
 DATABASES = {
     # default is a postrgres database load from environment variable POSTGRES_URL
     "default": dj_database_url.config(
-        default=os.environ.get('POSTGRES_URL')
+        default=fixed_postgres_url
     )
 }
 
