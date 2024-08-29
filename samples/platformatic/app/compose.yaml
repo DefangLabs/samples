@@ -1,0 +1,14 @@
+services:
+  platformatic-app:
+    build: .
+    ports:
+      - target: 3042
+        published: 3042
+        protocol: tcp
+        mode: ingress
+    environment:
+      NODE_ENV: production
+    restart: always
+    volumes:
+      - .:/app
+      - /app/node_modules

@@ -1,11 +1,13 @@
 {
   "$schema": "https://platformatic.dev/schemas/v1.52.2/runtime",
-  "entrypoint": "app",
+  "entrypoint": "service1",
   "allowCycles": false,
   "hotReload": true,
   "autoload": {
     "path": "services",
-    "exclude": ["docs"]
+    "exclude": [
+      "docs"
+    ]
   },
   "server": {
     "hostname": "{PLT_SERVER_HOSTNAME}",

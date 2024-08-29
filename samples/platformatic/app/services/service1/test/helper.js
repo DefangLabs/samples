@@ -2,7 +2,7 @@
 
 const { join } = require('node:path')
 const { readFile } = require('node:fs/promises')
-const { buildServer } = require('@platformatic/composer')
+const { buildServer } = require('@platformatic/service')
 
 
 async function getServer (t) {

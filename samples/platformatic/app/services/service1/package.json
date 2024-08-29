@@ -1,5 +1,5 @@
 {
-  "name": "app",
+  "name": "service1",
   "scripts": {
     "start": "platformatic start",
     "test": "borp"
@@ -9,7 +9,7 @@
     "borp": "^0.16.0"
   },
   "dependencies": {
-    "@platformatic/composer": "^1.52.2"
+    "@platformatic/service": "^1.52.2"
   },
   "engines": {
     "node": "^18.8.0 || >=20.6.0"

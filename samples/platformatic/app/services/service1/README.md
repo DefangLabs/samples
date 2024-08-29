@@ -1,6 +1,6 @@
-# Platformatic Composer API
+# Platformatic Service API
 
-This is a generated [Platformatic Composer](https://docs.platformatic.dev/docs/composer/overview) application.
+This is a generated [Platformatic Service](https://docs.platformatic.dev/docs/service/overview) application.
 
 ## Requirements
 
@@ -9,7 +9,7 @@ You'll need to have [Node.js](https://nodejs.org/) >= v18.8.0 or >= v20.6.0
 
 ## Setup
 
-1. Install dependencies:
+Install dependencies:
 
 ```bash
 npm install
@@ -24,7 +24,8 @@ npm start
 ```
 
 ### Explore
-- ⚡ The Platformatic Composer server is running at http://localhost:3042/
+- ⚡ The Platformatic DB server is running at http://localhost:3042/
 - 📔 View the REST API's Swagger documentation at http://localhost:3042/documentation/
+- 🔍 Try out the GraphiQL web UI at http://localhost:3042/graphiql
 
 
