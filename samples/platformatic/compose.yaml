@@ -1,7 +1,8 @@
 services:
   platformatic-app:
     build:
-      context: .
+      context: ./app
+      dockerfile: Dockerfile
     ports:
       - target: 3042
         published: 3042
