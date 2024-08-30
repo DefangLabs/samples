@@ -1,0 +1,13 @@
+services:
+  platformatic-app:
+    build:
+      context: .
+    ports:
+      - "3042:3042"
+    environment:
+      NODE_ENV: development
+    restart: unless-stopped
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: npm run start

@@ -1,6 +1,7 @@
 services:
   platformatic-app:
-    build: .
+    build:
+      context: .
     ports:
       - target: 3042
         published: 3042
@@ -9,6 +10,8 @@ services:
     environment:
       NODE_ENV: production
     restart: always
-    volumes:
-      - .:/app
-      - /app/node_modules
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "512M"

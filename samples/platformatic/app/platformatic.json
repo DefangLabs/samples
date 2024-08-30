@@ -5,12 +5,10 @@
   "hotReload": true,
   "autoload": {
     "path": "services",
-    "exclude": [
-      "docs"
-    ]
+    "exclude": ["docs"]
   },
   "server": {
-    "hostname": "{PLT_SERVER_HOSTNAME}",
+    "hostname": "0.0.0.0",
     "port": "{PORT}",
     "logger": {
       "level": "{PLT_SERVER_LOGGER_LEVEL}"
