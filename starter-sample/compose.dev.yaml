@@ -3,6 +3,10 @@
 # for samples where a user may want to hot reload changes in the app, or
 # if it depends on stateful services like a database that isn't supported
 # by Defang, like MongoDB.
+#
+# Note: This dev compose file's services should extend the production 
+# compose file's services. That way we can keep things consistent across
+# dev and production and override only what we need to.
 
 services:
   app:

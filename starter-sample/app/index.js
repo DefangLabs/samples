@@ -1,3 +1,6 @@
+//#REMOVE_ME_AFTER_EDITING - This is a sample index.js file for a Node.js application.
+// Feel free to delete this file. It's just a placeholder.
+
 const express = require('express');
 const { MongoClient } = require('mongodb');
 

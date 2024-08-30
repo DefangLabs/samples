@@ -1,5 +1,5 @@
 # A sample dockerfile for a Node.js application.
-# Replace with an appropriate Dockerfile for your application.
+# Replace with an appropriate Dockerfile for your sample.
 #REMOVE_ME_AFTER_EDITING
 
 FROM node:20-bookworm-slim
