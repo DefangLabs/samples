@@ -1,15 +1,19 @@
 services:
-  platformatic-app:
+  app:
     build:
       context: ./app
       dockerfile: Dockerfile
     ports:
       - target: 3042
         published: 3042
-        protocol: tcp
         mode: ingress
     environment:
       NODE_ENV: production
+      PLT_SERVER_HOSTNAME: 0.0.0.0
+      PORT: 3042
+      PLT_SERVER_LOGGER_LEVEL: info
+      PLT_MANAGEMENT_API: true
+      PLT_SERVICE1_TYPESCRIPT: false
     restart: always
     deploy:
       resources:

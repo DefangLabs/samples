@@ -1,5 +1,5 @@
 # Use an official Go runtime as a parent image
-FROM golang:1.20-alpine as builder
+FROM golang:1.20-slim as builder
 
 # Set the working directory in the builder container
 WORKDIR /src

@@ -1,7 +1,5 @@
-# Dockerfile for Svelte frontend and Node.js backend
-
 # Stage 1: Build Svelte frontend
-FROM node:16-alpine as frontend
+FROM node:20-bookworm-slim as frontend
 
 WORKDIR /frontend
 
@@ -13,7 +11,7 @@ COPY frontend/ ./
 RUN npm install --legacy-peer-deps && npm run build
 
 # Stage 2: Build Node.js backend
-FROM node:16-alpine as backend
+FROM node:20-bookworm-slim as backend
 
 WORKDIR /app
 
@@ -24,11 +22,8 @@ COPY backend/ ./
 # Install dependencies
 RUN npm install
 
-# Copy the built Svelte files
+# Copy the built Svelte files from the frontend stage
 COPY --from=frontend /frontend/build ./public
-
-# Copy the backend source code
-COPY backend/ .
 
 # Expose the application on port 3001
 EXPOSE 3001
