@@ -1,5 +1,7 @@
 # Django
 
+[![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-django-template%26template_owner%3DDefangSamples)
+
 This is a simple example of how to run Django on Defang. It is a simple Todo app that uses SQLite as the database.
 
 ### NOTE

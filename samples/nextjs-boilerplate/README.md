@@ -1,5 +1,7 @@
 # Next.js Boilerplate
 
+[![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-nextjs-boilerplate-template%26template_owner%3DDefangSamples)
+
 This template is a boilerplate project developed using Next.js, offering a starting point to help you quickly build your website. We have prepared all the necessary files for deployment. By spending just a few minutes setting up the environment, as detailed in the prerequisites, and executing the commands in our step-by-step guide, your website will be ready to go live in no time!
 
 ## Essential Setup Files
