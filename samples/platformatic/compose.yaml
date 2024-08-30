@@ -1,0 +1,21 @@
+services:
+  app:
+    # uncomment to add your own domain
+    # domainname: example.com
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - target: 3000
+        published: 3000
+        mode: ingress
+    healthcheck:
+      # wget or curl required for healthchecks on services with a published port
+      # this gets parsed by Defang and provided to the load balancers as well
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/"]
+    environment:
+      PLT_SERVER_HOSTNAME: "0.0.0.0"
+      PORT: 3000
+      PLT_SERVER_LOGGER_LEVEL: "info"
+      PLT_MANAGEMENT_API: true
+      PLT_DEFANG_PLATFORMATIC_TYPESCRIPT: true

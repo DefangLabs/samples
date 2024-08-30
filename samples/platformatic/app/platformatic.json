@@ -1,0 +1,20 @@
+{
+  "$schema": "https://platformatic.dev/schemas/v1.52.2/runtime",
+  "entrypoint": "defang-platformatic",
+  "allowCycles": false,
+  "hotReload": true,
+  "autoload": {
+    "path": "services",
+    "exclude": [
+      "docs"
+    ]
+  },
+  "server": {
+    "hostname": "{PLT_SERVER_HOSTNAME}",
+    "port": "{PORT}",
+    "logger": {
+      "level": "{PLT_SERVER_LOGGER_LEVEL}"
+    }
+  },
+  "managementApi": "{PLT_MANAGEMENT_API}"
+}
