@@ -1,5 +1,7 @@
 # Langchain & flask
 
+[![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-langchain-template%26template_owner%3DDefangSamples)
+
 This sample is an endpoint that tells programming jokes and shows how to deploy a flask app that uses Langchain on to AWS via Defang.
 
 ## Prerequisites
