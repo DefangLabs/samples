@@ -1,6 +1,6 @@
 # Flask & Form Submission
 
-[1-click deploy](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-python-form-template%26template_owner%3DDefangSamples)
+[![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-python-form-template%26template_owner%3DDefangSamples)
 
 This Flask application provides a basic example of handling form submissions. It displays an HTML form where users can input their first name. Upon submission, the application greets the user by name on a new page. Note that alognside your .py file, include a requirements.txt so that the Dockerfile can install the necessary packages with pip.
 

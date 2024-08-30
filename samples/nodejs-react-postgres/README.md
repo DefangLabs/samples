@@ -1,6 +1,6 @@
 # React & Node.js & PostgreSQL
 
-[1-click deploy](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-nodejs-react-postgres-template%26template_owner%3DDefangSamples)`
+[![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-nodejs-react-postgres-template%26template_owner%3DDefangSamples)`
 
 This sample project demonstrates how to deploy a full-stack application using React for the frontend, Node.js for the backend, and PostgreSQL for the database. The project uses Docker to containerize the services, making it easy to run in both development and production environments.
 
