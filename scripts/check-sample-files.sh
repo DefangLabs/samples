@@ -16,9 +16,12 @@ for dir in ./samples/*/; do
     fi
   else
     # if there is a compose.yaml file, check if it is valid
-    if ! defang compose config -C "${dir}" > /dev/null 2>/dev/null; then
-      echo " - [ ] ${dir}/compose.yaml contains errors"
-    fi
+    (
+      cd $dir
+      if ! defang compose config > /dev/null 2>/dev/null; then
+        echo " - [ ] ${dir}compose.yaml contains errors"
+      fi
+    )
   fi
 
   # Check that we have a .github/workflows/deploy.yaml file
