@@ -1,5 +1,7 @@
 # Flask Request Inspector API
 
+[![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-python-minimal-template%26template_owner%3DDefangSamples)
+
 This Flask application is designed to inspect and return detailed information about HTTP requests. It supports both GET and POST methods, providing insights into the request path, method, headers, query parameters, and body. Note that alognside your .py file, include a requirements.txt so that the Dockerfile can install the necessary packages with pip.
 
 ## Features

@@ -1,5 +1,7 @@
 # Python & Implicit & GPU
 
+[![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-python-implicit-gpu-template%26template_owner%3DDefangSamples)
+
 This Music Recommendation API provides artist recommendations based on collaborative filtering using the Alternating Least Squares (ALS) algorithm from the implicit library. The dataset utilized is from Last.fm. Note that alognside your .py file, include a requirements.txt so that the Dockerfile can install the necessary packages with pip. It demonstrates how to use a GPU with Python and the implicit library with Defang.
 
 ## Essential Setup Files

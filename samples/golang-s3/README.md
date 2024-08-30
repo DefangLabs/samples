@@ -1,3 +1,7 @@
+# Go & S3
+
+[![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-golang-s3-template%26template_owner%3DDefangSamples)
+
 ## Setup
 
 This sample requires an API key to access AWS S3. The name of the config value is referenced in the compose.yaml file.
