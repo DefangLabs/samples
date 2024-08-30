@@ -1,7 +1,5 @@
 #!/bin/bash
 
-. <(curl -Ls https://s.defang.io/install)
-
 for dir in ./samples/*/; do
   # set variable pulumi to true if there is a Pulumi.yaml file in the directory, or there is a directory called pulumi
   pulumi=false
