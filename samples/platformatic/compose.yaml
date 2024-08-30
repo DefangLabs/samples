@@ -12,10 +12,11 @@ services:
     healthcheck:
       # wget or curl required for healthchecks on services with a published port
       # this gets parsed by Defang and provided to the load balancers as well
-      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/"]
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
     environment:
       PLT_SERVER_HOSTNAME: "0.0.0.0"
       PORT: 3000
       PLT_SERVER_LOGGER_LEVEL: "info"
       PLT_MANAGEMENT_API: true
       PLT_DEFANG_PLATFORMATIC_TYPESCRIPT: true
+      PLT_PLUGIN_TIMEOUT: 30000  # Increase timeout to 30 seconds (adjust as needed)
