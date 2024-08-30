@@ -1,13 +1,12 @@
 services:
-  platformatic-app:
-    build:
-      context: .
-    ports:
-      - "3042:3042"
+  app:
+    extends:
+      file: compose.yaml
+      service: app
     environment:
       NODE_ENV: development
     restart: unless-stopped
     volumes:
-      - .:/app
+      - ./app:/app
       - /app/node_modules
     command: npm run start
