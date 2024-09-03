@@ -31,7 +31,7 @@ This sample is a simple Flask app that demonstrates how to create a TODO app usi
 
 Title: Flask
 
-Short Description: A basic Flask to o app.
+Short Description: A basic Flask to do app.
 
 Tags: Flask, Python
 
