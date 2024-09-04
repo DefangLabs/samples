@@ -29,7 +29,7 @@ SECRET_KEY = "django-insecure-c!3+-wtsf@&6+p-z88$fyqr!zrnd@uvi=hi&u00n+ku9&_04rk
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", False) == "True"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*.prod1.defang.dev'] # Set this to your domain name
 
 if DEBUG:
     ALLOWED_HOSTS = ["*"]

@@ -102,7 +102,8 @@
     
     messages.forEach(appendMessage)
     
-    const chatSocket = new WebSocket('ws://' + window.location.host + '/ws/' + roomName + '/')
+    const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://'
+    const chatSocket = new WebSocket(protocol + window.location.host + '/ws/' + roomName + '/')
     
     chatSocket.onmessage = function (e) {
       const data = JSON.parse(e.data)
