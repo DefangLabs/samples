@@ -10,11 +10,8 @@ class MessagePayload(BaseModel):
     message: str
     timestamp: float = None
 
-class GroupPayload(BaseModel):
+class GroupPayload(MessagePayload):
     type: str
-    user: str = "Anonymous"
-    message: str
-    timestamp: float = None
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
