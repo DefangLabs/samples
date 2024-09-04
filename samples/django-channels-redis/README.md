@@ -1,8 +1,8 @@
-# Starter Sample #REMOVE_ME_AFTER_EDITING
+# Django Channels & Redis & Postgres
 
 [![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-django-channels-redis-template%26template_owner%3DDefangSamples)
 
-This is a sample that shows the rough structure of an actual Defang sample. This top paragraph should give a bit of context about the project and what it does. The rest of the README should be a guide on how to use the sample. #REMOVE_ME_AFTER_EDITING
+This sample demonstrates how to get Django Channels up and running with Redis and Postgres both managed by Defang. It demonstrates how to do this with a simple chat application.
 
 ## Prerequisites
 
@@ -15,32 +15,34 @@ This is a sample that shows the rough structure of an actual Defang sample. This
 To run the application locally, you can use the following command:
 
 ```bash
-# This might be `docker compose -f compose.dev.yaml up` depending on the project. #REMOVE_ME_AFTER_EDITING
-docker compose up
+docker compose -f compose.dev.yaml up
 ```
 
-## Configuration
-#REMOVE_ME_AFTER_EDITING - this section should be removed if there are no configuration values needed. The intro text can probably stay, but the list of configuration values should be updated/removed if there are none.
+This will start the Django server, Redis, and Postgres and mounts your Django app so you get live reloading. You can access the Django server at `http://localhost:8000`.
 
+## Configuration
 For this sample, you will need to provide the following [configuration](https://docs.defang.io/docs/concepts/configuration). Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
 
-### `API_KEY` #REMOVE_ME_AFTER_EDITING
-An explanation of what the env var (`API_KEY`) is, etc.
+### `POSTGRES_PASSWORD`
+The password for your Postgres database. You need to set this before deploying for the first time.
+
+### `POSTGRES_URL`
+The URL for your Postgres database (which should include the password set with `POSTGRES_PASSWORD`). This should be in the format `postgres://<username>:<password>@<host>:<port>/<database>`
 
 
 ## Deploying
 
 1. Open the terminal and type `defang login`
-2. Use the [`defang config`](https://docs.defang.io/docs/concepts/compose#configuration) command to setup environment variables. #REMOVE_ME_AFTER_EDITING
+2. Use the [`defang config`](https://docs.defang.io/docs/concepts/compose#configuration) command to setup environment variables.
 3. Type `defang compose up` in the CLI.
 4. Your app will be running within a few minutes.
 
 ---
 
-Title: Sample Title #REMOVE_ME_AFTER_EDITING
+Title: Django Channels & Redis & Postgres
 
-Short Description: A short sentence or two describing the sample. #REMOVE_ME_AFTER_EDITING
+Short Description: A basic configuration of Django Channels with Redis and Postgres demonstrating a simple chat application.
 
-Tags: Tags, That, Are, Not, Programming, Languages #REMOVE_ME_AFTER_EDITING
+Tags: Django, Channels, Redis, Postgres, Chat, Application
 
-Languages: Programming, Languages, Used #REMOVE_ME_AFTER_EDITING
+Languages: Python

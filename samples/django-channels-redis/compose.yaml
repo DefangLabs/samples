@@ -1,5 +1,3 @@
-# Sample compose file. #REMOVE_ME_AFTER_EDITING
-
 services:
   app:
     # uncomment to add your own domain
