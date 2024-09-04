@@ -13,7 +13,7 @@ services:
     depends_on:
       - redis_service
       - postgres_service
-    command: python manage.py runserver 0.0.0.0:8000
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
 
   redis_service:
     extends:

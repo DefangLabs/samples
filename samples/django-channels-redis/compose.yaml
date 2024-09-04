@@ -13,8 +13,7 @@ services:
         mode: ingress
     environment:
       REDIS_URL: redis://redis_service:6379
-      POSTGRES_URL: postgres://postgres:password@postgres_service:5432/postgres
-      POSTGRES_PASSWORD: testtest
+      POSTGRES_URL:
     healthcheck:
       # wget or curl required for healthchecks on services with a published port
       # this gets parsed by Defang and provided to the load balancers as well
@@ -34,4 +33,4 @@ services:
       - mode: host
         target: 5432
     environment:
-      POSTGRES_PASSWORD: testtest
+      POSTGRES_PASSWORD:
