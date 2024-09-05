@@ -1,0 +1,26 @@
+services:
+  app:
+    extends:
+      file: compose.yaml
+      service: app
+    build: 
+      target: development
+    volumes:
+      - ./app:/app
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_HOST: database
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: postgres
+    healthcheck: {}
+    command: npm run dev
+
+  database:
+    extends:
+      file: compose.yaml
+      service: database
+    environment:
+      POSTGRES_PASSWORD: password
+
+  

@@ -1,0 +1,36 @@
+# Sample compose file. #REMOVE_ME_AFTER_EDITING
+
+services:
+  app:
+    # uncomment to add your own domain
+    # domainname: example.com
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - target: 3000
+        published: 3000
+        mode: ingress
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD:
+      POSTGRES_HOST: database
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: postgres
+      POSTGRES_SSL: true
+    healthcheck:
+      # wget or curl required for healthchecks on services with a published port
+      # this gets parsed by Defang and provided to the load balancers as well
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health" ]
+    depends_on:
+      - database
+
+  database:
+    image: postgres:16
+    x-defang-postgres: true
+    environment:
+      POSTGRES_PASSWORD:
+    ports:
+      - target: 5432
+        published: 5432
+        mode: host
