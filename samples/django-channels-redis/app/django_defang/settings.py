@@ -41,7 +41,8 @@ def get_private_ips():
         return []  # or return a default list of IPs
 
 ALLOWED_HOSTS = [
-    '*.prod1.defang.dev',
+    '.prod1.defang.dev',
+    'localhost',
 ] # Add your own domain name
 
 ALLOWED_HOSTS += get_private_ips() # Add private IPs so the health check can pass
