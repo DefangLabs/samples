@@ -9,10 +9,12 @@ const client = new Client({
   database: process.env.POSTGRES_DB,
   password: process.env.POSTGRES_PASSWORD,
   port: parseInt(process.env.POSTGRES_PORT!, 10),
+  // We have to connect with SSL when we deploy, but we want to allow self-signed certificates
   ssl: process.env.POSTGRES_SSL === 'true' ? { rejectUnauthorized: false } : false,
 });
 
 // Only connect if we actually have the password
+// This prevents a connection error during build time (since we don't have access to the DB during build)
 const connection = process.env.POSTGRES_PASSWORD ? client.connect() : Promise.resolve();
 
 function parseIPv6MappedIPv4(ip: string | null) {
