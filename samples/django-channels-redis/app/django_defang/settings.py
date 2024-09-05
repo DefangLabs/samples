@@ -14,6 +14,8 @@ import os
 from pathlib import Path
 import dj_database_url
 import urllib.parse
+from socket import gethostname, gethostbyname_ex
+import ipaddress
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -24,12 +26,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-c!3+-wtsf@&6+p-z88$fyqr!zrnd@uvi=hi&u00n+ku9&_04rk"
+SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-c!3+-wtsf@&6+p-z88$fyqr!zrnd@uvi=hi&u00n+ku9&_04rk")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", False) == "True"
 
-ALLOWED_HOSTS = ['*.prod1.defang.dev'] # Set this to your domain name
+
+def get_private_ips():
+    try:
+        hostname = gethostname()
+        _, _, ips = gethostbyname_ex(hostname)
+        return [ip for ip in ips if ipaddress.ip_address(ip).is_private]
+    except:
+        return []  # or return a default list of IPs
+
+ALLOWED_HOSTS = [
+    '*.prod1.defang.dev',
+] # Add your own domain name
+
+ALLOWED_HOSTS += get_private_ips() # Add private IPs so the health check can pass
 
 if DEBUG:
     ALLOWED_HOSTS = ["*"]

@@ -12,6 +12,7 @@ services:
     environment:
       REDIS_URL: redis://redis_service:6379
       POSTGRES_URL:
+      SECRET_KEY:
     healthcheck:
       # wget or curl required for healthchecks on services with a published port
       # this gets parsed by Defang and provided to the load balancers as well

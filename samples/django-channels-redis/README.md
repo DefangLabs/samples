@@ -23,6 +23,9 @@ This will start the Django server, Redis, and Postgres and mounts your Django ap
 ## Configuration
 For this sample, you will need to provide the following [configuration](https://docs.defang.io/docs/concepts/configuration). Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
 
+### `SECRET_KEY`
+The secret key for your Django application. You can generate a new one by running `python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'`. A default, insecure key is used if this is not set, but you should set it for a production deployment.
+
 ### `POSTGRES_PASSWORD`
 The password for your Postgres database. You need to set this before deploying for the first time.
 
