@@ -17,8 +17,9 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Deploy
-      uses: DefangLabs/defang-github-action@v1.0.4
+      uses: DefangLabs/defang-github-action@v1.0.9
       #REMOVE_ME_AFTER_EDITING - Replace the following line with the list of environment variables you want to pass to the action
+      # or remove the lines if you don't need to pass any environment variables/secrets to the action
       with:
         config-env-vars: ENV1 ENV2
       env:
