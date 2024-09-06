@@ -1,0 +1,26 @@
+services:
+  web:
+    extends:
+      file: compose.yaml
+      service: web
+    build:
+      context: ./app
+      dockerfile: Dockerfile.dev
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/rails/
+
+  db:
+    extends:
+      file: compose.yaml
+      service: db
+    environment:
+      POSTGRES_USER: app_user
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - db-data:/var/lib/postgresql/data
+volumes:
+  db-data:
