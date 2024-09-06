@@ -1,8 +1,8 @@
-# Starter Sample #REMOVE_ME_AFTER_EDITING
+# Next.js & Postgres
 
-[1-click deploy](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-<YOUR_SAMPLE_DIR#REMOVE_ME_AFTER_EDITING>-template%26template_owner%3DDefangSamples)
+[1-click deploy](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-nextjs-postgres-template%26template_owner%3DDefangSamples)
 
-This is a sample that shows the rough structure of an actual Defang sample. This top paragraph should give a bit of context about the project and what it does. The rest of the README should be a guide on how to use the sample. #REMOVE_ME_AFTER_EDITING
+This is a sample Next.js application that uses Postgres as a database. It is a simple example that demonstrates how to connect to a Postgres database from a Next.js application: on each request it takes the user's IP address, geo-locates it, and stores the result in the database, then displays the last 20 results on the home page.
 
 ## Prerequisites
 
@@ -15,17 +15,15 @@ This is a sample that shows the rough structure of an actual Defang sample. This
 To run the application locally, you can use the following command:
 
 ```bash
-# This might be `docker compose -f compose.dev.yaml up` depending on the project. #REMOVE_ME_AFTER_EDITING
-docker compose up
+docker compose -f compose.dev.yaml up
 ```
 
 ## Configuration
-#REMOVE_ME_AFTER_EDITING - this section should be removed if there are no configuration values needed. The intro text can probably stay, but the list of configuration values should be updated/removed if there are none.
 
 For this sample, you will need to provide the following [configuration](https://docs.defang.io/docs/concepts/configuration). Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
 
-### `API_KEY` #REMOVE_ME_AFTER_EDITING
-An explanation of what the env var (`API_KEY`) is, etc.
+### `POSTGRES_PASSWORD`
+A password that will be used to connect to the Postgres database.
 
 
 ## Deploying
