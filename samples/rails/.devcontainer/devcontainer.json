@@ -1,0 +1,22 @@
+{
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
+  "features": {
+    "ghcr.io/defanglabs/devcontainer-feature/defang-cli:1.0.4": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  "runArgs": [
+    "--env-file", ".env"
+  ],
+  "appPort": 3000,
+  "forwardPorts": [],
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "remote.autoForwardPorts": false
+      }
+    }
+  }
+}
