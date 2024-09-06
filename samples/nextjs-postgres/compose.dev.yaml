@@ -22,5 +22,9 @@ services:
       service: database
     environment:
       POSTGRES_PASSWORD: password
+    volumes:
+      - postgres:/var/lib/postgresql/data
 
+volumes:
+  postgres: {}
   
