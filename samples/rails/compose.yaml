@@ -1,5 +1,7 @@
 services:
   rails:
+    # uncomment to add your own domain
+    # domainname: example.com
     restart: unless-stopped
     build:
       context: ./app
