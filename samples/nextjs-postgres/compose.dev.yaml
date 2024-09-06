@@ -13,6 +13,7 @@ services:
       POSTGRES_HOST: database
       POSTGRES_PORT: 5432
       POSTGRES_DB: postgres
+      POSTGRES_SSL: ""
     healthcheck: {}
     command: npm run dev
 
