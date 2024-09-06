@@ -1,5 +1,3 @@
-# Sample compose file. #REMOVE_ME_AFTER_EDITING
-
 services:
   app:
     # uncomment to add your own domain
@@ -19,8 +17,6 @@ services:
       POSTGRES_DB: postgres
       POSTGRES_SSL: true
     healthcheck:
-      # wget or curl required for healthchecks on services with a published port
-      # this gets parsed by Defang and provided to the load balancers as well
       test: ["CMD", "curl", "-f", "http://localhost:3000" ]
     depends_on:
       - database
