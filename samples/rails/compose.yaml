@@ -5,10 +5,30 @@ services:
       context: ./app
       dockerfile: Dockerfile
     environment:
+      DATABASE_USERNAME: rails_user
+      DATABASE_HOST: db
+      DATABASE_PASSWORD: secret
       SECRET_KEY_BASE: example # set your own key here.
     ports:
       - mode: ingress
         target: 3000
+    deploy:
+      resources:
+        reservations:
+          memory: 1GB
+  db:
+    restart: unless-stopped
+    image: postgres:16
+    environment:
+      POSTGRES_USER: rails_user
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     deploy:
       resources:
         reservations:
