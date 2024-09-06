@@ -4,11 +4,8 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile
-    environment:
-      DATABASE_USERNAME: rails_user
-      DATABASE_HOST: db
-      DATABASE_PASSWORD: secret
-      SECRET_KEY_BASE: example # set your own key here.
+    env_file:
+      - .env
     ports:
       - mode: ingress
         target: 3000
