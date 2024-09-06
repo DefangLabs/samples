@@ -1,0 +1,8 @@
+services:
+  app: 
+    restart: unless-stopped
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
