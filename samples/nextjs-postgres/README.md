@@ -29,16 +29,16 @@ A password that will be used to connect to the Postgres database.
 ## Deploying
 
 1. Open the terminal and type `defang login`
-2. Use the [`defang config`](https://docs.defang.io/docs/concepts/compose#configuration) command to setup environment variables. #REMOVE_ME_AFTER_EDITING
+2. Use the [`defang config`](https://docs.defang.io/docs/concepts/compose#configuration) command to setup environment variables.
 3. Type `defang compose up` in the CLI.
 4. Your app will be running within a few minutes.
 
 ---
 
-Title: Sample Title #REMOVE_ME_AFTER_EDITING
+Title: Next.js & Postgres
 
-Short Description: A short sentence or two describing the sample. #REMOVE_ME_AFTER_EDITING
+Short Description: A sample Next.js application that uses Postgres as a database.
 
-Tags: Tags, That, Are, Not, Programming, Languages #REMOVE_ME_AFTER_EDITING
+Tags: Next.js, Postgres, Database, Node.js
 
-Languages: Programming, Languages, Used #REMOVE_ME_AFTER_EDITING
+Languages: TypeScript, JavaScript
