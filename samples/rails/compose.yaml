@@ -15,6 +15,11 @@ services:
       resources:
         reservations:
           memory: 1GB
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   db:
     restart: unless-stopped
     image: postgres:16
