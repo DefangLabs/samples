@@ -17,4 +17,4 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Deploy
-      uses: DefangLabs/defang-github-action@v1.0.9
+      uses: DefangLabs/defang-github-action@v1.1.0
