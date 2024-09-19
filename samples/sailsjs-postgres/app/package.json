@@ -6,7 +6,7 @@
   "keywords": [],
   "dependencies": {
     "grunt": "1.0.4",
-    "sails": "^1.5.11",
+    "sails": "^1.5.12",
     "sails-hook-grunt": "^5.0.0",
     "sails-hook-orm": "^4.0.3",
     "sails-hook-sockets": "^3.0.0",
