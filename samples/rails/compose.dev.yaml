@@ -1,17 +1,19 @@
 services:
-  web:
+  rails:
     extends:
       file: compose.yaml
-      service: web
+      service: rails
     build:
       context: ./app
       dockerfile: Dockerfile.dev
     env_file:
       - .env
+    environment:
+      - POSTGRES_PASSWORD=secret
     ports:
       - "3000:3000"
     volumes:
-      - .:/rails/
+      - ./app:/rails/
 
   db:
     extends:

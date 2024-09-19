@@ -26,6 +26,8 @@ RUN bundle install && \
 # Copy application code
 COPY . .
 
+RUN ls /rails
+
 # Entrypoint prepares the database.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
