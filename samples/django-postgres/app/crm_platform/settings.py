@@ -29,7 +29,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://*.prod1.defang.dev',
+    'https://*.defang.dev',
     'http://localhost:8000',
 ]
 
