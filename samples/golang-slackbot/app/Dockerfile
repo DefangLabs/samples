@@ -17,9 +17,9 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
 # Start a new stage from scratch
-FROM alpine:latest
+FROM golang:1.20-slim
 
-RUN apk --no-cache add ca-certificates
+RUN apt update && apt install -y curl ca-certificates
 
 WORKDIR /root/
 
