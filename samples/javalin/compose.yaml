@@ -6,3 +6,5 @@ services:
       - target: 7000
         published: 7000
         mode: ingress
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7000/"]

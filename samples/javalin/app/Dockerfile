@@ -15,6 +15,8 @@ RUN mvn clean package
 # Stage 2: Create the runtime image
 FROM openjdk:17-jdk-slim
 
+RUN apt-get update && apt-get install -y curl
+
 # Set the working directory
 WORKDIR /app
 

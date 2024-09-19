@@ -17,7 +17,9 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o taskmanager .
 
 # Start a new stage from scratch
-FROM alpine:latest  
+FROM golang:1.20-slim
+
+RUN apt update && apt install -y curl ca-certificates
 
 WORKDIR /root/
 
@@ -30,4 +32,3 @@ EXPOSE 8080
 
 # Command to run the executable
 CMD ["./taskmanager"]
-
