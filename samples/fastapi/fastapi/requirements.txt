@@ -1,3 +1,4 @@
 uwsgi
 fastapi
 uvicorn
+jinja2
