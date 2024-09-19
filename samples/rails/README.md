@@ -17,6 +17,14 @@ This template is a member list project developed using Ruby on Rails, offering a
 3. Open up a shell in the VS Code terminal and run `docker compose -f compose.dev.yaml up`.
 
 
+## Configuration
+
+For this sample, you will need to provide the following [configuration](https://docs.defang.io/docs/concepts/configuration). Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
+
+### `POSTGRES_PASSWORD`
+This password will be used to initialize the PostgreSQL database and to connect to it.
+
+
 ## Deployment
 
 > [!NOTE]
