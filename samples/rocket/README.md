@@ -6,7 +6,7 @@ This sample demonstrates how to deploy a very simple Rocket app. Rocket is a web
 
 ## Prerequisites
 
-1. [!NOTE] Download [Defang CLI](https://github.com/DefangLabs/defang)
+1. Download [Defang CLI](https://github.com/DefangLabs/defang)
 2. (Optional) If you are using [Defang BYOC](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html) authenticate against your AWS account
 3. (Optional for local development) [Docker CLI](https://docs.docker.com/engine/install/)
 
