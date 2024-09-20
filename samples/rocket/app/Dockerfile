@@ -18,6 +18,11 @@ RUN --mount=type=cache,target=/build/target \
 
 FROM docker.io/debian:bookworm-slim
 
+RUN apt-get update -qq \
+  && apt-get install -y curl \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 ## copy the main binary
