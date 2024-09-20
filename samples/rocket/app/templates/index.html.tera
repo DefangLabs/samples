@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defang × Rocket × Rust</title>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Exo 2', sans-serif;
+            min-width: 100vw;
+            min-height: 100vh;
+            color: #ffffff;
+            background-image: linear-gradient(311deg, rgba(63, 178, 175, 0.67), rgba(80, 54, 163, 0.67) 53%, rgba(9, 23, 76, 0.85)), linear-gradient(54deg, rgba(255, 131, 122, 0.25), rgba(255, 131, 122, 0) 28%), linear-gradient(241deg, rgba(228, 122, 255, 0.32), rgb(212, 240, 248) 36%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        a {
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Defang × Rocket × Rust</h1>
+    <p>Check the docs at <a href="https://docs.defang.io/docs/intro">https://docs.defang.io/docs/intro</a></p>
+</body>
+</html>
