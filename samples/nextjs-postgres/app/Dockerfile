@@ -25,7 +25,10 @@ FROM node:20-bookworm-slim
 WORKDIR /app
 
 # Install curl
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+RUN apt-get update -qq \
+      && apt-get install -y curl \
+      && apt-get clean \
+      && rm -rf /var/lib/apt/lists/*
 
 # Copy only the necessary files from the build stage
 COPY --from=builder /app/package*.json ./

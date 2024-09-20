@@ -13,7 +13,10 @@ RUN npm install --legacy-peer-deps && npm run build
 # Stage 2: Build Node.js backend
 FROM node:20-bookworm-slim as backend
 
-RUN apt-get update && apt-get install -y curl
+RUN apt-get update -qq \
+      && apt-get install -y curl \
+      && apt-get clean \
+      && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 

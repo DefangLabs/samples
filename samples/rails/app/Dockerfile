@@ -17,8 +17,10 @@ ENV RAILS_ENV="production" \
 FROM base as build
 
 # Install packages needed to build gems
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git libvips pkg-config libpq-dev
+RUN apt-get update -qq \
+    && apt-get install --no-install-recommends -y build-essential git libvips pkg-config libpq-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Set bundler config to force ruby platform
 RUN bundle config set force_ruby_platform true
@@ -45,7 +47,8 @@ FROM base
 # Install packages needed for deployment
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y curl libvips libpq-dev && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy built artifacts: gems, application
 COPY --from=build /usr/local/bundle /usr/local/bundle
