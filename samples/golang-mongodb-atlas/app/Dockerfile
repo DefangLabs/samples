@@ -1,5 +1,5 @@
 # Start from the official Go image.
-FROM golang:1.20-slim as builder
+FROM golang:1.20 as builder
 
 # Set the Current Working Directory inside the container
 WORKDIR /app
@@ -17,9 +17,7 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o taskmanager .
 
 # Start a new stage from scratch
-FROM golang:1.20-slim
-
-RUN apt update && apt install -y curl ca-certificates
+FROM golang:1.20
 
 WORKDIR /root/
 
