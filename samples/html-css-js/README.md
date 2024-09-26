@@ -21,9 +21,8 @@ docker compose up
 ## Deploying
 
 1. Open the terminal and type `defang login`
-2. Use the [`defang config`](https://docs.defang.io/docs/concepts/compose#configuration) command to setup environment variables. #REMOVE_ME_AFTER_EDITING
-3. Type `defang compose up` in the CLI.
-4. Your app will be running within a few minutes.
+2. Type `defang compose up` in the CLI.
+3. Your app will be running within a few minutes.
 
 ---
 
