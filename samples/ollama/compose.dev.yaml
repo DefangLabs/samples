@@ -1,0 +1,15 @@
+services:
+  app:
+    extends:
+      file: compose.yaml
+      service: app
+
+  ui:
+    extends:
+      file: compose.yaml
+      service: ui
+    volumes:
+      - type: bind
+        source: ./ui
+        target: /app
+    command: ["npm", "run", "dev"]

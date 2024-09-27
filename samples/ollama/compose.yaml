@@ -1,0 +1,52 @@
+services:
+  ollama:
+    # uncomment to add your own domain
+    # domainname: example.com
+    build:
+      context: ./ollama
+      dockerfile: Dockerfile
+      shm_size: "16gb"
+    ports:
+      - target: 8000
+        mode: host
+    deploy:
+      resources:
+        reservations:
+          cpus: '2.0'
+          memory: 8192M
+          # Uncomment the next two lines to enable GPU support, for example to use gemma:7b
+          # NOTE: this is only supported in [BYOC](https://docs.defang.io/docs/concepts/defang-byoc)
+          # devices:
+          #   - capabilities: ["gpu"]
+    # By Default we load llama3.2:1b because it can run efficiently on a CPU, but you can select
+    # a different model by setting the LOAD_MODEL environment variable. Check the [list](https://ollama.com/library)
+    # for more models. For example, to load gemma:7b, set the LOAD_MODEL environment variable to gemma:7b below.
+    environment:
+      - LOAD_MODEL=llama3.2:1b
+      # - LOAD_MODEL=gemma:7b
+    healthcheck:
+      # wget or curl required for healthchecks on services with a published port
+      # this gets parsed by Defang and provided to the load balancers as well
+      test: [ "CMD", "curl", "-s", "http://localhost:8000/" ]
+
+  ui:
+    build:
+      context: ui
+      dockerfile: Dockerfile
+    ports:
+      - mode: ingress
+        target: 3000
+        published: 3000
+    deploy:
+      resources:
+        reservations:
+          memory: 256M
+    healthcheck:
+      # wget or curl required for healthchecks on services with a published port
+      # this gets parsed by Defang and provided to the load balancers as well
+      test: [ "CMD", "curl", "-s", "http://localhost:3000/" ]
+    environment:
+      - OLLAMA_ENDPOINT=http://ollama:8000
+      # Make sure the LOAD_MODEL is the same as the app service
+      - LOAD_MODEL=llama3.2:1b
+      # - LOAD_MODEL=gemma:7b
