@@ -1,8 +1,8 @@
-# Starter Sample #REMOVE_ME_AFTER_EDITING
+# Ollama
 
-[1-click deploy](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-<YOUR_SAMPLE_DIR#REMOVE_ME_AFTER_EDITING>-template%26template_owner%3DDefangSamples)
+[1-click deploy](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-ollama-template%26template_owner%3DDefangSamples)
 
-This is a sample that shows the rough structure of an actual Defang sample. This top paragraph should give a bit of context about the project and what it does. The rest of the README should be a guide on how to use the sample. #REMOVE_ME_AFTER_EDITING
+This sample demonstrates how to deploy [Ollama](https://ollama.com/) with Defang, along with a Next.js frontend using the [AI SDK](https://www.npmjs.com/package/ai) for smooth streaming conversations. By default it runs a very small model (`llama3.2:1b`) which can perform well with just a CPU, but we've included lines that you can uncomment in the compose file to enable GPU support and run a larger model like `gemma:7b`. If you want to deploy to a GPU powered instance, you will need to use your own AWS account with [Defang BYOC](https://docs.defang.io/docs/concepts/defang-byoc).
 
 ## Prerequisites
 
@@ -15,17 +15,8 @@ This is a sample that shows the rough structure of an actual Defang sample. This
 To run the application locally, you can use the following command:
 
 ```bash
-# This might be `docker compose -f compose.dev.yaml up` depending on the project. #REMOVE_ME_AFTER_EDITING
-docker compose up
+docker compose -f compose.dev.yaml up
 ```
-
-## Configuration
-#REMOVE_ME_AFTER_EDITING - this section should be removed if there are no configuration values needed. The intro text can probably stay, but the list of configuration values should be updated/removed if there are none.
-
-For this sample, you will need to provide the following [configuration](https://docs.defang.io/docs/concepts/configuration). Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
-
-### `API_KEY` #REMOVE_ME_AFTER_EDITING
-An explanation of what the env var (`API_KEY`) is, etc.
 
 ## Deployment
 
@@ -36,6 +27,8 @@ An explanation of what the env var (`API_KEY`) is, etc.
 
 Deploy your application to the defang playground by opening up your terminal and typing `defang up`.
 
+**Keep in mind that the playground does not support GPU instances.**
+
 ### BYOC (AWS)
 
 If you want to deploy to your own cloud account, you can use Defang BYOC:
@@ -45,10 +38,10 @@ If you want to deploy to your own cloud account, you can use Defang BYOC:
 
 ---
 
-Title: Sample Title #REMOVE_ME_AFTER_EDITING
+Title: Ollama
 
-Short Description: A short sentence or two describing the sample. #REMOVE_ME_AFTER_EDITING
+Short Description: Ollama is a tool that lets you easily run large language models.
 
-Tags: Tags, That, Are, Not, Programming, Languages #REMOVE_ME_AFTER_EDITING
+Tags: AI, LLM, ML, Llama, Mistral, Next.js, AI SDK, 
 
-Languages: Programming, Languages, Used #REMOVE_ME_AFTER_EDITING
+Languages: Typescript

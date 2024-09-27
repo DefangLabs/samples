@@ -10,6 +10,7 @@ ARG OLLAMA_MODELS=/usr/share/ollama/.ollama/models
 # Use the build-time arguments to set environment variables
 ENV OLLAMA_HOST=${OLLAMA_HOST}
 ENV OLLAMA_MODELS=${OLLAMA_MODELS}
+ENV LOAD_MODEL=llama3.2:1b
 
 RUN curl -fsSL https://ollama.com/install.sh | sh
 
