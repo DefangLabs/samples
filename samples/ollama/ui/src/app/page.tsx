@@ -31,7 +31,7 @@ export default function Home() {
       {
         role: 'assistant',
         content: (
-          `Hi! I am a Defang support bot. I am here to help you with any questions you may have about Defang.`
+          `Hi! I'm Defang, a fun chatbot. If you want to learn more about the Defang tool, then head to https://docs.defang.io/`
         ),
       },
       ...messages
