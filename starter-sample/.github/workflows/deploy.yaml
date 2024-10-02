@@ -23,5 +23,8 @@ jobs:
       with:
         config-env-vars: ENV1 ENV2
       env:
+        # Use the GitHub Variables (https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables) 
+        # to switch between providers. You'll need to make sure to also set the corresponding secrets for the provider you want to use. 
+        DEFANG_PROVIDER: ${{ vars.DEFANG_PROVIDER || 'auto' }}
         ENV1: ${{ secrets.ENV1 }}
         ENV2: ${{ secrets.ENV2 }}
