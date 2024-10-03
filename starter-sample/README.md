@@ -7,7 +7,7 @@ This is a sample that shows the rough structure of an actual Defang sample. This
 ## Prerequisites
 
 1. Download [Defang CLI](https://github.com/DefangLabs/defang)
-2. (Optional) If you are using [Defang BYOC](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html) authenticated with your AWS account
+2. (Optional) If you are using [Defang BYOC](https://docs.defang.io/docs/concepts/defang-byoc) authenticate with your cloud provider account
 3. (Optional for local development) [Docker CLI](https://docs.docker.com/engine/install/)
 
 ## Development
@@ -40,8 +40,8 @@ Deploy your application to the defang playground by opening up your terminal and
 
 If you want to deploy to your own cloud account, you can use Defang BYOC:
 
-1. [Authenticate your AWS account](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html), and that you have properly set your environment variables like `AWS_PROFILE`, `AWS_REGION`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`.
-2. Run `defang up` in a terminal that has access to your AWS environment variables.
+1. [Authenticate your AWS account](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html), and check that you have properly set your environment variables like `AWS_PROFILE`, `AWS_REGION`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`.
+2. Run `defang --provider=aws up` in a terminal that has access to your AWS environment variables.
 
 ---
 
