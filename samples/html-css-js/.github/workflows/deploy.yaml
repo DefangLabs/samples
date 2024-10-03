@@ -18,3 +18,5 @@ jobs:
 
     - name: Deploy
       uses: DefangLabs/defang-github-action@v1.0.4
+      env:
+        DEFANG_PROVIDER: ${{ secrets.DEFANG_PROVIDER || 'auto' }}
