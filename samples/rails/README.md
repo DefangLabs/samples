@@ -14,7 +14,7 @@ This template is a member list project developed using Ruby on Rails, offering a
 
 1. Open the working directory with Visual Studio Code or any editor which supports Dev Containers.
 2. Click on the bottom left corner of the window where you see "Reopen in Container".
-3. Open up a shell in the VS Code terminal and run `docker compose -f compose.dev.yaml up`.
+3. Open up a shell in the VS Code terminal and run `docker compose -f compose.dev.yaml up --build`.
 
 
 ## Configuration
