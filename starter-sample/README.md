@@ -34,7 +34,7 @@ An explanation of what the env var (`API_KEY`) is, etc.
 
 ### Defang Playground
 
-Deploy your application to the defang playground by opening up your terminal and typing `defang up`.
+Deploy your application to the defang playground by opening up your terminal and typing `defang compose up`.
 
 ### BYOC (AWS)
 
