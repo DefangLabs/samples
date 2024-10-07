@@ -24,7 +24,7 @@ The `worker` service is the queue processor that will process the jobs added to 
 
 ## Local Development
 
-1. Run `docker compose -f compose.dev.yaml up`
+1. Run `docker compose -f compose.dev.yaml up --build`
 
 ---
 

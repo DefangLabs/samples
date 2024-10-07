@@ -51,7 +51,7 @@ Access secret for the S3 bucket.
 
 For development, we use a local postgres container and a volume mount for file uploads. To run the app locally, just run:
 
-`docker compose --file compose.dev.yaml up`
+`docker compose --file compose.dev.yaml up --build`
 
 ---
 
