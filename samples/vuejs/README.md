@@ -18,12 +18,28 @@ To run the application locally, you can use the following command (make sure you
 npm run dev
 ```
 
-## Deploying
 
-1. Open the terminal and type `defang login`
-2. Type `defang compose up` in the CLI.
-3. Your app will be running within a few minutes.
+## Deployment
 
+> [!NOTE]
+> Download [Defang CLI](https://github.com/DefangLabs/defang)
+
+### Defang Playground
+
+Deploy your application to the Defang Playground by opening up your terminal and typing:
+```bash
+defang compose up
+```
+
+### BYOC (AWS)
+
+If you want to deploy to your own cloud account, you can use Defang BYOC:
+
+1. [Authenticate your AWS account](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html), and check that you have properly set your environment variables like `AWS_PROFILE`, `AWS_REGION`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`.
+2. Run in a terminal that has access to your AWS environment variables:
+    ```bash
+    defang --provider=aws compose up
+    ```
 ---
 
 Title: Vue.js
