@@ -45,7 +45,7 @@ By following these steps, you should be able to deploy Mistral along with a cust
 
 Title: Mistral & vLLM
 
-Short Description: Deploy Mistral with a custom UI using vLLM
+Short Description: Deploy Mistral with a custom UI using vLLM.
 
 Tags: Mistral, vLLM, AI, Nextjs, GPU, Node.js, TypeScript, JavaScript
 
