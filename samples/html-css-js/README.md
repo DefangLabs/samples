@@ -15,7 +15,7 @@ This sample shows how to get a static HTML + CSS + JavaScript website up and run
 To run the application locally, you can use the following command:
 
 ```bash
-docker compose up
+docker compose up --build
 ```
 
 
