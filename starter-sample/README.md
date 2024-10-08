@@ -44,7 +44,10 @@ defang compose up
 If you want to deploy to your own cloud account, you can use Defang BYOC:
 
 1. [Authenticate your AWS account](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html), and check that you have properly set your environment variables like `AWS_PROFILE`, `AWS_REGION`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`.
-2. Run `defang --provider=aws up` in a terminal that has access to your AWS environment variables.
+2. Run in a terminal that has access to your AWS environment variables:
+    ```bash
+    defang --provider=aws compose up
+    ```
 
 ---
 
