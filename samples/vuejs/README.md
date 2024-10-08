@@ -18,6 +18,11 @@ To run the application locally, you can use the following command (make sure you
 npm run dev
 ```
 
+To run it using a Docker container, you can use the following command:
+
+```bash
+docker compose up --build
+```
 
 ## Deployment
 
