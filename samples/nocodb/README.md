@@ -57,7 +57,7 @@ For development, we use a local postgres container and a volume mount for file u
 
 Title: NocoDB
 
-Short Description: An open source alternative to AirTable
+Short Description: An open source alternative to AirTable.
 
 Tags: NocoDB
 

@@ -28,7 +28,7 @@ docker compose up --build
 
 Title: Javalin
 
-Short Description: A short hello world application demonstrating how to deploy Javalin onto defang.
+Short Description: A short hello world application demonstrating how to deploy Javalin onto Defang.
 
 Tags: Javalin, Java, Maven
 

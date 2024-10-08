@@ -23,7 +23,7 @@ This sample project demonstrates how to deploy FastAPI with PostgreSQL with Defa
 
 Title: FastAPI & PostgreSQL
 
-Short Description: A sample project with FastAPI and PostgreSQL
+Short Description: A sample project with FastAPI and PostgreSQL.
 
 Tags: FastAPI, PostgreSQL, Python, SQL
 

@@ -53,5 +53,5 @@ Short Description: A minimal Vue.js app running on Defang.
 
 Tags: Vue.js, Vite, Node.js, Frontend, JavaScript
 
-Languages: javascript
+Languages: nodejs
 

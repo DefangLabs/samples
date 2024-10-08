@@ -48,4 +48,4 @@ Short Description: A simple HTML + CSS + JavaScript website running on Defang.
 
 Tags: HTML, CSS, JavaScript, Frontend
 
-Languages: HTML, CSS, JavaScript
+Languages: nodejs
