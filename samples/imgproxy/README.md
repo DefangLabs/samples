@@ -2,7 +2,7 @@
 
 [![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-imgproxy-template%26template_owner%3DDefangSamples)
 
-ImgProxy is a fast and secure standalone server for resizing and converting remote images. It's can be deployed using their official Docker image, as documented [here](https://docs.imgproxy.net/installation#docker).
+ImgProxy is a fast and secure standalone server for resizing and converting remote images. It can be deployed using the official Docker image, as documented [here](https://docs.imgproxy.net/installation#docker).
 
 ## Prerequisites
 
