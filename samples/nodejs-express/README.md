@@ -24,8 +24,8 @@ This Node.js application, built with Express.js, is designed to inspect and disp
 
 Title: Node.js & Express
 
-Short Description: A Node.js application that inspects and displays detailed information about incoming http requests.
+Short Description: A Node.js application that inspects and displays detailed information about incoming HTTP requests.
 
-Tags: Node.js, Express, http, Request, Inspector, JavaScript
+Tags: Node.js, Express, HTTP, Request, Inspector, JavaScript
 
 Languages: nodejs

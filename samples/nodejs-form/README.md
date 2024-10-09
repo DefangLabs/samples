@@ -26,6 +26,6 @@ Title: Node.js Express Form
 
 Short Description: A Node.js application that handles form submissions using the Express framework.
 
-Tags: Node.js, Express, http, JavaScript
+Tags: Node.js, Express, HTTP, JavaScript
 
 Languages: nodejs
