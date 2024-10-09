@@ -15,8 +15,8 @@ This is a sample that shows the rough structure of an actual Defang sample. This
 To run the application locally, you can use the following command:
 
 ```bash
-# This might be `docker compose -f compose.dev.yaml up` depending on the project. #REMOVE_ME_AFTER_EDITING
-docker compose up
+# This might be `docker compose -f compose.dev.yaml up --build` depending on the project. #REMOVE_ME_AFTER_EDITING
+docker compose up --build
 ```
 
 ## Configuration
