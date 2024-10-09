@@ -1,0 +1,13 @@
+services:
+  app:
+    extends:
+      file: compose.yaml
+      service: app
+    build:
+      target: dev
+    volumes:
+      - ./app:/app
+      - /app/node_modules
+    command: npm run dev 
+
+

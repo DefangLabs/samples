@@ -15,4 +15,4 @@ services:
         reservations:
           memory: 512M
     healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://localhost:5173/"]
+      test: ["CMD", "curl", "-f", "http://localhost:5173/"]
