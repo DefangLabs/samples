@@ -30,7 +30,7 @@ This sample showcases how you could deploy a full-stack application with ASP.NET
 
 For development, we use two local containers, one for the frontend service and one for the backend service in ASP.NET Core. It also uses Caddy as a web server for serving static files. To run the sample locally after cloning the repository, you can run on Docker by doing:
 
-`docker compose -f compose.dev.yaml up`
+`docker compose -f compose.dev.yaml up --build`
 
 ---
 

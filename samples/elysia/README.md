@@ -18,7 +18,7 @@ A basic [Elysia](https://elysiajs.com/) app running on [Bun](https://bun.sh/) wi
 
 ## Local Development
 
-1. Run `docker compose -f compose.dev.yaml up`
+1. Run `docker compose -f compose.dev.yaml up --build`
 
 ---
 

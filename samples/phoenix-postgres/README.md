@@ -15,7 +15,7 @@ Defang is the easiest way to deploy containerized apps like this Phoenix + Postg
 To run the application locally, you can use the following command:
 
 ```bash
-docker compose -f compose.yaml -f compose.dev.yaml up
+docker compose -f compose.yaml -f compose.dev.yaml up --build
 ```
 
 This will run Phoenix in development mode. If you need to run any commands in the container, after you have run the command above and started the container, you can run the command in a new terminal:
