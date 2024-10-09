@@ -1,5 +1,5 @@
 # Use nginx as the base image
-FROM nginx:alpine
+FROM nginx:stable
 
 # Set working directory to /app
 WORKDIR /app
@@ -14,5 +14,5 @@ RUN chmod -R 755 /usr/share/nginx/html && chown -R nginx:nginx /usr/share/nginx/
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Expose the port your app runs on
-EXPOSE 80
+EXPOSE 8080
 
