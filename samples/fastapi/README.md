@@ -29,7 +29,7 @@ That will start your FastAPI app on `http://localhost:8000` with hot reloading e
 
 Title: FastAPI
 
-Short Description: A sample project demonstrating how to deploy FastAPI with Defang
+Short Description: A sample project demonstrating how to deploy FastAPI with Defang.
 
 Tags: FastAPI, OpenAPI, Python
 
