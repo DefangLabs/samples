@@ -35,7 +35,7 @@ The Dockerfile and compose files are already set up for you and are ready to be 
 
 Title: Django
 
-Short Description: A simple Django app that uses SQLite as the database
+Short Description: A simple Django app that uses SQLite as the database.
 
 Tags: Django, SQLite, Python
 
