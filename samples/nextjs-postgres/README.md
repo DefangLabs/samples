@@ -15,7 +15,7 @@ This is a sample Next.js application that uses Postgres as a database. It is a s
 To run the application locally, you can use the following command:
 
 ```bash
-docker compose -f compose.dev.yaml up
+docker compose -f compose.dev.yaml up --build
 ```
 
 ## Configuration

@@ -23,7 +23,7 @@ This sample showcases how you could deploy a full-stack application with Defang 
 
 ## Development
 
-For development, we use a local container. This can be seen in the compose.yaml file and the server.js file where we create a pool of connections. To run the sample locally after clonging the respository, you can run on docker by doing _docker compose up --build_ or run without using Docker by doing the following:
+For development, we use a local container. This can be seen in the compose.yaml file and the server.js file where we create a pool of connections. To run the sample locally after clonging the respository, you can run on docker by doing _docker compose up --build --build_ or run without using Docker by doing the following:
 
 1. run npm install to install the nodejs dependencies
 2. create an .env file on the svelte directory specifying the appropriate environment variables.
