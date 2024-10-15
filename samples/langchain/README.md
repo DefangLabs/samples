@@ -13,7 +13,7 @@ This sample is an endpoint that tells programming jokes and shows how to deploy 
 ## Deploying
 
 1. Open the terminal and type `defang login`
-2. Set the environment variable `OPENAI_API_KEY` by typing `defang config set OPENAI_API_KEY`.
+2. Set the environment variable `OPENAI_KEY` by typing `defang config set OPENAI_KEY`.
 3. Type `defang compose up` in the CLI.
 4. Your app will be running within a few minutes.
 

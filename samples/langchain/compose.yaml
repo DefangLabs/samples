@@ -4,7 +4,7 @@ services:
       context: ./app
       dockerfile: Dockerfile
     environment:
-      - OPENAI_API_KEY
+      - OPENAI_KEY
     ports:
       - target: 80
         published: 8080
