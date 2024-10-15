@@ -3,4 +3,4 @@ fastapi
 uvicorn
 asyncpg
 databases
-
+python-dotenv
