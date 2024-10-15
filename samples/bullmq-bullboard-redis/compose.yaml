@@ -59,7 +59,10 @@ services:
 
   redisx:
     image: redis:6.2
-    x-defang-redis: true
+    # Uncomment the following line to use managed redis with Defang BYOC
+    # (Not supported on playground)
+    #
+    # x-defang-redis: true
     restart: unless-stopped
     ports:
       - mode: host
