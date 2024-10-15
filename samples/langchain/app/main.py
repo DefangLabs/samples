@@ -12,7 +12,7 @@ prompt_template = PromptTemplate(
 )
 
 def generate_text(prompt: str) -> str:
-    api_key = os.getenv("OPENAI_API_KEY")
+    api_key = os.getenv("OPENAI_KEY")
     model = OpenAI(api_key=api_key)
     response = model.invoke(prompt)
     return response
