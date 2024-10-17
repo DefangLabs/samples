@@ -7,7 +7,7 @@ services:
       context: ./app
       dockerfile: Dockerfile
     ports: 
-      - target: 80
+      - target: 8080
         published: 8080
         mode: ingress
     deploy:
@@ -15,4 +15,4 @@ services:
         reservations:
           memory: 256M
     healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://localhost:80/"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]

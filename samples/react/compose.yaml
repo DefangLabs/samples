@@ -1,6 +1,8 @@
 services:
-  app: 
-    restart: unless-stopped
+  app:
+    restart: 'unless-stopped'
+    # uncomment to add your own domain
+    # domainname: example.com
     build:
       context: ./app
       dockerfile: Dockerfile
@@ -13,4 +15,4 @@ services:
         reservations:
           memory: 512M
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5173/"]
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:5173/"]

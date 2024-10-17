@@ -1,0 +1,29 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 10em;
+  padding: 1em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #28A2E9);
+}
+
+a {
+  color: #0F71BE;
+  font-weight: 500;
+  text-decoration: none;
+}
+a:visited {
+  color: #0F71BE;
+}
+
+.card {
+  padding: 2em;
+}
