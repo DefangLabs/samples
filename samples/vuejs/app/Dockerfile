@@ -1,5 +1,11 @@
-# Use Node runtime as base image 
-FROM node:20-alpine
+# Use slim version of Node.js v20 on Debian Bookworm as base image 
+FROM node:20-bookworm-slim
+
+# Install curl for healthchecks testing 
+RUN apt-get update -qq \
+      && apt-get install -y curl \
+      && apt-get clean \
+      && rm -rf /var/lib/apt/lists/*
 
 # Set working directory to /app
 WORKDIR /app
@@ -8,7 +14,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm ci
 
 # Copy the rest of your application's code
 COPY . .
