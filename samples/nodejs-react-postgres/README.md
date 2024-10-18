@@ -1,4 +1,4 @@
-# React & Node.js & PostgreSQL
+# Node.js & React & PostgreSQL
 
 [![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-nodejs-react-postgres-template%26template_owner%3DDefangSamples)`
 
@@ -32,10 +32,10 @@ Or run without using Docker by doing the following:
 
 ---
 
-Title: React & Node.js & PostgreSQL
+Title: Node.js & React & PostgreSQL
 
 Short Description: A full-stack to-do list application.
 
-Tags: React, Node.js, Full-stack, PostgreSQL, JavaScript, SQL
+Tags: Node.js, React, Full-stack, PostgreSQL, JavaScript, SQL
 
 Languages: nodejs

@@ -1,4 +1,4 @@
-# Flask Request Inspector API
+# Python & Flask & HTTP
 
 [![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-python-minimal-template%26template_owner%3DDefangSamples)
 
@@ -27,7 +27,7 @@ This Flask application is designed to inspect and return detailed information ab
 
 ---
 
-Title: Flask
+Title: Python & Flask & HTTP
 
 Short Description: A Flask application that inspects and returns detailed information about HTTP requests.
 
