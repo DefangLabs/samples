@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    environment: production
+    environment: playground
     runs-on: ubuntu-latest
     permissions:
       contents: read
