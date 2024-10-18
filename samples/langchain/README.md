@@ -1,4 +1,4 @@
-# Langchain & flask
+# Langchain & Flask
 
 [![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-langchain-template%26template_owner%3DDefangSamples)
 
@@ -29,7 +29,7 @@ This will start a Docker container with the flask app which will display the res
 
 ---
 
-Title: Flask & LangChain
+Title: LangChain & Flask
 
 Short Description: A sample project demonstrating how to deploy LangChain with Flask on Defang.
 

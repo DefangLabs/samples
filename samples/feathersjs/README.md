@@ -1,4 +1,4 @@
-# FeathersJS Application with Defang
+# Feathers.js 
 
 This sample project demonstrates how to deploy a FeathersJS application on to AWS using Defang. We also demonstrate how to run the application in both development and production environments using Docker Compose.
 
