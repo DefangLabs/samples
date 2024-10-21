@@ -27,7 +27,7 @@ To start the local environment, run `docker compose -f ./compose.yaml -f ./compo
 
 Title: Huginn
 
-Short Description: A system for building agents that perform automated tasks for you online
+Short Description: A system for building agents that perform automated tasks for you online.
 
 Tags: Huginn, Agents, Automation
 

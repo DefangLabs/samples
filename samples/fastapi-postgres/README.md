@@ -17,13 +17,13 @@ This sample project demonstrates how to deploy FastAPI with PostgreSQL with Defa
 
 ## Local Development
 
-1. Run `docker compose -f compose.dev.yaml up`
+1. Run `docker compose -f compose.dev.yaml up --build`
 
 ---
 
 Title: FastAPI & PostgreSQL
 
-Short Description: A sample project with FastAPI and PostgreSQL
+Short Description: A sample project with FastAPI and PostgreSQL.
 
 Tags: FastAPI, PostgreSQL, Python, SQL
 

@@ -1,6 +1,11 @@
 # Use an official Python runtime as a parent image
 FROM python:3.11-slim
 
+RUN apt-get update -qq \
+  && apt-get install -y curl \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1

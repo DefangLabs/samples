@@ -37,8 +37,8 @@ Environment: Designed to run in containerized environments using Docker, which e
 
 Title: Go & MongoDB Atlas
 
-Short Description: A simple Go application that manages tasks with MongoDB Atlas
+Short Description: A simple Go application that manages tasks with MongoDB Atlas.
 
-Tags: Go, MongoDB, Atlas, Task manager
+Tags: Go, MongoDB, Atlas, Task Manager
 
 Languages: golang

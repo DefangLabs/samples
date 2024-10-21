@@ -1,9 +1,9 @@
 services:
-  web:
+  app:
     restart: unless-stopped
     # domainname: mydomain.com # if you want to use your own domain
     build:
-      context: ./web
+      context: ./app
       dockerfile: Dockerfile
     ports:
       - target: 3000

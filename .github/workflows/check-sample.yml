@@ -25,6 +25,7 @@ jobs:
       - name: Run Checks
         id: checks
         run: |
+          . <(curl -Ls https://s.defang.io/install)
           ./scripts/check-sample-files.sh > checklist.txt
           ./scripts/check-modified-samples.sh > modified.txt
           echo "@@ MODIFIED @@"

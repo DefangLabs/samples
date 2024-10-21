@@ -16,6 +16,8 @@ services:
     #  resources:
     #    reservations:
     #      memory: 256M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:1337/"]
 
 networks:
   app-network:

@@ -20,7 +20,7 @@ This sample project demonstrates how to deploy FastAPI with Defang.
 To run your FastAPI app locally, you'll need to have Docker installed on your machine. You can then run:
 
 ```bash
-docker compose -f compose.yaml -f compose.dev.yaml up
+docker compose -f compose.yaml -f compose.dev.yaml up --build
 ```
 
 That will start your FastAPI app on `http://localhost:8000` with hot reloading enabled.
@@ -29,7 +29,7 @@ That will start your FastAPI app on `http://localhost:8000` with hot reloading e
 
 Title: FastAPI
 
-Short Description: A sample project demonstrating how to deploy FastAPI with Defang
+Short Description: A sample project demonstrating how to deploy FastAPI with Defang.
 
 Tags: FastAPI, OpenAPI, Python
 

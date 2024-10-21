@@ -1,6 +1,11 @@
 # Use the slim version of Node.js on Debian Bookworm as the base image
 FROM node:20-bookworm-slim
 
+RUN apt-get update -qq \
+      && apt-get install -y curl \
+      && apt-get clean \
+      && rm -rf /var/lib/apt/lists/*
+
 # Create app directory
 WORKDIR /usr/src/app
 
