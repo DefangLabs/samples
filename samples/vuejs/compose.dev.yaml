@@ -1,0 +1,11 @@
+services:
+  app:
+    extends:
+      file: compose.yaml
+      service: app
+    ports:
+      - "5174:5173"
+    volumes:
+      - ./app:/app
+      - /app/node_modules
+    command: npm run dev
