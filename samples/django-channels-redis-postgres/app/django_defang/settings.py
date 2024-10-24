@@ -43,6 +43,7 @@ def get_private_ips():
 ALLOWED_HOSTS = [
     '.prod1.defang.dev',
     'localhost',
+    '*', # TODO: REMOVE THIS WHEN GOING TO PRODUCTION
 ] # Add your own domain name
 
 ALLOWED_HOSTS += get_private_ips() # Add private IPs so the health check can pass
@@ -98,7 +99,6 @@ WSGI_APPLICATION = "django_defang.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
 
 DATABASES = {
     # default is a postrgres database load from environment variable POSTGRES_URL

@@ -10,22 +10,22 @@ services:
         published: 8000
         mode: ingress
     environment:
-      REDIS_URL: redis://redis_service:6379
-      POSTGRES_URL:
+      REDIS_URL: redis://redis-service:6379
+      POSTGRES_URL: "postgres://postgres:${POSTGRES_PASSWORD}@postgres-service:5432/postgres?sslmode=require"
       SECRET_KEY:
     healthcheck:
       # wget or curl required for healthchecks on services with a published port
       # this gets parsed by Defang and provided to the load balancers as well
       test: ["CMD", "python3", "-c", "import sys, urllib.request; urllib.request.urlopen(sys.argv[1]).read()", "http://localhost:8000/"]
 
-  redis_service:
+  redis-service:
     image: redis:6.2
     x-defang-redis: true
     ports:
       - mode: host
         target: 6379
 
-  postgres_service:
+  postgres-service:
     image: postgres:16.4
     x-defang-postgres: true
     ports:

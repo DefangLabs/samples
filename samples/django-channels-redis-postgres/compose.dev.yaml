@@ -7,23 +7,23 @@ services:
       - ./app:/app
     healthcheck: {}
     environment:
-      REDIS_URL: redis://redis_service:6379
-      POSTGRES_URL: postgres://user:password@postgres_service:5432/db
+      REDIS_URL: redis://redis-service:6379
+      POSTGRES_URL: postgres://user:password@postgres-service:5432/db
       DEBUG: "True"
     depends_on:
-      - redis_service
-      - postgres_service
+      - redis-service
+      - postgres-service
     command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
 
-  redis_service:
+  redis-service:
     extends:
       file: compose.yaml
-      service: redis_service
+      service: redis-service
   
-  postgres_service:
+  postgres-service:
     extends:
       file: compose.yaml
-      service: postgres_service
+      service: postgres-service
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
