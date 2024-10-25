@@ -18,9 +18,8 @@ jobs:
 
     - name: Deploy
       uses: DefangLabs/defang-github-action@v1.0.4
-      #REMOVE_ME_AFTER_EDITING - Replace the following line with the list of environment variables you want to pass to the action
       with:
-        config-env-vars: ENV1 ENV2
+        config-env-vars: SECRET_KEY POSTGRES_PASSWORD
       env:
-        ENV1: ${{ secrets.ENV1 }}
-        ENV2: ${{ secrets.ENV2 }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
