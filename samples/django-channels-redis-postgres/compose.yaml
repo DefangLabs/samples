@@ -11,7 +11,7 @@ services:
         mode: ingress
     environment:
       REDIS_URL: redis://redis-service:6379
-      POSTGRES_URL: "postgres://postgres:${POSTGRES_PASSWORD}@postgres-service:5432/postgres?sslmode=require"
+      POSTGRES_URL: "postgres://djangouser:${POSTGRES_PASSWORD}@postgres-service:5432/djangodatabase?sslmode=require"
       SECRET_KEY:
     healthcheck:
       # wget or curl required for healthchecks on services with a published port
@@ -33,3 +33,5 @@ services:
         target: 5432
     environment:
       POSTGRES_PASSWORD:
+      POSTGRES_DB: djangodatabase
+      POSTGRES_USER: djangouser

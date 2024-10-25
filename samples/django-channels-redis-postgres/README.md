@@ -29,10 +29,6 @@ The secret key for your Django application. You can generate a new one by runnin
 ### `POSTGRES_PASSWORD`
 The password for your Postgres database. You need to set this before deploying for the first time.
 
-### `POSTGRES_URL`
-The URL for your Postgres database (which should include the password set with `POSTGRES_PASSWORD`). This should be in the format `postgres://<username>:<password>@<host>:<port>/<database>`
-
-
 ## Deploying
 
 1. Open the terminal and type `defang login`
