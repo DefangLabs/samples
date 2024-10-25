@@ -1,0 +1,35 @@
+services:
+  app:
+    extends:
+      file: compose.yaml
+      service: app
+    volumes:
+      - ./app:/app
+    healthcheck: {}
+    environment:
+      REDIS_URL: redis://redis-service:6379
+      POSTGRES_URL: postgres://djangouser:djangopassword@postgres-service:5432/djangodatabase
+      DEBUG: "True"
+    depends_on:
+      - redis-service
+      - postgres-service
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+
+  redis-service:
+    extends:
+      file: compose.yaml
+      service: redis-service
+  
+  postgres-service:
+    extends:
+      file: compose.yaml
+      service: postgres-service
+    environment:
+      POSTGRES_DB: djangodatabase
+      POSTGRES_USER: djangouser
+      POSTGRES_PASSWORD: djangopassword
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
