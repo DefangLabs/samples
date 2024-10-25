@@ -1,2 +1,3 @@
 artists.npy
 model.npz
+__pycache__/
