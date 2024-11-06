@@ -1,0 +1,24 @@
+# Ignore development files and directories
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+.env
+
+# Ignore static files
+/static/
+/media/
+
+# Ignore database files
+/db.sqlite3
+
+# Ignore log files
+/logs/
+
+# Ignore Docker-related files
+Dockerfile
+docker-compose.yml
+
+# Ignore any other unnecessary files or directories
+node_modules/
+*.log

@@ -1,0 +1,37 @@
+services:
+  app:
+    # uncomment to add your own domain
+    # domainname: example.com
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - target: 8000
+        published: 8000
+        mode: ingress
+    environment:
+      REDIS_URL: redis://redis-service:6379
+      POSTGRES_URL: "postgres://djangouser:${POSTGRES_PASSWORD}@postgres-service:5432/djangodatabase?sslmode=require"
+      SECRET_KEY:
+    healthcheck:
+      # wget or curl required for healthchecks on services with a published port
+      # this gets parsed by Defang and provided to the load balancers as well
+      test: ["CMD", "python3", "-c", "import sys, urllib.request; urllib.request.urlopen(sys.argv[1]).read()", "http://localhost:8000/"]
+
+  redis-service:
+    image: redis:6.2
+    x-defang-redis: true
+    ports:
+      - mode: host
+        target: 6379
+
+  postgres-service:
+    image: postgres:16.4
+    x-defang-postgres: true
+    ports:
+      - mode: host
+        target: 5432
+    environment:
+      POSTGRES_PASSWORD:
+      POSTGRES_DB: djangodatabase
+      POSTGRES_USER: djangouser

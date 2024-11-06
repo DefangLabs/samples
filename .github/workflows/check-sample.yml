@@ -18,6 +18,10 @@ jobs:
           # Fetch two to see changes in current commit
           fetch-depth: 2
 
+      - name: Install Defang
+        run: |
+          . <(curl -Ls https://s.defang.io/install)
+
       - name: Run Checks
         id: checks
         run: |
