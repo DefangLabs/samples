@@ -5,10 +5,15 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile
+
     ports:
       - target: 3000
         mode: ingress
         published: 3000
+
+    healthcheck:
+      test: wget -q --spider http://localhost:3000/ || exit 1
+
     deploy:
       resources:
         reservations:
