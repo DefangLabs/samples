@@ -6,47 +6,6 @@ on:
       - 'samples/**'
 
 jobs:
-  run_samples_locally:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    env:
-      DEFANG_FABRIC: fabric-staging.defang.dev:443
-
-    steps:
-      - name: Install Docker Compose
-        uses: ndeloof/install-compose-action@v0.0.1
-        with:
-          version: v2.29.7
-
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
-
-      - name: Fetch main branch
-        run: git fetch origin main:main # Fetch the main branch reference for comparison
-
-      - name: Identify changed samples
-        run: |
-          echo "Identifying changed samples..."
-          bash scripts/changed-samples.sh > changed_samples.txt
-
-      - name: Run Docker Compose Up and down
-        run: |
-          echo "DEFANG_DEBUG=$RUNNER_DEBUG" >> $GITHUB_ENV
-          CHANGED_FILES=$(cat changed_samples.txt)
-          echo "changed samples"
-          echo $CHANGED_FILES
-
-          # Iterate over the changed samples and run them one at a time with docker locally
-            for sample in $CHANGED_FILES; do
-            if ! bash scripts/compose-sample.sh $sample; then
-              echo "Failed to compose up and down $sample"
-            fi
-          done
-
   deploy_samples:
     runs-on: ubuntu-latest
     permissions:
