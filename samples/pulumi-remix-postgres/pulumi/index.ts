@@ -42,6 +42,7 @@ const service = new defang.DefangService(
     ports: [
       {
         target: 3000,
+        published: 3000,
         mode: "ingress",
         protocol: "http",
       },
