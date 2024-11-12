@@ -6,7 +6,7 @@ sample=$1
   cd "$sample" || exit
 
   echo "Starting $sample"
-  docker compose up
+  docker compose up --detach --wait
 
   echo "Stopping $sample"
   docker down --detach
