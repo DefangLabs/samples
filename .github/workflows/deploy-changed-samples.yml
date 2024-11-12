@@ -11,6 +11,8 @@ jobs:
     permissions:
       contents: read
       id-token: write
+    env:
+      DEFANG_FABRIC: fabric-staging.defang.dev:443
 
     steps:
       - name: Checkout code
@@ -50,7 +52,7 @@ jobs:
             cd $sample
 
             # deploy the sample
-            defang compose up --cluster fabric-staging.defang.dev:443 --debug
+            defang compose up --debug
 
             # teardown the sample
             defang compose down
