@@ -81,6 +81,12 @@ jobs:
           defang login
           defang whoami
 
+      - name: Deprovision any previously running projects
+        run: |
+          sudo apt-get install -y yq
+          echo "Deprovisioning any previously running projects..."
+          defang down --detach --project-name=$(defang ls | grep -v '^ \* ' | yq '.project')
+
       - name: Deploy Config
         shell: bash
         run: |
