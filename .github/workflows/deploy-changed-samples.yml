@@ -22,7 +22,7 @@ jobs:
       - name: Identify changed samples
         run: |
           echo "Identifying changed samples..."
-          CHANGED_SAMPLES=$(git diff --name-only HEAD HEAD^ | awk -F'/' '{print $1"/"$2}' | sort | uniq)
+          CHANGED_SAMPLES=$(git diff --name-only HEAD origin/main | grep '^samples/' | awk -F'/' '{print $1"/"$2}' | sort | uniq)
 
       - name: Install defang
         shell: bash
