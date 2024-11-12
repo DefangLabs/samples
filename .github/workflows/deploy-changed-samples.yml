@@ -28,7 +28,7 @@ jobs:
       - name: Identify changed samples
         run: |
           echo "Identifying changed samples..."
-          echo $(git diff --name-only HEAD main | grep '^samples/' | awk -F'/' '{print $1"/"$2}' | sort | uniq) > changed_samples.txt
+          bash scripts/changed-samples.sh > changed_samples.txt
 
       - name: Run Docker Compose Up and down
         run: |
@@ -38,22 +38,10 @@ jobs:
           echo $CHANGED_FILES
 
           # Iterate over the changed samples and run them one at a time with docker locally
-          for sample in $CHANGED_FILES; do
-            (
-              echo "up $sample"
-              cd $sample
-
-              docker compose up
-
-              echo "down $sample"
-              docker compose down --detach
-
-              echo "Started and stopped $sample successfully"
-
-              cd ..
-            ) &
-            done
-            wait
+            for sample in $CHANGED_FILES; do
+            if ! bash scripts/compose-sample.sh $sample; then
+              echo "Failed to compose up and down $sample"
+            fi
           done
 
   deploy_samples:
@@ -76,7 +64,7 @@ jobs:
       - name: Identify changed samples
         run: |
           echo "Identifying changed samples..."
-          echo $(git diff --name-only HEAD main | grep '^samples/' | awk -F'/' '{print $1"/"$2}' | sort | uniq) > changed_samples.txt
+          bash scripts/changed-samples.sh > changed_samples.txt
 
       - name: Install defang
         shell: bash
@@ -100,21 +88,9 @@ jobs:
 
           # Iterate over the changed samples and deploy them one at a time
           for sample in $CHANGED_FILES; do
-            (
-              echo "Deploying $sample"
-              cd $sample
+            echo "Deploying $sample"
 
-              # deploy the sample
-              defang compose up
-
-              echo "Deprovisioning $sample"
-              # teardown the sample
-              defang compose down --detach
-
-              echo "Deployed and deprovisioned $sample successfully"
-
-              cd ..
-            ) &
-            done
-            wait
+            if ! bash scripts/deploy-sample.sh $sample; then
+              echo "Failed to deploy and deprovision $sample"
+            fi
           done
