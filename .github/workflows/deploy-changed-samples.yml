@@ -86,7 +86,7 @@ jobs:
 
       - name: Deprovision any previously running projects
         run: |
-          sudo apt-get install -y yq
+          sudo apt-get update && apt-get install -y yq
           echo "Deprovisioning any previously running projects..."
           defang down --detach --project-name=$(defang ls | grep -v '^ \* ' | yq '.project')
 
