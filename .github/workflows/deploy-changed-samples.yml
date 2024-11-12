@@ -8,6 +8,8 @@ on:
 jobs:
   run_samples_locally:
     runs-on: ubuntu-latest
+    container:
+      image: docker:27-cli
     permissions:
       contents: read
       id-token: write
@@ -31,12 +33,12 @@ jobs:
       - name: Run Docker Compose Up
         run: |
           echo "Running Docker Compose Up..."
-          docker-compose up
+          docker compose up
 
       - name: Run Docker Compose Down
         run: |
           echo "Running Docker Compose Down..."
-          docker-compose down
+          docker compose down
 
   deploy_samples:
     runs-on: ubuntu-latest
@@ -81,15 +83,22 @@ jobs:
           echo $CHANGED_FILES
 
           # Iterate over the changed samples and deploy them one at a time
-          for sample in $CHANGED_FILES; do
-            echo "Deploying $sample"
-            cd $sample
+            for sample in $CHANGED_FILES; do
+            (
+              echo "Deploying $sample"
+              cd $sample
 
-            # deploy the sample
-            defang compose up
+              # deploy the sample
+              defang compose up
 
-            # teardown the sample
-            defang compose down --detach
+              echo "Deprovisioning $sample"
+              # teardown the sample
+              defang compose down --detach
 
-            cd ..
+              echo "Deployed and deprovisioned $sample successfully"
+
+              cd ..
+            ) &
+            done
+            wait
           done
