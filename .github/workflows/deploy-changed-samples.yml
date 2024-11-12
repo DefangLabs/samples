@@ -16,13 +16,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          # Fetch two to see changes in current commit
-          fetch-depth: 2
+          fetch-depth: 1
+
+      - name: Fetch main branch
+        run: git fetch origin main:main # Fetch the main branch reference for comparison
 
       - name: Identify changed samples
         run: |
           echo "Identifying changed samples..."
-          CHANGED_SAMPLES=$(git diff --name-only HEAD origin/main | grep '^samples/' | awk -F'/' '{print $1"/"$2}' | sort | uniq)
+          CHANGED_SAMPLES=$(git diff --name-only HEAD main | grep '^samples/' | awk -F'/' '{print $1"/"$2}' | sort | uniq)
 
       - name: Install defang
         shell: bash
