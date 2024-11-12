@@ -90,4 +90,6 @@ jobs:
 
             # teardown the sample
             defang compose down --detach
+
+            cd ..
           done
