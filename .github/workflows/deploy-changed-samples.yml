@@ -86,9 +86,12 @@ jobs:
 
       - name: Deprovision any previously running projects
         run: |
-          sudo apt-get update && sudo apt-get install -y yq
           echo "Deprovisioning any previously running projects..."
-          defang down --detach --project-name=$(defang ls | grep -v '^ \* ' | yq '.project')
+          CURRENTLY_RUNNING_PROJECT=$(defang ls | grep -v '^ \* ' | head -n1 | awk '{print $2}')
+          # if CURRENTLY_RUNNING_PROJECT is not empty, deprovision it
+          if [ -n "$CURRENTLY_RUNNING_PROJECT" ]; then
+            defang down --detach --project-name=$CURRENTLY_RUNNING_PROJECT
+          fi
 
       - name: Deploy Config
         shell: bash
