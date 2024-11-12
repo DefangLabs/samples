@@ -30,15 +30,31 @@ jobs:
           echo "Identifying changed samples..."
           echo $(git diff --name-only HEAD main | grep '^samples/' | awk -F'/' '{print $1"/"$2}' | sort | uniq) > changed_samples.txt
 
-      - name: Run Docker Compose Up
+      - name: Run Docker Compose Up and down
         run: |
-          echo "Running Docker Compose Up..."
-          docker compose up
+          echo "DEFANG_DEBUG=$RUNNER_DEBUG" >> $GITHUB_ENV
+          CHANGED_FILES=$(cat changed_samples.txt)
+          echo "changed samples"
+          echo $CHANGED_FILES
 
-      - name: Run Docker Compose Down
-        run: |
-          echo "Running Docker Compose Down..."
-          docker compose down
+          # Iterate over the changed samples and run them one at a time with docker locally
+          for sample in $CHANGED_FILES; do
+            (
+              echo "up $sample"
+              cd $sample
+
+              docker compose up
+
+              echo "down $sample"
+              docker compose down --detach
+
+              echo "Started and stopped $sample successfully"
+
+              cd ..
+            ) &
+            done
+            wait
+          done
 
   deploy_samples:
     runs-on: ubuntu-latest
@@ -83,7 +99,7 @@ jobs:
           echo $CHANGED_FILES
 
           # Iterate over the changed samples and deploy them one at a time
-            for sample in $CHANGED_FILES; do
+          for sample in $CHANGED_FILES; do
             (
               echo "Deploying $sample"
               cd $sample
