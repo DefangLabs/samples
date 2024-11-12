@@ -1,0 +1,47 @@
+name: Deploy Changed Samples
+
+on:
+  pull_request:
+    paths:
+      - 'samples/**'
+
+jobs:
+  deploy_samples:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          # Fetch two to see changes in current commit
+          fetch-depth: 2
+
+      - name: Identify changed samples
+        run: |
+          echo "Identifying changed samples..."
+          CHANGED_SAMPLES=$(git diff --name-only HEAD HEAD^ | awk -F'/' '{print $1"/"$2}' | sort | uniq)
+
+      - name: Install defang
+        shell: bash
+        run: . <(curl -Lf https://raw.githubusercontent.com/DefangLabs/defang/main/src/bin/install || echo return $?)
+        env:
+          GH_TOKEN: ${{ github.token }} # avoid rate-limits
+
+      - name: Login to Defang
+        shell: bash
+        run: |
+          defang login
+          defang whoami
+
+      - name: Deploy Config
+        shell: bash
+        run: |
+          # Iterate over the changed samples and deploy them
+          for sample in $CHANGED_SAMPLES; do
+            echo "Deploying $sample"
+            cd $sample
+
+            # deploy the sample
+            defang compose up
+          done
