@@ -55,5 +55,5 @@ jobs:
             defang compose up --debug
 
             # teardown the sample
-            defang compose down
+            defang compose down --detach
           done
