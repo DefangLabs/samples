@@ -50,7 +50,7 @@ jobs:
             cd $sample
 
             # deploy the sample
-            defang compose up
+            defang compose up --cluster fabric-staging.defang.dev:443
 
             # teardown the sample
             defang compose down
