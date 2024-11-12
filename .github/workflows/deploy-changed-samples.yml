@@ -54,6 +54,9 @@ jobs:
       id-token: write
     env:
       DEFANG_FABRIC: fabric-staging.defang.dev:443
+    concurrency:
+      group: deploy_samples-group-${{ github.head_ref }}
+      cancel-in-progress: true
 
     steps:
       - name: Checkout code
