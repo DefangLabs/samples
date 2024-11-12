@@ -6,6 +6,38 @@ on:
       - 'samples/**'
 
 jobs:
+  run_samples_locally:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      DEFANG_FABRIC: fabric-staging.defang.dev:443
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+
+      - name: Fetch main branch
+        run: git fetch origin main:main # Fetch the main branch reference for comparison
+
+      - name: Identify changed samples
+        run: |
+          echo "Identifying changed samples..."
+          echo $(git diff --name-only HEAD main | grep '^samples/' | awk -F'/' '{print $1"/"$2}' | sort | uniq) > changed_samples.txt
+
+      - name: Run Docker Compose Up
+        run: |
+          echo "Running Docker Compose Up..."
+          docker-compose up
+
+      - name: Run Docker Compose Down
+        run: |
+          echo "Running Docker Compose Down..."
+          docker-compose down
+
   deploy_samples:
     runs-on: ubuntu-latest
     permissions:
