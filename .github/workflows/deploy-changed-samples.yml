@@ -24,8 +24,7 @@ jobs:
       - name: Identify changed samples
         run: |
           echo "Identifying changed samples..."
-          CHANGED_SAMPLES=$(git diff --name-only HEAD main | grep '^samples/' | awk -F'/' '{print $1"/"$2}' | sort | uniq)
-          export $CHANGED_SAMPLES
+          echo $(git diff --name-only HEAD main | grep '^samples/' | awk -F'/' '{print $1"/"$2}' | sort | uniq) > changed_samples.txt
 
       - name: Install defang
         shell: bash
@@ -43,9 +42,10 @@ jobs:
         shell: bash
         run: |
           echo "changed samples"
-          echo $CHANGED_SAMPLES"
+          CHANGED_FILES=$(cat changed_samples.txt)
+
           # Iterate over the changed samples and deploy them one at a time
-          for sample in $CHANGED_SAMPLES; do
+          for sample in $CHANGED_FILES; do
             echo "Deploying $sample"
             cd $sample
 
