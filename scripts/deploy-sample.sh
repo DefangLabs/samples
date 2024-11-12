@@ -1,9 +1,11 @@
 #!/bin/bash
 
+set -e
+
 sample=$1
 
 (
-  cd "$sample" || exit
+  cd "$sample"
 
   echo "Deploying $sample"
   defang compose up

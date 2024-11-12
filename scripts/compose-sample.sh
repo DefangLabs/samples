@@ -1,9 +1,11 @@
 #!/bin/bash
 
+set -e
+
 sample=$1
 
 (
-  cd "$sample" || exit
+  cd "$sample"
 
   echo "Starting $sample"
   docker compose up --detach --wait
