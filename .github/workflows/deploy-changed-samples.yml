@@ -8,8 +8,6 @@ on:
 jobs:
   run_samples_locally:
     runs-on: ubuntu-latest
-    container:
-      image: docker:27-cli
     permissions:
       contents: read
       id-token: write
@@ -17,6 +15,11 @@ jobs:
       DEFANG_FABRIC: fabric-staging.defang.dev:443
 
     steps:
+      - name: Install Docker Compose
+        uses: ndeloof/install-compose-action@v0.0.1
+        with:
+          version: v2.29.7
+
       - name: Checkout code
         uses: actions/checkout@v3
         with:
