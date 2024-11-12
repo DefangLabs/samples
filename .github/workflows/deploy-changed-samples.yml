@@ -75,6 +75,7 @@ jobs:
       - name: Deploy Config
         shell: bash
         run: |
+          echo "DEFANG_DEBUG=$RUNNER_DEBUG" >> $GITHUB_ENV
           echo "changed samples"
           CHANGED_FILES=$(cat changed_samples.txt)
 
@@ -84,7 +85,7 @@ jobs:
             cd $sample
 
             # deploy the sample
-            defang compose up --debug
+            defang compose up
 
             # teardown the sample
             defang compose down --detach
