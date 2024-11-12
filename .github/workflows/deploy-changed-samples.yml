@@ -37,11 +37,14 @@ jobs:
       - name: Deploy Config
         shell: bash
         run: |
-          # Iterate over the changed samples and deploy them
+          # Iterate over the changed samples and deploy them one at a time
           for sample in $CHANGED_SAMPLES; do
             echo "Deploying $sample"
             cd $sample
 
             # deploy the sample
             defang compose up
+
+            # teardown the sample
+            defang compose down
           done
