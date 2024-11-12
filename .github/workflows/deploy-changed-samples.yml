@@ -76,8 +76,9 @@ jobs:
         shell: bash
         run: |
           echo "DEFANG_DEBUG=$RUNNER_DEBUG" >> $GITHUB_ENV
-          echo "changed samples"
           CHANGED_FILES=$(cat changed_samples.txt)
+          echo "changed samples"
+          echo $CHANGED_FILES
 
           # Iterate over the changed samples and deploy them one at a time
           for sample in $CHANGED_FILES; do
