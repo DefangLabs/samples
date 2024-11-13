@@ -52,13 +52,14 @@ jobs:
             defang down --detach --project-name=$CURRENTLY_RUNNING_PROJECT
           fi
 
-      - name: Deploy Config
+      - name: Deploy Samples
         shell: bash
         run: |
           echo "DEFANG_DEBUG=$RUNNER_DEBUG" >> $GITHUB_ENV
           CHANGED_FILES=$(cat changed_samples.txt)
           echo "changed samples"
           echo $CHANGED_FILES
+          FAILED_SAMPLES=()
 
           # Iterate over the changed samples and deploy them one at a time
           for sample in $CHANGED_FILES; do
@@ -66,5 +67,11 @@ jobs:
 
             if ! bash scripts/deploy-sample.sh $sample; then
               echo "Failed to deploy and deprovision $sample"
+              FAILED_SAMPLES+=($sample)
             fi
           done
+
+          if [ ${#FAILED_SAMPLES[@]} -gt 0 ]; then
+            echo "Failed to deploy the following samples: ${FAILED_SAMPLES[@]}"
+            exit 1
+          fi
