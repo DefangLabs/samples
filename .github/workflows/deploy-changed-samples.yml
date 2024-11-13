@@ -30,6 +30,18 @@ jobs:
         run: |
           echo "Identifying changed samples..."
           bash scripts/changed-samples.sh > changed_samples.txt
+          if [ ! -s changed_samples.txt ]; then
+            echo "No samples have changed. Exiting..."
+            exit 0
+          fi
+
+      - name: Clone defang-mvp
+        uses: actions/checkout@v3
+        with:
+          repository: DefangLabs/defang-mvp
+          fetch-depth: 1
+          ref: jordan/issuetoken
+          path: defang-mvp
 
       - name: Install defang
         shell: bash
@@ -37,22 +49,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }} # avoid rate-limits
 
-      - name: Login to Defang
-        shell: bash
-        run: |
-          defang login
-          defang whoami
-
-      - name: Deprovision any previously running projects
-        run: |
-          echo "Deprovisioning any previously running projects..."
-          CURRENTLY_RUNNING_PROJECT=$(defang ls | grep -v '^ \* ' | head -n1 | awk '{print $2}')
-          # if CURRENTLY_RUNNING_PROJECT is not empty, deprovision it
-          if [ -n "$CURRENTLY_RUNNING_PROJECT" ]; then
-            if ! defang down --detach --project-name=$CURRENTLY_RUNNING_PROJECT; then
-              echo "Failed to deprovision $CURRENTLY_RUNNING_PROJECT. Continuing..."
-            fi
-          fi
+      - name: Install gnu parallel
+        run: sudo apt-get update && sudo apt-get install parallel
 
       - name: Deploy Samples
         shell: bash
@@ -88,25 +86,13 @@ jobs:
           TEST_SLACK_TOKEN: ${{ secrets.TEST_SLACK_TOKEN }}
         run: |
           echo "DEFANG_DEBUG=$RUNNER_DEBUG" >> $GITHUB_ENV
-          CHANGED_FILES=$(cat changed_samples.txt)
+
+          CHANGED_SAMPLES=$(cat changed_samples.txt)
           echo "changed samples"
-          echo $CHANGED_FILES
-          FAILED_SAMPLES=()
+          echo $CHANGED_SAMPLES
 
-          # Iterate over the changed samples and deploy them one at a time
-          for sample in $CHANGED_FILES; do
-            echo "Deploying $sample"
+          CONCURRENT_DEPLOYMENTS=8
 
-            # detect missing config values and set them from the environment
-            # defang config FOO set -e TEST_FOO
-
-            if ! bash scripts/deploy-sample.sh $sample; then
-              echo "Failed to deploy and deprovision $sample"
-              FAILED_SAMPLES+=($sample)
-            fi
+          for ((i=0; i<${#CHANGED_SAMPLES[@]}; i+=$CONCURRENT_DEPLOYMENTS)); do
+            AWS_REGION=us-west-2 AWS_PROFILE=defang-staging TENANT=defangSampleTestFakeTenant$i CLUSTER=$CLUSTER bash scripts/deploy-samples.sh ${CHANGED_FILES[@]:$i:$CONCURRENT_DEPLOYMENTS}
           done
-
-          if [ ${#FAILED_SAMPLES[@]} -gt 0 ]; then
-            echo "Failed to deploy the following samples: ${FAILED_SAMPLES[@]}"
-            exit 1
-          fi
