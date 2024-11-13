@@ -9,7 +9,7 @@ services:
     env_file:
       - .env
     environment:
-      POSTGRES_PASSWORD:
+      - POSTGRES_PASSWORD
     ports:
       - mode: ingress
         target: 3000
@@ -28,7 +28,7 @@ services:
     image: postgres:16
     x-defang-postgres: true
     environment:
-      POSTGRES_PASSWORD:
+      - POSTGRES_PASSWORD
     ports:
       - mode: host
         target: 5432
