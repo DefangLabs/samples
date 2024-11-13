@@ -46,7 +46,7 @@ FROM base
 
 # Install packages needed for deployment
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libvips libpq-dev && \
+    apt-get install --no-install-recommends -y curl libvips libpq-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
