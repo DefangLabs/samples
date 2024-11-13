@@ -34,36 +34,12 @@ jobs:
             exit 0
           fi
 
-      - name: Configure AWS Credentials for CI
-        id: creds
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-region: us-west-2
-          output-credentials: true
-          role-to-assume: arn:aws:iam::488659951590:role/ci-role-d4fe904 # ciRoleArn from defang-io/infrastructure stack
-
-      - name: Configure AWS Credentials for Playground
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-region: us-west-2
-          role-duration-seconds: 1200
-          role-chaining: true
-          role-to-assume: arn:aws:iam::426819183542:role/admin # adminUserRoleArn from defang-io/bootstrap stack
-
       - name: Install Golang
         uses: actions/setup-go@v5
         with:
-          go-version-file: defang-mvp/tools/testing/go.mod
+          go-version-file: tools/testing/go.mod
           cache-dependency-path: |
-            defang-mvp/tools/testing/go.sum
-            defang/src/go.sum
-
-      - name: Install latest defang cli
-        run: |
-          go install github.com/DefangLabs/defang/src/cmd/cli@latest
-          which cli
-          mv $(which cli) $(dirname $(which cli))/defang
-          defang --version
+            tools/testing/go.sum
 
       - name: Build the test tool using Go
         run: |
@@ -75,6 +51,7 @@ jobs:
         id: run-tests
         shell: bash # implies set -o pipefail, so pipe below will keep the exit code from loadtest
         env:
+          FIXED_VERIFIED_PK: ${{ secrets.FIXED_VERIFIED_PK }}
           TEST_AWS_ACCESS_KEY: ${{ secrets.TEST_AWS_ACCESS_KEY }}
           TEST_AWS_SECRET_KEY: ${{ secrets.TEST_AWS_SECRET_KEY }}
           TEST_BOARD_PASSWORD: ${{ secrets.TEST_BOARD_PASSWORD }}

@@ -7,15 +7,12 @@ import (
 	"encoding/pem"
 	"fmt"
 	"log"
-	"strings"
+	"os"
 	"time"
 
 	defangclient "github.com/DefangLabs/defang/src/pkg/cli/client"
 	"github.com/DefangLabs/defang/src/pkg/types"
 	defangv1 "github.com/DefangLabs/defang/src/protos/io/defang/v1"
-	"github.com/aws/aws-sdk-go-v2/config"
-	"github.com/aws/aws-sdk-go-v2/service/ssm"
-	"github.com/aws/smithy-go/ptr"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -25,28 +22,8 @@ type TokenIssuer struct {
 }
 
 func NewTokenIssuer(ctx context.Context, cluster string) (*TokenIssuer, error) {
-	parts := strings.Split(strings.TrimPrefix(cluster, "fabric-"), ".")
-	if len(parts) < 2 {
-		return nil, fmt.Errorf("invalid cluster: %v", cluster)
-	}
-	stack := parts[0]
-
-	config, err := config.LoadDefaultConfig(ctx)
-	if err != nil {
-		return nil, fmt.Errorf("unable to load SDK config: %w", err)
-	}
-
-	ssmClient := ssm.NewFromConfig(config)
-	privateKeyParamName := fmt.Sprintf("/ecs/%v/fixed-verifier-private-key-ed25519-pem", stack)
-	out, err := ssmClient.GetParameter(ctx, &ssm.GetParameterInput{
-		Name:           ptr.String(privateKeyParamName),
-		WithDecryption: ptr.Bool(true),
-	})
-	if err != nil {
-		return nil, fmt.Errorf("failed to get fixed verifier key at %v parameter: %w", privateKeyParamName, err)
-	}
-
-	pk, err := decodePrivateKeyPEM(*out.Parameter.Value)
+	fixedVerifierPk := os.Getenv("FIXED_VERIFIER_PK")
+	pk, err := decodePrivateKeyPEM(fixedVerifierPk)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse fixed verifier key: %w", err)
 	}
