@@ -95,6 +95,9 @@ jobs:
           for sample in $CHANGED_FILES; do
             echo "Deploying $sample"
 
+            # detect missing config values and set them from the environment
+            # defang config FOO set -e TEST_FOO
+
             if ! bash scripts/deploy-sample.sh $sample; then
               echo "Failed to deploy and deprovision $sample"
               FAILED_SAMPLES+=($sample)
