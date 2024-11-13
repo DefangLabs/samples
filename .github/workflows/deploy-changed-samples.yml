@@ -54,6 +54,36 @@ jobs:
 
       - name: Deploy Samples
         shell: bash
+        env:
+          TEST_AWS_ACCESS_KEY: ${{ secrets.TEST_AWS_ACCESS_KEY }}
+          TEST_AWS_SECRET_KEY: ${{ secrets.TEST_AWS_SECRET_KEY }}
+          TEST_BOARD_PASSWORD: ${{ secrets.TEST_BOARD_PASSWORD }}
+          TEST_DATABASE_HOST: ${{ secrets.TEST_DATABASE_HOST }}
+          TEST_DATABASE_NAME: ${{ secrets.TEST_DATABASE_NAME }}
+          TEST_DATABASE_PASSWORD: ${{ secrets.TEST_DATABASE_PASSWORD }}
+          TEST_DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
+          TEST_DATABASE_USERNAME: ${{ secrets.TEST_DATABASE_USERNAME }}
+          TEST_HASURA_GRAPHQL_ADMIN_SECRET: ${{ secrets.TEST_HASURA_GRAPHQL_ADMIN_SECRET }}
+          TEST_HASURA_GRAPHQL_DATABASE_URL: ${{ secrets.TEST_HASURA_GRAPHQL_DATABASE_URL }}
+          TEST_HF_TOKEN: ${{ secrets.TEST_HF_TOKEN }}
+          TEST_MB_DB_DBNAME: ${{ secrets.TEST_MB_DB_DBNAME }}
+          TEST_MB_DB_HOST: ${{ secrets.TEST_MB_DB_HOST }}
+          TEST_MB_DB_PASS: ${{ secrets.TEST_MB_DB_PASS }}
+          TEST_MB_DB_PORT: ${{ secrets.TEST_MB_DB_PORT }}
+          TEST_MB_DB_USER: ${{ secrets.TEST_MB_DB_USER }}
+          TEST_NC_DB: ${{ secrets.TEST_NC_DB }}
+          TEST_NC_S3_ENDPOINT: ${{ secrets.TEST_NC_S3_ENDPOINT }}
+          TEST_NC_S3_BUCKET_NAME: ${{ secrets.TEST_NC_S3_BUCKET_NAME }}
+          TEST_NC_S3_REGION: ${{ secrets.TEST_NC_S3_REGION }}
+          TEST_NC_S3_ACCESS_KEY: ${{ secrets.TEST_NC_S3_ACCESS_KEY }}
+          TEST_NC_S3_ACCESS_SECRET: ${{ secrets.TEST_NC_S3_ACCESS_SECRET }}
+          TEST_OPENAI_KEY: ${{ secrets.TEST_OPENAI_KEY }}
+          TEST_POSTGRES_PASSWORD: ${{ secrets.TEST_POSTGRES_PASSWORD }}
+          TEST_QUEUE: ${{ secrets.TEST_QUEUE }}
+          TEST_SECRET_KEY_BASE: ${{ secrets.TEST_SECRET_KEY_BASE }}
+          TEST_SESSION_SECRET: ${{ secrets.TEST_SESSION_SECRET }}
+          TEST_SLACK_CHANNEL_ID: ${{ secrets.TEST_SLACK_CHANNEL_ID }}
+          TEST_SLACK_TOKEN: ${{ secrets.TEST_SLACK_TOKEN }}
         run: |
           echo "DEFANG_DEBUG=$RUNNER_DEBUG" >> $GITHUB_ENV
           CHANGED_FILES=$(cat changed_samples.txt)
