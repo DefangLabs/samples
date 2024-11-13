@@ -49,7 +49,9 @@ jobs:
           CURRENTLY_RUNNING_PROJECT=$(defang ls | grep -v '^ \* ' | head -n1 | awk '{print $2}')
           # if CURRENTLY_RUNNING_PROJECT is not empty, deprovision it
           if [ -n "$CURRENTLY_RUNNING_PROJECT" ]; then
-            defang down --detach --project-name=$CURRENTLY_RUNNING_PROJECT
+            if ! defang down --detach --project-name=$CURRENTLY_RUNNING_PROJECT; then
+              echo "Failed to deprovision $CURRENTLY_RUNNING_PROJECT. Continuing..."
+            fi
           fi
 
       - name: Deploy Samples
