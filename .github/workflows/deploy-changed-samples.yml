@@ -108,16 +108,15 @@ jobs:
           SAMPLES=$(IFS=,; echo "$(cat changed_samples.txt)")
           echo "Running tests for samples: $SAMPLES"
 
-          cd defang-mvp/tools/testing/
           mkdir output
           # concurrency is set to 10 to avoid exhausting our fargate vCPU limits when running
           # kaniko builds, which consume 4 vCPUs each. the limit is currently set to 60--6.5 of
           # which are used to run the staging stack. So floor((60-6.5)/4) = 13 is our upper limit
-          ./loadtest -c fabric-staging.defang.dev:443 --timeout=15m --concurrency=10 -s $SAMPLES -o output --markdown=true | tee output/summary.log | grep -v '^\s*[-*]' # removes load sample log lines
+          ./tools/testing/loadtest -c fabric-staging.defang.dev:443 --timeout=15m --concurrency=10 -s $SAMPLES -o output --markdown=true | tee output/summary.log | grep -v '^\s*[-*]' # removes load sample log lines
 
       - name: Upload Output as Artifact
         uses: actions/upload-artifact@v4
         if: success() || steps.run-tests.outcome == 'failure' # Always upload result unless cancelled
         with:
           name: program-output
-          path: defang-mvp/tools/testing/output/**
+          path: output/**
