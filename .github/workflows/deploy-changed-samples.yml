@@ -1,0 +1,123 @@
+name: Deploy Changed Samples
+
+on:
+  pull_request:
+    paths:
+      - 'samples/**'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy_changed_samples:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy_samples-group-${{ github.head_ref }}
+      cancel-in-progress: true
+    environment: deploy-changed-samples
+    timeout-minutes: 90
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Fetch main branch
+        run: git fetch origin main:main # Fetch the main branch reference for comparison
+
+      - name: Identify changed samples
+        run: |
+          git diff --name-only HEAD main | grep '^samples/' | awk -F'/' '{print $1"/"$2}' | sort | uniq > changed_samples.txt
+          if [ ! -s changed_samples.txt ]; then
+            echo "No samples have changed. Exiting..."
+            exit 0
+          fi
+
+      - name: Configure AWS Credentials for CI
+        id: creds
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-west-2
+          output-credentials: true
+          role-to-assume: arn:aws:iam::488659951590:role/ci-role-d4fe904 # ciRoleArn from defang-io/infrastructure stack
+
+      - name: Configure AWS Credentials for Playground
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-west-2
+          role-duration-seconds: 1200
+          role-chaining: true
+          role-to-assume: arn:aws:iam::426819183542:role/admin # adminUserRoleArn from defang-io/bootstrap stack
+
+      - name: Install Golang
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: defang-mvp/tools/testing/go.mod
+          cache-dependency-path: |
+            defang-mvp/tools/testing/go.sum
+            defang/src/go.sum
+
+      - name: Install latest defang cli
+        run: |
+          go install github.com/DefangLabs/defang/src/cmd/cli@latest
+          which cli
+          mv $(which cli) $(dirname $(which cli))/defang
+          defang --version
+
+      - name: Build the test tool using Go
+        run: |
+          cd tools/testing/
+          go mod tidy
+          go build ./cmd/loadtest
+
+      - name: Run tests
+        id: run-tests
+        shell: bash # implies set -o pipefail, so pipe below will keep the exit code from loadtest
+        env:
+          TEST_AWS_ACCESS_KEY: ${{ secrets.TEST_AWS_ACCESS_KEY }}
+          TEST_AWS_SECRET_KEY: ${{ secrets.TEST_AWS_SECRET_KEY }}
+          TEST_BOARD_PASSWORD: ${{ secrets.TEST_BOARD_PASSWORD }}
+          TEST_DATABASE_HOST: ${{ secrets.TEST_DATABASE_HOST }}
+          TEST_DATABASE_NAME: ${{ secrets.TEST_DATABASE_NAME }}
+          TEST_DATABASE_PASSWORD: ${{ secrets.TEST_DATABASE_PASSWORD }}
+          TEST_DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
+          TEST_DATABASE_USERNAME: ${{ secrets.TEST_DATABASE_USERNAME }}
+          TEST_HASURA_GRAPHQL_ADMIN_SECRET: ${{ secrets.TEST_HASURA_GRAPHQL_ADMIN_SECRET }}
+          TEST_HASURA_GRAPHQL_DATABASE_URL: ${{ secrets.TEST_HASURA_GRAPHQL_DATABASE_URL }}
+          TEST_HF_TOKEN: ${{ secrets.TEST_HF_TOKEN }}
+          TEST_MB_DB_DBNAME: ${{ secrets.TEST_MB_DB_DBNAME }}
+          TEST_MB_DB_HOST: ${{ secrets.TEST_MB_DB_HOST }}
+          TEST_MB_DB_PASS: ${{ secrets.TEST_MB_DB_PASS }}
+          TEST_MB_DB_PORT: ${{ secrets.TEST_MB_DB_PORT }}
+          TEST_MB_DB_USER: ${{ secrets.TEST_MB_DB_USER }}
+          TEST_NC_DB: ${{ secrets.TEST_NC_DB }}
+          TEST_NC_S3_ENDPOINT: ${{ secrets.TEST_NC_S3_ENDPOINT }}
+          TEST_NC_S3_BUCKET_NAME: ${{ secrets.TEST_NC_S3_BUCKET_NAME }}
+          TEST_NC_S3_REGION: ${{ secrets.TEST_NC_S3_REGION }}
+          TEST_NC_S3_ACCESS_KEY: ${{ secrets.TEST_NC_S3_ACCESS_KEY }}
+          TEST_NC_S3_ACCESS_SECRET: ${{ secrets.TEST_NC_S3_ACCESS_SECRET }}
+          TEST_OPENAI_KEY: ${{ secrets.TEST_OPENAI_KEY }}
+          TEST_POSTGRES_PASSWORD: ${{ secrets.TEST_POSTGRES_PASSWORD }}
+          TEST_QUEUE: ${{ secrets.TEST_QUEUE }}
+          TEST_SECRET_KEY_BASE: ${{ secrets.TEST_SECRET_KEY_BASE }}
+          TEST_SESSION_SECRET: ${{ secrets.TEST_SESSION_SECRET }}
+          TEST_SLACK_CHANNEL_ID: ${{ secrets.TEST_SLACK_CHANNEL_ID }}
+          TEST_SLACK_TOKEN: ${{ secrets.TEST_SLACK_TOKEN }}
+        run: |
+          SAMPLES=$(IFS=,; echo "$(cat changed_samples.txt)")
+          echo "Running tests for samples: $SAMPLES"
+
+          cd defang-mvp/tools/testing/
+          mkdir output
+          # concurrency is set to 10 to avoid exhausting our fargate vCPU limits when running
+          # kaniko builds, which consume 4 vCPUs each. the limit is currently set to 60--6.5 of
+          # which are used to run the staging stack. So floor((60-6.5)/4) = 13 is our upper limit
+          ./loadtest -c fabric-staging.defang.dev:443 --timeout=15m --concurrency=10 -s $SAMPLES -o output --markdown=true | tee output/summary.log | grep -v '^\s*[-*]' # removes load sample log lines
+
+      - name: Upload Output as Artifact
+        uses: actions/upload-artifact@v4
+        if: success() || steps.run-tests.outcome == 'failure' # Always upload result unless cancelled
+        with:
+          name: program-output
+          path: defang-mvp/tools/testing/output/**
