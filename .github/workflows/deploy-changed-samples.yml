@@ -42,6 +42,7 @@ jobs:
           fetch-depth: 1
           ref: jordan/issuetoken
           path: defang-mvp
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install defang
         shell: bash
