@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"math"
 	"os"
 	"os/signal"
 	"path/filepath"
@@ -131,9 +132,11 @@ func RunSamples(ctx context.Context, samplePatterns, excludePatters []string, co
 		close(samplesChannel)
 	}()
 
+	workers := int(math.Min(float64(concurrency), float64(len(samples))))
+
 	var wg sync.WaitGroup
-	log.Printf("Starting %v concurrent tests...", concurrency)
-	for i := 0; i < concurrency; i++ {
+	log.Printf("Starting %v concurrent tests...", workers)
+	for i := 0; i < workers; i++ {
 		wg.Add(1)
 		go func(id int) {
 			defer wg.Done()
