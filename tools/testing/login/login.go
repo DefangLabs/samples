@@ -5,6 +5,7 @@ import (
 	"crypto/ed25519"
 	"crypto/x509"
 	"encoding/pem"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -22,7 +23,10 @@ type TokenIssuer struct {
 }
 
 func NewTokenIssuer(ctx context.Context, cluster string) (*TokenIssuer, error) {
-	fixedVerifierPk := os.Getenv("FIXED_VERIFIER_PK")
+	fixedVerifierPk, ok := os.LookupEnv("FIXED_VERIFIER_PK")
+	if !ok {
+		return nil, errors.New("FIXED_VERIFIER_PK not found in environment")
+	}
 	pk, err := decodePrivateKeyPEM(fixedVerifierPk)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse fixed verifier key: %w", err)
