@@ -155,15 +155,7 @@ func (d *CliDeployer) RunDeployTest(ctx context.Context, t test.TestInfo) (*test
 		},
 	}
 
-	wkdir, err := os.Getwd()
-	if err != nil {
-		return nil, fmt.Errorf("failed to get current working directory: %w", err)
-	}
-	err = os.Chdir("/")
-	if err != nil {
-		return nil, fmt.Errorf("failed to change working directory: %w", err)
-	}
-	_, err = d.RunCommand(cmdCtx, func(cmd *exec.Cmd) {
+	d.RunCommand(cmdCtx, func(cmd *exec.Cmd) {
 		if t.Stdout != nil {
 			cmd.Stdout = io.MultiWriter(&d.Stdout, t.Stdout, detector)
 		} else {
@@ -177,14 +169,7 @@ func (d *CliDeployer) RunDeployTest(ctx context.Context, t test.TestInfo) (*test
 		cmd.Cancel = func() error {
 			return cmd.Process.Signal(os.Interrupt) // Use interrupt signal to stop the command when context is cancelled
 		}
-	}, "defang", "compose", "down", "--detach")
-	if err != nil {
-		return nil, fmt.Errorf("failed to run compose down: %w", err)
-	}
-	err = os.Chdir(wkdir)
-	if err != nil {
-		return nil, fmt.Errorf("failed to change working directory: %w", err)
-	}
+	}, "defang", "-C", "/tmp/", "compose", "down", "--detach")
 
 	d.HasDeployed = true
 	start := time.Now()
