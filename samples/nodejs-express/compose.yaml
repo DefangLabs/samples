@@ -6,6 +6,7 @@ services:
     ports:
       - mode: ingress
         target: 3000
+        published: 3000
     deploy:
       resources:
         reservations:
