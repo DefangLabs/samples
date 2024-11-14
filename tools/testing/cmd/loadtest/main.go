@@ -249,7 +249,7 @@ func deploySample(ctx context.Context, id int, deployer *deployer.CliDeployer, s
 		t.Logger.Printf("deployer %v failed to run test %v at %v: %v", id, sampleName, samplePath, err)
 	}
 
-	if resultDir != "" {
+	if result != nil && resultDir != "" {
 		WriteResults(result, resultDir)
 	}
 
