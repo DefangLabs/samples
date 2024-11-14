@@ -444,7 +444,9 @@ func loadConfigNames(ctx context.Context, samplePath string) ([]string, error) {
 	for _, service := range project.Services {
 		for key, val := range service.Environment {
 			// if the val is empty add the key to the list
-			if *val == "" {
+			if val == nil {
+				configNames = append(configNames, key)
+			} else if *val == "" {
 				configNames = append(configNames, key)
 			}
 		}
