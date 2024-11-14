@@ -86,7 +86,7 @@ jobs:
           TEST_SLACK_CHANNEL_ID: ${{ secrets.TEST_SLACK_CHANNEL_ID }}
           TEST_SLACK_TOKEN: ${{ secrets.TEST_SLACK_TOKEN }}
         run: |
-          SAMPLES=$(IFS=,; echo "$(cat changed_samples.txt)")
+          SAMPLES=$(paste -sd ',' changed_samples.txt)
           echo "Running tests for samples: $SAMPLES"
 
           mkdir output
