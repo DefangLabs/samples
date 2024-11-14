@@ -47,6 +47,10 @@ jobs:
           go mod tidy
           go build ./cmd/loadtest
 
+      - name: Install Defang
+        run: |
+          . <(curl -Ls https://s.defang.io/install)
+
       - name: Run tests
         id: run-tests
         shell: bash # implies set -o pipefail, so pipe below will keep the exit code from loadtest
