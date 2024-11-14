@@ -13,8 +13,7 @@ jobs:
   deploy_changed_samples:
     runs-on: ubuntu-latest
     concurrency:
-      group: deploy_samples-group-${{ github.head_ref }}
-      cancel-in-progress: true
+      group: deploy_samples-group
     environment: deploy-changed-samples
     timeout-minutes: 90
     steps:
