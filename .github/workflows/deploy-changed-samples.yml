@@ -43,9 +43,9 @@ jobs:
 
       - name: Build the test tool using Go
         run: |
-          cd tools/testing/
           go mod tidy
           go build ./cmd/loadtest
+        working-directory: tools/testing/
 
       - name: Install Defang
         run: |
