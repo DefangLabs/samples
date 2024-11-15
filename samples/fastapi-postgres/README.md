@@ -11,7 +11,7 @@ This sample project demonstrates how to deploy FastAPI with PostgreSQL with Defa
 
 ## Development
 
-To run the development container(s) locally, do:
+To run the application locally, you can use the following command:
 
 ```
 docker compose -f compose.dev.yaml up --build
@@ -27,11 +27,12 @@ POSTGRES_PASSWORD=postgres docker compose up --build
 
 For this sample, you will need to provide the following [configuration](https://docs.defang.io/docs/concepts/configuration): 
 
-``` 
-defang config create POSTGRES_PASSWORD
-```
-
 > Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
+
+### `POSTGRES_PASSWORD` 
+``` bash
+defang config set POSTGRES_PASSWORD
+```
 
 ## Deployment
 
