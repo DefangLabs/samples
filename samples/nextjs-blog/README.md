@@ -23,6 +23,15 @@ This template is a starter project developed using Next.js designed to make it e
 3. Type `defang compose up` in the CLI
 4. Now your application will be launched
 
+## Configuration
+
+For this sample, you will not need to provide [configuration](https://docs.defang.io/docs/concepts/configuration).
+
+If you wish to provide configuration, see below for an example of setting a configuration for a value named `API_KEY`.
+
+```bash
+defang config set API_KEY
+```
 ---
 
 Title: Next.js Blog

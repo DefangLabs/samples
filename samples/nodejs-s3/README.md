@@ -14,6 +14,14 @@ defang config set --name AWS_SECRET_KEY
 
 and then enter the value when prompted.
 
+## Configuration
+
+If you wish to provide more configuration values, see below for an example of setting a configuration for a value named `API_KEY`.
+
+```bash
+defang config set API_KEY
+```
+
 ## Testing
 
 curl -X POST -H 'Content-Type: application/json' -d '{ "first_name" : "jane", "last_name" : "doe" }' https://xxxxxx/upload

@@ -39,6 +39,16 @@ If you want to edit the database, such that you can deploy them to production, y
 2. Type `defang compose up` in the CLI.
 3. Your app will be running within a few minutes.
 
+## Configuration
+
+For this sample, you will not need to provide [configuration](https://docs.defang.io/docs/concepts/configuration).
+
+If you wish to provide configuration, see below for an example of setting a configuration for a value named `API_KEY`.
+
+```bash
+defang config set API_KEY
+```
+
 ---
 
 Title: Svelte & Node.js & MySQL

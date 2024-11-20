@@ -53,6 +53,13 @@ For development, we use a local postgres container and a volume mount for file u
 
 `docker compose --file compose.dev.yaml up --build`
 
+## Configuration
+If you wish to provide more configurations, see below for an example of setting a configuration for a value named `API_KEY`.
+
+```bash
+defang config set API_KEY
+```
+
 ---
 
 Title: NocoDB
