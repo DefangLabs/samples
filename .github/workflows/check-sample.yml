@@ -21,7 +21,7 @@ jobs:
       - name: Run Checks
         id: checks
         run: |
-          eval "$(curl -Ls https://s.defang.io/install)"
+          eval "$(curl -fsSL https://s.defang.io/install)"
           ./scripts/check-sample-files.sh > checklist.txt
           ./scripts/check-modified-samples.sh > modified.txt
           echo "@@ MODIFIED @@"
@@ -31,7 +31,7 @@ jobs:
       #       once we figure out how to prevent it from erroring on warnings.
       # - name: Validate Compose Files with Defang CLI
       #   run: |
-      #     eval "$(curl -Ls https://s.defang.io/install)"
+      #     eval "$(curl -fsSL https://s.defang.io/install)"
       #     cat modified.txt | xargs -n1 defang compose config -C > /dev/null
 
       - name: Add checklist to PR description
