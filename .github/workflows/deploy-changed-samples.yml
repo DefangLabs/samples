@@ -48,7 +48,7 @@ jobs:
 
       - name: Install Defang
         run: |
-          . <(curl -Ls https://s.defang.io/install)
+          eval "$(curl -fsSL s.defang.io/install)"
 
       - name: Run tests
         id: run-tests
