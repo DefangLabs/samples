@@ -11,7 +11,7 @@ This sample project demonstrates how to deploy FastAPI with PostgreSQL with Defa
 
 ## Development
 
-To run the application locally, you can use the following command:
+To run the development container(s) locally, do:
 
 ```
 docker compose -f compose.dev.yaml up --build
