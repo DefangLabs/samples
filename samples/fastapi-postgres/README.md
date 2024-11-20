@@ -13,13 +13,13 @@ This sample project demonstrates how to deploy FastAPI with PostgreSQL with Defa
 
 To run the development container(s) locally, do:
 
-```
+```bash
 docker compose -f compose.dev.yaml up --build
 ```
 
 Or to run the production container(s) locally, do:
 
-```
+```bash
 POSTGRES_PASSWORD=postgres docker compose up --build
 ```
 
