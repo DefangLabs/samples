@@ -2,9 +2,7 @@
 
 [![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-angular-express-template%26template_owner%3DDefangSamples)
 
-This project demonstrates both client-side component rendering and hydration with Angular, as well as server-side rendering with Node.js and Socket.IO for real-time communication. 
-
-It showcases how you could deploy a full-stack application with Angular and Node.js using Defang. The Docker setup ensures the app can be easily built and deployed.
+This sample demonstrates how to deploy a full-stack Angular and Node.js application with Defang. It uses Socket.IO for real-time communication. The Docker setup ensures the app can be easily built and deployed.
 
 ## Prerequisites
 

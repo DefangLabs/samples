@@ -4,26 +4,51 @@
 
 This Go application demonstrates a simple form submission using the standard net/http library. Users can input their first name into a form, and upon submission, they will be greeted personally by the application.
 
-## Features
-
-1. Simple form to submit a user's first name.
-2. Personalized greeting displayed in response to the form submission
-
-## Essential Setup Files
-
-1. A [Dockerfile](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/).
-2. A [compose file](https://docs.defang.io/docs/concepts/compose) to define and run multi-container Docker applications (this is how Defang identifies services to be deployed). (compose.yaml file)
-
-## Prerequisite
+## Prerequisites
 
 1. Download [Defang CLI](https://github.com/DefangLabs/defang)
-2. If you are using [Defang BYOC](https://docs.defang.io/docs/concepts/defang-byoc), make sure you have properly [authenticated your AWS account (optional)](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)
+2. (Optional) If you are using [Defang BYOC](https://docs.defang.io/docs/concepts/defang-byoc) authenticate with your cloud provider account
+3. (Optional for local development) [Docker CLI](https://docs.docker.com/engine/install/)
 
-## A Step-by-Step Guide
+## Development
 
-1. Open the terminal and type `defang login`
-2. Type `defang compose up` in the CLI
-3. Your app should be up and running with Defang in minutes!
+To run the application locally, you can use the following command:
+
+```bash
+docker compose up --build
+```
+
+## Configuration
+
+For this sample, you will not need to provide [configuration](https://docs.defang.io/docs/concepts/configuration). 
+
+If you wish to provide configuration, see below for an example of setting a configuration for a value named `API_KEY`.
+
+```bash
+defang config set API_KEY
+```
+
+## Deployment
+
+> [!NOTE]
+> Download [Defang CLI](https://github.com/DefangLabs/defang)
+
+### Defang Playground
+
+Deploy your application to the Defang Playground by opening up your terminal and typing:
+```bash
+defang compose up
+```
+
+### BYOC (AWS)
+
+If you want to deploy to your own cloud account, you can use Defang BYOC:
+
+1. [Authenticate your AWS account](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html), and check that you have properly set your environment variables like `AWS_PROFILE`, `AWS_REGION`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`.
+2. Run in a terminal that has access to your AWS environment variables:
+    ```bash
+    defang --provider=aws compose up
+    ```
 
 ---
 

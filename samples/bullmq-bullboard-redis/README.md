@@ -2,7 +2,7 @@
 
 [![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-bullmq-bullboard-redis-template%26template_owner%3DDefangSamples)
 
-This sample project demonstrates how to deploy a BullMQ message queue on top of managed Redis with a queue processor and a dashboard to monitor the queue.
+This sample demonstrates how to deploy a BullMQ message queue on top of managed Redis with a queue processor and a dashboard to monitor the queue.
 
 Once your app is up and running you can go to the `/board` route for the `board` service to see the Bull Board dashboard and use the username `admin` and the board password you set to log in (see [Configuration](#configuration)).
 
