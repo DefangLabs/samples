@@ -28,8 +28,8 @@ RUN bundle config set force_ruby_platform true
 # Install application gems
 COPY Gemfile Gemfile.lock ./
 RUN bundle install && \
-    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
-    bundle exec bootsnap precompile --gemfile
+    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git \
+    && bundle exec bootsnap precompile --gemfile
 
 # Copy application code
 COPY . .
@@ -45,8 +45,8 @@ RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 FROM base
 
 # Install packages needed for deployment
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libvips libpq-dev && \
+RUN apt-get update -qq \
+    && apt-get install --no-install-recommends -y curl libvips libpq-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -55,8 +55,8 @@ COPY --from=build /usr/local/bundle /usr/local/bundle
 COPY --from=build /rails /rails
 
 # Run and own only the runtime files as a non-root user for security
-RUN useradd rails --create-home --shell /bin/bash && \
-    chown -R rails:rails db log storage tmp
+RUN useradd rails --create-home --shell /bin/bash \
+    && chown -R rails:rails db log storage tmp
 USER rails:rails
 
 # Entrypoint prepares the database.
