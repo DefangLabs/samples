@@ -2,7 +2,7 @@
 
 [![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-html-css-javascript-template%26template_owner%3DDefangSamples)
 
-This sample shows how to get a static HTML + CSS + JavaScript website up and running with Defang.
+This sample shows how to get a static HTML, CSS and JavaScript website up and running with Defang.
 
 ## Prerequisites
 
@@ -18,6 +18,15 @@ To run the application locally, you can use the following command:
 docker compose up --build
 ```
 
+## Configuration
+
+For this sample, you will not need to provide [configuration](https://docs.defang.io/docs/concepts/configuration). 
+
+If you wish to provide configuration, see below for an example of setting a configuration for a value named `API_KEY`.
+
+```bash
+defang config set API_KEY
+```
 
 ## Deployment
 
@@ -44,7 +53,7 @@ If you want to deploy to your own cloud account, you can use Defang BYOC:
 
 Title: HTML & CSS & JavaScript
 
-Short Description: A simple HTML + CSS + JavaScript website running on Defang. 
+Short Description: A simple HTML, CSS and JavaScript website running on Defang. 
 
 Tags: HTML, CSS, JavaScript, Frontend
 
