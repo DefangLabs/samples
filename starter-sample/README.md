@@ -22,10 +22,15 @@ docker compose up --build
 ## Configuration
 #REMOVE_ME_AFTER_EDITING - this section should be removed if there are no configuration values needed. The intro text can probably stay, but the list of configuration values should be updated/removed if there are none.
 
-For this sample, you will need to provide the following [configuration](https://docs.defang.io/docs/concepts/configuration). Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
+For this sample, you will need to provide the following [configuration](https://docs.defang.io/docs/concepts/configuration): 
 
-### `API_KEY` #REMOVE_ME_AFTER_EDITING 
+> Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
+
+### `API_KEY` #REMOVE_ME_AFTER_EDITING
 An explanation of what the env var (`API_KEY`) is, etc.
+```bash
+defang config set API_KEY
+```
 
 ## Deployment
 
