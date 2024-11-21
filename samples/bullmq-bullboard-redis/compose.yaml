@@ -45,7 +45,7 @@ services:
   worker:
     restart: unless-stopped
     deploy:
-      replicas: 2
+      replicas: 1
     build:
       context: ./worker
       dockerfile: Dockerfile
