@@ -2,36 +2,59 @@
 
 [![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-golang-mongodb-atlas-template%26template_owner%3DDefangSamples)
 
-## Overview
+This sample is a task manager application that uses Go and MongoDB Atlas, deployed with Defang. 
 
-This sample is is a web-based task manager designed to help users manage their tasks efficiently. It allows users to add, delete, and view tasks in a simple and intuitive interface. This application is ideal for anyone looking to enhance their productivity by keeping track of their daily activities. There is a go.mod file that includes dependencies for the Dockerfile to install
+HTML and JavaScript are used for the frontend to interact with the backend via API calls. There is a `go.mod` file that includes dependencies for the Dockerfile to install.
 
-## Features
+There is a environment variable named `MONGO_URI` for the `MONGODB` connection string. In the `compose.yaml` file, be sure to put your MongoDB URI, i.e.
+   `mongodb+srv://<username>:<pwd>@host`.
 
-Create Tasks: Users can add new tasks with descriptions.
-Delete Tasks: Users can remove tasks when they are completed or no longer needed.
-View Tasks: Users can view a list of their current tasks.
-
-## Technology
-
-Backend: The application is built with Go (Golang), utilizing the powerful net/http standard library for handling HTTP requests and responses.
-Database: MongoDB is used for storing tasks. It is a NoSQL database that offers high performance, high availability, and easy scalability.
-Frontend: Basic HTML and JavaScript are used for the frontend to interact with the backend via API calls.
-Environment: Designed to run in containerized environments using Docker, which ensures consistency across different development and production environments.
-
-## Prerequisite
+## Prerequisites
 
 1. Download [Defang CLI](https://github.com/DefangLabs/defang)
-2. If you are using [Defang BYOC](https://docs.defang.io/docs/concepts/defang-byoc), make sure you have properly [authenticated your AWS account](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)
-   Plus, make sure that you have properly set all environment variables up
-3. There is a environment variable named MONGO_URI for the MONGODB connection string, in the compose file, be sure to put your mongodb URI, i.e.
-   mongodb+srv://<username>:<pwd>@host
+2. (Optional) If you are using [Defang BYOC](https://docs.defang.io/docs/concepts/defang-byoc) authenticate with your cloud provider account
+3. (Optional for local development) [Docker CLI](https://docs.docker.com/engine/install/)
 
-## A Step-by-Step Guide
+## Development
 
-1. Open the terminal and type `defang login`
-2. Type `defang compose up` in the CLI
-3. Your app should be up and running with Defang in minutes!
+To run the application locally, you can use the following command:
+
+```bash
+docker compose up --build
+```
+
+## Configuration
+For this sample, you will need to provide the following [configuration](https://docs.defang.io/docs/concepts/configuration): 
+
+> Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
+
+### `MONGODB_URI` 
+A URI for MongoDB that should have a format of `mongodb+srv://<username>:<pwd>@host`.
+```bash
+defang config set MONGODB_URI
+```
+
+## Deployment
+
+> [!NOTE]
+> Download [Defang CLI](https://github.com/DefangLabs/defang)
+
+### Defang Playground
+
+Deploy your application to the Defang Playground by opening up your terminal and typing:
+```bash
+defang compose up
+```
+
+### BYOC (AWS)
+
+If you want to deploy to your own cloud account, you can use Defang BYOC:
+
+1. [Authenticate your AWS account](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html), and check that you have properly set your environment variables like `AWS_PROFILE`, `AWS_REGION`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`.
+2. Run in a terminal that has access to your AWS environment variables:
+    ```bash
+    defang --provider=aws compose up
+    ```
 
 ---
 
