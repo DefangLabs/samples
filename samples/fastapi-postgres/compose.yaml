@@ -7,9 +7,18 @@ services:
     ports:
       - mode: ingress
         target: 8000
+        published: 8000
     environment:
-      - DATABASE_URL
+      - DATABASE_URL=postgres://postgres:${POSTGRES_PASSWORD}@db:5432/postgres
     #deploy:
     #  resources:
     #    reservations:
     #      memory: 256M
+
+  db:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB=postgres

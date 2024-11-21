@@ -3,9 +3,6 @@ services:
     extends:
       file: compose.yaml
       service: fastapi
-    restart: unless-stopped
-    ports:
-      - "8000:8000"
     environment:
       - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
     volumes:
@@ -15,8 +12,9 @@ services:
     command: fastapi dev main.py --host 0.0.0.0
 
   db:
-    image: postgres:15
-    restart: unless-stopped
+    extends:
+      file: compose.yaml
+      service: db
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
