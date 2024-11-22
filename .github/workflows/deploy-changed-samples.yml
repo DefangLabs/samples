@@ -27,7 +27,7 @@ jobs:
 
       - name: Identify changed samples
         run: |
-          git diff --name-only HEAD main | grep '^samples/' | awk -F'/' '{print $1"/"$2}' | sort | uniq > changed_samples.txt
+          git diff --name-only HEAD $(git merge-base main HEAD) | grep '^samples/' | awk -F'/' '{print $1"/"$2}' | sort | uniq > changed_samples.txt
           if [ ! -s changed_samples.txt ]; then
             echo "No samples have changed. Exiting..."
             exit 0
