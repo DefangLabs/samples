@@ -10,6 +10,8 @@ services:
         published: 8000
     environment:
       - DATABASE_URL=postgres://postgres:${POSTGRES_PASSWORD}@db:5432/postgres
+    depends_on:
+      - db
     #deploy:
     #  resources:
     #    reservations:
