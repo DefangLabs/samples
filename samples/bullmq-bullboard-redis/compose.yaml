@@ -12,6 +12,8 @@ services:
       - REDIS=redis://redisx:6379
       - BOARD_PASSWORD
       - QUEUE
+    healthcheck:
+      test: ["CMD", "curl", "-f", "127.0.0.1:3000"]
     depends_on:
       - redisx
     #deploy:
@@ -31,6 +33,8 @@ services:
     environment:
       - REDIS=redis://redisx:6379
       - QUEUE
+    healthcheck:
+      test: ["CMD", "curl", "-f", "127.0.0.1:3001"]
     depends_on:
       - redisx
     #deploy:
@@ -41,15 +45,13 @@ services:
   worker:
     restart: unless-stopped
     deploy:
-      replicas: 2
+      replicas: 1
     build:
       context: ./worker
       dockerfile: Dockerfile
     environment:
       - REDIS=redis://redisx:6379
       - QUEUE
-    healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "127.0.0.1:3000"]
     depends_on:
       - redisx
     #deploy:
