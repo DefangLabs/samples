@@ -9,7 +9,7 @@ services:
         target: 8000
         published: 8000
     environment:
-      - DATABASE_URL=postgres://postgres:${POSTGRES_PASSWORD}@db:5432/postgres
+      - DB_URL=postgres://postgres:${POSTGRES_PASSWORD}@db:5432/postgres
     depends_on:
       - db
     #deploy:
