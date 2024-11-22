@@ -9,10 +9,19 @@ services:
         target: 8080
         published: 8080
     environment:
-      - MONGO_URI=your mongo db URI connection string
+      - MONGO_URI=mongodb://$MONGO_INITDB_ROOT_USERNAME:$MONGO_INITDB_ROOT_PASSWORD@db:27017/
     #deploy:
     #  resources:
     #    reservations:
     #      memory: 256M
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+  db:
+    image: mongo:8.0.3
+    restart: unless-stopped
+    ports:
+      - mode: host
+        target: 27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD
