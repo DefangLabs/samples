@@ -20,25 +20,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
-
-      - name: Fetch main branch
-        run: git fetch origin main:main # Fetch the main branch reference for comparison
+          fetch-depth: 0
 
       - name: Identify changed samples
         run: |
-          # Identify the samples that have changed since the last commit on main
-          # and save them to a file for later use.
-          # remove paths to samples which have been renamed or deleted.
-          git diff --name-only HEAD $(git merge-base main HEAD) \
+          git fetch origin main
+          LAST_ANCESTOR=$(git merge-base HEAD origin/main)
+          git diff --name-only HEAD $LAST_ANCESTOR \
             | grep '^samples/' \
             | awk -F'/' '{print $1"/"$2}' \
             | sort \
-            | uniq \
-            | while read -r dir; do [ -d "$dir" ] && echo "$dir"; done > changed_samples.txt
-          if [ ! -s changed_samples.txt ]; then
+            | uniq > changed_samples.txt
+          if [ -s changed_samples.txt ]; then
+            echo "The following samples have changed:"
+            cat changed_samples.txt
+          else
             echo "No samples have changed. Exiting..."
-            exit 0
           fi
 
       - name: Install Golang
