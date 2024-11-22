@@ -27,7 +27,15 @@ jobs:
 
       - name: Identify changed samples
         run: |
-          git diff --name-only HEAD $(git merge-base main HEAD) | grep '^samples/' | awk -F'/' '{print $1"/"$2}' | sort | uniq > changed_samples.txt
+          # Identify the samples that have changed since the last commit on main
+          # and save them to a file for later use.
+          # remove paths to samples which have been renamed or deleted.
+          git diff --name-only HEAD $(git merge-base main HEAD) \
+            | grep '^samples/' \
+            | awk -F'/' '{print $1"/"$2}' \
+            | sort \
+            | uniq \
+            | while read -r dir; do [ -d "$dir" ] && echo "$dir"; done > changed_samples.txt
           if [ ! -s changed_samples.txt ]; then
             echo "No samples have changed. Exiting..."
             exit 0
