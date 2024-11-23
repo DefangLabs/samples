@@ -92,6 +92,7 @@ jobs:
           TEST_OPENAI_KEY: ${{ secrets.TEST_OPENAI_KEY }}
           TEST_POSTGRES_PASSWORD: ${{ secrets.TEST_POSTGRES_PASSWORD }}
           TEST_QUEUE: ${{ secrets.TEST_QUEUE }}
+          TEST_SECRET_KEY: ${{ secrets.TEST_SECRET_KEY }}
           TEST_SECRET_KEY_BASE: ${{ secrets.TEST_SECRET_KEY_BASE }}
           TEST_SESSION_SECRET: ${{ secrets.TEST_SESSION_SECRET }}
           TEST_SLACK_CHANNEL_ID: ${{ secrets.TEST_SLACK_CHANNEL_ID }}
