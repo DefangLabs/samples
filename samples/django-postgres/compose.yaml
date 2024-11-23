@@ -35,10 +35,10 @@ services:
     environment:
       - DB_HOST=db
       - DEBUG=False
-    deploy:
-      resources:
-        reservations:
-          memory: 2GB
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       memory: 2GB
     # volumes: [".:/code"]
     depends_on:
       - db
