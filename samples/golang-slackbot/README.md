@@ -6,7 +6,10 @@ This is a simple slackbot that takes a request and posts the message from the bo
 
 ## Prerequisites
 
-Install the Defang CLI by following the instructions in the [Defang CLI documentation](https://docs.defang.io/docs/getting-started).
+1. Download [Defang CLI](https://github.com/DefangLabs/defang)
+2. (Optional) If you are using [Defang BYOC](https://docs.defang.io/docs/concepts/defang-byoc) authenticate with your cloud provider account
+3. (Optional for local development) [Docker CLI](https://docs.docker.com/engine/install/)
+
 
 ### Slack API Token
 
@@ -19,27 +22,54 @@ Make sure to:
 - Copy the Bot User OAuth Access Token
 - Invite your bot to the channel you want it to post to using the `@botname` command in the channel (this will allow you to invite it)
 
-## Configure
 
-Before deploying the Slackbot, you need to set up some config values. These config values are environment variables that the Slackbot needs to function correctly. The values are:
+## Development
 
-- `SLACK_TOKEN`: This is the token you copied previously for the Slack API.
-- `SLACK_CHANNEL_ID`: This is the ID of the Slack channel where the bot will post messages.
+To run the application locally, you can use the following command:
 
-You can set these config parameters using the `defang config set` command. Here's how:
-
-```sh
-defang config set --name SLACK_TOKEN --value your_slack_token
-defang config set --name SLACK_CHANNEL_ID --value your_slack_channel_id
+```bash
+docker compose up --build
 ```
 
-## Deploy
+## Configuration
 
-If you have environment variables configured for your [own cloud account](https://docs.defang.io/docs/concepts/defang-byoc), this will deploy the application to your cloud account, otherwise it will deploy to the Defang playground.
+For this sample, you will need to provide the following [configuration](https://docs.defang.io/docs/concepts/configuration): 
 
-```sh
+> Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
+
+### `SLACK_TOKEN`
+This is the token you've copied previously for the Slack API.
+```bash
+defang config set SLACK_TOKEN 
+```
+
+### `SLACK_CHANNEL_ID`
+This is the ID of the Slack channel where the bot will post messages.
+```bash
+defang config set SLACK_CHANNEL_ID 
+```
+
+## Deployment
+
+> [!NOTE]
+> Download [Defang CLI](https://github.com/DefangLabs/defang)
+
+### Defang Playground
+
+Deploy your application to the Defang Playground by opening up your terminal and typing:
+```bash
 defang compose up
 ```
+
+### BYOC (AWS)
+
+If you want to deploy to your own cloud account, you can use Defang BYOC:
+
+1. [Authenticate your AWS account](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html), and check that you have properly set your environment variables like `AWS_PROFILE`, `AWS_REGION`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`.
+2. Run in a terminal that has access to your AWS environment variables:
+    ```bash
+    defang --provider=aws compose up
+
 
 ## Usage
 
