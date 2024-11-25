@@ -6,7 +6,7 @@ services:
     environment:
       - POSTGRES_DB=mydatabase
       - POSTGRES_USER=myuser
-      - POSTGRES_PASSWORD=mypassword
+      - POSTGRES_PASSWORD
     ports:
       - mode: host
         target: 5432
@@ -14,7 +14,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "PGUSER=myuser PGPASSWORD=mypassword pg_isready -q -d mydatabase",
+          "PGUSER=$POSTGRES_USER PGPASSWORD=$POSTGRES_PASSWORD pg_isready -q -d $POSTGRES_DB",
         ]
       interval: 1m30s
       timeout: 30s
