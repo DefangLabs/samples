@@ -18,7 +18,7 @@ Huginn is a system for building agents that perform automated tasks for you onli
 To run the application locally, you can use the following command:
 
 ```bash
-`docker compose -f ./compose.yaml -f ./compose.dev.yaml up
+docker compose -f ./compose.yaml -f ./compose.dev.yaml up
 ```
 This will start the Postgres container and the Huginn container. Huginn will be available at `http://localhost:3000` with the username `admin` and password `password`.
 
