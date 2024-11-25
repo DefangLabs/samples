@@ -5,7 +5,8 @@ services:
     ports:
       - mode: ingress
         target: 8080
-        protocol: http
+        published: 8080
+        protocol: tcp
     deploy:
       resources:
         reservations:
