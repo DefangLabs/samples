@@ -8,9 +8,9 @@ from pydantic import BaseModel
 from databases import Database
 from dotenv import load_dotenv
 
-load_dotenv() 
+load_dotenv()
 
-database_url = os.getenv("DATABASE_URL")
+database_url = os.getenv("DB_URL")
 print(f"Connecting to database at: {database_url}")
 database = Database(database_url)
 
