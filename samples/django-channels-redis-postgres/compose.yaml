@@ -35,6 +35,7 @@ services:
       - mode: host
         target: 5432
     environment:
+      - POSTGRES_PARAMS=?
       - POSTGRES_PASSWORD
       - POSTGRES_DB=djangodatabase
       - POSTGRES_USER=djangouser
