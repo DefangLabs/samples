@@ -1,8 +1,10 @@
-# Go & S3
+# Go & MongoDB
 
-[![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-golang-s3-template%26template_owner%3DDefangSamples)
+[![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-golang-mongodb-template%26template_owner%3DDefangSamples)
 
-This sample shows a simple Go application that uploads and downloads files from AWS S3, deployed with Defang.
+This sample is a task manager application that uses Go and MongoDB, deployed with Defang.
+
+HTML and JavaScript are used for the frontend to interact with the backend via API calls. There is a `go.mod` file that includes dependencies for the Dockerfile to install.
 
 ## Prerequisites
 
@@ -19,28 +21,31 @@ docker compose up --build
 ```
 
 ## Configuration
-For this sample, you will need to provide the following [configuration](https://docs.defang.io/docs/concepts/configuration): 
+For this sample, you will need to provide the following [configuration](https://docs.defang.io/docs/concepts/configuration):
 
 > Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
 
-### `AWS_ACCESS_KEY` 
-An AWS access key to use S3. 
+### `MONGO_INITDB_ROOT_USERNAME`
+The username for the MongoDB database.
 ```bash
-defang config set --name AWS_ACCESS_KEY
+defang config set MONGO_INITDB_ROOT_USERNAME
 ```
 
-### `AWS_SECRET_KEY`
-An AWS secret key to use S3.
+### `MONGO_INITDB_ROOT_PASSWORD`
+The password for the MongoDB database.
 ```bash
-defang config set --name AWS_SECRET_KEY
+defang config set MONGO_INITDB_ROOT_PASSWORD
 ```
 
-## Testing
-Below is a useful command for testing.
+### Using MongoDB Atlas
 
-```bash
-curl -X POST -H 'Content-Type: application/json' -d '{ "first_name" : "jane", "last_name" : "doe" }' https://xxxxxx/upload
-curl https://xxxxxx/download
+If you want to use MongoDB Atlas, you can set the URI with `defang config set MONGO_URI` and remove the value from the `MONGO_URI` environment variable so that it is read from defang config. For example, in your `compose.yaml` file:
+
+```yaml
+services:
+  app:
+    environment:
+      - MONGO_URI # empty values are read from defang config
 ```
 
 ## Deployment
@@ -67,10 +72,10 @@ If you want to deploy to your own cloud account, you can use Defang BYOC:
 
 ---
 
-Title: Go & S3
+Title: Go & MongoDB
 
-Short Description: A simple Go application that uploads and downloads files from AWS S3.
+Short Description: A simple Go application that manages tasks with MongoDB.
 
-Tags: Go, S3, AWS
+Tags: Go, MongoDB, Atlas, Task Manager
 
 Languages: golang
