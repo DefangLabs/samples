@@ -1,13 +1,10 @@
-# Go & MongoDB Atlas
+# Go & MongoDB
 
-[![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-golang-mongodb-atlas-template%26template_owner%3DDefangSamples)
+[![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-golang-mongodb-template%26template_owner%3DDefangSamples)
 
-This sample is a task manager application that uses Go and MongoDB Atlas, deployed with Defang. 
+This sample is a task manager application that uses Go and MongoDB, deployed with Defang.
 
 HTML and JavaScript are used for the frontend to interact with the backend via API calls. There is a `go.mod` file that includes dependencies for the Dockerfile to install.
-
-There is a environment variable named `MONGO_URI` for the `MONGODB` connection string. In the `compose.yaml` file, be sure to put your MongoDB URI, i.e.
-   `mongodb+srv://<username>:<pwd>@host`.
 
 ## Prerequisites
 
@@ -24,14 +21,31 @@ docker compose up --build
 ```
 
 ## Configuration
-For this sample, you will need to provide the following [configuration](https://docs.defang.io/docs/concepts/configuration): 
+For this sample, you will need to provide the following [configuration](https://docs.defang.io/docs/concepts/configuration):
 
 > Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
 
-### `MONGODB_URI` 
-A URI for MongoDB that should have a format of `mongodb+srv://<username>:<pwd>@host`.
+### `MONGO_INITDB_ROOT_USERNAME`
+The username for the MongoDB database.
 ```bash
-defang config set MONGODB_URI
+defang config set MONGO_INITDB_ROOT_USERNAME
+```
+
+### `MONGO_INITDB_ROOT_PASSWORD`
+The password for the MongoDB database.
+```bash
+defang config set MONGO_INITDB_ROOT_PASSWORD
+```
+
+### Using MongoDB Atlas
+
+If you want to use MongoDB Atlas, you can set the URI with `defang config set MONGO_URI` and remove the value from the `MONGO_URI` environment variable so that it is read from defang config. For example, in your `compose.yaml` file:
+
+```yaml
+services:
+  app:
+    environment:
+      - MONGO_URI # empty values are read from defang config
 ```
 
 ## Deployment
@@ -58,9 +72,9 @@ If you want to deploy to your own cloud account, you can use Defang BYOC:
 
 ---
 
-Title: Go & MongoDB Atlas
+Title: Go & MongoDB
 
-Short Description: A simple Go application that manages tasks with MongoDB Atlas.
+Short Description: A simple Go application that manages tasks with MongoDB.
 
 Tags: Go, MongoDB, Atlas, Task Manager
 

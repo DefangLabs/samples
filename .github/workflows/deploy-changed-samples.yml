@@ -20,39 +20,49 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
-
-      - name: Fetch main branch
-        run: git fetch origin main:main # Fetch the main branch reference for comparison
+          fetch-depth: 0
 
       - name: Identify changed samples
         run: |
-          git diff --name-only HEAD main | grep '^samples/' | awk -F'/' '{print $1"/"$2}' | sort | uniq > changed_samples.txt
-          if [ ! -s changed_samples.txt ]; then
+          git fetch origin main
+          LAST_ANCESTOR=$(git merge-base HEAD origin/main)
+          git diff --name-only HEAD $LAST_ANCESTOR \
+            | grep '^samples/' \
+            | awk -F'/' '{print $1"/"$2}' \
+            | sort \
+            | uniq > changed_samples.txt
+          if [ -s changed_samples.txt ]; then
+            echo "should_continue=true" >> $GITHUB_ENV
+            echo "The following samples have changed:"
+            cat changed_samples.txt
+          else
+            echo "should_continue=false" >> $GITHUB_ENV
             echo "No samples have changed. Exiting..."
-            exit 0
           fi
-
       - name: Install Golang
         uses: actions/setup-go@v5
         with:
           go-version-file: tools/testing/go.mod
           cache-dependency-path: |
             tools/testing/go.sum
+        if: env.should_continue == 'true'
 
       - name: Build the test tool using Go
         run: |
           go mod tidy
           go build ./cmd/loadtest
         working-directory: tools/testing/
+        if: env.should_continue == 'true'
 
       - name: Install Defang
         run: |
           eval "$(curl -fsSL s.defang.io/install)"
+        if: env.should_continue == 'true'
 
       - name: Run tests
         id: run-tests
         shell: bash # implies set -o pipefail, so pipe below will keep the exit code from loadtest
+        if: env.should_continue == 'true'
         env:
           FIXED_VERIFIER_PK: ${{ secrets.FIXED_VERIFIER_PK }}
           TEST_AWS_ACCESS_KEY: ${{ secrets.TEST_AWS_ACCESS_KEY }}
@@ -71,6 +81,8 @@ jobs:
           TEST_MB_DB_PASS: ${{ secrets.TEST_MB_DB_PASS }}
           TEST_MB_DB_PORT: ${{ secrets.TEST_MB_DB_PORT }}
           TEST_MB_DB_USER: ${{ secrets.TEST_MB_DB_USER }}
+          TEST_MONGO_INITDB_ROOT_USER: ${{ secrets.TEST_MONGO_INITDB_ROOT_USER }}
+          TEST_MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.TEST_MONGO_INITDB_ROOT_PASSWORD }}
           TEST_NC_DB: ${{ secrets.TEST_NC_DB }}
           TEST_NC_S3_ENDPOINT: ${{ secrets.TEST_NC_S3_ENDPOINT }}
           TEST_NC_S3_BUCKET_NAME: ${{ secrets.TEST_NC_S3_BUCKET_NAME }}
@@ -87,16 +99,14 @@ jobs:
         run: |
           SAMPLES=$(sed 's|^samples/||' changed_samples.txt | paste -s -d ',' -)
           echo "Running tests for samples: $SAMPLES"
-
           mkdir output
           # concurrency is set to 10 to avoid exhausting our fargate vCPU limits when running
           # kaniko builds, which consume 4 vCPUs each. the limit is currently set to 60--6.5 of
           # which are used to run the staging stack. So floor((60-6.5)/4) = 13 is our upper limit
           ./tools/testing/loadtest -c fabric-staging.defang.dev:443 --timeout=15m --concurrency=10 -s $SAMPLES -o output --markdown=true | tee output/summary.log | grep -v '^\s*[-*]' # removes load sample log lines
-
       - name: Upload Output as Artifact
         uses: actions/upload-artifact@v4
-        if: success() || steps.run-tests.outcome == 'failure' # Always upload result unless cancelled
+        if: env.should_continue == 'true' && (success() || steps.run-tests.outcome == 'failure') # Always upload result unless cancelled
         with:
           name: program-output
           path: output/**
