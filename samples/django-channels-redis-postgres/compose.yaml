@@ -10,10 +10,10 @@ services:
         published: 8000
         mode: ingress
     environment:
-      REDIS_URL: redis://redis-service:6379
+      - REDIS_URL=redis://redis-service:6379
       # if using BYOC set POSTGRES_PARAMS to ?sslmode=require in playground, set to ?
-      POSTGRES_URL: "postgres://djangouser:${POSTGRES_PASSWORD}@postgres-service:5432/djangodatabase${POSTGRES_PARAMS}"
-      SECRET_KEY:
+      - POSTGRES_URL="postgres://djangouser:${POSTGRES_PASSWORD}@postgres-service:5432/djangodatabase${POSTGRES_PARAMS}"
+      - SECRET_KEY
     healthcheck:
       # wget or curl required for healthchecks on services with a published port
       # this gets parsed by Defang and provided to the load balancers as well
@@ -35,6 +35,6 @@ services:
       - mode: host
         target: 5432
     environment:
-      POSTGRES_PASSWORD:
-      POSTGRES_DB: djangodatabase
-      POSTGRES_USER: djangouser
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB=djangodatabase
+      - POSTGRES_USER=djangouser
