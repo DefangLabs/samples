@@ -11,7 +11,7 @@ services:
         published: 8080
         mode: ingress
     environment:
-      - HASURA_GRAPHQL_DATABASE_URL
+      - HASURA_GRAPHQL_DATABASE_URL=postgres://postgres:${POSTGRES_PASSWORD}@db:5432/postgres
       - HASURA_GRAPHQL_ADMIN_SECRET
       - HASURA_GRAPHQL_ENABLE_CONSOLE=true
       - HASURA_GRAPHQL_UNAUTHORIZED_ROLE=public
@@ -19,7 +19,17 @@ services:
       - HASURA_GRAPHQL_DEFAULT_NAMING_CONVENTION=graphql-default
       - HASURA_GRAPHQL_MIGRATIONS_DIR=/hasura/migrations
       - HASURA_GRAPHQL_METADATA_DIR=/hasura/metadata
-    #deploy:
-    #  resources:
-    #    reservations:
-    #      memory: 256M
+    deploy:
+     resources:
+       reservations:
+         memory: 256M
+  db:
+    image: postgres:14
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB=postgres
+    ports:
+      - mode: host
+        target: 5432
