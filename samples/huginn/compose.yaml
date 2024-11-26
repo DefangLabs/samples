@@ -20,11 +20,17 @@ services:
       - DATABASE_ADAPTER=postgresql
       - DATABASE_NAME=huginn
       - DATABASE_USERNAME=huginn
-      - DATABASE_PASSWORD
-      - DATABASE_HOST=postgres
-  postgres:
-    image: postgres:16
+      - DATABASE_PASSWORD=${POSTGRES_PASSWORD}
+      - DATABASE_HOST=postgresx
+  postgresx:
+    image: postgres:14
     environment:
       - POSTGRES_USER=huginn
       - POSTGRES_PASSWORD
       - POSTGRES_DB=huginn
+    ports:
+      - mode: host
+        target: 5432
+        published: 5432
+    networks:
+      - public
