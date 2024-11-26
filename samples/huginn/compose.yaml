@@ -1,5 +1,5 @@
 services:
-  huginn:
+  huginn-app:
     image: ghcr.io/huginn/huginn
     restart: unless-stopped
     ports:
@@ -10,7 +10,7 @@ services:
       resources:
         reservations:
           cpus: '1.0'
-          memory: '2G'
+          memory: 1G
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/"]
       interval: 1m30s
@@ -18,7 +18,19 @@ services:
       retries: 10
     environment:
       - DATABASE_ADAPTER=postgresql
-      - DATABASE_NAME
-      - DATABASE_USERNAME
-      - DATABASE_PASSWORD
-      - DATABASE_HOST
+      - DATABASE_NAME=huginn
+      - DATABASE_USERNAME=huginn
+      - DATABASE_PASSWORD=${POSTGRES_PASSWORD}
+      - DATABASE_HOST=postgresx
+  postgresx:
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=huginn
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB=huginn
+    ports:
+      - mode: host
+        target: 5432
+        published: 5432
+    networks:
+      - public
