@@ -1,5 +1,5 @@
 services:
-  huginn:
+  huginn-app:
     image: ghcr.io/huginn/huginn
     restart: unless-stopped
     ports:
@@ -22,3 +22,9 @@ services:
       - DATABASE_USERNAME=huginn
       - DATABASE_PASSWORD
       - DATABASE_HOST=postgres
+  postgres:
+    image: postgres:16
+    environment:
+      - POSTGRES_USER=huginn
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB=huginn
