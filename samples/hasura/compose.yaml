@@ -19,7 +19,7 @@ services:
       - HASURA_GRAPHQL_DEFAULT_NAMING_CONVENTION=graphql-default
       - HASURA_GRAPHQL_MIGRATIONS_DIR=/hasura/migrations
       - HASURA_GRAPHQL_METADATA_DIR=/hasura/metadata
-    #deploy:
-    #  resources:
-    #    reservations:
-    #      memory: 256M
+    deploy:
+     resources:
+       reservations:
+         memory: 256M

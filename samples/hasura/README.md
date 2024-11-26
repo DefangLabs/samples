@@ -23,7 +23,7 @@ docker compose -f ./compose.yaml -f ./compose.dev.yaml up --build
 ```
 This will start the Postgres container (from `compose.dev.yaml`) and the Hasura container (from `compose.yaml` with some overrides). The Hasura console will be available at `http://localhost:8080` with the password `password`.
 
-> Note: If you want to make changes to your database, permissions, etc. see [Editing Hasura Settings](#editing-hasura-settings) for more information.
+> Note: If you want to make changes to your database, permissions, etc. see [Editing Hasura Settings](#editing-hasura-settings).
 
 ### Editing Hasura Settings
 
