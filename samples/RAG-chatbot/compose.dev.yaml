@@ -1,0 +1,18 @@
+services:
+  rag-chatbot-2:
+    build:
+      context: ./app
+      shm_size: "16gb"
+    ports:
+      - target: 5000
+        published: 5000
+        protocol: tcp
+        mode: ingress
+    environment:
+      FLASK_APP: app.py
+      OPENAI_API_KEY: ${OPENAI_API_KEY} # Set your OpenAI API key here or in the .env file
+    command: flask run --host=0.0.0.0
+    deploy:
+      resources:
+        reservations:
+          memory: 4G
