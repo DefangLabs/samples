@@ -12,7 +12,7 @@ services:
     environment:
       - REDIS_URL=redis://redis-service:6379
       # if using BYOC add sslmode=require to the POSTGRES_URL query params
-      - POSTGRES_URL="postgres://djangouser:${POSTGRES_PASSWORD}@postgres-service:5432/djangodatabase?"
+      - POSTGRES_URL=postgres://djangouser:${POSTGRES_PASSWORD}@postgres-service:5432/djangodatabase?
       - SECRET_KEY
     healthcheck:
       # wget or curl required for healthchecks on services with a published port
