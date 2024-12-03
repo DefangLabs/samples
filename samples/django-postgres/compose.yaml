@@ -1,7 +1,7 @@
 services:
   db:
     restart: unless-stopped
-    image: postgres:14
+    image: postgres:16
     volumes: ["./tmp/postgres:/var/lib/postgresql/data/"]
     environment:
       - POSTGRES_DB=mydatabase
@@ -26,6 +26,9 @@ services:
     environment:
       - DB_HOST=db
       - DEBUG=False
+      - POSTGRES_USER=myuser
+      - POSTGRES_DB=mydatabase
+      - POSTGRES_PASSWORD
     # deploy:
     #   resources:
     #     reservations:
