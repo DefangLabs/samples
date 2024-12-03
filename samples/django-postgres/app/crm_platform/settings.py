@@ -53,7 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', 
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'crm_platform.urls'
@@ -83,13 +83,13 @@ WSGI_APPLICATION = 'crm_platform.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "HOST": os.environ.get('DB_HOST', 'db'), 
-        # We put the host in an environment variable because Defang 
+        "HOST": os.environ.get('DB_HOST', 'db'),
+        # We put the host in an environment variable because Defang
         # detects hostnames that match service names and makes sure they
         # are properly configured to communicate when deployed
-        "NAME": 'mydatabase',
-        "USER": 'myuser',
-        "PASSWORD": 'mypassword',
+        "NAME": os.environ.get("POSTGRES_DB"),
+        "USER": os.environ.get("POSTGRES_USER"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
     }
 }
 
