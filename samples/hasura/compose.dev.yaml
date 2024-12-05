@@ -1,6 +1,8 @@
 services:
   postgres:
-    image: postgres:14
+    extends:
+      file: compose.yaml
+      service: postgres
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
