@@ -9,7 +9,7 @@ services:
     depends_on:
       - postgres
   postgres:
-    image: postgres:16
+    image: postgres:14
     environment:
       POSTGRES_USER: huginn
       POSTGRES_PASSWORD: huginn
