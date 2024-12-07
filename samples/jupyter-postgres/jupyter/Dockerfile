@@ -11,3 +11,5 @@ USER 1000
 
 COPY requirements.txt /tmp/
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
+
+COPY ./notebooks /home/jovyan/work
