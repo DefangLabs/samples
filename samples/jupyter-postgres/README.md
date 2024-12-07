@@ -15,8 +15,7 @@ This sample shows you how to spin up a postgres database and a Jupyter notebook 
 To run the application locally, you can use the following command:
 
 ```bash
-# This might be `docker compose -f compose.dev.yaml up --build` depending on the project. #REMOVE_ME_AFTER_EDITING
-docker compose up --build
+docker compose -f compose.dev.yaml up --build
 ```
 
 ## Configuration
