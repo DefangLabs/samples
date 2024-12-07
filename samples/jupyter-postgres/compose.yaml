@@ -11,6 +11,7 @@ services:
     environment:
       JUPYTER_TOKEN:
       POSTGRES_PASSWORD:
+      DATABASE_HOST: db
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8888/login" ]
     depends_on:
