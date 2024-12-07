@@ -1,0 +1,22 @@
+services:
+  jupyter:
+    extends:
+      service: jupyter
+      file: compose.yaml
+    environment:
+      JUPYTER_TOKEN: jupyter
+      POSTGRES_PASSWORD: password
+    volumes:
+      - ./jupyter/notebooks:/home/jovyan/work
+    
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
