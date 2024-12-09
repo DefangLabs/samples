@@ -1,15 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page 2 of HTML Sample</title>
-    <link rel="stylesheet" href="/style.css" type="text/css">
-    <script src="script.js"></script>
+<title>demo</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,intial-scale=1.0">
 </head>
 <body>
-    <h1>Cloud, Simplified!</h1>
-    <p>Having fun? For more, go to our official website at <a href="https://defang.io/">defang.io</a>!</p>
-    <a href="/"><button>Visit home page</button></a>
+
+<label>ITEMS</label><select id="mysp" onChange="mys()">
+<option value="pen">PEN</option>
+<option value="pencil">PENCIL</option>
+<option value="book">BOOK</option>
+<option value="eraser">ERASER</option>
+<option value="scale">SCALE</option>
+<option value="bag">BAG</option>
+</select>
+
+<script type="text/javascript">
+function mys()
+{
+x=document.getElementById("mysp").value
+document.getElementById("ps").innerText=x
+}
+</script>
+<br><br>
+<table><tr><td>Your Selection=</td><td><p id="ps"></p></td></tr></table>
 </body>
 </html>
