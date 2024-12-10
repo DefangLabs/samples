@@ -41,6 +41,12 @@ This guide demonstrates how to deploy Mistral using vLLM. You'll need a Hugging 
 
 By following these steps, you should be able to deploy Mistral along with a custom UI on AWS, using GPU capabilities for enhanced performance.
 
+If you wish to provide configuration, see below for an example of setting a configuration for a value named `API_KEY`.
+
+```bash
+defang config set API_KEY
+```
+
 ---
 
 Title: Mistral & vLLM
