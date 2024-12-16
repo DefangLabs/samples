@@ -1,15 +1,18 @@
 services:
   huginn:
+    extends:
+      file: compose.yaml
+      service: huginn-app
     environment:
       - DATABASE_ADAPTER=postgresql
       - DATABASE_NAME=huginn
       - DATABASE_USERNAME=huginn
       - DATABASE_PASSWORD=huginn
-      - DATABASE_HOST=postgres
-    depends_on:
-      - postgres
-  postgres:
-    image: postgres:14
+      - DATABASE_HOST=db
+  db:
+    extends:
+      file: compose.yaml
+      service: db
     environment:
       POSTGRES_USER: huginn
       POSTGRES_PASSWORD: huginn
