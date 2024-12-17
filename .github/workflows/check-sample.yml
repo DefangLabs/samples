@@ -50,11 +50,6 @@ jobs:
             let error = false;
 
             try {
-              // Check if the checklist file exists
-              if (!fs.existsSync('checklist.txt')) {
-                  throw new Error("Samples checklist file does not exist. Please fix the issues and try again.");
-              }
-
               // Read the checklist from the file
               checklist = fs.readFileSync('checklist.txt', 'utf8');
               checklist = checklist.trim();
@@ -65,7 +60,7 @@ jobs:
                 error = true;
               }
             } catch (readFileError) {
-              throw new Error(Could not read samples checklist from file. Please fix the issues and try again.")
+              throw new Error("Could not read samples checklist from file. Please fix the issues and try again.")
             }
 
             try {
