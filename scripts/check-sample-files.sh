@@ -18,8 +18,9 @@ for dir in ./samples/*/; do
     # if there is a compose.yaml file, check if it is valid
     (
       cd $dir
-      if ! defang compose config > /dev/null 2>/dev/null; then
-        echo " - [ ] ${dir}compose.yaml contains errors"
+      output=$(defang compose config 2>&1)
+      if [[ $? -ne 0 ]]; then
+        echo " - [ ] ${dir}compose.yaml is not valid according to \`defang compose config\`:  $output"
       fi
     )
   fi
