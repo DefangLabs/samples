@@ -16,6 +16,7 @@ It includes Vite and ESLint, which are common build tools for React development.
 To run the application locally, you can use the following command (make sure you've got `npm` and [Node.js](https://nodejs.org/en) installed):
 
 ```bash
+npm install
 npm run dev
 ```
 
