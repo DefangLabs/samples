@@ -1,0 +1,37 @@
+services:
+  db:
+    extends:
+      file: compose.yaml
+      service: db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=password
+
+  runmigrations:
+    extends:
+      file: compose.yaml
+      service: django
+    restart: on-failure
+    environment:
+      - DEBUG=False
+      - POSTGRES_PASSWORD=password
+    command: python manage.py migrate
+    depends_on:
+      - db
+
+  django:
+    extends:
+      file: compose.yaml
+      service: django
+    environment:
+      - DEBUG=False
+      - POSTGRES_PASSWORD=password
+    volumes: 
+      - "./app:/code"
+    command: python manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - runmigrations
+
+volumes:
+  postgres_data:
