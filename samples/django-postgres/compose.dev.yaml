@@ -9,14 +9,32 @@ services:
       - POSTGRES_PASSWORD=password
 
   runmigrations:
-    extends:
-      file: compose.yaml
-      service: django
     restart: on-failure
+    build: ./app
     environment:
-      - DEBUG=False
+      - DB_HOST=db
+      - DEBUG=True
+      - POSTGRES_USER=django
+      - POSTGRES_DB=django
       - POSTGRES_PASSWORD=password
+    volumes: 
+      - "./app:/code"
     command: python manage.py migrate
+    depends_on:
+      - db
+
+  createsuperuser:
+    restart: on-failure
+    build: ./app
+    environment:
+      - DB_HOST=db
+      - DEBUG=True
+      - POSTGRES_USER=django
+      - POSTGRES_DB=django
+      - POSTGRES_PASSWORD=password
+    volumes: 
+      - "./app:/code"
+    command: python manage.py createsuperauto 
     depends_on:
       - db
 
@@ -25,13 +43,13 @@ services:
       file: compose.yaml
       service: django
     environment:
-      - DEBUG=False
+      - DEBUG=True
       - POSTGRES_PASSWORD=password
     volumes: 
       - "./app:/code"
     command: python manage.py runserver 0.0.0.0:8000
     depends_on:
-      - runmigrations
+      - createsuperuser
 
 volumes:
   postgres_data:

@@ -24,4 +24,4 @@ COPY . /code/
 RUN python manage.py collectstatic --noinput
 
 # Start server
-CMD python manage.py migrate && python manage.py createsuperuser && gunicorn crm_platform.wsgi:application --bind 0.0.0.0:8000
+CMD python manage.py migrate && python manage.py createsuperauto && gunicorn app.wsgi:application --bind 0.0.0.0:8000
