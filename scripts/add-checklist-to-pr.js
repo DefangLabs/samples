@@ -21,13 +21,16 @@ module.exports = async ({ github, context }) => {
       throw new Error("Could not read samples checklist from file. Please fix the issues and try again.")
     }
 
+    let pullRequest;
+
     try {
       // Get the current PR
-      const { data: pullRequest } = await github.rest.pulls.get({
+      const { data: prData } = await github.rest.pulls.get({
           owner: context.repo.owner,
           repo: context.repo.repo,
           pull_number: pr_number
       });
+      pullRequest = prData;
     } catch (getPrError) {
         throw new Error ("Could not get current PR from source. Please fix the issues and try again.")
     }
@@ -45,6 +48,13 @@ module.exports = async ({ github, context }) => {
           newBody = body + "\n" + marker + "\n" + checklist;
       }
 
+      console.log('@@ pulls opts: ', {
+          owner: context.repo.owner,
+          repo: context.repo.repo,
+          pull_number: pr_number,
+          body: newBody
+      });
+
       // Update the PR description
       await github.rest.pulls.update({
           owner: context.repo.owner,
@@ -53,6 +63,7 @@ module.exports = async ({ github, context }) => {
           body: newBody
       });
     } catch (updatePrError) {
+      console.error('@@ updatePrError: ', updatePrError);
       throw new Error("Could not update PR description based on samples checklist. Please fix the issues and try again.")
     }
 

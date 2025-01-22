@@ -2,38 +2,30 @@ services:
   db:
     restart: unless-stopped
     image: postgres:16
-    volumes: ["./tmp/postgres:/var/lib/postgresql/data/"]
+    x-defang-postgres: true
     environment:
-      - POSTGRES_DB=mydatabase
-      - POSTGRES_USER=myuser
+      - POSTGRES_DB=django
+      - POSTGRES_USER=django
       - POSTGRES_PASSWORD
     ports:
       - mode: host
         target: 5432
-    #deploy:
-    #  resources:
-    #    reservations:
-    #      memory: 256M
+        published: 5432
 
-  django-crm:
+  django:
+    # uncomment to add your own domain
+    # domainname: example.com
     restart: unless-stopped
     build: ./app
     ports:
       - mode: ingress
         target: 8000
-        # Uncomment the following line if you want to run it locally
-        # published: 8000
+        published: 8000
     environment:
       - DB_HOST=db
       - DEBUG=False
-      - POSTGRES_USER=myuser
-      - POSTGRES_DB=mydatabase
+      - POSTGRES_USER=django
+      - POSTGRES_DB=django
       - POSTGRES_PASSWORD
-    # deploy:
-    #   resources:
-    #     reservations:
-    #       memory: 2GB
-    # volumes: [".:/code"]
     depends_on:
       - db
-    # command: python manage.py runserver 0.0.0.0:8000
