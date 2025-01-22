@@ -2,6 +2,7 @@ services:
   db:
     restart: unless-stopped
     image: postgres:16
+    x-defang-postgres: true
     environment:
       - POSTGRES_DB=django
       - POSTGRES_USER=django
@@ -9,8 +10,11 @@ services:
     ports:
       - mode: host
         target: 5432
+        published: 5432
 
   django:
+    # uncomment to add your own domain
+    # domainname: example.com
     restart: unless-stopped
     build: ./app
     ports:

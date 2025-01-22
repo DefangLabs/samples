@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  check_samples:
+  publish_samples:
     runs-on: ubuntu-latest
     permissions: 
       contents: write
