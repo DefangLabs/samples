@@ -21,13 +21,16 @@ module.exports = async ({ github, context }) => {
       throw new Error("Could not read samples checklist from file. Please fix the issues and try again.")
     }
 
+    let pullRequest;
+
     try {
       // Get the current PR
-      const { data: pullRequest } = await github.rest.pulls.get({
+      const { data: prData } = await github.rest.pulls.get({
           owner: context.repo.owner,
           repo: context.repo.repo,
           pull_number: pr_number
       });
+      pullRequest = prData;
     } catch (getPrError) {
         throw new Error ("Could not get current PR from source. Please fix the issues and try again.")
     }
