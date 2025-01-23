@@ -97,9 +97,7 @@ jobs:
           TEST_SESSION_SECRET: ${{ secrets.TEST_SESSION_SECRET }}
           TEST_SLACK_CHANNEL_ID: ${{ secrets.TEST_SLACK_CHANNEL_ID }}
           TEST_SLACK_TOKEN: ${{ secrets.TEST_SLACK_TOKEN }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          TEST_ALLOWED_HOSTS: ${{ secrets.TEST_ALLOWED_HOSTS }}
         run: |
           SAMPLES=$(sed 's|^samples/||' changed_samples.txt | paste -s -d ',' -)
           echo "Running tests for samples: $SAMPLES"
