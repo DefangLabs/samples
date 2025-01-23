@@ -4,9 +4,6 @@
 
 This template is a customer relationship management list project developed using Python Django framework, offering a starting point to help you quickly build your customer management system. We use PostgreSQL as the database. We have prepared all the essential files for deployment. By spending less than 10 minutes setting up the environment, as detailed in the prerequisites, and executing the commands in our step-by-step guide, your website will be ready to go live to the world!
 
-> [!NOTE]
-This sample showcases how you could deploy a full-stack application with Defang and Django. However, it deploys Postgres as a Defang service. Defang [services](https://12factor.net/processes) are ephemeral and should not be used to run stateful workloads in production as they will be reset on every deployment. For production use cases you should use a managed database like RDS, Aiven, or others. If you stick to Django's default SQLite database, your stored data will be lost on every deployment, and in some other situations. In the future, Defang will help you provision and connect to managed databases.
-
 ## Prerequisites
 
 1. Download [Defang CLI](https://github.com/DefangLabs/defang)
@@ -28,8 +25,27 @@ For this sample, you will need to provide the following [configuration](https://
 > Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
 
 ### `POSTGRES_PASSWORD` 
+
+The password for the PostgreSQL database.
+
 ```bash
 defang config set POSTGRES_PASSWORD
+```
+
+### `SECRET_KEY` 
+
+The secret key is used to secure the Django application.
+
+```bash
+defang config set SECRET_KEY
+```
+
+### `ALLOWED_HOSTS` 
+
+The allowed hosts for the Django application. (i.e. the domain your app runs on)
+
+```bash
+defang config set ALLOWED_HOSTS
 ```
 
 ## Deployment

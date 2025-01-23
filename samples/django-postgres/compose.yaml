@@ -27,5 +27,7 @@ services:
       - POSTGRES_USER=django
       - POSTGRES_DB=django
       - POSTGRES_PASSWORD
+      - SECRET_KEY
+      - ALLOWED_HOSTS
     depends_on:
       - db

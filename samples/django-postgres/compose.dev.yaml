@@ -17,6 +17,8 @@ services:
       - POSTGRES_USER=django
       - POSTGRES_DB=django
       - POSTGRES_PASSWORD=password
+      - SECRET_KEY=django-insecure-^0jq%7b(%aj$j@n0_$gk@#73&z#t%4o#klquddg1e1hdal^9!s
+      - ALLOWED_HOSTS=*
     volumes: 
       - "./app:/code"
     command: python manage.py migrate
