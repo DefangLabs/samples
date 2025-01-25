@@ -15,7 +15,7 @@ function Message({
 }: MessageProps) {
   return (
     <div className={`chat ${isBot ? 'chat-start' : 'chat-end'}`}>
-      <div className={`chat-bubble ${isBot ? 'bg-purple-700' : 'bg-blue-500'} shadow-xl text-white`}>
+      <div className={`chat-bubble ${isBot ? 'bg-gray-900' : 'bg-emerald-800'} shadow-xl text-white`}>
         <ReactMarkdown>{text}</ReactMarkdown>
       </div>
     </div>
@@ -84,7 +84,7 @@ export default function Home() {
                 }}
               />
               <div className='flex flex-col justify-end'>
-                <button className="p-4 bg-purple-800 rounded-xl text-white shadow-xl hover:shadow-2xl transition-all h-auto" disabled={isLoading}>
+                <button className="p-4 bg-emerald-800 rounded-xl text-white shadow-xl hover:shadow-2xl transition-all h-auto" disabled={isLoading}>
                   {isLoading ? (
                     <span className="loading loading-dots loading-sm"></span>
                   ) : 'Send'}

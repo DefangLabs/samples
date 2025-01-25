@@ -1,34 +1,23 @@
 import Anthropic from '@anthropic-ai/sdk';
+import { AnthropicStream, StreamingTextResponse } from 'ai';
 
 const anthropic = new Anthropic({
-    apiKey: process.env["ANTHROPIC_API_KEY"]
-    });
+  apiKey: process.env.ANTHROPIC_API_KEY || '',
+});
 
-export const POST = async function (req: Request) {
-    const { messages } = await req.json();
+export const runtime = 'edge';
 
-    const stream = await anthropic.messages.stream({
-        max_tokens: 1024,
-        messages: messages,
-        model: 'claude-3-5-sonnet-latest',
-        stream: true,
-    });
+export async function POST(req: Request) {
+  const { messages } = await req.json();
 
-    const readableStream = new ReadableStream({
-        async start(controller) {
-            for await (const messageStream of stream) {
-                if (messageStream.type === 'content_block_delta') {
-                    const delta = messageStream.delta.text;
-                    if (delta) {
-                        controller.enqueue(delta);
-                    }
-                }
-            }
-            controller.close();
-        }
-    });
+  const response = await anthropic.messages.stream({
+    messages,
+    model: 'claude-3-5-sonnet-20241022',
+    stream: true,
+    system: "You are a helpful, and knowledgable assistant for working with Git version control, with an expertise in local Git. You are witty, and you love to help others. You tend to speak in short messages.",
+    max_tokens: 1024,
+  });
 
-    return new Response(readableStream, {
-        headers: { 'Content-Type': 'text/event-stream' },
-    });
+  const stream = AnthropicStream(response);
+  return new StreamingTextResponse(stream);
 }

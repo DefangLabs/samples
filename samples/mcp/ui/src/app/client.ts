@@ -13,9 +13,6 @@ export class MCPClient {
     const transport = await http_client(serverParams);
     this.session = new ClientSession(transport);
     await this.session.initialize();
-
-    // Connect to Docker image mcp/git
-    await this.session.connectToDockerImage('mcp/git');
   }
 
   async listTools() {
