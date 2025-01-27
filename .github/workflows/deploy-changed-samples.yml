@@ -65,6 +65,7 @@ jobs:
         if: env.should_continue == 'true'
         env:
           FIXED_VERIFIER_PK: ${{ secrets.FIXED_VERIFIER_PK }}
+          TEST_ANTHROPIC_API_KEY: ${{ secrets.TEST_ANTHROPIC_API_KEY }}
           TEST_AWS_ACCESS_KEY: ${{ secrets.TEST_AWS_ACCESS_KEY }}
           TEST_AWS_SECRET_KEY: ${{ secrets.TEST_AWS_SECRET_KEY }}
           TEST_BOARD_PASSWORD: ${{ secrets.TEST_BOARD_PASSWORD }}
