@@ -3,7 +3,7 @@ services:
     # uncomment to add your own domain
     # domainname: example.com
     build:
-      context: ./app
+      context: ./ui
       dockerfile: Dockerfile
     ports:
       - target: 3000

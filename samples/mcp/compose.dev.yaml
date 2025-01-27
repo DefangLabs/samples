@@ -1,5 +1,5 @@
 services:
-  ui:
+  mcp:
     extends:
       file: compose.yaml
       service: ui
