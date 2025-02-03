@@ -1,5 +1,5 @@
 services:
-  mcp:
+  ui:
     extends:
       file: compose.yaml
       service: ui
@@ -8,3 +8,12 @@ services:
         source: ./ui
         target: /app
     command: ["npm", "run", "dev"]
+
+  mcp-server:
+    extends:
+      file: compose.yaml
+      service: mcp-server
+    volumes:
+      - type: bind
+        source: ./mcp-server
+        target: /wrapper

@@ -61,12 +61,15 @@ export default function Home() {
           <div className="fixed bottom-0 left-0 right-0 z-10">
             <form
               className="flex space-x-4 p-4 w-full max-w-4xl m-auto"
-              onSubmit={(evt) => {
-                handleSubmit(evt);
-                const textarea = formRef.current?.querySelector('textarea');
-                if (textarea) {
-                  textarea.style.height = 'inherit';
-                }
+              onSubmit={async (evt) => {
+                evt.preventDefault();
+                const response = await fetch('http://localhost:8000', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ messages: [input] })
+                })
               }}
               ref={formRef}
             >
