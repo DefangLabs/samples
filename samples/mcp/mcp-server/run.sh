@@ -2,6 +2,9 @@
 
 echo "Starting MCP Server"
 
+# may need to add this
+# mcp-server-time &
+
 # Run og entrypoint "mcp-server-time" in the background
 echo "Waiting for MCP Server to start"
 

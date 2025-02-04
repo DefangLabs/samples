@@ -14,8 +14,7 @@ services:
         reservations:
           memory: 256M
     environment: 
-      - ANTHROPIC_API_KEY
-      - GIT_SERVER_URL=http://mcp-git-server:8000 # Add this line to configure the Git server URL
+      - MCP_SERVER_URL=http://mcp-server:8000 # Add this line to configure the Git server URL
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/"]
 
@@ -27,3 +26,5 @@ services:
       - target: 8000
         published: 8000
         mode: ingress
+    environment: 
+      - ANTHROPIC_API_KEY

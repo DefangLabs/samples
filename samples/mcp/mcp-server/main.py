@@ -6,6 +6,9 @@ from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
 from anthropic import Anthropic
+from dotenv import load_dotenv
+
+load_dotenv()  # load environment variables from .env
 
 class MCPClient:
     def __init__(self):
@@ -13,6 +16,7 @@ class MCPClient:
         self.session: Optional[ClientSession] = None
         self.exit_stack = AsyncExitStack()
         self.anthropic = Anthropic()
+
     # methods will go here
 
     async def connect_to_server(self, server_script_path: str):
@@ -21,15 +25,11 @@ class MCPClient:
         Args:
             server_script_path: Path to the server script (.py or .js)
         """
-        is_python = server_script_path.endswith('.py')
-        is_js = server_script_path.endswith('.js')
-        if not (is_python or is_js):
-            raise ValueError("Server script must be a .py or .js file")
-            
-        command = "python" if is_python else "node"
+        
+        # run the command to start the server
         server_params = StdioServerParameters(
-            command=command,
-            args=[server_script_path],
+            command="python",
+            args=["-m", server_script_path, "--local-timezone=America/Los_Angeles"],
             env=None
         )
         
@@ -71,6 +71,7 @@ class MCPClient:
         tool_results = []
         final_text = []
 
+        # loops through content, and if content is a tool_use, calls the tool
         for content in response.content:
             if content.type == 'text':
                 final_text.append(content.text)
@@ -94,34 +95,16 @@ class MCPClient:
                     "content": result.content
                 })
 
-                # Get next response from Claude
-                response = self.anthropic.messages.create(
-                    model="claude-3-5-sonnet-20241022",
-                    max_tokens=1000,
-                    messages=messages,
-                )
+                # # Get next response from Claude
+                # response = self.anthropic.messages.create(
+                #     model="claude-3-5-sonnet-20241022",
+                #     max_tokens=1000,
+                #     messages=messages,
+                # )
 
                 final_text.append(response.content[0].text)
 
         return "\n".join(final_text)
-    async def chat_loop(self):
-        """Run an interactive chat loop"""
-        print("\nMCP Client Started!")
-        print("Type your queries or 'quit' to exit.")
-        
-        while True:
-            try:
-                query = input("\nQuery: ").strip()
-                
-                if query.lower() == 'quit':
-                    break
-                    
-                response = await self.process_query(query)
-                print("\n" + response)
-                    
-            except Exception as e:
-                print(f"\nError: {str(e)}")
-
     async def cleanup(self):
         """Clean up resources"""
         await self.exit_stack.aclose()
@@ -145,21 +128,42 @@ class MCPClient:
 # let's start a flask server
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import atexit
 
 app = Flask(__name__)
+
+client = MCPClient()
+async def initialize_client():
+    await client.connect_to_server("/app/.venv/bin/mcp-server-time")
+
+# Run the initialization
+asyncio.run(initialize_client())
 
 @app.route('/', methods=['POST'])
 async def chat():
 
     # TODO: handle chat things in here
 
-    client = MCPClient()
-    await client.connect_to_server("/app/.venv/bin/mcp-server-time")
+    # format the request
+    data = request.json
+    messages = data.get('messages', [])
+    if not messages or not isinstance(messages, list):
+        return jsonify({"error": "No valid messages provided"}), 400
 
-    return jsonify({"response": "test"})
+    response = ""
+    for query in messages:
+        if query:
+            response += await client.process_query(query) + "\n"
+
+    return jsonify({"response": response})
+    # return jsonify({"response": "test"})
 
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 
 if __name__ == "__main__":
     app.run(port=8000, host='0.0.0.0')
+    def cleanup():
+        asyncio.run(client.cleanup())
+
+    atexit.register(cleanup)
