@@ -28,8 +28,9 @@ class MCPClient:
         
         # run the command to start the server
         server_params = StdioServerParameters(
-            command="python",
-            args=["-m", server_script_path, "--local-timezone=America/Los_Angeles"],
+            command="/app/.venv/bin/python",
+#            args=[server_script_path],
+            args=[server_script_path, "--local-timezone=America/Los_Angeles"],
             env=None
         )
         
