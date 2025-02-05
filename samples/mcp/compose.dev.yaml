@@ -13,6 +13,8 @@ services:
     extends:
       file: compose.yaml
       service: mcp-server
+    env_file:
+      - ./mcp-server/.env
     volumes:
       - type: bind
         source: ./mcp-server

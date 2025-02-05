@@ -26,5 +26,7 @@ services:
       - target: 8000
         published: 8000
         mode: ingress
-    environment: 
-      - ANTHROPIC_API_KEY
+    # environment: 
+    #   - ANTHROPIC_API_KEY
+    env_file:
+      - ./mcp-server/.env
