@@ -42,7 +42,6 @@ class MCPClient:
         # run the command to start the server
         server_params = StdioServerParameters(
             command="/app/.venv/bin/python",
-            # args=[server_script_path],
             args=[server_script_path, "--local-timezone=America/Los_Angeles"],
             env=None
         )
@@ -131,47 +130,39 @@ class MCPClient:
                     final_text.append(f"Failed to call tool {tool_name}: {(e)}")
                     return jsonify({"response": "\n".join(final_text)}) 
 
+                # Get completed response from Claude with tool results
+                response = self.anthropic.messages.create(
+                    model="claude-3-5-sonnet-20241022",
+                    max_tokens=1000,
+                    messages=messages,
+                )
+
                 final_text.append(response.content[0].text)
-            logger.info(f"Final text: {final_text}")
-            logger.info(f"Tool Results: {tool_results}")
-        # return jsonify({"response": "\n".join(final_text)})
+        logger.info(f"Final text: {final_text}")
+        logger.info(f"Tool Results: {tool_results}")
+        return jsonify({"response": response.content[0].text})
 
     async def cleanup(self):
         """Clean up resources"""
         await self.exit_stack.aclose()
 
 # let's start a quart server
-# app = Quart(__name__)
-# app = cors(app, allow_origin="*")
+app = Quart(__name__)
+app = cors(app, allow_origin="*")
 
-# client = MCPClient()
-
-# def cleanup():
-#     asyncio.create_task(client.cleanup())
-
-# atexit.register(cleanup)
-
-# async def initialize_client():
-#     await client.connect_to_server("/app/.venv/bin/mcp-server-time")
-
-# # Run the initialization
-# asyncio.run(initialize_client())
-
-# @app.route('/', methods=['POST'])
-# async def chat():
-#     return await client.process_query("what's the time right now")
-
-async def main():
+@app.route('/', methods=['POST'])
+async def chat():
     client = MCPClient()
     try:
         await client.connect_to_server("/app/.venv/bin/mcp-server-time")
-        await client.process_query("what's the time right now in los angeles")
-        await client.process_query("what is the time in tokyo")
+        return await client.process_query("what's the time right now in los angeles")
+        # await client.process_query("what is the time in tokyo")
     finally:
         await client.cleanup()
 
-
+async def main():
+    print("app OK")
 
 if __name__ == "__main__":
-    # app.run(port=8000, host='0.0.0.0')
+    app.run(port=8000, host='0.0.0.0')
     asyncio.run(main())
