@@ -165,7 +165,8 @@ async def main():
     client = MCPClient()
     try:
         await client.connect_to_server("/app/.venv/bin/mcp-server-time")
-        await client.process_query("what's the time right now")
+        await client.process_query("what's the time right now in los angeles")
+        await client.process_query("what is the time in tokyo")
     finally:
         await client.cleanup()
 
