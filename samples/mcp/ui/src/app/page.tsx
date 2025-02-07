@@ -1,7 +1,6 @@
 'use client';
 
-import { useChat } from 'ai/react';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 
 interface MessageProps {
@@ -23,7 +22,9 @@ function Message({
 }
 
 export default function Home() {
-  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat();
+  const [messages, setMessages] = useState<{ role: string, content: string }[]>([]);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
   const fullMessages = useMemo(() => {
@@ -45,6 +46,36 @@ export default function Home() {
     });
   }, [messages]);
 
+  const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInput(event.target.value);
+  };
+
+  const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
+    evt.preventDefault();
+    setIsLoading(true);
+    const userMessage = { role: 'user', content: input };
+    setMessages((prevMessages) => [...prevMessages, userMessage]);
+    setInput('');
+    try {
+      const response = await fetch('http://localhost:8000', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ messages: [input] })
+      });
+      const data = await response.json();
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { role: 'assistant', content: data.response }
+      ]);
+    } catch (error) {
+      console.error('Error fetching response:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <>
       <div className="bg-gradient-defang -z-0 top-0 bottom-0 w-full fixed"></div>
@@ -61,16 +92,7 @@ export default function Home() {
           <div className="fixed bottom-0 left-0 right-0 z-10">
             <form
               className="flex space-x-4 p-4 w-full max-w-4xl m-auto"
-              onSubmit={async (evt) => {
-                evt.preventDefault();
-                const response = await fetch('http://localhost:8000', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify({ messages: [input] })
-                })
-              }}
+              onSubmit={handleSubmit}
               ref={formRef}
             >
               <textarea
