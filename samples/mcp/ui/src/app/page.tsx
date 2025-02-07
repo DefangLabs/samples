@@ -32,7 +32,7 @@ export default function Home() {
       {
         role: 'assistant',
         content: (
-          `Hi! I'm Defang, a fun chatbot. If you want to learn more about the Defang tool, then head to https://docs.defang.io/`
+          `Hi! I'm Defang Time Assistant, an MCP-based chatbot who's here to help you with all your timezone needs! If you want to learn more about Defang, visit https://docs.defang.io/`
         ),
       },
       ...messages
