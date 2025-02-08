@@ -14,7 +14,7 @@ services:
         reservations:
           memory: 256M
     environment: 
-      - MCP_SERVER_URL=http://mcp-server:8000 # Add this line to configure the Git server URL
+      - MCP_SERVER_URL=mcp-server
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/"]
 
@@ -24,9 +24,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - target: 8000
-        published: 8000
-        mode: ingress
-    # environment: 
-    #   - ANTHROPIC_API_KEY
-    env_file:
-      - ./mcp-server/.env
+        mode: host
+    environment: 
+      - ANTHROPIC_API_KEY # you can comment this out if you are using an env_file in compose.dev.yaml

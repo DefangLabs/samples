@@ -3,19 +3,12 @@ services:
     extends:
       file: compose.yaml
       service: ui
-    volumes:
-      - type: bind
-        source: ./ui
-        target: /app
-    command: ["npm", "run", "dev"]
+    env_file:
+      - ./ui/.env
 
   mcp-server:
     extends:
       file: compose.yaml
       service: mcp-server
     env_file:
-      - ./mcp-server/.env
-    volumes:
-      - type: bind
-        source: ./mcp-server
-        target: /wrapper
+      - ./mcp-server/.env # to use env_file, comment out the environment vars in the compose.yaml file

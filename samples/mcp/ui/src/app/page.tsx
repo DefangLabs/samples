@@ -57,7 +57,9 @@ export default function Home() {
     setMessages((prevMessages) => [...prevMessages, userMessage]);
     setInput('');
     try {
-      const response = await fetch('http://localhost:8000', {
+      const url = `http://${process.env.MCP_SERVER_URL}:8000` || 'http://localhost:8000';
+      console.log('MCP_SERVER_URL:', url);
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
