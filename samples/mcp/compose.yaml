@@ -13,10 +13,21 @@ services:
       resources:
         reservations:
           memory: 256M
-    environment: 
-      - MCP_SERVER_URL=mcp-server
+    environment:
+      - NEXT_PUBLIC_PROXY_SERVER_URL=https://nullfunc-proxy--4000.prod1a.defang.dev
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+
+  proxy:
+    build:
+      context: ./proxy
+    ports:
+      - target: 4000
+        published: 4000
+        mode: ingress
+    environment:
+      - MCP_SERVER_URL=http://mcp-server:8000
+      - CORS_ALLOW=https://nullfunc-ui--3000.prod1a.defang.dev
 
   mcp-server:
     build:
@@ -24,6 +35,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - target: 8000
+        published: 8000
         mode: host
-    environment: 
-      - ANTHROPIC_API_KEY # you can comment this out if you are using an env_file in compose.dev.yaml
+    environment:
+      - ANTHROPIC_API_KEY
