@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { forwardAction } from './forward.action';
 
 type ClientComponentProps = {
   serverUrl: string;
@@ -25,12 +26,11 @@ function Message({
   );
 }
 
-export default function Home({ serverUrl }: ClientComponentProps) {
+export default function Home() {
   const [messages, setMessages] = useState<{ role: string, content: string }[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
-  const url: string = serverUrl;
 
   const fullMessages = useMemo(() => {
     return [
@@ -62,19 +62,10 @@ export default function Home({ serverUrl }: ClientComponentProps) {
     setMessages((prevMessages) => [...prevMessages, userMessage]);
     setInput('');
     try {
-      console.log('env:', process.env);
-      console.log('MCP_SERVER_URL:', url);
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ messages: [input] })
-      });
-      const data = await response.json();
+      const response = await forwardAction(input);
       setMessages((prevMessages) => [
         ...prevMessages,
-        { role: 'assistant', content: data.response }
+        { role: 'assistant', content: response }
       ]);
     } catch (error) {
       console.error('Error fetching response:', error);
