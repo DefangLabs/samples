@@ -9,10 +9,7 @@ export async function forwardAction(message: string) {
       headers: { "Content-Type": "application/json" },
       body: message,
     });
-    
-    // log the body of the response
-    console.log(await response.text());
-
+  
     const data = await response.json();
     return data;
   } catch (error) {
