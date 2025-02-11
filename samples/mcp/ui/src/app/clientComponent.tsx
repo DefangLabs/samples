@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { forwardAction } from './forward.action';
+import { forwardAction } from './forwardAction';
 
 type ClientComponentProps = {
   serverUrl: string;
