@@ -7,11 +7,12 @@ export async function forwardAction(message: string) {
     const response = await fetch(mcpServiceUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: message,
+      body: JSON.stringify({ messages: [message] }),
     });
   
     const data = await response.json();
-    return data;
+
+    return data.response;
   } catch (error) {
     throw new Error(`Internal server error url: ${mcpServiceUrl}: ${error}`);
   }

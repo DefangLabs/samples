@@ -157,6 +157,7 @@ async def chat():
         data = await request.get_json()
         query = data.get('messages', [None])[0]
         logger.info(f"Received query: {query}")
+        logger.info("Anthropic API Key: " + os.getenv("ANTHROPIC_API_KEY"))
         await client.connect_to_server("/app/.venv/bin/mcp-server-time")
         return await client.process_query(query)
         # await client.process_query("what is the time in tokyo")
