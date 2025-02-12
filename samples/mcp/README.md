@@ -2,7 +2,18 @@
 
 [![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-<YOUR_SAMPLE_DIR#REMOVE_ME_AFTER_EDITING>-template%26template_owner%3DDefangSamples)
 
-This is a sample of an MCP (Model Context Protocol) chatbot application deployed using Defang. It uses Docker's [`mcp/time` image](https://hub.docker.com/r/mcp/time) as a base for the MCP server (MCP tools included), but it can be adapted to use any of Docker [MCP images](https://hub.docker.com/u/mcp). The MCP server communicates with an MCP client in a Quart app (i.e. ASGI Flask), as demonstrated in `mcp-server/main.py`. Requests sent from the browser are forwarded via UI to the MCP client. The response is created with calls to Anthropic (Claude) API and the appropriate MCP tools accessible by the server. 
+This is a sample of an MCP (Model Context Protocol) chatbot application built with Next.js, Python, and Claude, deployed using Defang. 
+
+This example uses Docker's [`mcp/time`](https://hub.docker.com/r/mcp/time) image as a base for the MCP server (with MCP tools included), but it can be adapted to use any of Docker [MCP images](https://hub.docker.com/u/mcp). 
+
+### How It Works
+
+The [MCP client](https://modelcontextprotocol.io/quickstart/client) is written in Python and ran in a `venv`. The MCP server is provided by the Docker `mcp/time` image. The MCP server communicates with the MCP client in a Quart app (i.e. ASGI version of Flask) through the `stdio` transport method, as seen in `mcp-server/main.py`. For more on MCP transport methods, see [here](https://modelcontextprotocol.io/docs/concepts/transports).
+
+1. When a user submits a query to the chatbot, the browser sends a request to the Next.js UI. 
+2. The UI will forward this request to the MCP client via a REST endpoint. 
+3. The MCP client processes the request by interacting with Anthropic (Claude) API, and tools available through the MCP server. 
+4. Once the response is generated, it is sent back to the UI and displayed to the user. 
 
 ## Prerequisites
 
@@ -15,7 +26,7 @@ This is a sample of an MCP (Model Context Protocol) chatbot application deployed
 To run the application locally, you can use the following command:
 
 ```bash
-docker compose -f compose.dev.yaml up --build
+docker compose up --build
 ```
 
 ## Configuration
@@ -41,22 +52,16 @@ Deploy your application to the Defang Playground by opening up your terminal and
 defang compose up
 ```
 
-### BYOC (AWS)
+### BYOC
 
-If you want to deploy to your own cloud account, you can use Defang BYOC:
-
-1. [Authenticate your AWS account](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html), and check that you have properly set your environment variables like `AWS_PROFILE`, `AWS_REGION`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`.
-2. Run in a terminal that has access to your AWS environment variables:
-    ```bash
-    defang --provider=aws compose up
-    ```
+If you want to deploy to your own cloud account, you can [use Defang BYOC](https://docs.defang.io/docs/tutorials/deploy-to-your-cloud).
 
 ---
 
-Title: Sample Title #REMOVE_ME_AFTER_EDITING
+Title: MCP
 
-Short Description: A short sentence or two describing the sample. #REMOVE_ME_AFTER_EDITING
+Short Description: An MCP (Model Context Protocol) chatbot assistant built with Next.js, Python, and Claude. 
 
-Tags: Tags, That, Are, Not, Programming, Languages #REMOVE_ME_AFTER_EDITING
+Tags: MCP, Next.js, Python, Quart, Claude, AI, Anthropic, TypeScript, React, JavaScript
 
-Languages: Programming, Languages, Used #REMOVE_ME_AFTER_EDITING
+Languages: nodejs
