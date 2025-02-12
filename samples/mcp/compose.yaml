@@ -1,0 +1,30 @@
+services:
+  ui:
+    # uncomment to add your own domain
+    # domainname: example.com
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+    ports:
+      - target: 3000
+        published: 3000
+        mode: ingress
+    deploy:
+      resources:
+        reservations:
+          memory: 256M
+    environment:
+      - MCP_SERVER_URL=http://mcp-server:8000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+
+  mcp-server:
+    build:
+      context: ./mcp-server
+      dockerfile: Dockerfile
+    ports:
+      - target: 8000
+        published: 8000
+        mode: host
+    environment:
+      - ANTHROPIC_API_KEY
