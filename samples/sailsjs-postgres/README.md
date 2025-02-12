@@ -30,6 +30,14 @@ To start the development environment, run:
 docker compose -f compose.dev.yaml up --build
 ```
 
+## Configuration
+
+If you wish to provide configuration, see below for an example of setting a configuration for a value named `API_KEY`.
+
+```bash
+defang config set API_KEY
+```
+
 ---
 
 Title: Sails.js & PostgreSQL

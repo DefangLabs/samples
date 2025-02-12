@@ -30,6 +30,14 @@ Or run without using Docker by doing the following:
 4. Type `defang compose up` in the CLI.
 5. Your app will be running within a few minutes.
 
+## Configuration
+
+For any other config values, please use 
+
+```bash
+defang config set API_KEY
+```
+
 ---
 
 Title: Node.js & React & PostgreSQL

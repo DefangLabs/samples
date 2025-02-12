@@ -4,6 +4,16 @@
 
 This is a project that demonstrate both client side component rendering and hydration as well as serverside rendering with external API route configuration. Furthermore, there is also a mongodb connection (not hosted on the atlas) to cache the queried results.
 
+## Configuration
+
+For this sample, you will not need to provide [configuration](https://docs.defang.io/docs/concepts/configuration).
+
+If you wish to provide configuration, see below for an example of setting a configuration for a value named `API_KEY`.
+
+```bash
+defang config set API_KEY
+```
+
 ## NOTE
 
 This sample showcases how you could deploy a full-stack application with Defang and Sveltekit. However, it deploys mongodb as a defang service. Defang [services](https://12factor.net/processes) are ephemeral and should not be used to run stateful workloads in production as they will be reset on every deployment. For production use cases you should use a managed database like RDS, Aiven, or others. In the future, Defang will help you provision and connect to managed databases.
