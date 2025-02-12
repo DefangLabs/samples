@@ -3,7 +3,7 @@ import ClientComponent from './clientComponent';
 const HomePage = async () => {
   return (
     <div>
-      <h1>Home Page (Server Side)</h1>
+      <h1>Defang MCP Application</h1>
       <ClientComponent  />
     </div>
   );
