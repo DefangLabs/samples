@@ -50,7 +50,7 @@ class MCPClient:
             response = await self.session.list_tools()
             self.tools = response.tools
             
-            print("\nConnected to server with tools:", [tool.name for tool in self.tools])
+            logger.info("\nConnected to server with tools:", [tool.name for tool in self.tools])
             
         except Exception as e:
             logger.error(f"Failed to connect to server: {e}")
