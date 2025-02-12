@@ -10,18 +10,12 @@ from anthropic import Anthropic
 import logging
 from quart import Quart, request, jsonify
 from quart_cors import cors
-import atexit
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# sample async function
-# async def test():
-#     print("Hello, world!")
-#     await asyncio.sleep(1)
-#     print("Goodbye, world!")
-
+# Define an MCP client
 class MCPClient:
     def __init__(self):
         # Initialize session and client objects
@@ -46,7 +40,6 @@ class MCPClient:
             env=None
         )
         try:
-            
             logger.info("Starting async context")
             stdio_transport = await self.exit_stack.enter_async_context(stdio_client(server_params))
             self.stdio, self.write = stdio_transport
@@ -101,11 +94,9 @@ class MCPClient:
                 tool_args = content.input
                 logger.info(f"Noticed tool {tool_name} with args {tool_args}")
                 
-                
                 if self.session is None:
                     logger.error("Session not initialized. Exiting.")
                     return jsonify({"response": "Session not initialized. Exiting."})
-
 
                 try:
             # Execute tool call
@@ -146,7 +137,7 @@ class MCPClient:
         """Clean up resources"""
         await self.exit_stack.aclose()
 
-# let's start a quart server
+# let's start a Quart server
 app = Quart(__name__)
 app = cors(app, allow_origin="*")
 
@@ -157,10 +148,8 @@ async def chat():
         data = await request.get_json()
         query = data.get('messages', [None])[0]
         logger.info(f"Received query: {query}")
-        logger.info("Anthropic API Key: " + os.getenv("ANTHROPIC_API_KEY"))
         await client.connect_to_server("/app/.venv/bin/mcp-server-time")
         return await client.process_query(query)
-        # await client.process_query("what is the time in tokyo")
     finally:
         await client.cleanup()
 
