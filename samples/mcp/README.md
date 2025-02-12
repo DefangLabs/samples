@@ -2,17 +2,17 @@
 
 [![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-mcp-template%26template_owner%3DDefangSamples)
 
-This is a sample of an MCP (Model Context Protocol) chatbot application built with Next.js, Python, and Claude, deployed using Defang. 
+This is a sample of an MCP (Model Context Protocol) chatbot application built with Next.js, Python, and Anthropic Claude, deployed using Defang. 
 
-This example uses Docker's [`mcp/time`](https://hub.docker.com/r/mcp/time) image as a base for the MCP server (with MCP tools included), but it can be adapted to use any of Docker [MCP images](https://hub.docker.com/u/mcp). 
+This example uses Docker's [`mcp/time`](https://hub.docker.com/r/mcp/time) image as a base for the MCP server (with MCP tools included), but it can be adapted to use any of the Docker [MCP images](https://hub.docker.com/u/mcp). 
 
 ### How It Works
 
-The [MCP client](https://modelcontextprotocol.io/quickstart/client) is written in Python and ran in a `venv`. The MCP server is provided by the Docker `mcp/time` image. The MCP server communicates with the MCP client in a Quart app (i.e. ASGI version of Flask) through the `stdio` transport method, as seen in `mcp-server/main.py`. For more on MCP transport methods, see [here](https://modelcontextprotocol.io/docs/concepts/transports).
+The [MCP client](https://modelcontextprotocol.io/quickstart/client) is written in Python and ran in a `venv` virtual environment. The MCP server is provided by the Docker `mcp/time` image. The MCP server communicates with the MCP client in a Quart app (i.e. Asynchronous Server Gateway Interface (ASGI) version of Flask) through the `stdio` transport method, as seen in `mcp-server/main.py`. For more on MCP transport methods, see [here](https://modelcontextprotocol.io/docs/concepts/transports).
 
 1. When a user submits a query to the chatbot, the browser sends a request to the Next.js UI. 
 2. The UI will forward this request to the MCP client via a REST endpoint. 
-3. The MCP client processes the request by interacting with Anthropic (Claude) API, and tools available through the MCP server. 
+3. The MCP client processes the request by interacting with the Anthropic (Claude) API and tools available through the MCP server. 
 4. Once the response is generated, it is sent back to the UI and displayed to the user. 
 
 ## Prerequisites
@@ -60,7 +60,7 @@ If you want to deploy to your own cloud account, you can [use Defang BYOC](https
 
 Title: MCP
 
-Short Description: An MCP (Model Context Protocol) chatbot assistant built with Next.js, Python, and Claude. 
+Short Description: An MCP (Model Context Protocol) chatbot assistant built with Next.js, Python, and Anthropic Claude. 
 
 Tags: MCP, Next.js, Python, Quart, Claude, AI, Anthropic, TypeScript, React, JavaScript
 

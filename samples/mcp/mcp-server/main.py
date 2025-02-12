@@ -24,13 +24,12 @@ class MCPClient:
         self.anthropic = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
         self.tools = []
         
-    # methods will go here
 
     async def connect_to_server(self, server_script_path: str):
         """Connect to an MCP server
         
         Args:
-            server_script_path: Path to the server script (.py or .js)
+            server_script_path: Path to the server script
         """
         
         # run the command to start the server
@@ -85,7 +84,7 @@ class MCPClient:
         tool_results = []
         final_text = []
 
-        # loops through content, and if content is a tool_use, calls the tool
+        # loops through content, and if content.type is a tool_use, calls the tool
         for content in response.content:
             if content.type == 'text':
                 final_text.append(content.text)
@@ -99,7 +98,7 @@ class MCPClient:
                     return jsonify({"response": "Session not initialized. Exiting."})
 
                 try:
-            # Execute tool call
+                    # Execute tool call
                     await self.session.initialize()
                     result = await self.session.call_tool(tool_name, tool_args)
 
@@ -129,6 +128,7 @@ class MCPClient:
                 )
 
                 final_text.append(response.content[0].text)
+
         logger.info(f"Final text: {final_text}")
         logger.info(f"Tool Results: {tool_results}")
         return jsonify({"response": response.content[0].text})
