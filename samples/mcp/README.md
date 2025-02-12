@@ -8,12 +8,15 @@ This example uses Docker's [`mcp/time`](https://hub.docker.com/r/mcp/time) image
 
 ### How It Works
 
-The [MCP client](https://modelcontextprotocol.io/quickstart/client) is written in Python and ran in a `venv` virtual environment. The MCP server is provided by the Docker `mcp/time` image. The MCP server communicates with the MCP client in a Quart app (i.e. Asynchronous Server Gateway Interface (ASGI) version of Flask) through the `stdio` transport method, as seen in `mcp-server/main.py`. For more on MCP transport methods, see [here](https://modelcontextprotocol.io/docs/concepts/transports).
+The [MCP client](https://modelcontextprotocol.io/quickstart/client) is written in Python and ran in a `venv` virtual environment. The MCP server is provided by the Docker `mcp/time` image. The MCP server communicates with the MCP client in a Quart app (i.e. Asynchronous Server Gateway Interface (ASGI) version of Flask) through the `stdio` transport method, as seen in `/mcp-server/main.py`. For more on MCP transport methods, see [here](https://modelcontextprotocol.io/docs/concepts/transports).
 
-1. When a user submits a query to the chatbot, the browser sends a request to the Next.js UI. 
-2. The UI will forward this request to the MCP client via a REST endpoint. 
+The UI (User Interface) and web server are built in Next.js (see `/ui/src/app`). The web server includes a forwarding action to connect to the MCP client. 
+
+Here's a breakdown of what happens when you interact with the UI:
+1. When a user submits a query to the chatbot, the browser sends a request to the Next.js web server. 
+2. The Next.js web server will forward this request to the MCP client via a REST endpoint. 
 3. The MCP client processes the request by interacting with the Anthropic (Claude) API and tools available through the MCP server. 
-4. Once the response is generated, it is sent back to the UI and displayed to the user. 
+4. Once the response is generated, it is sent back to the Next.js web server and displayed to the user in the UI. 
 
 ## Prerequisites
 
@@ -35,7 +38,7 @@ For this sample, you will need to provide the following [configuration](https://
 > Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
 
 ### `ANTHROPIC_API_KEY` 
-An API key for Anthropic AI.
+An API key for accessing the [Anthropic Claude API](https://docs.anthropic.com/en/api/getting-started).
 ```bash
 defang config set ANTHROPIC_API_KEY
 ```
