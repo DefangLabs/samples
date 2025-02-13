@@ -1,4 +1,4 @@
-# MCP
+# MCP & Next.js & Python & Claude
 
 [![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-mcp-template%26template_owner%3DDefangSamples)
 
@@ -61,7 +61,7 @@ If you want to deploy to your own cloud account, you can [use Defang BYOC](https
 
 ---
 
-Title: MCP
+Title: MCP & Next.js & Python & Claude
 
 Short Description: An MCP (Model Context Protocol) chatbot assistant built with Next.js, Python, and Anthropic Claude. 
 
