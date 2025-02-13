@@ -61,7 +61,7 @@ If you want to deploy to your own cloud account, you can [use Defang BYOC](https
 
 ---
 
-Title: Model Context Protocol chatbot
+Title: Model Context Protocol (MCP) Chatbot
 
 Short Description: An MCP (Model Context Protocol) chatbot assistant built with Next.js, Python, and Anthropic Claude. 
 
