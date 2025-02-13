@@ -1,6 +1,6 @@
 "use server"
 
-const mcpServiceUrl = process.env.MCP_SERVER_URL || "http://localhost:8000";
+const mcpServiceUrl = process.env.MCP_SERVICE_URL || "http://localhost:8000";
 
 export async function forwardAction(message: string) {
   try {
