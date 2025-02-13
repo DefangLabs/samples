@@ -25,6 +25,13 @@ or
 ```
 cat prompt.txt | curl -H "Content-Type: application/text" -d @- https://xxxxxxxx/prompt
 ```
+## Configuration
+
+Please configure the `OPENAI_KEY` with 
+
+```bash
+defang config set OPENAI_KEY
+```
 
 ---
 
