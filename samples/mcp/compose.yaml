@@ -1,9 +1,7 @@
 services:
-  ui:
-    # uncomment to add your own domain
-    # domainname: example.com
+  service-1: # Web Server and UI
     build:
-      context: ./ui
+      context: ./service-1
       dockerfile: Dockerfile
     ports:
       - target: 3000
@@ -14,13 +12,13 @@ services:
         reservations:
           memory: 256M
     environment:
-      - MCP_SERVICE_URL=http://mcp-service:8000
+      - MCP_SERVICE_URL=http://service-2:8000
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/"]
 
-  mcp-service:
+  service-2: # MCP Service (MCP Client and Server)
     build:
-      context: ./mcp-service
+      context: ./service-2
       dockerfile: Dockerfile
     ports:
       - target: 8000

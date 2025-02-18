@@ -2,20 +2,23 @@
 
 [![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-mcp-template%26template_owner%3DDefangSamples)
 
-This is a sample of an MCP (Model Context Protocol) chatbot application built with Next.js, Python, and Anthropic Claude, deployed using Defang. 
+This is a sample of a Model Context Protocol (MCP) chatbot application built with Next.js, Python, and Anthropic Claude, deployed using Defang. 
 
-This example uses Docker's [`mcp/time`](https://hub.docker.com/r/mcp/time) image as a base for the MCP server (with MCP tools included), but it can be adapted to use any of the Docker [MCP images](https://hub.docker.com/u/mcp). 
+This example uses Docker's [`mcp/time`](https://hub.docker.com/r/mcp/time) image as a base for the MCP Server (with MCP tools included), but it can be adapted to use any of the Docker [MCP images](https://hub.docker.com/u/mcp). 
 
 ### How It Works
 
-The [MCP client](https://modelcontextprotocol.io/quickstart/client) is written in Python and ran in a `venv` virtual environment. The MCP server is provided by the Docker `mcp/time` image. The MCP server communicates with the MCP client in a Quart app (i.e. Asynchronous Server Gateway Interface (ASGI) version of Flask) through the `stdio` transport method, as seen in `/mcp-service/main.py`. For more on MCP transport methods, see [here](https://modelcontextprotocol.io/docs/concepts/transports).
+#### Service 1 (Web Server with UI)
 
-The UI (User Interface) and web server are built in Next.js (see `/ui/src/app`). The web server includes a forwarding action to connect to the MCP client. 
+The web server and UI are built in Next.js (see `/service-1/src/app`). The web server includes a forwarding action to connect to the MCP Client. 
 
-Here's a breakdown of what happens when you interact with the UI:
+#### Service 2 (MCP Client and MCP Server)
+The [MCP Client](https://modelcontextprotocol.io/quickstart/client) is written in Python and ran in a `venv` virtual environment. The MCP server is provided by the Docker `mcp/time` image. The MCP Server communicates with the MCP Client in a Quart app (i.e. Asynchronous Server Gateway Interface (ASGI) version of Flask) through the `stdio` transport method, as seen in `/service-2/main.py`. For more on MCP transport methods, see [here](https://modelcontextprotocol.io/docs/concepts/transports).
+
+Here's a breakdown of what happens when a user interacts with the UI:
 1. When a user submits a query to the chatbot, the browser sends a request to the Next.js web server. 
-2. The Next.js web server will forward this request to the MCP client via a REST endpoint. 
-3. The MCP client processes the request by interacting with the Anthropic (Claude) API and tools available through the MCP server. 
+2. The Next.js web server will forward this request to the MCP Client via a REST endpoint. 
+3. The MCP Client processes the request by interacting with the Anthropic (Claude) API and tools available through the MCP Server. 
 4. Once the response is generated, it is sent back to the Next.js web server and displayed to the user in the UI. 
 
 ## Prerequisites
