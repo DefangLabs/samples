@@ -1,0 +1,1 @@
+esptool.py --chip esp32s3 --port /dev/tty.usbserial-1110 --baud 921600 write_flash -z 0x0 Default_Factory_Firmware_ESP32-S3_v1.0.0.bin
