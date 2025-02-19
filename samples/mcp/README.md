@@ -13,7 +13,7 @@ This example uses Docker's [`mcp/time`](https://hub.docker.com/r/mcp/time) image
 The web server and UI are built in Next.js (see `/service-1/src/app`). The web server includes a forwarding action to connect to the MCP Client. 
 
 #### Service 2 (MCP Client and MCP Server)
-The [MCP Client](https://modelcontextprotocol.io/quickstart/client) is written in Python and ran in a `venv` virtual environment. The MCP server is provided by the Docker `mcp/time` image. The MCP Server communicates with the MCP Client in a Quart app (i.e. Asynchronous Server Gateway Interface (ASGI) version of Flask) through the `stdio` transport method, as seen in `/service-2/main.py`. For more on MCP transport methods, see [here](https://modelcontextprotocol.io/docs/concepts/transports).
+The [MCP Client](https://modelcontextprotocol.io/quickstart/client) is written in Python and ran in a `venv` virtual environment. The MCP server is provided by the Docker `mcp/time` image. The MCP Server communicates with the MCP Client in a [Quart](https://quart.palletsprojects.com/en/latest/index.html) app (i.e. Asynchronous Server Gateway Interface (ASGI) version of Flask) through the `stdio` transport method, as seen in `/service-2/main.py`. For more on MCP transport methods, see [here](https://modelcontextprotocol.io/docs/concepts/transports).
 
 Here's a breakdown of what happens when a user interacts with the UI:
 1. When a user submits a query to the chatbot, the browser sends a request to the Next.js web server. 
