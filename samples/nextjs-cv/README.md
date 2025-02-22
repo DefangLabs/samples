@@ -1,6 +1,6 @@
 # Next.js CV
 
-[![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-<YOUR_SAMPLE_DIR#REMOVE_ME_AFTER_EDITING>-template%26template_owner%3DDefangSamples)
+[![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-nextjs-cv-template%26template_owner%3DDefangSamples)
 
 This is a sample of a Next.js CV web application, deployed with Defang. 
 
