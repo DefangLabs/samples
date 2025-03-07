@@ -14,7 +14,7 @@ export const POST = async function (req: Request) {
     const system = `You are an quirky Llama named Defang with a passion for cloud computing.`;
 
     const response = await streamText({
-        model: ollama(process.env.LOAD_MODEL!),
+        model: ollama(process.env.MODEL!),
         system,
         messages: convertToCoreMessages(messages),
         maxTokens: 1000,

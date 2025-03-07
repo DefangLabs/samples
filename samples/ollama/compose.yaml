@@ -2,12 +2,14 @@ services:
   ollama:
     # uncomment to add your own domain
     # domainname: example.com
-    build:
-      context: ./ollama
-      dockerfile: Dockerfile
-      shm_size: "16gb"
+    # build:
+    #   context: ./ollama
+    #   dockerfile: Dockerfile
+    #   shm_size: "16gb"
+    image: ollama/ollama:latest
     ports:
-      - target: 8000
+      - target: 11434
+        published: 11434
         mode: host
     deploy:
       resources:
@@ -19,15 +21,19 @@ services:
           # devices:
           #   - capabilities: ["gpu"]
     # By Default we load llama3.2:1b because it can run efficiently on a CPU, but you can select
-    # a different model by setting the LOAD_MODEL environment variable. Check the [list](https://ollama.com/library)
-    # for more models. For example, to load gemma:7b, set the LOAD_MODEL environment variable to gemma:7b below.
+    # a different model by setting the MODEL environment variable. Check the [list](https://ollama.com/library)
+    # for more models. For example, to load gemma:7b, set the MODEL environment variable to gemma:7b below.
     environment:
-      - LOAD_MODEL=llama3.2:1b
-      # - LOAD_MODEL=gemma:7b
+      - MODEL=llama3.2:1b
+      # - MODEL=gemma:7b
+    volumes:
+        - ./ollama:/root/.ollama
+        - ./entrypoint.sh:/entrypoint.sh
+    entrypoint: ["/bin/bash", "/entrypoint.sh"]
     healthcheck:
       # wget or curl required for healthchecks on services with a published port
       # this gets parsed by Defang and provided to the load balancers as well
-      test: [ "CMD", "curl", "-s", "http://localhost:8000/" ]
+      test: [ "CMD", "curl", "-s", "http://localhost:11434/" ]
 
   ui:
     build:
@@ -46,7 +52,15 @@ services:
       # this gets parsed by Defang and provided to the load balancers as well
       test: [ "CMD", "curl", "-s", "http://localhost:3000/" ]
     environment:
-      - OLLAMA_ENDPOINT=http://ollama:8000
-      # Make sure the LOAD_MODEL is the same as the app service
-      - LOAD_MODEL=llama3.2:1b
-      # - LOAD_MODEL=gemma:7b
+      - OLLAMA_ENDPOINT=http://ollama:11434
+      # Make sure the MODEL is the same as the app service
+      - MODEL=llama3.2:1b
+      # - MODEL=gemma:7b
+    depends_on:
+      - ollama
+
+volumes:
+  ollama:
+    driver: local
+  ollama-entrypoint.sh:
+    driver: local
