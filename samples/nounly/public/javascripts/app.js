@@ -23,8 +23,8 @@
         if (t != 0)
             submitting();
         if (t == 1) {
-            window.location.href = elem.value;
-            var item = {code:elem.value, url:window.location.protocol+"//"+window.location.host+"/"+elem.value};
+            window.location.href = encodeURIComponent(elem.value);
+            var item = {code: elem.value, url: window.location.protocol + "//" + window.location.host + "/" + encodeURIComponent(elem.value)};
             addHistory(history.find(function(e){return e.code === item.code}) || item, true);
         }
         return t == 2;
