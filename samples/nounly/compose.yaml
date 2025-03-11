@@ -1,0 +1,34 @@
+name: nounly
+services:
+  nounly:
+    restart: always
+    build:
+      context: .
+    deploy:
+      resources:
+        reservations:
+          memory: 512M
+    healthcheck:
+      test:
+        ["CMD", "wget", "--spider", "-qO-", "http://localhost:2345/v1/status"]
+    ports:
+      - 2345:2345
+    environment:
+      PORT: 2345
+      REDIS: redis:6379
+      PROJECT_HONEYPOT_KEY:
+      SHARED_SECRETS:
+  redis:
+    restart: always
+    image: redis:alpine
+    deploy:
+      resources:
+        reservations:
+          memory: 512M
+    ports:
+      - target: 6379
+        published: 6379
+        protocol: tcp
+        mode: host
+    platform: linux/arm64
+    x-defang-redis: true
