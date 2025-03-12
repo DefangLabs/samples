@@ -14,7 +14,9 @@ This template is a documentation starter project developed using Nextra, designe
 
 1. Download [Defang CLI](https://github.com/DefangLabs/defang)
 2. If you are using [Defang BYOC](https://docs.defang.io/docs/concepts/defang-byoc), make sure you have properly [authenticated your AWS account](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)
-   Plus, make sure that you have properly set your environment variables like `AWS_PROFILE`, `AWS_REGION`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`.
+   Plus, make sure that you have properly set your environment variables like 
+   `AWS_PROFILE`, `AWS_REGION`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`.
+3. For any other config values that need to be set, please remember to configure with `defang config set API_KEY`
 
 ## A Step-by-Step Guide
 
