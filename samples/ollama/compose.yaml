@@ -7,33 +7,16 @@ services:
     #   dockerfile: Dockerfile
     #   shm_size: "16gb"
     image: ollama/ollama:latest
+    x-defang-llm: 1
     ports:
       - target: 11434
         published: 11434
         mode: host
-    deploy:
-      resources:
-        reservations:
-          cpus: '2.0'
-          memory: 8192M
-          # Uncomment the next two lines to enable GPU support, for example to use gemma:7b
-          # NOTE: this is only supported in [BYOC](https://docs.defang.io/docs/concepts/defang-byoc)
-          # devices:
-          #   - capabilities: ["gpu"]
     # By Default we load llama3.2:1b because it can run efficiently on a CPU, but you can select
     # a different model by setting the MODEL environment variable. Check the [list](https://ollama.com/library)
     # for more models. For example, to load gemma:7b, set the MODEL environment variable to gemma:7b below.
     environment:
-      - MODEL=llama3.2:1b
-      # - MODEL=gemma:7b
-    volumes:
-        - ./ollama:/root/.ollama
-        - ./entrypoint.sh:/entrypoint.sh
-    entrypoint: ["/bin/bash", "/entrypoint.sh"]
-    healthcheck:
-      # wget or curl required for healthchecks on services with a published port
-      # this gets parsed by Defang and provided to the load balancers as well
-      test: [ "CMD", "curl", "-s", "http://localhost:11434/" ]
+      - MODEL=meta.llama3-2-1b-instruct-v1:0
 
   ui:
     build:
@@ -54,13 +37,4 @@ services:
     environment:
       - OLLAMA_ENDPOINT=http://ollama:11434
       # Make sure the MODEL is the same as the app service
-      - MODEL=llama3.2:1b
-      # - MODEL=gemma:7b
-    depends_on:
-      - ollama
-
-volumes:
-  ollama:
-    driver: local
-  ollama-entrypoint.sh:
-    driver: local
+      - MODEL=meta.llama3-2-1b-instruct-v1:0
