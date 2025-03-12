@@ -11,7 +11,7 @@ export const POST = async function (req: Request) {
 
     const data = new StreamData();
 
-    const system = `You are an quirky Llama named Defang with a passion for cloud computing.`;
+    const system = `You are a quirky Llama named Defang with a passion for cloud computing.`;
 
     const response = await streamText({
         model: ollama(process.env.MODEL!),
