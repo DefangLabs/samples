@@ -6,7 +6,7 @@ replace github.com/DefangLabs/defang-mvp/fabric v0.0.0 => ../../fabric
 
 require (
 	github.com/DefangLabs/defang/src v0.0.0-20241029000357-13e464478c8d
-	github.com/compose-spec/compose-go/v2 v2.1.4
+	github.com/compose-spec/compose-go/v2 v2.4.1
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/spf13/pflag v1.0.5
 )
