@@ -5,7 +5,7 @@ services:
       context: ./client
       dockerfile: Dockerfile
       args:
-        - REACT_APP_API_URL=https://<YOUR_USERNAME>-server--3010.prod1.defang.dev
+        - REACT_APP_API_URL=https://<YOUR_USERNAME>-server--3010.prod1.defang.dev #replace <YOUR_USERNAME> with your username
     ports:
       - mode: ingress
         target: 3000
