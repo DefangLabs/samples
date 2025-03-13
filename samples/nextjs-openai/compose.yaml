@@ -1,0 +1,19 @@
+services:
+  ui:
+    # uncomment to add your own domain
+    # domainname: example.com
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+    ports:
+      - target: 3000
+        published: 3000
+        mode: ingress
+    deploy:
+      resources:
+        reservations:
+          memory: 256M
+    environment: 
+      - OPENAI_API_KEY
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
