@@ -1,6 +1,6 @@
 # Python & Flask & AWS S3
 
-[![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-python-s3-template%26template_owner%3DDefangSamples)
+[![1-click-deploy](https://defang.io/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-python-s3-template%26template_owner%3DDefangSamples)
 
 This sample requires an API key to access AWS S3. The name of the config values is referenced in the compose.yaml file.
 To provide a value for it, you can use the Defang CLI like this:
