@@ -1,6 +1,6 @@
 # Svelte & Node.js & MySQL
 
-[![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-svelte-mysql-template%26template_owner%3DDefangSamples)
+[![1-click-deploy](https://defang.io/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-svelte-mysql-template%26template_owner%3DDefangSamples)
 
 This sample project demonstrates how to deploy a full-stack application using Svelte for the frontend, Node.js for the backend, and MySQL for the database. The project uses Docker to containerize the services, making it easy to run in both development and production environments.
 

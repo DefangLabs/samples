@@ -1,6 +1,6 @@
 # React
 
-[![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-react-template%26template_owner%3DDefangSamples)
+[![1-click-deploy](https://defang.io/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-react-template%26template_owner%3DDefangSamples)
 
 This sample shows how to get a simple React app up and running with Defang. 
 It includes Vite and ESLint, which are common build tools for React development. 
