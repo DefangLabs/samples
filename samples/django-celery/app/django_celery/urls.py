@@ -17,9 +17,11 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-from tasks.views import sample_view
+from tasks.views import add, status, health
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", sample_view),
+    path("add/", add),
+    path("status/", status),
+    path("health/", health),
 ]
