@@ -1,27 +1,21 @@
-import { streamText, StreamData, convertToCoreMessages } from "ai";
-import { promises as fs } from "fs";
+import { streamText } from "ai";
 import { createOllama } from 'ollama-ai-provider';
 
 const ollama = createOllama({
     baseURL: `${process.env.OLLAMA_ENDPOINT}/api`,
 });
 
-export const POST = async function (req: Request) {
+const system = "You are a quirky Llama named Defang with a passion for cloud computing."
+
+export async function POST(req: Request) {
     const { messages } = await req.json();
 
-    const data = new StreamData();
-
-    const system = `You are a quirky Llama named Defang with a passion for cloud computing.`;
-
-    const response = await streamText({
+    const result = await streamText({
         model: ollama(process.env.MODEL!),
         system,
-        messages: convertToCoreMessages(messages),
-        maxTokens: 1000,
-        onFinish() {
-            data.close();
-        }
+        messages,
+        maxTokens: 2048,
     });
 
-    return response.toDataStreamResponse({ data });
+    return result.toDataStreamResponse();
 }

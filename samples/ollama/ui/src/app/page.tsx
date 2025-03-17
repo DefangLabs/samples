@@ -1,6 +1,6 @@
 'use client';
 
-import { useChat } from 'ai/react';
+import { useChat } from '@ai-sdk/react';
 import { useEffect, useMemo, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 
