@@ -3,9 +3,8 @@ services:
     extends:
       file: compose.yaml
       service: ollama
-    environment:
-      # Make sure the MODEL is the same as the app service
-      - MODEL=llama3.2:1b
+    env_file:
+      - .env.dev
     volumes:
         - ./ollama:/root/.ollama
         - ./entrypoint.sh:/entrypoint.sh
@@ -28,11 +27,8 @@ services:
     extends:
       file: compose.yaml
       service: ui
-    environment:
-      # Make sure the MODEL is the same as the app service
-      - MODEL=llama3.2:1b
-    depends_on:
-      - ollama
+    env_file:
+      - .env.dev
 
 volumes:
   ollama:
