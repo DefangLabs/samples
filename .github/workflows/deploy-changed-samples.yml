@@ -64,6 +64,8 @@ jobs:
         shell: bash # implies set -o pipefail, so pipe below will keep the exit code from loadtest
         if: env.should_continue == 'true'
         env:
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
           FIXED_VERIFIER_PK: ${{ secrets.FIXED_VERIFIER_PK }}
           TEST_ANTHROPIC_API_KEY: ${{ secrets.TEST_ANTHROPIC_API_KEY }}
           TEST_AWS_ACCESS_KEY: ${{ secrets.TEST_AWS_ACCESS_KEY }}
