@@ -11,12 +11,9 @@ def sample_task(param=None):
     A sample task that can be called asynchronously
     """
     # artificial delay as if the task is doing something
-    # random between 10 and 30 sec
+    # random between 1 and 5 sec
     sleep = random.randint(1, 5)
 
     time.sleep(sleep)
-
-    logger.info("Potato: ")
-    logger.info(param['potato'])
 
     return f"Task completed with param: {param}"

@@ -2,7 +2,7 @@ x-env: &app-env
   environment:
     - DEBUG=True
     - SECRET_KEY=dev-secret-key
-    - DATABASE_URL=postgres://postgres:password@db:5432/postgres
+    - POSTGRES_URL=postgres://postgres:password@database:5432/postgres
 
 services:
   web:
@@ -22,19 +22,19 @@ services:
     volumes:
       - ./app:/app
 
-  db:
+  database:
     extends:
       file: compose.yaml
-      service: db
+      service: database
     environment:
       - POSTGRES_PASSWORD=password
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  redis:
+  broker:
     extends:
       file: compose.yaml
-      service: redis
+      service: broker
     volumes:
       - redis_data:/data
 
