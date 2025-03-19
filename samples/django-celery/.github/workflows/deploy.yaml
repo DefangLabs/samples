@@ -20,6 +20,7 @@ jobs:
     - name: Deploy
       uses: DefangLabs/defang-github-action@v1.2.0
       with:
-        config-env-vars: POSTGRES_PASSWORD
+        config-env-vars: POSTGRES_PASSWORD SECRET_KEY
       env:
         POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
