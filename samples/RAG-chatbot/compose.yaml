@@ -1,0 +1,24 @@
+services:
+  rag-chatbot:
+    build:
+      context: ./app
+      shm_size: "16gb"
+    ports:
+      - target: 5000
+        published: 5000
+        protocol: tcp
+        mode: ingress
+    environment:
+      FLASK_APP: app.py
+      OPENAI_API_KEY: ${OPENAI_API_KEY} # Set your OpenAI API key here or in the .env file
+    command: gunicorn --bind 0.0.0.0:5000 app:app
+    deploy:
+      resources:
+        reservations:
+          memory: 4G
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
