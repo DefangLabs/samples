@@ -30,6 +30,12 @@ The password for the Postgres database.
 defang config set POSTGRES_PASSWORD
 ```
 
+### `SECRET_KEY`
+The [secret key](https://docs.djangoproject.com/en/5.1/ref/settings/#std-setting-SECRET_KEY) for the Django application. 
+```bash
+defang config set SECRET_KEY
+```
+
 ## Deployment
 
 > [!NOTE]
