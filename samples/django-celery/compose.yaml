@@ -27,8 +27,9 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile
-    deploy:
-      replicas: 2
+    # If you need more than one worker, uncomment the following lines
+    # deploy:
+    #   replicas: 2
     environment:
       - SECRET_KEY
       - REDIS_URL=redis://broker:6379/0
