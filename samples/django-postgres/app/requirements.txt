@@ -1,6 +1,6 @@
 asgiref==3.8.1
 Django==5.0.4
-gunicorn==22.0.0
+gunicorn==23.0.0
 packaging==24.0
 psycopg2-binary==2.9.9
 setuptools==69.1.1
