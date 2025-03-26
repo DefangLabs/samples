@@ -17,7 +17,8 @@ services:
       PORT: 2345
       REDIS: redis:6379
       PROJECT_HONEYPOT_KEY:
-      SHARED_SECRETS:
+      SHARED_SECRETS: "{}"
+
   redis:
     restart: always
     image: redis:alpine

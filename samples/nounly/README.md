@@ -38,7 +38,7 @@ defang config set PROJECT_HONEYPOT_KEY
 
 ### `SHARED_SECRETS`
 
-A JSON object string of shared secrets that are used for API clients. It is optional, but please set to "{}" (without the quotation marks) if you do not have any shared secrets.
+A JSON object string of shared secrets that are used for API clients. It is optional, and the default value is `{}` if you do not have any shared secrets.
 
 ```bash
 defang config set SHARED_SECRETS

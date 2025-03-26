@@ -21,7 +21,6 @@ FROM --platform=${TARGETPLATFORM} ${BASE}
 # RUN apk add --update curl ca-certificates && rm -rf /var/cache/apk* # Certificates for SSL
 ARG PORT=80
 ENV PORT=$PORT
-# ENV REPLICAS=1
 COPY --link --from=build /server /server
 COPY --link ./public /public
 ENTRYPOINT [ "/server" ]
