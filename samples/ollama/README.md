@@ -1,6 +1,6 @@
 # Ollama
 
-[![1-click-deploy](https://defang.io/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-ollama-template%26template_owner%3DDefangSamples)
+[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-ollama-template%26template_owner%3DDefangSamples)
 
 This sample demonstrates how to deploy [Ollama](https://ollama.com/) with Defang, along with a Next.js frontend using the [AI SDK](https://www.npmjs.com/package/ai) for smooth streaming conversations. By default it runs a very small model (`llama3.2:1b`) which can perform well with just a CPU, but we've included lines that you can uncomment in the compose file to enable GPU support and run a larger model like `gemma:7b`. If you want to deploy to a GPU powered instance, you will need to use your own AWS account with [Defang BYOC](https://docs.defang.io/docs/concepts/defang-byoc).
 

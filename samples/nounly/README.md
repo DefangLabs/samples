@@ -1,6 +1,6 @@
 # Nounly
 
-[![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-nounly-template%26template_owner%3DDefangSamples)
+[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-nounly-template%26template_owner%3DDefangSamples)
 
 Nounly (also known as Noun.ly) is a URL shortener website built with Go, JavaScript and Redis, and can be deployed with Defang as a sample.
 
