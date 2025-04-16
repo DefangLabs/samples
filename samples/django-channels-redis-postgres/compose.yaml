@@ -18,6 +18,9 @@ services:
       # wget or curl required for healthchecks on services with a published port
       # this gets parsed by Defang and provided to the load balancers as well
       test: ["CMD", "python3", "-c", "import sys, urllib.request; urllib.request.urlopen(sys.argv[1]).read()", "http://localhost:8000/"]
+    depends_on:
+      - redis-service
+      - postgres-service
 
   redis-service:
     image: redis:6.2
