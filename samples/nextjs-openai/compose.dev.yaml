@@ -1,0 +1,10 @@
+services:
+  ui:
+    extends:
+      file: compose.yaml
+      service: nextjs-openai
+    volumes:
+      - type: bind
+        source: ./ui
+        target: /app
+    command: ["npm", "run", "dev"]
