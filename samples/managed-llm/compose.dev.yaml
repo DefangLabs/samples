@@ -1,0 +1,9 @@
+services:
+  app:
+    extends:
+      file: compose.yaml
+      service: app
+    environment:
+      - ENDPOINT_URL=https://api.openai.com/v1 # endpoint of the LLM used for local testing
+      - OPENAI_API_KEY=${OPENAI_API_KEY} # your OpenAI API key for local testing
+      - MODEL=gpt-4-turbo # LLM model ID used for local testing

@@ -1,0 +1,5 @@
+dotenv
+fastapi
+python-multipart
+requests
+uvicorn

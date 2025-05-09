@@ -82,6 +82,7 @@ jobs:
           TEST_MB_DB_PASS: ${{ secrets.TEST_MB_DB_PASS }}
           TEST_MB_DB_PORT: ${{ secrets.TEST_MB_DB_PORT }}
           TEST_MB_DB_USER: ${{ secrets.TEST_MB_DB_USER }}
+          TEST_MODEL: ${{ secrets.TEST_MODEL }}
           TEST_MONGO_INITDB_ROOT_USERNAME: ${{ secrets.TEST_MONGO_INITDB_ROOT_USERNAME }}
           TEST_MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.TEST_MONGO_INITDB_ROOT_PASSWORD }}
           TEST_NC_DB: ${{ secrets.TEST_NC_DB }}

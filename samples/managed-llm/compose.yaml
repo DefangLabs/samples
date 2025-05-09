@@ -1,0 +1,29 @@
+services:
+  app:
+    build: 
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    restart: always
+    environment:
+      - ENDPOINT_URL=http://llm-gateway:80 # endpoint to the LLM gateway service
+      - OPENAI_API_KEY=optionalkey # this value will be ignored in production when using the gateway
+      - MODEL=${MODEL} # LLM model ID used for the gateway
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:8000/health"]
+
+# Defang OpenAI Access Gateway
+# This service is used to route requests to the LLM API
+  llm-gateway:
+    x-defang-llm: true # this must be set to true for the LLM gateway to work
+    image: defangio/openai-access-gateway:latest
+    ports:
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: ingress
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
