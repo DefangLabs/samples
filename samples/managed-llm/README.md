@@ -10,6 +10,8 @@ You can configure the `MODEL` and `ENDPOINT_URL` for the LLM separately for loca
 * The `MODEL` is the LLM Model ID you are using.
 * The `ENDPOINT_URL` is the bridge that provides authenticated access to the LLM model. 
 
+Ensure you have the necessary permissions to access the model you intend to use. For example, if you are using AWS Bedrock, verify that your account has [model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html).
+
 ### Defang OpenAI Access Gateway
 
 In the `compose.yaml` file, the `llm` service is used to route requests to the LLM API model. This is known as the Defang OpenAI Access Gateway. 
@@ -37,7 +39,7 @@ For this sample, you will need to provide the following [configuration](https://
 > Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
 
 ### `MODEL`
-The Model ID of the LLM you are using for your application. For example, `anthropic.claude-3-5-haiku-20241022-v1:0`.
+The Model ID of the LLM you are using for your application. For example, `anthropic.claude-3-haiku-20240307-v1:0`.
 ```bash
 defang config set MODEL
 ```
