@@ -7,23 +7,27 @@ services:
       - "8000:8000"
     restart: always
     environment:
-      - ENDPOINT_URL=http://llm-gateway:80 # endpoint to the LLM gateway service
-      - OPENAI_API_KEY=optionalkey # this value will be ignored in production when using the gateway
-      - MODEL=${MODEL} # LLM model ID used for the gateway
+      - ENDPOINT_URL=http://llm-gateway/api/v1/chat/completions   # endpoint to the gateway service
+      - MODEL=anthropic.claude-3-5-sonnet-20241022-v2:0   # LLM model ID used for the gateway
+      - OPENAI_API_KEY=FAKE_TOKEN   # this value will be ignored in production when using the gateway
     healthcheck:
-      test: ["CMD", "wget", "--spider", "http://localhost:8000/health"]
+      test: ["CMD", "python3", "-c", "import sys, urllib.request; urllib.request.urlopen(sys.argv[1]).read()", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
 
-# Defang OpenAI Access Gateway
-# This service is used to route requests to the LLM API
+# # Defang OpenAI Access Gateway
+# # This service is used to route requests to the LLM API
   llm-gateway:
-    x-defang-llm: true # this must be set to true for the LLM gateway to work
+    x-defang-llm: true # this must be set to true in BYOC for the gateway to work
     image: defangio/openai-access-gateway:latest
     ports:
       - target: 80
         published: 80
         protocol: tcp
-        mode: ingress
-    env_file:
-      - .env
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+        mode: host
+    environment:
+      - OPENAI_API_KEY=FAKE_TOKEN
+      - USE_MODEL_MAPPING=false
+      - DEBUG=true
