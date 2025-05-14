@@ -7,7 +7,7 @@ services:
     extends:
         file: compose.yaml
         service: llm
-    # if using AWS for local development, include this section::
+    # if using AWS Bedrock for local development, include this section:
     environment:
       - AWS_REGION=${AWS_REGION} # replace with your AWS region
       - AWS_PROFILE=${AWS_PROFILE} # replace with your AWS profile name
