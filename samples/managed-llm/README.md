@@ -2,11 +2,13 @@
 
 [![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-managed-llm-template%26template_owner%3DDefangSamples)
 
-This sample application demonstrates the use of Managed LLMs (Large Language Models) with Defang.
+This sample application demonstrates the use of OpenAI-compatible Managed LLMs (Large Language Models) with Defang.
 
-The Managed LLM feature, provided by the Defang OpenAI Access Gateway, enables users to switch LLM models in production without altering the app's API interface.
+The OpenAI-compatible managed LLM feature, provided by the Defang OpenAI Access Gateway, allows users to use AWS Bedrock or Google Cloud Vertex AI with an OpenAI compatible SDK. This enables switching from OpenAI to one of these cloud-native platforms without modifying your application code.
 
-You can configure the `MODEL` and `ENDPOINT_URL` for the LLM separately for local development and production environments. The `MODEL` is the LLM Model ID you are using. The `ENDPOINT_URL` is the bridge that provides authenticated access to the LLM model. 
+You can configure the `MODEL` and `ENDPOINT_URL` for the LLM separately for local development and production environments.
+* The `MODEL` is the LLM Model ID you are using.
+* The `ENDPOINT_URL` is the bridge that provides authenticated access to the LLM model. 
 
 ### Defang OpenAI Access Gateway
 
@@ -62,6 +64,6 @@ Title: Managed LLM
 
 Short Description: An app using Managed LLMs with Defang's OpenAI Access Gateway.
 
-Tags: LLM, Managed LLM, FastAPI, OpenAI, Python
+Tags: LLM, OpenAI, Python, Bedrock, Vertex
 
 Languages: Python
