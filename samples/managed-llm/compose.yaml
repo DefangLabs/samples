@@ -7,7 +7,7 @@ services:
       - "8000:8000"
     restart: always
     environment:
-      - ENDPOINT_URL=http://llm-gateway/api/v1/chat/completions   # endpoint to the gateway service
+      - ENDPOINT_URL=http://llm/api/v1/chat/completions   # endpoint to the gateway service
       - MODEL=anthropic.claude-3-5-sonnet-20241022-v2:0   # LLM model ID used for the gateway
       - OPENAI_API_KEY=FAKE_TOKEN   # this value will be ignored in production when using the gateway
     healthcheck:
@@ -19,7 +19,7 @@ services:
 
 # # Defang OpenAI Access Gateway
 # # This service is used to route requests to the LLM API
-  llm-gateway:
+  llm:
     x-defang-llm: true # this must be set to true in BYOC for the gateway to work
     image: defangio/openai-access-gateway:latest
     ports:

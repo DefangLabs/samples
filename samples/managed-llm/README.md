@@ -12,9 +12,9 @@ You can configure the `MODEL` and `ENDPOINT_URL` for the LLM separately for loca
 
 ### Defang OpenAI Access Gateway
 
-In the `compose.yaml` file, the `llm-gateway` service is used to route requests to the LLM API model. This is known as the Defang OpenAI Access Gateway. 
+In the `compose.yaml` file, the `llm` service is used to route requests to the LLM API model. This is known as the Defang OpenAI Access Gateway. 
 
-The `x-defang-llm` property must be set to `true` to enable the feature during deployment with Defang.  
+The `x-defang-llm` property on the `llm` service must be set to `true` in order to use the OpenAI Access Gateway when deploying with Defang.
 
 ## Prerequisites
 
