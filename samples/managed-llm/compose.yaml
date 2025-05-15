@@ -17,8 +17,8 @@ services:
       retries: 3
       start_period: 5s
 
-# # Defang OpenAI Access Gateway
-# # This service is used to route requests to the LLM API
+# Defang OpenAI Access Gateway
+# This service is used to route requests to the LLM API
   llm:
     # x-defang-llm: true # this must be set to true for the gateway to work
     image: docker.io/defangio/openai-access-gateway:latest
