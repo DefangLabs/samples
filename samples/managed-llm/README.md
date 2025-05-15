@@ -10,7 +10,7 @@ You can configure the `MODEL` and `ENDPOINT_URL` for the LLM separately for loca
 * The `MODEL` is the LLM Model ID you are using.
 * The `ENDPOINT_URL` is the bridge that provides authenticated access to the LLM model. 
 
-Ensure you have the necessary permissions to access the model you intend to use. To do this, you can check your [AWS Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html) or [GCP Vertex AI model permissions](https://cloud.google.com/vertex-ai/generative-ai/docs/partner-models/use-partner-models?hl=en#grant-permissions).
+Ensure you have the necessary permissions to access the model you intend to use. To do this, you can check your [AWS Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html) or [GCP Vertex AI model access](https://cloud.google.com/vertex-ai/generative-ai/docs/control-model-access).
 
 ### Defang OpenAI Access Gateway
 
