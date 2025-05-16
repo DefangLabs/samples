@@ -16,7 +16,7 @@ Ensure you have the necessary permissions to access the model you intend to use.
 
 ### Docker Model Provider
 
-In the `compose.yaml` file, the `llm` service will route requests to the LLM API model using a [Docker Model Provider](https://docs.defang.io/docs/concepts/managed-llms/openai-access-gateway#docker-provider-services).
+In the `compose.yaml` file, the `llm` service will route requests to the LLM API model using a [Docker Model Provider](https://docs.defang.io/docs/concepts/managed-llms/openai-access-gateway#docker-model-provider-services).
 
 The `x-defang-llm` property on the `llm` service must be set to `true` in order to use the Docker Model Provider when deploying with Defang.
 
