@@ -1,0 +1,14 @@
+# Default .dockerignore file for Defang
+**/__pycache__
+**/.git
+**/.github
+**/compose.*.yaml
+**/compose.*.yml
+**/compose.yaml
+**/compose.yml
+**/docker-compose.*.yaml
+**/docker-compose.*.yml
+**/docker-compose.yaml
+**/docker-compose.yml
+Dockerfile
+*.Dockerfile
