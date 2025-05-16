@@ -1,12 +1,12 @@
-# Managed LLM with Provider
+# Managed LLM with Docker Model Provider
 
 [![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-managed-llm-provider-template%26template_owner%3DDefangSamples)
 
-This sample application demonstrates using Managed LLMs with a Provider Service, deployed with Defang.
+This sample application demonstrates using Managed LLMs with a Docker Model Provider, deployed with Defang.
 
-> Note: This version uses a [Docker Provider Service](https://docs.docker.com/compose/how-tos/model-runner/#provider-services) for managing LLMs. For the version with Defang's [OpenAI Access Gateway](https://docs.defang.io/docs/concepts/managed-llms/openai-access-gateway), please see our [*Managed LLM Sample*](https://github.com/DefangLabs/samples/tree/main/samples/managed-llm) instead.
+> Note: This version uses a [Docker Model Provider](https://docs.docker.com/compose/how-tos/model-runner/#provider-services) for managing LLMs. For the version with Defang's [OpenAI Access Gateway](https://docs.defang.io/docs/concepts/managed-llms/openai-access-gateway), please see our [*Managed LLM Sample*](https://github.com/DefangLabs/samples/tree/main/samples/managed-llm) instead.
 
-The Provider Service allows users to use AWS Bedrock or Google Cloud Vertex AI models with their application.
+The Docker Model Provider allows users to use AWS Bedrock or Google Cloud Vertex AI models with their application. It is a service in the `compose.yaml` file.
 
 You can configure the `MODEL` and `ENDPOINT_URL` for the LLM separately for local development and production environments.
 * The `MODEL` is the LLM Model ID you are using.
@@ -14,11 +14,11 @@ You can configure the `MODEL` and `ENDPOINT_URL` for the LLM separately for loca
 
 Ensure you have the necessary permissions to access the model you intend to use. To do this, you can check your [AWS Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html) or [GCP Vertex AI model access](https://cloud.google.com/vertex-ai/generative-ai/docs/control-model-access).
 
-### Provider Service
+### Docker Model Provider
 
-In the `compose.yaml` file, the `llm` service is used to route requests to the LLM API model using a [Provider Service](https://docs.defang.io/docs/concepts/managed-llms/openai-access-gateway#docker-provider-services).
+In the `compose.yaml` file, the `llm` service will route requests to the LLM API model using a [Docker Model Provider](https://docs.defang.io/docs/concepts/managed-llms/openai-access-gateway#docker-provider-services).
 
-The `x-defang-llm` property on the `llm` service must be set to `true` in order to use the Provider Service when deploying with Defang.
+The `x-defang-llm` property on the `llm` service must be set to `true` in order to use the Docker Model Provider when deploying with Defang.
 
 ## Prerequisites
 
@@ -64,10 +64,10 @@ If you want to deploy to your own cloud account, you can [use Defang BYOC](https
 
 ---
 
-Title: Managed LLM with Provider
+Title: Managed LLM with Docker Model Provider
 
-Short Description: An app using Managed LLMs with a Provider Service, deployed with Defang.
+Short Description: An app using Managed LLMs with a Docker Model Provider, deployed with Defang.
 
-Tags: LLM, Python, Bedrock, Vertex
+Tags: LLM, Python, Bedrock, Vertex, Docker Model Provider
 
 Languages: Python
