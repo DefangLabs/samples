@@ -20,5 +20,6 @@ services:
 # Provider Service
 # This service is used to route requests to the LLM API
   llm:
-   provider:
-    type: model
+    provider:
+      type: model
+    x-defang-llm: true
