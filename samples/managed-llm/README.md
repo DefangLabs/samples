@@ -4,13 +4,16 @@
 
 This sample application demonstrates the use of OpenAI-compatible Managed LLMs (Large Language Models) with Defang.
 
+
+> Note: Using Docker Model Provider? See our [*Managed LLM with Docker Model Provider*](https://github.com/DefangLabs/samples/tree/main/samples/managed-llm-provider) sample.
+
 The OpenAI-compatible managed LLM feature, provided by the Defang OpenAI Access Gateway, allows users to use AWS Bedrock or Google Cloud Vertex AI with an OpenAI compatible SDK. This enables switching from OpenAI to one of these cloud-native platforms without modifying your application code.
 
 You can configure the `MODEL` and `ENDPOINT_URL` for the LLM separately for local development and production environments.
 * The `MODEL` is the LLM Model ID you are using.
 * The `ENDPOINT_URL` is the bridge that provides authenticated access to the LLM model. 
 
-Ensure you have the necessary permissions to access the model you intend to use. To do this, you can check your [AWS Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html) or [GCP Vertex AI model access](https://cloud.google.com/vertex-ai/generative-ai/docs/control-model-access).
+Ensure you have enabled model access for the model you intend to use. To do this, you can check your [AWS Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html) or [GCP Vertex AI model access](https://cloud.google.com/vertex-ai/generative-ai/docs/control-model-access).
 
 ### Defang OpenAI Access Gateway
 
