@@ -8,7 +8,7 @@ services:
     restart: always
     environment:
       - ENDPOINT_URL=http://llm/api/v1/chat/completions   # endpoint to the gateway service
-      - MODEL=anthropic.claude-3-5-sonnet-20241022-v2:0   # LLM model ID used for the gateway
+      - MODEL=anthropic.claude-3-haiku-20240307-v1:0  # LLM model ID used for the gateway
       - OPENAI_API_KEY=FAKE_TOKEN   # the actual value will be ignored when using the gateway, but it should match the one in the llm service
     healthcheck:
       test: ["CMD", "python3", "-c", "import sys, urllib.request; urllib.request.urlopen(sys.argv[1]).read()", "http://localhost:8000/"]
@@ -20,7 +20,7 @@ services:
 # Defang OpenAI Access Gateway
 # This service is used to route requests to the LLM API
   llm:
-    x-defang-llm: true # this must be set to true for the gateway to work
+    # x-defang-llm: true # this must be set to true for the gateway to work
     image: docker.io/defangio/openai-access-gateway:latest
     ports:
       - target: 80

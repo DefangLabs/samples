@@ -41,7 +41,7 @@ For this sample, you will need to provide the following [configuration](https://
 > Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
 
 ### `MODEL`
-The Model ID of the LLM you are using for your application. For example, `anthropic.claude-3-5-sonnet-20241022-v2:0`.
+The Model ID of the LLM you are using for your application. For example, `anthropic.claude-3-haiku-20240307-v1:0`.
 ```bash
 defang config set MODEL
 ```
