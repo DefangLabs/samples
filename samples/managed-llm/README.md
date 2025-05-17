@@ -7,7 +7,7 @@ This sample application demonstrates the use of OpenAI-compatible Managed LLMs (
 
 > Note: Using Docker Model Provider? See our [*Managed LLM with Docker Model Provider*](https://github.com/DefangLabs/samples/tree/main/samples/managed-llm-provider) sample.
 
-Using the [Defang OpenAI Access Gateway](#defang-openai-access-gateway), the feature `x-defang-llm: true` enables you to use Managed LLMs on the Defang Playground or with BYOC providers (such as AWS Bedrock or GCP Vertex AI) with an  OpenAI-compatible SDK.
+Using the [Defang OpenAI Access Gateway](#defang-openai-access-gateway), the feature `x-defang-llm: true` enables you to use Managed LLMs on the Defang Playground or with BYOC providers (such as AWS Bedrock or GCP Vertex AI) with an OpenAI-compatible SDK.
 
 This allows switching from OpenAI to the Managed LLMs on supported cloud platforms without modifying your application code.
 
