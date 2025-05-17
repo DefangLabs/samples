@@ -7,7 +7,9 @@ This sample application demonstrates the use of OpenAI-compatible Managed LLMs (
 
 > Note: Using Docker Model Provider? See our [*Managed LLM with Docker Model Provider*](https://github.com/DefangLabs/samples/tree/main/samples/managed-llm-provider) sample.
 
-Using the Defang OpenAI Access Gateway, the [Managed LLM](https://docs.defang.io/docs/concepts/managed-llms/managed-language-models) feature `x-defang-llm: true` allows users to use AWS Bedrock or Google Cloud Vertex AI models with an OpenAI-compatible SDK. This enables switching from OpenAI to one of these cloud-native platforms without modifying your application code. This feature is available in the Defang Playground and Defang BYOC. 
+Using the Defang OpenAI Access Gateway, the Managed LLM feature `x-defang-llm: true` allows users to use AWS Bedrock or Google Cloud Vertex AI models with an OpenAI-compatible SDK. 
+
+This enables switching from OpenAI to one of these cloud-native platforms without modifying your application code. This feature is available in the Defang Playground and Defang BYOC. 
 
 You can configure the `MODEL` and `ENDPOINT_URL` for the LLM separately for local development and production environments.
 * The `MODEL` is the LLM Model ID you are using.
@@ -15,9 +17,11 @@ You can configure the `MODEL` and `ENDPOINT_URL` for the LLM separately for loca
 
 Ensure you have enabled model access for the model you intend to use. To do this, you can check your [AWS Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html) or [GCP Vertex AI model access](https://cloud.google.com/vertex-ai/generative-ai/docs/control-model-access).
 
+For more about Managed LLMs in Defang, please see our [Managed LLMs documentation](https://docs.defang.io/docs/concepts/managed-llms/managed-language-models).
+
 ### Defang OpenAI Access Gateway
 
-In the `compose.yaml` file, the `llm` service is used to route requests to the LLM API model. This is known as the Defang OpenAI Access Gateway. 
+In the `compose.yaml` file, the `llm` service is used to route requests to the LLM API model. This is known as the [Defang OpenAI Access Gateway](https://docs.defang.io/docs/concepts/managed-llms/openai-access-gateway). 
 
 The `x-defang-llm` property on the `llm` service must be set to `true` in order to use the OpenAI Access Gateway when deploying with Defang.
 

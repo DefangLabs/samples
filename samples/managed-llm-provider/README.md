@@ -14,6 +14,8 @@ You can configure the `MODEL` and `ENDPOINT_URL` for the LLM separately for loca
 
 Ensure you have enabled model access for the model you intend to use. To do this, you can check your [AWS Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html) or [GCP Vertex AI model access](https://cloud.google.com/vertex-ai/generative-ai/docs/control-model-access).
 
+For more about Managed LLMs in Defang, please see our [Managed LLMs documentation](https://docs.defang.io/docs/concepts/managed-llms/managed-language-models).
+
 ### Docker Model Provider
 
 In the `compose.yaml` file, the `llm` service will route requests to the LLM API model using a [Docker Model Provider](https://docs.defang.io/docs/concepts/managed-llms/openai-access-gateway#docker-model-provider-services).
