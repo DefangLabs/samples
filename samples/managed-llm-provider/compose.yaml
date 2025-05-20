@@ -7,18 +7,21 @@ services:
       - "8000:8000"
     restart: always
     environment:
-      - ENDPOINT_URL=http://llm/api/v1/chat/completions   # endpoint to the Provider Service
-      - MODEL=anthropic.claude-3-haiku-20240307-v1:0   # LLM model ID used in the Provider Service
+      - LLM_MODEL
     healthcheck:
       test: ["CMD", "python3", "-c", "import sys, urllib.request; urllib.request.urlopen(sys.argv[1]).read()", "http://localhost:8000/"]
       interval: 30s
       timeout: 5s
       retries: 3
       start_period: 5s
+    depends_on:
+      - llm
 
 # Provider Service
 # This service is used to route requests to the LLM API
   llm:
     provider:
       type: model
+      options:
+        model: ai/smollm2
     x-defang-llm: true
