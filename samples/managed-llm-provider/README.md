@@ -43,7 +43,7 @@ For this sample, you will need to provide the following [configuration](https://
 > Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
 
 ### `MODEL`
-The Model ID of the LLM you are using for your application. For example, `ai/claude3-haiku`. 
+The Model ID of the LLM you are using for your application. For example, `ai/nova-micro`. 
 ```bash
 defang config set MODEL
 ```
