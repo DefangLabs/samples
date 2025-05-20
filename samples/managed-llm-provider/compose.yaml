@@ -1,6 +1,6 @@
 services:
   app:
-    build: 
+    build:
       context: ./app
       dockerfile: Dockerfile
     ports:
@@ -9,7 +9,6 @@ services:
     environment:
       - ENDPOINT_URL=http://llm/api/v1/chat/completions   # endpoint to the Provider Service
       - MODEL=ai/claude3-haiku  # LLM model ID used in the Provider Service
-      - OPENAI_API_KEY=FAKE_TOKEN   # the actual value will be ignored when using the Provider Service
     healthcheck:
       test: ["CMD", "python3", "-c", "import sys, urllib.request; urllib.request.urlopen(sys.argv[1]).read()", "http://localhost:8000/"]
       interval: 30s

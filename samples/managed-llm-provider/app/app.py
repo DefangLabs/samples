@@ -1,9 +1,10 @@
-import os
 import json
 import logging
+import os
+
+import requests
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse
-import requests
 
 app = FastAPI()
 
@@ -18,7 +19,7 @@ MODEL_ID = os.getenv("MODEL", "gpt-4-turbo")
 # Get the API key for the LLM
 # For development, you can use your local API key. In production, the LLM gateway service will override the need for it.
 def get_api_key():
-    return os.getenv("OPENAI_API_KEY", "API key not set")
+    return os.getenv("OPENAI_API_KEY", "")
 
 # Home page form
 @app.get("/", response_class=HTMLResponse)
@@ -29,14 +30,14 @@ async def home():
         <body>
             <h1>Ask the AI Model</h1>
             <form method="post" action="/ask" onsubmit="document.getElementById('loader').style.display='block'">
-                <textarea name="prompt" autofocus="autofocus" rows="5" cols="60" placeholder="Enter your question here..." 
+                <textarea name="prompt" autofocus="autofocus" rows="5" cols="60" placeholder="Enter your question here..."
                   onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();this.form.submit();}">
                 </textarea>
                 <br><br>
                 <input type="submit" value="Ask">
             </form>
         </body>
-        
+
     </html>
     """
 
