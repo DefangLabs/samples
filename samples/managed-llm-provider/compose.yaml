@@ -8,7 +8,7 @@ services:
     restart: always
     environment:
       - ENDPOINT_URL=http://llm/api/v1/chat/completions   # endpoint to the Provider Service
-      - MODEL=ai/nova-micro  # LLM model ID used in the Provider Service
+      - MODEL=us.amazon.nova-micro-v1:0  # LLM model ID used in the Provider Service
     healthcheck:
       test: ["CMD", "python3", "-c", "import sys, urllib.request; urllib.request.urlopen(sys.argv[1]).read()", "http://localhost:8000/"]
       interval: 30s
