@@ -5,14 +5,19 @@ import os
 import requests
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import JSONResponse
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Configure basic logging
 logging.basicConfig(level=logging.INFO)
 
+default_openai_base_url = "https://api.openai.com/v1/"
+
 # Set the environment variables for the chat model
-LLM_URL = os.getenv("LLM_URL", "https://api.openai.com/v1/") + "chat/completions"
+LLM_URL = os.getenv("LLM_URL", default_openai_base_url) + "chat/completions"
 # Fallback to OpenAI Model if not set in environment
 MODEL_ID = os.getenv("LLM_MODEL", "gpt-4-turbo")
 
@@ -26,31 +31,28 @@ def get_api_key():
 async def home():
     return """
     <html>
-        <head><title>Ask the AI Model</title></head>
+        <head>
+            <title>Ask the AI Model</title>
+            <script type="text/javascript" src="./static/app.js"></script>
+        </head>
         <body>
             <h1>Ask the AI Model</h1>
-            <form method="post" action="/ask" onsubmit="document.getElementById('loader').style.display='block'">
-                <textarea name="prompt" autofocus="autofocus" rows="5" cols="60" placeholder="Enter your question here..."
-                  onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();this.form.submit();}">
-                </textarea>
+            <form method="post" id="askForm" onsubmit="event.preventDefault(); submitForm(event);">
+                <textarea id="prompt" name="prompt" autofocus="autofocus" rows="5" cols="60" placeholder="Enter your question here..."
+                  onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();this.form.dispatchEvent(new Event('submit', {cancelable:true}));}"></textarea>
                 <br><br>
                 <input type="submit" value="Ask">
             </form>
+            <hr>
+            <h2>Model's Reply:</h2>
+            <p id="reply"></p>
         </body>
-
     </html>
     """
 
 # Handle form submission
-@app.post("/ask", response_class=HTMLResponse)
+@app.post("/ask", response_class=JSONResponse)
 async def ask(prompt: str = Form(...)):
-    headers = {
-        "Content-Type": "application/json"
-    }
-
-    api_key = get_api_key()
-    headers["Authorization"] = f"Bearer {api_key}"
-
     payload = {
         "model": MODEL_ID,
         "messages": [
@@ -59,59 +61,43 @@ async def ask(prompt: str = Form(...)):
         "stream": False
     }
 
+    reply = get_llm_response(payload)
+
+    return {"prompt": prompt, "reply": reply}
+
+def get_llm_response(payload):
+    api_key = get_api_key()
+    request_headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {api_key}"
+    }
+
     # Log request details
     logging.info(f"Sending POST to {LLM_URL}")
-    logging.info(f"Request Headers: {headers}")
+    logging.info(f"Request Headers: {request_headers}")
     logging.info(f"Request Payload: {payload}")
 
     response = None
-    reply = None
     try:
-        response = requests.post(f"{LLM_URL}", headers=headers, data=json.dumps(payload))
+        response = requests.post(f"{LLM_URL}", headers=request_headers, data=json.dumps(payload))
     except requests.exceptions.HTTPError as errh:
-        reply = f"HTTP error:", errh
+        return f"HTTP error:", errh
     except requests.exceptions.ConnectionError as errc:
-        reply = f"Connection error:", errc
+        return f"Connection error:", errc
     except requests.exceptions.Timeout as errt:
-        reply = f"Timeout error:", errt
+        return f"Timeout error:", errt
     except requests.exceptions.RequestException as err:
-        reply = f"Unexpected error:", err
+        return f"Unexpected error:", err
 
-    if response is not None:
-        # logging.info(f"Response Status Code: {response.status_code}")
-        # logging.info(f"Response Headers: {response.headers}")
-        # logging.info(f"Response Body: {response.text}")
-        if response.status_code == 200:
-            data = response.json()
-            try:
-                reply = data["choices"][0]["message"]["content"]
-            except (KeyError, IndexError):
-                reply = "Model returned an unexpected response."
-        elif response.status_code == 400:
-            reply = f"Connect Error: {response.status_code} - {response.text}"
-        elif response.status_code == 500:
-            reply = f"Error from server: {response.status_code} - {response.text}"
-        else:
-            # Log error details
-            reply = f"Error from server: {response.status_code} - {response.text}"
-            logging.error(f"Error from server: {response.status_code} - {response.text}")
+    if response is None:
+        return f"Error: No response from server."
+    if response.status_code == 400:
+        return f"Connect Error: {response.status_code} - {response.text}"
+    if response.status_code == 500:
+        return f"Error from server: {response.status_code} - {response.text}"
 
-    # Return result
-    return f"""
-    <html>
-        <head><title>Ask the AI Model</title></head>
-        <body>
-            <h1>Ask the AI Model</h1>
-            <form method="post" action="/ask" onsubmit="document.getElementById('loader').style.display='block'">
-                <textarea name="prompt" autofocus="autofocus" rows="5" cols="60" placeholder="Enter your question here..."
-                  onkeydown="if(event.key==='Enter'&&!event.shiftKey){{event.preventDefault();this.form.submit();}}"></textarea><br><br>
-                <input type="submit" value="Ask">
-            </form>
-            <h2>You Asked:</h2>
-            <p>{prompt}</p>
-            <hr>
-            <h2>Model's Reply:</h2>
-            <p>{reply}</p>
-        </body>
-    </html>
-    """
+    try:
+        data = response.json()
+        return data["choices"][0]["message"]["content"]
+    except (KeyError, IndexError):
+        return "Model returned an unexpected response."
