@@ -17,6 +17,8 @@ You can configure the `MODEL` and `ENDPOINT_URL` for the LLM separately for loca
 
 Ensure you have enabled model access for the model you intend to use. To do this, you can check your [AWS Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html) or [GCP Vertex AI model access](https://cloud.google.com/vertex-ai/generative-ai/docs/control-model-access).
 
+To learn about available LLM models in Defang, please see our [Model Mapping documentation](https://docs.defang.io/docs/concepts/managed-llms/openai-access-gateway#model-mapping). 
+
 For more about Managed LLMs in Defang, please see our [Managed LLMs documentation](https://docs.defang.io/docs/concepts/managed-llms/managed-language-models).
 
 ### Defang OpenAI Access Gateway
@@ -37,18 +39,6 @@ To run the application locally, you can use the following command:
 
 ```bash
 docker compose -f compose.dev.yaml up --build
-```
-
-## Configuration
-
-For this sample, you will need to provide the following [configuration](https://docs.defang.io/docs/concepts/configuration): 
-
-> Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
-
-### `MODEL`
-The Model ID of the LLM you are using for your application. For example, `anthropic.claude-3-haiku-20240307-v1:0`.
-```bash
-defang config set MODEL
 ```
 
 ## Deployment
