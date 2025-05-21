@@ -6,11 +6,12 @@ This sample application demonstrates using Managed LLMs with a Docker Model Prov
 
 > Note: This version uses a [Docker Model Provider](https://docs.docker.com/compose/how-tos/model-runner/#provider-services) for managing LLMs. For the version with Defang's [OpenAI Access Gateway](https://docs.defang.io/docs/concepts/managed-llms/openai-access-gateway), please see our [*Managed LLM Sample*](https://github.com/DefangLabs/samples/tree/main/samples/managed-llm) instead.
 
-The Docker Model Provider allows users to use AWS Bedrock or Google Cloud Vertex AI models with their application. It is a service in the `compose.yaml` file.
+The Docker Model Provider allows users to run LLMs locally using `docker compose`. It is a service with `provider:` in the `compose.yaml` file.
+Defang will transparently fixup your project to use AWS Bedrock or Google Cloud Vertex AI models during deployment.
 
-You can configure the `MODEL` and `ENDPOINT_URL` for the LLM separately for local development and production environments.
-* The `MODEL` is the LLM Model ID you are using.
-* The `ENDPOINT_URL` is the bridge that provides authenticated access to the LLM model. 
+You can configure the `LLM_MODEL` and `LLM_URL` for the LLM separately for local development and production environments.
+* The `LLM_MODEL` is the LLM Model ID you are using.
+* The `LLM_URL` will be set by Docker and during deployment Defang will provide authenticated access to the LLM model in the cloud.
 
 Ensure you have enabled model access for the model you intend to use. To do this, you can check your [AWS Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html) or [GCP Vertex AI model access](https://cloud.google.com/vertex-ai/generative-ai/docs/control-model-access).
 

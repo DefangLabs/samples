@@ -12,9 +12,9 @@ app = FastAPI()
 logging.basicConfig(level=logging.INFO)
 
 # Set the environment variables for the chat model
-ENDPOINT_URL = os.getenv("ENDPOINT_URL", "https://api.openai.com/v1/chat/completions")
+LLM_URL = os.getenv("LLM_URL", "https://api.openai.com/v1/") + "chat/completions"
 # Fallback to OpenAI Model if not set in environment
-MODEL_ID = os.getenv("MODEL", "gpt-4-turbo")
+MODEL_ID = os.getenv("LLM_MODEL", "gpt-4-turbo")
 
 # Get the API key for the LLM
 # For development, you can use your local API key. In production, the LLM gateway service will override the need for it.
@@ -60,14 +60,14 @@ async def ask(prompt: str = Form(...)):
     }
 
     # Log request details
-    logging.info(f"Sending POST to {ENDPOINT_URL}")
+    logging.info(f"Sending POST to {LLM_URL}")
     logging.info(f"Request Headers: {headers}")
     logging.info(f"Request Payload: {payload}")
 
     response = None
     reply = None
     try:
-        response = requests.post(f"{ENDPOINT_URL}", headers=headers, data=json.dumps(payload))
+        response = requests.post(f"{LLM_URL}", headers=headers, data=json.dumps(payload))
     except requests.exceptions.HTTPError as errh:
         reply = f"HTTP error:", errh
     except requests.exceptions.ConnectionError as errc:
