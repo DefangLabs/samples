@@ -7,7 +7,7 @@ services:
       - "8000:8000"
     restart: always
     environment:
-      - LLM_MODEL # LLM model ID used
+      - LLM_MODEL=default
       # For other models, see https://docs.defang.io/docs/concepts/managed-llms/openai-access-gateway#model-mapping
     healthcheck:
       test: ["CMD", "python3", "-c", "import sys, urllib.request; urllib.request.urlopen(sys.argv[1]).read()", "http://localhost:8000/"]

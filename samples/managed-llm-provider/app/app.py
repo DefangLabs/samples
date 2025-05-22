@@ -19,8 +19,8 @@ default_openai_base_url = "https://api.openai.com/v1/"
 
 # Set the environment variables for the chat model
 LLM_URL = os.getenv("LLM_URL", default_openai_base_url) + "chat/completions"
-# Fallback LLM Model if not set in environment
-MODEL_ID = os.getenv("LLM_MODEL", "default")
+# Fallback to OpenAI Model if not set in environment
+MODEL_ID = os.getenv("LLM_MODEL", "gpt-4-turbo")
 
 # Get the API key for the LLM
 # For development, you have the option to use your local API key. In production, the LLM gateway service will override the need for it.
