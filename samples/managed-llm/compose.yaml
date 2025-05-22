@@ -7,7 +7,7 @@ services:
       - "8000:8000"
     restart: always
     environment:
-      - ENDPOINT_URL=http://llm/api/v1/chat/completions   # endpoint to the gateway service
+      - LLM_URL=http://llm/api/v1/chat/completions   # endpoint to the gateway service
       - MODEL=default  # LLM model ID used for the gateway. 
        # For other models, see https://docs.defang.io/docs/concepts/managed-llms/openai-access-gateway#model-mapping
       - OPENAI_API_KEY=FAKE_TOKEN   # the actual value will be ignored when using the gateway, but it should match the one in the llm service

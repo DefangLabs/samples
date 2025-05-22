@@ -15,10 +15,10 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 # Configure basic logging
 logging.basicConfig(level=logging.INFO)
 
-default_openai_base_url = "https://api.openai.com/v1/"
+default_openai_base_url = "https://api.openai.com/v1/chat/completions"
 
 # Set the environment variables for the chat model
-LLM_URL = os.getenv("LLM_URL", default_openai_base_url) + "chat/completions"
+LLM_URL = os.getenv("LLM_URL", default_openai_base_url)
 # Fallback to OpenAI Model if not set in environment
 MODEL_ID = os.getenv("LLM_MODEL", "gpt-4-turbo")
 
