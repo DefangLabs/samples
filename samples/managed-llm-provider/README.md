@@ -36,7 +36,7 @@ The `x-defang-llm` property on the `llm` service must be set to `true` in order 
 To run the application locally, you can use the following command:
 
 ```bash
-docker compose -f compose.dev.yaml up --build
+docker compose -f compose.local.yaml up --build
 ```
 
 ## Deployment
