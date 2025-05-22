@@ -19,7 +19,7 @@ default_openai_base_url = "https://api.openai.com/v1/"
 
 # Set the environment variables for the chat model
 LLM_URL = os.getenv("LLM_URL", default_openai_base_url) + "chat/completions"
-# Fallback to OpenAI Model if not set in environment
+# Fallback LLM Model if not set in environment
 MODEL_ID = os.getenv("LLM_MODEL", "default")
 
 # Get the API key for the LLM
