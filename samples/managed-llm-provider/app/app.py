@@ -23,7 +23,7 @@ LLM_URL = os.getenv("LLM_URL", default_openai_base_url) + "chat/completions"
 MODEL_ID = os.getenv("LLM_MODEL", "default")
 
 # Get the API key for the LLM
-# For development, you can use your local API key. In production, the LLM gateway service will override the need for it.
+# For development, you have the option to use your local API key. In production, the LLM gateway service will override the need for it.
 def get_api_key():
     return os.getenv("OPENAI_API_KEY", "")
 
