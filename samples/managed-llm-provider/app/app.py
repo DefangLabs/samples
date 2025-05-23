@@ -55,21 +55,15 @@ def get_llm_response(payload):
     }
 
     # Log request details
-    logging.info(f"Sending POST to {LLM_URL}")
-    logging.info(f"Request Headers: {request_headers}")
-    logging.info(f"Request Payload: {payload}")
+    logging.debug(f"Sending POST to {LLM_URL}")
+    logging.debug(f"Request Headers: {request_headers}")
+    logging.debug(f"Request Payload: {payload}")
 
     response = None
     try:
         response = requests.post(f"{LLM_URL}", headers=request_headers, data=json.dumps(payload))
-    except requests.exceptions.HTTPError as errh:
-        return f"HTTP error:", errh
-    except requests.exceptions.ConnectionError as errc:
-        return f"Connection error:", errc
-    except requests.exceptions.Timeout as errt:
-        return f"Timeout error:", errt
     except requests.exceptions.RequestException as err:
-        return f"Unexpected error:", err
+        return f"Error:", err.response.status_code, err.response.reason
 
     if response is None:
         return f"Error: No response from server."
