@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  postgres:
+    extends:
+      service: postgres
+      file: compose.yaml
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    extends:
+      service: redis
+      file: compose.yaml
+
+  api:
+    extends:
+      service: api
+      file: compose.yaml
+    command: ["./dev.sh"]
+    volumes:
+      - ./api:/app
+
+  worker:
+    extends:
+      service: worker
+      file: compose.yaml
+    volumes:
+      - ./api:/app
+    command: sh -c "pip install watchdog && watchmedo auto-restart --directory=./ --pattern=*.py --recursive -- celery -A config worker -l info"
+    environment:
+      LLM_MODEL: ai/gemma3:1B-Q4_K_M
+      LLM_ENDPOINT: http://model-runner.docker.internal/engines/llama.cpp/v1
+
+  ui:
+    extends:
+      service: ui
+      file: compose.yaml
+    volumes:
+      - ./ui:/app
+      - /app/node_modules
+    command: ["npm", "run", "dev"]
+    environment:
+      NODE_ENV: development
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+
+  llm:
+    extends:
+      file: compose.yaml
+      service: llm
+
+volumes:
+  pgdata:
