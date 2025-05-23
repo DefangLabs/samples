@@ -19,6 +19,9 @@ services:
       start_period: 5s
     depends_on:
       - llm
+    networks:
+      - default
+      - private
 
 # Defang OpenAI Access Gateway
 # This service is used to route requests to the LLM API
@@ -30,8 +33,14 @@ services:
         published: 80
         protocol: tcp
         mode: host
+    networks:
+      - private
     environment:
       - OPENAI_API_KEY=FAKE_TOKEN # this value must match the one in the app service
       # if using GCP for BYOC deployment, add these environment variables:
       # - GCP_PROJECT_ID=${GCP_PROJECT_ID}
       # - GCP_REGION=${GCP_REGION}
+
+networks:
+  default:
+  private:
