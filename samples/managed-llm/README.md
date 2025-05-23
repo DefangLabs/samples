@@ -11,8 +11,8 @@ Using the [Defang OpenAI Access Gateway](#defang-openai-access-gateway), the fea
 
 This allows switching from OpenAI to the Managed LLMs on supported cloud platforms without modifying your application code.
 
-You can configure the `MODEL` and `LLM_URL` for the LLM separately for local development and production environments.
-* The `MODEL` is the LLM Model ID you are using.
+You can configure the `LLM_MODEL` and `LLM_URL` for the LLM separately for local development and production environments.
+* The `LLM_MODEL` is the LLM Model ID you are using.
 * The `LLM_URL` is the bridge that provides authenticated access to the LLM model.
 
 Ensure you have enabled model access for the model you intend to use. To do this, you can check your [AWS Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html) or [GCP Vertex AI model access](https://cloud.google.com/vertex-ai/generative-ai/docs/control-model-access).
