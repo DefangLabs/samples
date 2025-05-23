@@ -19,6 +19,7 @@ services:
       interval: 1m
     environment:
       - HF_TOKEN
+
   ui:
     restart: unless-stopped
     build:
@@ -39,3 +40,5 @@ services:
       retries: 10
     environment:
       - OPENAI_BASE_URL=http://mistral:8000/v1/
+    depends_on:
+      - mistral
