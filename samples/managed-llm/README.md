@@ -11,19 +11,19 @@ Using the [Defang OpenAI Access Gateway](#defang-openai-access-gateway), the fea
 
 This allows switching from OpenAI to the Managed LLMs on supported cloud platforms without modifying your application code.
 
-You can configure the `MODEL` and `ENDPOINT_URL` for the LLM separately for local development and production environments.
+You can configure the `MODEL` and `LLM_URL` for the LLM separately for local development and production environments.
 * The `MODEL` is the LLM Model ID you are using.
-* The `ENDPOINT_URL` is the bridge that provides authenticated access to the LLM model. 
+* The `LLM_URL` is the bridge that provides authenticated access to the LLM model.
 
 Ensure you have enabled model access for the model you intend to use. To do this, you can check your [AWS Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html) or [GCP Vertex AI model access](https://cloud.google.com/vertex-ai/generative-ai/docs/control-model-access).
 
-To learn about available LLM models in Defang, please see our [Model Mapping documentation](https://docs.defang.io/docs/concepts/managed-llms/openai-access-gateway#model-mapping). 
+To learn about available LLM models in Defang, please see our [Model Mapping documentation](https://docs.defang.io/docs/concepts/managed-llms/openai-access-gateway#model-mapping).
 
 For more about Managed LLMs in Defang, please see our [Managed LLMs documentation](https://docs.defang.io/docs/concepts/managed-llms/managed-language-models).
 
 ### Defang OpenAI Access Gateway
 
-In the `compose.yaml` file, the `llm` service is used to route requests to the LLM API model. This is known as the [Defang OpenAI Access Gateway](https://docs.defang.io/docs/concepts/managed-llms/openai-access-gateway). 
+In the `compose.yaml` file, the `llm` service is used to route requests to the LLM API model. This is known as the [Defang OpenAI Access Gateway](https://docs.defang.io/docs/concepts/managed-llms/openai-access-gateway).
 
 The `x-defang-llm` property on the `llm` service must be set to `true` in order to use the OpenAI Access Gateway when deploying with Defang.
 
@@ -38,7 +38,7 @@ The `x-defang-llm` property on the `llm` service must be set to `true` in order 
 To run the application locally, you can use the following command:
 
 ```bash
-docker compose -f compose.dev.yaml up --build
+docker compose -f compose.local.yaml up --build
 ```
 
 ## Deployment

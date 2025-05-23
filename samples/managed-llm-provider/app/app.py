@@ -3,10 +3,11 @@ import logging
 import os
 
 import requests
-from fastapi import FastAPI, Form, Request
+from fastapi import FastAPI, Form
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -22,33 +23,14 @@ LLM_URL = os.getenv("LLM_URL", default_openai_base_url) + "chat/completions"
 MODEL_ID = os.getenv("LLM_MODEL", "gpt-4-turbo")
 
 # Get the API key for the LLM
-# For development, you can use your local API key. In production, the LLM gateway service will override the need for it.
+# For development, you have the option to use your local API key. In production, the LLM gateway service will override the need for it.
 def get_api_key():
     return os.getenv("OPENAI_API_KEY", "")
 
 # Home page form
 @app.get("/", response_class=HTMLResponse)
 async def home():
-    return """
-    <html>
-        <head>
-            <title>Ask the AI Model</title>
-            <script type="text/javascript" src="./static/app.js"></script>
-        </head>
-        <body>
-            <h1>Ask the AI Model</h1>
-            <form method="post" id="askForm" onsubmit="event.preventDefault(); submitForm(event);">
-                <textarea id="prompt" name="prompt" autofocus="autofocus" rows="5" cols="60" placeholder="Enter your question here..."
-                  onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();this.form.dispatchEvent(new Event('submit', {cancelable:true}));}"></textarea>
-                <br><br>
-                <input type="submit" value="Ask">
-            </form>
-            <hr>
-            <h2>Model's Reply:</h2>
-            <p id="reply"></p>
-        </body>
-    </html>
-    """
+    return FileResponse("static/index.html", media_type="text/html")
 
 # Handle form submission
 @app.post("/ask", response_class=JSONResponse)
