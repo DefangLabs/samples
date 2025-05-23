@@ -1,0 +1,10 @@
+Django>=4.2,<5.0
+daphne>=4.0,<5.0
+channels>=4.0,<5.0
+channels-redis>=4.0,<5.0
+whitenoise>=6.0,<7.0
+celery>=5.3,<6.0
+redis>=4.5,<5.0
+psycopg[binary]>=3.1,<4.0
+crewai
+Twisted[http2,tls]
