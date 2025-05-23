@@ -55,9 +55,9 @@ def get_llm_response(payload):
     }
 
     # Log request details
-    logging.info(f"Sending POST to {LLM_URL}")
-    logging.info(f"Request Headers: {request_headers}")
-    logging.info(f"Request Payload: {payload}")
+    logging.debug(f"Sending POST to {LLM_URL}")
+    logging.debug(f"Request Headers: {request_headers}")
+    logging.debug(f"Request Payload: {payload}")
 
     response = None
     try:
