@@ -1,0 +1,45 @@
+services:
+  db:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - mode: host
+        target: 5432
+        published: 5432
+
+  todo_list:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      args:
+        - REACT_APP_API_URL=http://localhost:3010
+    ports:
+      - mode: ingress
+        target: 3000
+        published: 3000
+    volumes:
+      - "./client:/code"
+      - /code/node_modules
+    depends_on:
+      - server
+
+  server:
+    restart: unless-stopped
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - target: 3010
+        mode: ingress
+        published: 3010
+    environment:
+    - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
+    volumes:
+      - "./server:/app"
+      - /app/node_modules
+    depends_on:
+      - db
