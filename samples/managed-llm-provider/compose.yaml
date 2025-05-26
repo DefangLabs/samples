@@ -18,6 +18,11 @@ services:
       start_period: 5s
     depends_on:
       - llm
+    deploy:
+      resources:
+        reservations:
+          cpus: 0.25
+          memory: 512MB
 
 # Provider Service
 # This service is used to route requests to the LLM API
@@ -27,3 +32,8 @@ services:
       options:
         model: ai/smollm2
     x-defang-llm: true
+    deploy:
+      resources:
+        reservations:
+          cpus: 0.25
+          memory: 512MB
