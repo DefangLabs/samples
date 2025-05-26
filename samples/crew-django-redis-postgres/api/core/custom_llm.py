@@ -3,27 +3,32 @@ from typing import Any, Dict, List, Optional, Union
 from crewai.llms.base_llm import BaseLLM
 import os
 
-LLM_MODEL = os.getenv("LLM_MODEL", "ai/smollm2")
-LLM_ENDPOINT = os.getenv("LLM_ENDPOINT", "http://model-runner.docker.internal/engines/llama.cpp/v1")
+LLM_MODEL = os.getenv("LLM_MODEL")
+LLM_URL = os.getenv("LLM_URL")
 
 
 class DockerRunnerLLM(BaseLLM):
     """
     Custom LLM that uses the OpenAI-compatible API.
-    Implements CrewAI's BaseLLM interface.
+    Implements CrewAI's BaseLLM interface. We create this because the 
+    Docker Model Runner is not yet supported by CrewAI, because LiteLLM doesn't
+    recognize the format in which the Docker Model Runner names the models.
     """
-    def __init__(self, model: str = LLM_MODEL, endpoint: str = LLM_ENDPOINT, api_key: str = "not-needed"):
+    def __init__(self, model: str = LLM_MODEL, url: str = LLM_URL, api_key: str = "not-needed"):
         super().__init__(model=model)
         if not api_key or not isinstance(api_key, str):
             raise ValueError("Invalid API key: must be a non-empty string")
-        if not endpoint or not isinstance(endpoint, str):
-            raise ValueError("Invalid endpoint URL: must be a non-empty string")
+        if not url or not isinstance(url, str):
+            raise ValueError("Invalid URL: must be a non-empty string")
+        if not model or not isinstance(model, str):
+            raise ValueError("Invalid model: must be a non-empty string")
+
         self.api_key = api_key
-        self.endpoint = endpoint
+        self.url = url
         self.model = model
         self.stop = []  # Customize stop words if needed
-        # OpenAI SDK client with custom endpoint
-        self.client = OpenAI(base_url=self.endpoint, api_key=self.api_key)
+        # OpenAI SDK client with custom url
+        self.client = OpenAI(base_url=self.url, api_key=self.api_key)
 
     def call(
         self,
@@ -46,7 +51,7 @@ class DockerRunnerLLM(BaseLLM):
                 kwargs["tools"] = tools
             if self.stop:
                 kwargs["stop"] = self.stop
-            # The OpenAI SDK will use the custom endpoint and api_key
+            # The OpenAI SDK will use the custom url and api_key
             response = self.client.chat.completions.create(**kwargs)
             content = response.choices[0].message.content
             return content

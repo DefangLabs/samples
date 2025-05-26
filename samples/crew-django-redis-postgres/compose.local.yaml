@@ -1,10 +1,10 @@
-version: '3.8'
-
 services:
   postgres:
     extends:
       service: postgres
       file: compose.yaml
+    environment:
+      POSTGRES_PASSWORD: password
     volumes:
       - pgdata:/var/lib/postgresql/data
 
@@ -18,6 +18,9 @@ services:
       service: api
       file: compose.yaml
     command: ["./dev.sh"]
+    environment:
+      DATABASE_URL: postgres://user:password@postgres:5432/app_db
+      DJANGO_SECRET_KEY:
     volumes:
       - ./api:/app
 
@@ -29,8 +32,8 @@ services:
       - ./api:/app
     command: sh -c "pip install watchdog && watchmedo auto-restart --directory=./ --pattern=*.py --recursive -- celery -A config worker -l info"
     environment:
-      LLM_MODEL: ai/gemma3:1B-Q4_K_M
-      LLM_ENDPOINT: http://model-runner.docker.internal/engines/llama.cpp/v1
+      DATABASE_URL: postgres://user:password@postgres:5432/app_db
+      DJANGO_SECRET_KEY:
 
   ui:
     extends:
@@ -48,6 +51,11 @@ services:
     extends:
       file: compose.yaml
       service: llm
+
+  embedding:
+    extends:
+      file: compose.yaml
+      service: embedding
 
 volumes:
   pgdata:

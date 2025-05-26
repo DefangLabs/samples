@@ -69,15 +69,36 @@ export default function Home() {
   return (
     <div className="flex flex-col gap-4 items-center min-h-screen min-w-screen justify-center">
       <form onSubmit={handleSubmit} className="w-full max-w-md flex flex-col gap-2 border border-gray-200 dark:border-gray-800 rounded-lg p-4 bg-white dark:bg-black/40 mt-4">
-        <div className="flex gap-2 items-center">
-          <input
-            type="text"
+        {/* Defang logo and documentation link in two-column layout */}
+        <div className="flex flex-row items-center justify-between mb-4 w-full gap-4">
+          <div className="flex-1 flex justify-center items-center">
+            <img
+              src="https://raw.githubusercontent.com/DefangLabs/defang-assets/refs/heads/main/images/logos/logos-with-workmarks/title/defang-title-dark-colour-large.png"
+              alt="Defang Logo"
+              className="max-w-[200px] w-full h-auto"
+            />
+          </div>
+          <div className="flex-1 flex justify-center items-center">
+            <a
+              href="https://docs.defang.io/docs/intro"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline text-base text-center"
+            >
+              Defang Documentation
+            </a>
+          </div>
+        </div>
+        <div className="flex flex-col gap-2">
+          <textarea
             value={input}
             onChange={e => setInput(e.target.value)}
-            placeholder="Type a message to send over WebSocket"
-            className="flex-1 px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-400 dark:bg-black/60 dark:text-white"
-            aria-label="WebSocket Message"
+            placeholder="Paste or type your text here to be summarized..."
+            className="flex-1 px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-400 dark:bg-black/60 dark:text-white min-h-[100px] resize-y"
+            aria-label="Text to summarize"
             disabled={!connected}
+            rows={5}
+            required
           />
           <button
             type="submit"

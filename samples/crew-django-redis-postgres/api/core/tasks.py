@@ -1,44 +1,87 @@
 from celery import shared_task
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-import time
 import crewai
+import openai
+import os
+from .models import Summary
+
+from pgvector.django import CosineDistance
 
 from .custom_llm import DockerRunnerLLM
 
+embedding_client = openai.Client(
+    api_key="not-needed",
+    base_url=os.getenv("EMBEDDING_URL"),
+)
 
-def crewai_hello(text: str):
+
+def crewai_summary(text: str):
+    embedding = embedding_client.embeddings.create(
+        model="ai/mxbai-embed-large",
+        input=text,
+    )
+
+    summaries = Summary.objects.annotate(
+        distance=CosineDistance('embedding', embedding.data[0].embedding)
+    ).filter(distance__lt=0.2).order_by('distance')
+
+    for summary in summaries:
+        print('@@ Summary Distance')
+        print(summary.distance)
+
+    if summaries.exists():
+        summary = summaries.first()
+        return summary.text, "Found semantically very similar summary."
+    
     llm = DockerRunnerLLM()
 
     # Define the agent
-    echo_agent = crewai.Agent(
+    summary_agent = crewai.Agent(
         role="Summarizer",
         goal="Summarize the input I receive.",
-        backstory="An agent designed to summarize any input it receives.",
+        backstory="You are an expert at summarizing text in a single sentence. You have an excellent reputation for your ability to do so and never go overboard.",
         llm=llm,
     )
 
     # Define the task
-    echo_task = crewai.Task(
+    summary_task = crewai.Task(
         description=f"Summarize the following text: '{text}'",
-        agent=echo_agent,
-        expected_output=f"The summary of '{text}'.",
+        agent=summary_agent,
+        expected_output=f"The summary of '{text}' in one sentence.",
     )
 
     # Create the crew with the agent and task
     crew = crewai.Crew(
-        agents=[echo_agent],
-        tasks=[echo_task],
+        agents=[summary_agent],
+        tasks=[summary_task],
     )
 
     # Execute the task
     result = crew.kickoff()
-    return result
+    summary = result.raw
+
+    summary_embedding = embedding_client.embeddings.create(
+        model="ai/mxbai-embed-large",
+        input=summary,
+    ).data[0].embedding
+
+    try:
+        Summary.objects.create(
+            text=summary,
+            embedding=summary_embedding,
+        )
+    except Exception as e:
+        print(e)
+
+    return summary, None
 
 @shared_task
-def crewai_hello_task(text: str, group_name: str):
+def crewai_summary_task(text: str, group_name: str):
     channel_layer = get_channel_layer()
     # Simulate streaming by sending two messages
-    async_to_sync(channel_layer.group_send)(group_name, {"type": "stream_message", "message": f"Started processing: {text}"})
-    result = crewai_hello(text)
-    async_to_sync(channel_layer.group_send)(group_name, {"type": "stream_message", "message": result.raw})
+    async_to_sync(channel_layer.group_send)(group_name, {"type": "stream_message", "message": f"Started processing: {text[:10]}...", "status": "processing"})
+    result, message = crewai_summary(text)
+    if message:
+        async_to_sync(channel_layer.group_send)(group_name, {"type": "stream_message", "message": message, "status": "info"})
+    async_to_sync(channel_layer.group_send)(group_name, {"type": "stream_message", "message": result, "status": "done"})
