@@ -7,6 +7,7 @@ services:
       - "8000:8000"
     restart: always
     environment:
+      - LLM_URL=http://llm/api/v1/
       - LLM_MODEL=default
       # For other models, see https://docs.defang.io/docs/concepts/managed-llms/openai-access-gateway#model-mapping
     healthcheck:
