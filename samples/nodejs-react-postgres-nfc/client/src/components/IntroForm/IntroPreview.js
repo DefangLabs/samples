@@ -28,6 +28,35 @@ const IntroPreview = ({ formData }) => {
 
   // Check if any social media links are available
   const hasSocialLinks = linkedinUrl || githubUrl || twitterUrl || instagramUrl || facebookUrl;
+  
+  // Helper function to sanitize URLs and remove localhost references
+  const sanitizeUrl = (url) => {
+    if (!url) return '';
+    
+    // Clean up URL
+    let cleanUrl = url.trim();
+    
+    // Remove localhost references
+    if (cleanUrl.includes('localhost') || cleanUrl.includes('127.0.0.1')) {
+      const domains = ['github.com', 'linkedin.com', 'twitter.com', 'x.com', 'instagram.com', 'facebook.com'];
+      for (const domain of domains) {
+        if (cleanUrl.includes(domain)) {
+          const parts = cleanUrl.split(domain);
+          if (parts.length > 1) {
+            cleanUrl = domain + parts[1];
+            break;
+          }
+        }
+      }
+    }
+    
+    // Add https:// if needed
+    if (!/^https?:\/\//i.test(cleanUrl)) {
+      return `https://${cleanUrl}`;
+    }
+    
+    return cleanUrl;
+  };
 
   return (
     <Paper
@@ -61,7 +90,7 @@ const IntroPreview = ({ formData }) => {
           variant="h5" 
           gutterBottom
           component="a"
-          href={personalWebsiteUrl}
+          href={sanitizeUrl(personalWebsiteUrl)}
           target="_blank"
           rel="noopener"
           sx={{ 
@@ -133,7 +162,7 @@ const IntroPreview = ({ formData }) => {
               {companyUrl ? (
                 <Box 
                   component="a" 
-                  href={companyUrl}
+                  href={sanitizeUrl(companyUrl)}
                   target="_blank"
                   rel="noopener"
                   sx={{ 
@@ -183,7 +212,7 @@ const IntroPreview = ({ formData }) => {
                 variant="outlined" 
                 size="small"
                 component="a" 
-                href={personalWebsiteUrl} 
+                href={sanitizeUrl(personalWebsiteUrl)} 
                 target="_blank" 
                 rel="noopener"
                 startIcon={<LanguageIcon fontSize="small" />}
@@ -207,7 +236,7 @@ const IntroPreview = ({ formData }) => {
                 variant="outlined" 
                 size="small"
                 component="a" 
-                href={meetingUrl} 
+                href={sanitizeUrl(meetingUrl)} 
                 target="_blank" 
                 rel="noopener"
                 startIcon={<EventIcon fontSize="small" />}
@@ -231,7 +260,7 @@ const IntroPreview = ({ formData }) => {
                 variant="outlined" 
                 size="small"
                 component="a" 
-                href={websiteUrl} 
+                href={sanitizeUrl(websiteUrl)} 
                 target="_blank" 
                 rel="noopener"
                 startIcon={<LanguageIcon fontSize="small" />}
@@ -262,31 +291,31 @@ const IntroPreview = ({ formData }) => {
             justifyContent="center" 
           >
             {linkedinUrl && (
-              <IconButton href={linkedinUrl} target="_blank" rel="noopener">
+              <IconButton href={sanitizeUrl(linkedinUrl)} target="_blank" rel="noopener">
                 <LinkedInIcon />
               </IconButton>
             )}
             
             {githubUrl && (
-              <IconButton href={githubUrl} target="_blank" rel="noopener">
+              <IconButton href={sanitizeUrl(githubUrl)} target="_blank" rel="noopener">
                 <GitHubIcon />
               </IconButton>
             )}
             
             {twitterUrl && (
-              <IconButton href={twitterUrl} target="_blank" rel="noopener">
+              <IconButton href={sanitizeUrl(twitterUrl)} target="_blank" rel="noopener">
                 <TwitterIcon />
               </IconButton>
             )}
             
             {instagramUrl && (
-              <IconButton href={instagramUrl} target="_blank" rel="noopener">
+              <IconButton href={sanitizeUrl(instagramUrl)} target="_blank" rel="noopener">
                 <InstagramIcon />
               </IconButton>
             )}
 
             {facebookUrl && (
-              <IconButton href={facebookUrl} target="_blank" rel="noopener">
+              <IconButton href={sanitizeUrl(facebookUrl)} target="_blank" rel="noopener">
                 <FacebookIcon />
               </IconButton>
             )}

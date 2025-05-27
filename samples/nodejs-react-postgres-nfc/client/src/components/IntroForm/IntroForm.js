@@ -20,7 +20,6 @@ import IntroPreview from './IntroPreview';
 
 const IntroForm = () => {
   const [formData, setFormData] = useState({
-    emoji: '👋',
     name: '',
     title: '', // keeping this for backward compatibility with preview
     tagline: '', // this will map to headline
@@ -39,10 +38,22 @@ const IntroForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    
+    // Special handling for URL fields to ensure proper formatting
+    if (['meetingUrl', 'personalWebsiteUrl', 'websiteUrl', 'companyUrl'].includes(name)) {
+      // If user is typing a URL and it doesn't start with http:// or https://, 
+      // we don't immediately add the prefix while they're typing
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    } else {
+      // For non-URL fields, just update the value normally
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   // Helper function to format URLs properly
@@ -51,6 +62,20 @@ const IntroForm = () => {
     
     // Clean up URL - trim whitespace
     let cleanUrl = url.trim();
+    
+    // Remove any localhost references
+    if (cleanUrl.includes('localhost') || cleanUrl.includes('127.0.0.1')) {
+      const domains = ['github.com', 'linkedin.com', 'twitter.com', 'x.com', 'instagram.com', 'facebook.com'];
+      for (const domain of domains) {
+        if (cleanUrl.includes(domain)) {
+          const parts = cleanUrl.split(domain);
+          if (parts.length > 1) {
+            cleanUrl = domain + parts[1];
+            break;
+          }
+        }
+      }
+    }
     
     // If URL doesn't start with http:// or https://, add https://
     if (!/^https?:\/\//i.test(cleanUrl)) {
@@ -249,6 +274,12 @@ const IntroForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
+    // Make sure to format all URL fields with proper https:// prefixes
+    const formattedMeetingUrl = formatUrl(formData.meetingUrl);
+    const formattedPersonalWebsiteUrl = formatUrl(formData.personalWebsiteUrl);
+    const formattedWebsiteUrl = formatUrl(formData.websiteUrl);
+    const formattedCompanyUrl = formatUrl(formData.companyUrl);
+    
     // Format data for API submission
     const apiData = {
       card_name: formData.title || formData.name,
@@ -256,10 +287,10 @@ const IntroForm = () => {
       headline: formData.tagline,
       bio: formData.bio,
       company_name: formData.companyName,
-      company_url: formatUrl(formData.companyUrl),
-      meeting_link: formatUrl(formData.meetingUrl),
-      personal_website: formatUrl(formData.personalWebsiteUrl),
-      additional_urls: formatUrl(formData.websiteUrl),
+      company_url: formattedCompanyUrl,
+      meeting_link: formattedMeetingUrl,
+      personal_website: formattedPersonalWebsiteUrl,
+      additional_urls: formattedWebsiteUrl,
       social_media: {
         linkedin: formatSocialUrl(formData.linkedinUrl, 'linkedin'),
         github: formatSocialUrl(formData.githubUrl, 'github'),
