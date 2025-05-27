@@ -9,7 +9,8 @@ import {
   Container,
   InputAdornment,
   Snackbar,
-  Alert
+  Alert,
+  Divider
 } from '@mui/material';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import GitHubIcon from '@mui/icons-material/GitHub';
@@ -20,6 +21,7 @@ import EventIcon from '@mui/icons-material/Event';
 import LanguageIcon from '@mui/icons-material/Language';
 import PaletteIcon from '@mui/icons-material/Palette';
 import ColorPicker from './ColorPicker';
+import AvatarUpload from './AvatarUpload';
 import IntroPreview from './IntroPreview';
 
 const IntroForm = () => {
@@ -43,7 +45,9 @@ const IntroForm = () => {
     meetingUrl: '', // this will map to meeting_link
     personalWebsiteUrl: '', // this will map to personal_website (new field)
     websiteUrl: '', // this will map to additional_urls
-    backgroundColor: '#ffffff' // New field for card background color
+    backgroundColor: '#ffffff', // New field for card background color
+    avatarBackgroundColor: '#d2e961', // New field for avatar background color circle
+    avatar: '' // New field for profile avatar (stores base64 image data)
   });
 
   const handleChange = (e) => {
@@ -290,6 +294,20 @@ const IntroForm = () => {
     const formattedWebsiteUrl = formatUrl(formData.websiteUrl);
     const formattedCompanyUrl = formatUrl(formData.companyUrl);
     
+    // Check if the avatar image data is too large (over 5MB)
+    let avatarData = formData.avatar;
+    if (avatarData && avatarData.length > 5 * 1024 * 1024) {
+      console.warn('Avatar image is too large, compressing...');
+      // For extremely large images, we might need to skip them
+      if (avatarData.length > 10 * 1024 * 1024) {
+        console.error('Avatar image exceeds maximum size limit');
+        setSnackbarMessage('Avatar image is too large. Please use a smaller image (< 5MB).');
+        setSnackbarSeverity('error');
+        setOpenSnackbar(true);
+        return;
+      }
+    }
+    
     // Format data for API submission
     const apiData = {
       card_name: formData.cardName || formData.name,
@@ -302,6 +320,8 @@ const IntroForm = () => {
       personal_website: formattedPersonalWebsiteUrl,
       additional_urls: formattedWebsiteUrl,
       background_color: formData.backgroundColor, // Include background color
+      avatar_bg_color: formData.avatarBackgroundColor, // Include avatar background color
+      avatar: avatarData, // Include avatar image data
       social_media: {
         linkedin: formatSocialUrl(formData.linkedinUrl, 'linkedin'),
         github: formatSocialUrl(formData.githubUrl, 'github'),
@@ -327,9 +347,6 @@ const IntroForm = () => {
     })
     .then(data => {
       console.log('Success:', data);
-      setSnackbarMessage('Card created successfully!');
-      setSnackbarSeverity('success');
-      setOpenSnackbar(true);
       
       // Reset all form fields to their initial state
       setFormData({
@@ -348,8 +365,16 @@ const IntroForm = () => {
         meetingUrl: '',
         personalWebsiteUrl: '',
         websiteUrl: '',
-        backgroundColor: '#ffffff' // Reset background color to default
+        backgroundColor: '#ffffff', // Reset background color to default
+        avatarBackgroundColor: '#d2e961', // Reset avatar background color to default
+        avatar: '' // Reset avatar to default (empty)
       });
+      
+      // Show success message
+      const hasAvatar = apiData.avatar ? ' with profile photo' : '';
+      setSnackbarMessage(`Card "${apiData.card_name}"${hasAvatar} created successfully!`);
+      setSnackbarSeverity('success');
+      setOpenSnackbar(true);
     })
     .catch(error => {
       console.error('Error submitting form:', error);
@@ -385,23 +410,49 @@ const IntroForm = () => {
 
               <Box mb={2}>
                 <Typography variant="subtitle1" gutterBottom>
-                  Name *
+                  Profile
                 </Typography>
-                <TextField
-                  fullWidth
-                  required
-                  name="name"
-                  value={formData.name}
-                  onChange={(e) => {
-                    handleChange(e);
-                    setFormData(prev => ({
-                      ...prev,
-                      title: e.target.value // Set title to name for backward compatibility
-                    }));
-                  }}
-                  placeholder="Your Full Name"
-                  inputProps={{ maxLength: 100 }}
-                />
+                <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                  <Box sx={{ flexGrow: 1 }}>
+                    <TextField
+                      fullWidth
+                      required
+                      name="name"
+                      label="Name *"
+                      value={formData.name}
+                      onChange={(e) => {
+                        handleChange(e);
+                        setFormData(prev => ({
+                          ...prev,
+                          title: e.target.value // Set title to name for backward compatibility
+                        }));
+                      }}
+                      placeholder="Your Full Name"
+                      inputProps={{ maxLength: 100 }}
+                    />
+                  </Box>
+                  <AvatarUpload 
+                    avatarImage={formData.avatar}
+                    avatarBgColor={formData.avatarBackgroundColor}
+                    onAvatarChange={(imageData) => {
+                      console.log('Avatar changed, updating form data');
+                      setFormData(prev => ({ ...prev, avatar: imageData }));
+                    }}
+                    onAvatarRemove={() => setFormData(prev => ({ ...prev, avatar: '' }))}
+                  />
+                </Box>
+                
+                {formData.avatar && (
+                  <Box mt={1} mb={2} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+                    <Typography variant="caption" color="text.secondary" sx={{ mr: 2, fontSize: '12px' }}>
+                      Photo Background:
+                    </Typography>
+                    <ColorPicker 
+                      color={formData.avatarBackgroundColor}
+                      onChange={(color) => setFormData(prev => ({...prev, avatarBackgroundColor: color}))}
+                    />
+                  </Box>
+                )}
               </Box>
 
               <Box mb={2}>
