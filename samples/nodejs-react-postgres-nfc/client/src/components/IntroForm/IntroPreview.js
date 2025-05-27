@@ -32,6 +32,14 @@ const IntroPreview = ({ formData }) => {
   // Check if any social media links are available
   const hasSocialLinks = linkedinUrl || githubUrl || twitterUrl || instagramUrl || facebookUrl;
   
+  // Determine primary profile link in priority order: LinkedIn > Personal Website > Company
+  const getPrimaryProfileLink = () => {
+    if (linkedinUrl) return sanitizeUrl(linkedinUrl);
+    if (personalWebsiteUrl) return sanitizeUrl(personalWebsiteUrl);
+    if (companyUrl) return sanitizeUrl(companyUrl);
+    return null;
+  };
+  
   // Helper function to sanitize URLs and remove localhost references
   const sanitizeUrl = (url) => {
     if (!url) return '';
@@ -113,15 +121,43 @@ const IntroPreview = ({ formData }) => {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-            <Avatar 
-              src={avatar}
-              alt={title || 'Profile'}
-              sx={{ 
-                width: 166, 
-                height: 166,
-                border: avatarBackgroundColor === 'transparent' ? 'none' : '3px solid rgba(255,255,255,0.85)',
-              }}
-            />
+            {getPrimaryProfileLink() ? (
+              <Box
+                component="a"
+                href={getPrimaryProfileLink()}
+                target="_blank"
+                rel="noopener"
+                sx={{
+                  display: 'block',
+                  borderRadius: '50%',
+                  cursor: 'pointer',
+                  transition: 'transform 0.2s ease',
+                  '&:hover': {
+                    transform: 'scale(1.02)',
+                  }
+                }}
+              >
+                <Avatar 
+                  src={avatar}
+                  alt={title || 'Profile'}
+                  sx={{ 
+                    width: 166, 
+                    height: 166,
+                    border: avatarBackgroundColor === 'transparent' ? 'none' : '3px solid rgba(255,255,255,0.85)',
+                  }}
+                />
+              </Box>
+            ) : (
+              <Avatar 
+                src={avatar}
+                alt={title || 'Profile'}
+                sx={{ 
+                  width: 166, 
+                  height: 166,
+                  border: avatarBackgroundColor === 'transparent' ? 'none' : '3px solid rgba(255,255,255,0.85)',
+                }}
+              />
+            )}
           </Box>
         </Box>
       )}
