@@ -98,25 +98,26 @@ const IntroPreview = ({ formData }) => {
         <Box sx={{ 
           display: 'flex', 
           justifyContent: 'center', 
-          mb: 3, 
-          mt: 3
+          mb: 4, 
+          mt: 4
         }}>
           <Box sx={{
-            width: 100,
-            height: 100,
+            width: 180,
+            height: 180,
             borderRadius: '50%',
             backgroundColor: avatarBackgroundColor || '#d2e961', // Use the selected avatar background color
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.12)'
           }}>
             <Avatar 
               src={avatar}
               alt={title || 'Profile'}
               sx={{ 
-                width: 90, 
-                height: 90,
-                border: '2px solid #fff',
+                width: 170, 
+                height: 170,
+                border: '3px solid #fff',
               }}
             />
           </Box>

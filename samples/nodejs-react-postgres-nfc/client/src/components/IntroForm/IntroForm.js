@@ -412,8 +412,8 @@ const IntroForm = () => {
                 <Typography variant="subtitle1" gutterBottom>
                   Profile
                 </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
-                  <Box sx={{ flexGrow: 1 }}>
+                <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: 'center', gap: 3 }}>
+                  <Box sx={{ flexGrow: 1, width: '100%' }}>
                     <TextField
                       fullWidth
                       required

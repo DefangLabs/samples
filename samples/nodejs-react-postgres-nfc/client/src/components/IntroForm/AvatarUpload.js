@@ -92,8 +92,8 @@ const AvatarUpload = ({ avatarImage, avatarBgColor = '#d2e961', onAvatarChange, 
           </IconButton>
         }
       >          <Box sx={{
-            width: 70,
-            height: 70,
+            width: 150,
+            height: 150,
             borderRadius: '50%',
             backgroundColor: avatarBgColor,
             display: 'flex',
@@ -104,8 +104,8 @@ const AvatarUpload = ({ avatarImage, avatarBgColor = '#d2e961', onAvatarChange, 
               src={avatarImage || ''}
               alt="Profile"
               sx={{
-                width: 64,
-                height: 64,
+                width: 140,
+                height: 140,
                 bgcolor: avatarImage ? 'transparent' : '#f5f5f5',
                 border: '2px solid #fff',
               }}
