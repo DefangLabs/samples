@@ -105,19 +105,21 @@ const IntroPreview = ({ formData }) => {
             width: 180,
             height: 180,
             borderRadius: '50%',
-            backgroundColor: avatarBackgroundColor || '#d2e961', // Use the selected avatar background color
+            background: avatarBackgroundColor === 'transparent' ? 'transparent' : 
+                       `radial-gradient(circle, transparent 60%, ${avatarBackgroundColor || '#000000'}60 85%, ${avatarBackgroundColor || '#000000'}20 95%, transparent 100%)`,
+            boxShadow: avatarBackgroundColor === 'transparent' ? 'none' : 
+                      `0 0 10px 2px ${avatarBackgroundColor || '#000000'}70, 0 0 15px 5px ${avatarBackgroundColor || '#000000'}40`,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.12)'
           }}>
             <Avatar 
               src={avatar}
               alt={title || 'Profile'}
               sx={{ 
-                width: 170, 
-                height: 170,
-                border: '3px solid #fff',
+                width: 166, 
+                height: 166,
+                border: avatarBackgroundColor === 'transparent' ? 'none' : '3px solid rgba(255,255,255,0.85)',
               }}
             />
           </Box>

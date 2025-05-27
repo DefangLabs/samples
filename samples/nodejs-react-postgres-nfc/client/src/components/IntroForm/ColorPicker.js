@@ -26,9 +26,32 @@ const defaultColors = [
   '#212121'  // keep dark gray unchanged
 ];
 
-const ColorPicker = ({ color, onChange }) => {
+// Vibrant colors for photo outlines to make images pop
+const outlineColors = [
+  'transparent', // transparent (no outline)
+  '#000000', // black (default)
+  '#d2e961', // lime green
+  '#61e9a8', // mint green
+  '#61c3e9', // sky blue
+  '#61a8e9', // blue
+  '#8861e9', // purple
+  '#e961d2', // pink
+  '#e96161', // red
+  '#e9a861', // orange
+  '#eadf61', // yellow
+  '#2ee37d', // vibrant green
+  '#2ecae3', // turquoise
+  '#2e7ae3', // royal blue
+  '#7a2ee3', // violet
+  '#e32eae', // magenta
+];
+
+const ColorPicker = ({ color, onChange, colorType = 'default' }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  
+  // Select color palette based on colorType
+  const colors = colorType === 'outline' ? outlineColors : defaultColors;
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -92,10 +115,10 @@ const ColorPicker = ({ color, onChange }) => {
       >
         <Box sx={{ p: 2 }}>
           <Typography variant="subtitle2" gutterBottom sx={{ mb: 1.5, opacity: 0.6, fontSize: '0.85rem', fontWeight: 400 }}>
-            Select subtle background
+            {colorType === 'outline' ? 'Select outline (or none)' : 'Select subtle background'}
           </Typography>
           <Grid container spacing={1.5} sx={{ width: 240 }}>
-            {defaultColors.map((colorOption) => (
+            {(colorType === 'outline' ? outlineColors : defaultColors).map((colorOption) => (
               <Grid item key={colorOption} xs={3}>
                 <Button
                   sx={{
@@ -104,17 +127,40 @@ const ColorPicker = ({ color, onChange }) => {
                     width: '36px',
                     height: '36px',
                     p: 0,
-                    backgroundColor: colorOption,
+                    backgroundColor: colorOption === 'transparent' ? 'white' : colorOption,
                     border: color === colorOption ? '2px solid #999' : '1px solid #eee',
                     borderRadius: '6px',
-                    outline: colorOption !== '#ffffff' && colorOption !== '#212121' ? `1px solid ${colorOption}` : 'none',
+                    outline: colorOption !== '#ffffff' && colorOption !== '#212121' && colorOption !== 'transparent' ? `1px solid ${colorOption}` : 'none',
                     boxShadow: color === colorOption ? '0 0 0 2px rgba(0,0,0,0.03)' : 'none',
                     opacity: colorOption !== '#212121' ? 1 : 1, // Keep black at full opacity
+                    position: 'relative',
                     '&:hover': {
-                      backgroundColor: colorOption,
+                      backgroundColor: colorOption === 'transparent' ? 'white' : colorOption,
                       borderColor: '#bbb',
                       boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
                     },
+                    '&::before': colorOption === 'transparent' ? {
+                      content: '""',
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      width: '24px',
+                      height: '24px',
+                      border: '2px dashed #ccc',
+                      borderRadius: '50%',
+                      backgroundColor: 'transparent',
+                    } : {},
+                    '&::after': colorOption === 'transparent' ? {
+                      content: '""',
+                      position: 'absolute',
+                      top: '7px',
+                      right: '7px',
+                      width: '20px',
+                      height: '2px',
+                      backgroundColor: '#ff5252',
+                      transform: 'rotate(45deg)',
+                    } : {},
                   }}
                   onClick={() => handleColorChange(colorOption)}
                 />

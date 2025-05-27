@@ -5,11 +5,9 @@ import {
   IconButton, 
   Badge, 
   Typography,
-  styled,
-  Button
+  styled
 } from '@mui/material';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
-import DeleteIcon from '@mui/icons-material/Delete';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -23,7 +21,7 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
-const AvatarUpload = ({ avatarImage, avatarBgColor = '#d2e961', onAvatarChange, onAvatarRemove }) => {
+const AvatarUpload = ({ avatarImage, avatarBgColor = '#000000', onAvatarChange, onAvatarRemove }) => {
   // Handle the file selection
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -108,7 +106,10 @@ const AvatarUpload = ({ avatarImage, avatarBgColor = '#d2e961', onAvatarChange, 
             width: 80,
             height: 80,
             borderRadius: '50%',
-            backgroundColor: avatarBgColor,
+            background: avatarBgColor === 'transparent' ? 'transparent' : 
+                        `radial-gradient(circle, transparent 60%, ${avatarBgColor}60 85%, ${avatarBgColor}20 95%, transparent 100%)`,
+            boxShadow: avatarBgColor === 'transparent' ? 'none' : 
+                       `0 0 10px 2px ${avatarBgColor}70, 0 0 15px 5px ${avatarBgColor}40`,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -120,10 +121,10 @@ const AvatarUpload = ({ avatarImage, avatarBgColor = '#d2e961', onAvatarChange, 
             src={avatarImage || ''}
             alt="Profile"
             sx={{
-              width: 74,
-              height: 74,
+              width: 70,
+              height: 70,
               bgcolor: avatarImage ? 'transparent' : '#f5f5f5',
-              border: '2px solid #fff',
+              border: avatarBgColor === 'transparent' ? 'none' : '2px solid rgba(255,255,255,0.85)',
               cursor: !avatarImage ? 'pointer' : 'default',
             }}
           >
@@ -150,27 +151,6 @@ const AvatarUpload = ({ avatarImage, avatarBgColor = '#d2e961', onAvatarChange, 
         onChange={handleFileChange}
         style={{ display: 'none' }}
       />
-      
-      {avatarImage && (
-        <Button 
-          variant="outlined" 
-          startIcon={<DeleteIcon />} 
-          onClick={onAvatarRemove}
-          size="small"
-          sx={{ 
-            mt: 2,
-            fontSize: '12px',
-            color: '#666',
-            borderColor: '#ccc',
-            '&:hover': { 
-              color: '#333',
-              borderColor: '#999'
-            }
-          }}
-        >
-          Remove
-        </Button>
-      )}
     </Box>
   );
 };

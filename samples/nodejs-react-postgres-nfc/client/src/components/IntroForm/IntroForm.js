@@ -20,6 +20,7 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import EventIcon from '@mui/icons-material/Event';
 import LanguageIcon from '@mui/icons-material/Language';
 import PaletteIcon from '@mui/icons-material/Palette';
+import DeleteIcon from '@mui/icons-material/Delete';
 import ColorPicker from './ColorPicker';
 import AvatarUpload from './AvatarUpload';
 import IntroPreview from './IntroPreview';
@@ -46,7 +47,7 @@ const IntroForm = () => {
     personalWebsiteUrl: '', // this will map to personal_website (new field)
     websiteUrl: '', // this will map to additional_urls
     backgroundColor: '#ffffff', // New field for card background color
-    avatarBackgroundColor: '#d2e961', // New field for avatar background color circle
+    avatarBackgroundColor: '#000000', // New field for avatar background color circle
     avatar: '' // New field for profile avatar (stores base64 image data)
   });
 
@@ -366,7 +367,7 @@ const IntroForm = () => {
         personalWebsiteUrl: '',
         websiteUrl: '',
         backgroundColor: '#ffffff', // Reset background color to default
-        avatarBackgroundColor: '#d2e961', // Reset avatar background color to default
+        avatarBackgroundColor: '#000000', // Reset avatar background color to default
         avatar: '' // Reset avatar to default (empty)
       });
       
@@ -430,6 +431,30 @@ const IntroForm = () => {
                       placeholder="Your Full Name"
                       inputProps={{ maxLength: 100 }}
                     />
+
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, mt: 2 }}>
+                      <PaletteIcon fontSize="small" sx={{ mr: 1, color: 'text.secondary', fontSize: '16px' }} />
+                      <Typography variant="caption" color="text.secondary" sx={{ mr: 2, fontSize: '12px' }}>
+                        Card Theme:
+                      </Typography>
+                      <ColorPicker 
+                        color={formData.backgroundColor} 
+                        onChange={(color) => setFormData(prev => ({...prev, backgroundColor: color}))}
+                      />
+                      
+                      {formData.avatar && (
+                        <Box sx={{ display: 'flex', alignItems: 'center', ml: 4 }}>
+                          <Typography variant="caption" color="text.secondary" sx={{ mr: 2, fontSize: '12px' }}>
+                            Photo Outline:
+                          </Typography>
+                          <ColorPicker 
+                            color={formData.avatarBackgroundColor}
+                            onChange={(color) => setFormData(prev => ({...prev, avatarBackgroundColor: color}))}
+                            colorType="outline"
+                          />
+                        </Box>
+                      )}
+                    </Box>
                   </Box>
                   <AvatarUpload 
                     avatarImage={formData.avatar}
@@ -444,13 +469,23 @@ const IntroForm = () => {
                 
                 {formData.avatar && (
                   <Box mt={1} mb={2} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                    <Typography variant="caption" color="text.secondary" sx={{ mr: 2, fontSize: '12px' }}>
-                      Photo Background:
-                    </Typography>
-                    <ColorPicker 
-                      color={formData.avatarBackgroundColor}
-                      onChange={(color) => setFormData(prev => ({...prev, avatarBackgroundColor: color}))}
-                    />
+                    <Button 
+                      variant="outlined" 
+                      startIcon={<DeleteIcon />} 
+                      onClick={() => setFormData(prev => ({ ...prev, avatar: '' }))}
+                      size="small"
+                      sx={{ 
+                        fontSize: '12px',
+                        color: '#666',
+                        borderColor: '#ccc',
+                        '&:hover': { 
+                          color: '#333',
+                          borderColor: '#999'
+                        }
+                      }}
+                    >
+                      Remove
+                    </Button>
                   </Box>
                 )}
               </Box>
@@ -680,19 +715,6 @@ const IntroForm = () => {
                 <Typography variant="caption" display="block" sx={{ mt: 0.5 }}>
                   A secondary website like a project, blog, or company site
                 </Typography>
-              </Box>
-
-              <Typography variant="subtitle1" gutterBottom sx={{ mt: 3 }}>
-                Card Theme
-              </Typography>
-              <Box mb={3} sx={{ display: 'flex', alignItems: 'center' }}>
-                <InputAdornment position="start" sx={{ mr: 2 }}>
-                  <PaletteIcon />
-                </InputAdornment>
-                <ColorPicker 
-                  color={formData.backgroundColor} 
-                  onChange={(color) => setFormData(prev => ({...prev, backgroundColor: color}))}
-                />
               </Box>
 
               <Button 
