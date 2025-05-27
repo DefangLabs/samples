@@ -14,7 +14,7 @@ kombu==5.5.0
 prompt_toolkit==3.0.50
 psycopg2-binary==2.9.10
 python-dateutil==2.9.0.post0
-setuptools==69.0.3
+setuptools==78.1.1
 six==1.17.0
 smmap==5.0.1
 sqlparse==0.5.3
