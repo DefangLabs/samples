@@ -6,15 +6,23 @@ services:
       POSTGRES_DB: app_db
       POSTGRES_PASSWORD:
     x-defang-postgres: true
+    ports:
+      - mode: host
+        target: 5432  
+        published: 5432
 
   redis:
     image: redis:6.2
     x-defang-redis: true
+    ports:
+      - mode: host
+        target: 6379
+        published: 6379
 
-  api:
+  app:
     build:
-      context: ./api
-    command: daphne -b 0.0.0.0 -p 8000 config.asgi:application
+      context: ./app
+    command: ./run.sh
     ports:
       - "8000:8000"
     depends_on:
@@ -27,10 +35,16 @@ services:
       CELERY_BROKER_URL: redis://redis:6379/0
       CELERY_RESULT_BACKEND: redis://redis:6379/0
       DJANGO_SECRET_KEY:
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
 
   worker:
     build:
-      context: ./api
+      context: ./app
     command: celery -A config worker -l info
     depends_on:
       - postgres
@@ -41,20 +55,7 @@ services:
       DJANGO_SETTINGS_MODULE: config.settings
       DATABASE_URL: postgres://user:${POSTGRES_PASSWORD}@postgres:5432/app_db?sslmode=${SSL_MODE}
       REDIS_URL: redis://redis:6379/0
-      CELERY_BROKER_URL: redis://redis:6379/0
-      CELERY_RESULT_BACKEND: redis://redis:6379/0
       DJANGO_SECRET_KEY:
-
-  ui:
-    build:
-      context: ./ui
-      args:
-        - NEXT_PUBLIC_API_URL=http://localhost:8000
-    command: "npm run start"
-    ports:
-      - "3000:3000"
-    depends_on:
-      - api
 
   llm:
     provider:

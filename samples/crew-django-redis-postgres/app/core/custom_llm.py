@@ -14,7 +14,7 @@ class DockerRunnerLLM(BaseLLM):
     Docker Model Runner is not yet supported by CrewAI, because LiteLLM doesn't
     recognize the format in which the Docker Model Runner names the models.
     """
-    def __init__(self, model: str = LLM_MODEL, url: str = LLM_URL, api_key: str = "not-needed"):
+    def __init__(self, model: str = LLM_MODEL, url: str = LLM_URL, api_key: str = ""):
         super().__init__(model=model)
         if not api_key or not isinstance(api_key, str):
             raise ValueError("Invalid API key: must be a non-empty string")

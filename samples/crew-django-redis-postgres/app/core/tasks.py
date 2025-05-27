@@ -4,19 +4,20 @@ from channels.layers import get_channel_layer
 import crewai
 import openai
 import os
-from .models import Summary
 
 from pgvector.django import CosineDistance
 
 from .custom_llm import DockerRunnerLLM
 
 embedding_client = openai.Client(
-    api_key="not-needed",
+    api_key="",
     base_url=os.getenv("EMBEDDING_URL"),
 )
 
 
 def crewai_summary(text: str):
+    from .models import Summary
+
     embedding = embedding_client.embeddings.create(
         model="ai/mxbai-embed-large",
         input=text,

@@ -25,10 +25,24 @@ For this sample, you will need to provide the following [configuration](https://
 
 > Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
 
-### `API_KEY` #REMOVE_ME_AFTER_EDITING
-An explanation of what the env var (`API_KEY`) is, etc.
+### `POSTGRES_PASSWORD`     
+The password for the Postgres database.
 ```bash
-defang config set API_KEY
+defang config set POSTGRES_PASSWORD
+```
+
+### `SSL_MODE`
+
+The SSL mode for the Postgres database.
+```bash
+defang config set SSL_MODE
+```
+
+### `DJANGO_SECRET_KEY`
+
+The secret key for the Django application.
+```bash
+defang config set DJANGO_SECRET_KEY
 ```
 
 ## Deployment
@@ -49,10 +63,10 @@ If you want to deploy to your own cloud account, you can [use Defang BYOC](https
 
 ---
 
-Title: Sample Title #REMOVE_ME_AFTER_EDITING
+Title: Crew.ai Django Sample
 
-Short Description: A short sentence or two describing the sample. #REMOVE_ME_AFTER_EDITING
+Short Description: A sample application that uses Crew.ai to summarize text in a background task, streamed to the user in real-time.
 
-Tags: Tags, That, Are, Not, Programming, Languages #REMOVE_ME_AFTER_EDITING
+Tags: Django, Celery, Redis, Postgres, AI, ML
 
-Languages: Programming, Languages, Used #REMOVE_ME_AFTER_EDITING
+Languages: Python

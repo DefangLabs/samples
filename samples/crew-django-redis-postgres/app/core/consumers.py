@@ -6,10 +6,10 @@ from .tasks import crewai_summary_task
 
 import uuid
 
-class EchoConsumer(AsyncWebsocketConsumer):
+class SummaryConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         # Generate a safe, unique group name for this connection
-        self.group_name = f"echo_{uuid.uuid4().hex}"
+        self.group_name = f"summary_{uuid.uuid4().hex}"
         await self.channel_layer.group_add(self.group_name, self.channel_name)
         await self.accept()
 

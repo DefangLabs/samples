@@ -153,19 +153,28 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+REDIS_URL = os.environ.get("REDIS_URL")
+
+import urllib.parse
+
+parsed_url = urllib.parse.urlparse(REDIS_URL)
+
+REDIS_HOST = parsed_url.hostname
+REDIS_PORT = parsed_url.port
+
 # Channels/Redis
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [(os.environ.get("REDIS_HOST", "redis"), 6379)],
+            "hosts": [(REDIS_HOST, REDIS_PORT)],
         },
     },
 }
 
 # Celery
-CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://redis:6379/0")
-CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "redis://redis:6379/0")
+CELERY_BROKER_URL = REDIS_URL
+CELERY_RESULT_BACKEND = REDIS_URL
 
 # CrewAI (no special settings needed for hello world)
 
