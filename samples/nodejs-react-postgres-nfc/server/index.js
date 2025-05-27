@@ -81,10 +81,14 @@ app.post("/cards", async (req, res) => {
       social_media 
     } = req.body;
     
+    // Check if this is the first card (to make it default)
+    const countResult = await pool.query("SELECT COUNT(*) FROM cards");
+    const isFirstCard = parseInt(countResult.rows[0].count) === 0;
+    
     // 1. Create card entry (parent record in cards table)
     const cardResult = await pool.query(
       "INSERT INTO cards (card_name, is_default) VALUES ($1, $2) RETURNING card_id, card_name",
-      [card_name, false]  // Default to false for is_default
+      [card_name, isFirstCard]  // Set is_default to true if this is the first card
     );
     
     const cardId = cardResult.rows[0].card_id;
@@ -124,6 +128,315 @@ app.post("/cards", async (req, res) => {
     res.status(500).json({
       status: "error",
       message: "Failed to create card",
+      error: err.message
+    });
+  }
+});
+
+// Set a card as default
+app.put("/cards/:id/set-default", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Begin transaction
+    await pool.query("BEGIN");
+    
+    // First, clear default status from all cards
+    await pool.query(
+      "UPDATE cards SET is_default = false"
+    );
+    
+    // Then, set the specified card as default
+    const result = await pool.query(
+      "UPDATE cards SET is_default = true WHERE card_id = $1 RETURNING *",
+      [id]
+    );
+    
+    if (result.rows.length === 0) {
+      await pool.query("ROLLBACK");
+      return res.status(404).json({
+        status: "error",
+        message: "Card not found"
+      });
+    }
+    
+    // Commit transaction
+    await pool.query("COMMIT");
+    
+    res.json({
+      status: "success",
+      message: "Card set as default",
+      data: {
+        card: result.rows[0]
+      }
+    });
+  } catch (err) {
+    // Rollback transaction in case of error
+    await pool.query("ROLLBACK");
+    console.error("Error setting default card:", err);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to set default card",
+      error: err.message
+    });
+  }
+});
+
+// Get all cards
+app.get("/cards", async (req, res) => {
+  try {
+    // Query to get all cards with their associated social media info
+    const result = await pool.query(`
+      SELECT c.*, cd.*, sm.*
+      FROM cards cd
+      JOIN card c ON c.card_id = cd.card_id
+      LEFT JOIN social_media sm ON c.social_media_id = sm.social_media_id
+      ORDER BY cd.is_default DESC, cd.date_created DESC
+    `);
+
+    if (result.rows.length === 0) {
+      return res.json({
+        status: "success",
+        message: "No cards found",
+        data: {
+          cards: []
+        }
+      });
+    }
+
+    res.json({
+      status: "success",
+      data: {
+        cards: result.rows
+      }
+    });
+  } catch (err) {
+    console.error("Error fetching cards:", err);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to fetch cards",
+      error: err.message
+    });
+  }
+});
+
+// Get the default card
+app.get("/cards/default", async (req, res) => {
+  try {
+    // Query to get the default card with associated social media info
+    const result = await pool.query(`
+      SELECT c.*, cd.*, sm.*
+      FROM cards cd
+      JOIN card c ON c.card_id = cd.card_id
+      LEFT JOIN social_media sm ON c.social_media_id = sm.social_media_id
+      WHERE cd.is_default = true
+    `);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        status: "error",
+        message: "No default card found"
+      });
+    }
+
+    res.json({
+      status: "success",
+      data: {
+        card: result.rows[0]
+      }
+    });
+  } catch (err) {
+    console.error("Error fetching default card:", err);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to fetch default card",
+      error: err.message
+    });
+  }
+});
+
+// Edit an existing card
+app.put("/cards/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Begin transaction
+    await pool.query("BEGIN");
+    
+    // Extract data from request body
+    const { 
+      card_name,
+      first_name, 
+      last_name, 
+      additional_name, 
+      headline, 
+      bio, 
+      meeting_link, 
+      personal_website,
+      additional_urls,
+      social_media 
+    } = req.body;
+    
+    // 1. Check if the card exists
+    const checkResult = await pool.query(
+      "SELECT card_id FROM cards WHERE card_id = $1",
+      [id]
+    );
+    
+    if (checkResult.rows.length === 0) {
+      await pool.query("ROLLBACK");
+      return res.status(404).json({
+        status: "error",
+        message: "Card not found"
+      });
+    }
+    
+    // 2. Update the cards entry
+    const cardsUpdateResult = await pool.query(
+      "UPDATE cards SET card_name = $1, date_updated = CURRENT_TIMESTAMP WHERE card_id = $2 RETURNING card_id, card_name",
+      [card_name, id]
+    );
+    
+    // Get the updated card name to ensure consistency
+    const updatedCardName = cardsUpdateResult.rows[0].card_name;
+    
+    // 3. Get the social_media_id linked to this card
+    const socialMediaIdResult = await pool.query(
+      "SELECT social_media_id FROM card WHERE card_id = $1",
+      [id]
+    );
+    
+    const socialMediaId = socialMediaIdResult.rows[0].social_media_id;
+    
+    // 4. Update social media entry
+    await pool.query(
+      "UPDATE social_media SET linkedin = $1, twitter = $2, instagram = $3, github = $4, facebook = $5 WHERE social_media_id = $6",
+      [social_media.linkedin, social_media.twitter, social_media.instagram, social_media.github, social_media.facebook, socialMediaId]
+    );
+    
+    // 5. Update card entry
+    const cardUpdateResult = await pool.query(
+      "UPDATE card SET card_name = $1, first_name = $2, last_name = $3, additional_name = $4, headline = $5, bio = $6, meeting_link = $7, personal_website = $8, additional_urls = $9, date_updated = CURRENT_TIMESTAMP WHERE card_id = $10 RETURNING *",
+      [updatedCardName, first_name, last_name, additional_name, headline, bio, meeting_link, personal_website, additional_urls, id]
+    );
+    
+    // Commit transaction
+    await pool.query("COMMIT");
+    
+    // Get the updated social media record to return in response
+    const updatedSocialMedia = await pool.query(
+      "SELECT * FROM social_media WHERE social_media_id = $1",
+      [socialMediaId]
+    );
+    
+    res.json({
+      status: "success",
+      message: "Card updated successfully",
+      data: {
+        card: cardUpdateResult.rows[0],
+        social_media: updatedSocialMedia.rows[0]
+      }
+    });
+    
+  } catch (err) {
+    // Rollback transaction in case of error
+    await pool.query("ROLLBACK");
+    console.error("Error updating card:", err);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to update card",
+      error: err.message
+    });
+  }
+});
+
+// Delete a card
+app.delete("/cards/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Begin transaction
+    await pool.query("BEGIN");
+    
+    // Check if the card exists
+    const checkResult = await pool.query(
+      "SELECT card_id FROM cards WHERE card_id = $1",
+      [id]
+    );
+    
+    if (checkResult.rows.length === 0) {
+      await pool.query("ROLLBACK");
+      return res.status(404).json({
+        status: "error",
+        message: "Card not found"
+      });
+    }
+
+    // Check if this is the default card
+    const defaultCheckResult = await pool.query(
+      "SELECT is_default FROM cards WHERE card_id = $1",
+      [id]
+    );
+    
+    const isDefault = defaultCheckResult.rows[0].is_default;
+    
+    // Get the social_media_id linked to this card
+    const socialMediaIdResult = await pool.query(
+      "SELECT social_media_id FROM card WHERE card_id = $1",
+      [id]
+    );
+    
+    const socialMediaId = socialMediaIdResult.rows[0].social_media_id;
+    
+    // Delete the card (child) record first
+    await pool.query(
+      "DELETE FROM card WHERE card_id = $1",
+      [id]
+    );
+    
+    // Delete the social media record
+    await pool.query(
+      "DELETE FROM social_media WHERE social_media_id = $1",
+      [socialMediaId]
+    );
+    
+    // Delete the cards (parent) record
+    await pool.query(
+      "DELETE FROM cards WHERE card_id = $1",
+      [id]
+    );
+    
+    // If this was the default card and there are other cards,
+    // set a new default
+    if (isDefault) {
+      const remainingCardsResult = await pool.query(
+        "SELECT card_id FROM cards ORDER BY date_created DESC LIMIT 1"
+      );
+      
+      if (remainingCardsResult.rows.length > 0) {
+        // Set the most recently created card as default
+        await pool.query(
+          "UPDATE cards SET is_default = true WHERE card_id = $1",
+          [remainingCardsResult.rows[0].card_id]
+        );
+      }
+    }
+    
+    // Commit transaction
+    await pool.query("COMMIT");
+    
+    res.json({
+      status: "success",
+      message: "Card deleted successfully"
+    });
+    
+  } catch (err) {
+    // Rollback transaction in case of error
+    await pool.query("ROLLBACK");
+    console.error("Error deleting card:", err);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to delete card",
       error: err.message
     });
   }
