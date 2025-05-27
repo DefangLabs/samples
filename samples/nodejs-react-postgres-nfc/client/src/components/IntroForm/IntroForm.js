@@ -9,10 +9,11 @@ import {
   Container,
   InputAdornment
 } from '@mui/material';
-import TwitterIcon from '@mui/icons-material/Twitter';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
+import FacebookIcon from '@mui/icons-material/Facebook';
 import EventIcon from '@mui/icons-material/Event';
 import LanguageIcon from '@mui/icons-material/Language';
 import IntroPreview from './IntroPreview';
@@ -20,16 +21,20 @@ import IntroPreview from './IntroPreview';
 const IntroForm = () => {
   const [formData, setFormData] = useState({
     emoji: '👋',
-    title: '',
-    tagline: '',
-    username: '',
-    body: '',
-    twitterUrl: '',
+    name: '',
+    title: '', // keeping this for backward compatibility with preview
+    tagline: '', // this will map to headline
+    bio: '', // changed from 'body' to match the label
+    companyName: '', // Company name field
+    companyUrl: '', // Company URL field
     linkedinUrl: '',
     githubUrl: '',
+    twitterUrl: '',
     instagramUrl: '',
-    meetingUrl: '',
-    websiteUrl: ''
+    facebookUrl: '',
+    meetingUrl: '', // this will map to meeting_link
+    personalWebsiteUrl: '', // this will map to personal_website (new field)
+    websiteUrl: '' // this will map to additional_urls
   });
 
   const handleChange = (e) => {
@@ -42,8 +47,39 @@ const IntroForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Here you would handle the form submission, e.g., send data to the server
+    
+    // Format data for API submission
+    const apiData = {
+      card_name: formData.title || formData.name,
+      name: formData.name,
+      headline: formData.tagline,
+      bio: formData.bio,
+      company_name: formData.companyName,
+      company_url: formData.companyUrl,
+      meeting_link: formData.meetingUrl,
+      personal_website: formData.personalWebsiteUrl, // Updated to use new field
+      additional_urls: formData.websiteUrl,
+      social_media: {
+        linkedin: formData.linkedinUrl,
+        github: formData.githubUrl,
+        twitter: formData.twitterUrl,
+        instagram: formData.instagramUrl,
+        facebook: formData.facebookUrl
+      }
+    };
+    
+    console.log('Form submitted:', apiData);
+    
+    // Here you would handle the form submission
+    // For example: 
+    // fetch('http://localhost:3010/cards', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify(apiData)
+    // })
+    // .then(response => response.json())
+    // .then(data => console.log('Success:', data))
+    // .catch(error => console.error('Error:', error));
   };
 
   return (
@@ -57,30 +93,22 @@ const IntroForm = () => {
             <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
               <Box mb={2}>
                 <Typography variant="subtitle1" gutterBottom>
-                  Emoji (Optional)
-                </Typography>
-                <TextField
-                  fullWidth
-                  name="emoji"
-                  value={formData.emoji}
-                  onChange={handleChange}
-                  placeholder="👋"
-                />
-              </Box>
-
-              <Box mb={2}>
-                <Typography variant="subtitle1" gutterBottom>
-                  Title *
+                  Name *
                 </Typography>
                 <TextField
                   fullWidth
                   required
-                  name="title"
-                  value={formData.title}
-                  onChange={handleChange}
-                  placeholder="Your Name or Project Title"
-                  inputProps={{ maxLength: 40 }}
-                  helperText={`${formData.title.length}/40 characters`}
+                  name="name"
+                  value={formData.name}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setFormData(prev => ({
+                      ...prev,
+                      title: e.target.value // Set title to name for backward compatibility
+                    }));
+                  }}
+                  placeholder="Your Full Name"
+                  inputProps={{ maxLength: 100 }}
                 />
               </Box>
 
@@ -94,7 +122,7 @@ const IntroForm = () => {
                   name="tagline"
                   value={formData.tagline}
                   onChange={handleChange}
-                  placeholder="A brief description or headline"
+                  placeholder="A brief description or headline or job title"
                   inputProps={{ maxLength: 60 }}
                   helperText={`${formData.tagline.length}/60 characters`}
                 />
@@ -102,61 +130,60 @@ const IntroForm = () => {
 
               <Box mb={2}>
                 <Typography variant="subtitle1" gutterBottom>
-                  Custom Username
+                  Company (Optional)
                 </Typography>
-                <TextField
-                  fullWidth
-                  name="username"
-                  value={formData.username}
-                  onChange={handleChange}
-                  placeholder="your-name"
-                  InputProps={{
-                    startAdornment: <InputAdornment position="start">intro.new/</InputAdornment>,
-                  }}
-                />
-                <Typography variant="caption" display="block" sx={{ mt: 0.5 }}>
-                  Choose a custom username for your intro page (letters, numbers, and hyphens only)
-                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      name="companyName"
+                      label="Company Name"
+                      value={formData.companyName}
+                      onChange={handleChange}
+                      placeholder="Company Name"
+                      inputProps={{ maxLength: 100 }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      name="companyUrl"
+                      label="Company URL"
+                      value={formData.companyUrl}
+                      onChange={handleChange}
+                      placeholder="https://company.com"
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <LanguageIcon />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </Grid>
+                </Grid>
               </Box>
 
               <Box mb={2}>
                 <Typography variant="subtitle1" gutterBottom>
-                  Body *
+                  Bio (Optional)
                 </Typography>
                 <TextField
                   fullWidth
-                  required
                   multiline
                   rows={4}
-                  name="body"
-                  value={formData.body}
+                  name="bio"
+                  value={formData.bio}
                   onChange={handleChange}
-                  placeholder="Tell your story or describe your project..."
+                  placeholder="Tell us about yourself or maybe an interesting fact."
                   inputProps={{ maxLength: 500 }}
-                  helperText={`${formData.body.length}/500 characters`}
+                  helperText={`${formData.bio.length}/500 characters`}
                 />
               </Box>
 
               <Typography variant="subtitle1" gutterBottom sx={{ mt: 3 }}>
                 Social Links (Optional)
               </Typography>
-
-              <Box mb={2}>
-                <TextField
-                  fullWidth
-                  name="twitterUrl"
-                  value={formData.twitterUrl}
-                  onChange={handleChange}
-                  placeholder="Twitter URL"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <TwitterIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Box>
 
               <Box mb={2}>
                 <TextField
@@ -195,6 +222,23 @@ const IntroForm = () => {
               <Box mb={2}>
                 <TextField
                   fullWidth
+                  name="twitterUrl"
+                  value={formData.twitterUrl}
+                  onChange={handleChange}
+                  placeholder="Twitter URL"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <TwitterIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Box>
+
+              <Box mb={2}>
+                <TextField
+                  fullWidth
                   name="instagramUrl"
                   value={formData.instagramUrl}
                   onChange={handleChange}
@@ -203,6 +247,23 @@ const IntroForm = () => {
                     startAdornment: (
                       <InputAdornment position="start">
                         <InstagramIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Box>
+
+              <Box mb={2}>
+                <TextField
+                  fullWidth
+                  name="facebookUrl"
+                  value={formData.facebookUrl}
+                  onChange={handleChange}
+                  placeholder="Facebook URL"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <FacebookIcon />
                       </InputAdornment>
                     ),
                   }}
@@ -233,15 +294,15 @@ const IntroForm = () => {
               </Box>
 
               <Typography variant="subtitle1" gutterBottom sx={{ mt: 3 }}>
-                Website URL (Optional)
+                Personal Website (Optional)
               </Typography>
               <Box mb={2}>
                 <TextField
                   fullWidth
-                  name="websiteUrl"
-                  value={formData.websiteUrl}
+                  name="personalWebsiteUrl"
+                  value={formData.personalWebsiteUrl}
                   onChange={handleChange}
-                  placeholder="https://yourwebsite.com"
+                  placeholder="https://yourpersonalsite.com"
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -250,6 +311,32 @@ const IntroForm = () => {
                     ),
                   }}
                 />
+                <Typography variant="caption" display="block" sx={{ mt: 0.5 }}>
+                  Your primary personal website or portfolio
+                </Typography>
+              </Box>
+
+              <Typography variant="subtitle1" gutterBottom sx={{ mt: 3 }}>
+                Additional Website URL (Optional)
+              </Typography>
+              <Box mb={2}>
+                <TextField
+                  fullWidth
+                  name="websiteUrl"
+                  value={formData.websiteUrl}
+                  onChange={handleChange}
+                  placeholder="https://yourproject.com"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LanguageIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                <Typography variant="caption" display="block" sx={{ mt: 0.5 }}>
+                  A secondary website like a project, blog, or company site
+                </Typography>
               </Box>
 
               <Button 
