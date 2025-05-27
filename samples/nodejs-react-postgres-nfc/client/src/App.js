@@ -1,7 +1,7 @@
 import React from "react";
 import { ThemeProvider, createTheme, CssBaseline, Box, AppBar, Toolbar, Typography } from '@mui/material';
 import "./App.css";
-import IntroForm from "./components/IntroForm/IntroForm";
+import CardCreator from "./components/CardCreator/CardCreator";
 
 // Create a theme
 const theme = createTheme({
@@ -31,7 +31,7 @@ function App() {
           </Toolbar>
         </AppBar>
         <Box sx={{ py: 4 }}>
-          <IntroForm />
+          <CardCreator />
         </Box>
       </Box>
     </ThemeProvider>

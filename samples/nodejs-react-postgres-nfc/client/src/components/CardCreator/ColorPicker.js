@@ -30,6 +30,7 @@ const defaultColors = [
 const outlineColors = [
   'transparent', // transparent (no outline)
   '#000000', // black (default)
+  '#ffffff', // white
   '#d2e961', // lime green
   '#61e9a8', // mint green
   '#61c3e9', // sky blue
@@ -98,7 +99,7 @@ const ColorPicker = ({ color, onChange, colorType = 'default' }) => {
 
       <Popover
         open={open}
-        anchorEl={anchorEl}
+anchorEl={anchorEl}
         onClose={handleClose}
         anchorOrigin={{
           vertical: 'bottom',
@@ -130,7 +131,8 @@ const ColorPicker = ({ color, onChange, colorType = 'default' }) => {
                     backgroundColor: colorOption === 'transparent' ? 'white' : colorOption,
                     border: color === colorOption ? '2px solid #999' : '1px solid #eee',
                     borderRadius: '6px',
-                    outline: colorOption !== '#ffffff' && colorOption !== '#212121' && colorOption !== 'transparent' ? `1px solid ${colorOption}` : 'none',
+                    outline: (colorOption !== '#212121' && colorOption !== 'transparent') ? 
+                             (colorOption === '#ffffff' ? '1px solid #ddd' : `1px solid ${colorOption}`) : 'none',
                     boxShadow: color === colorOption ? '0 0 0 2px rgba(0,0,0,0.03)' : 'none',
                     opacity: colorOption !== '#212121' ? 1 : 1, // Keep black at full opacity
                     position: 'relative',

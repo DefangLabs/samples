@@ -29,6 +29,9 @@ const IntroPreview = ({ formData }) => {
     avatar
   } = formData;
 
+  // Check if the background is dark
+  const isDarkTheme = backgroundColor === '#212121' || backgroundColor === '#000000';
+  
   // Check if any social media links are available
   const hasSocialLinks = linkedinUrl || githubUrl || twitterUrl || instagramUrl || facebookUrl;
   
@@ -96,7 +99,10 @@ const IntroPreview = ({ formData }) => {
     >
       {/* Share button in top right corner */}
       <Box sx={{ position: 'absolute', top: 12, right: 12 }}>
-        <IconButton size="small">
+        <IconButton 
+          size="small" 
+          sx={{ color: isDarkTheme ? '#ffffff' : 'inherit' }}
+        >
           <ShareIcon fontSize="small" />
         </IconButton>
       </Box>
@@ -114,9 +120,25 @@ const IntroPreview = ({ formData }) => {
             height: 180,
             borderRadius: '50%',
             background: avatarBackgroundColor === 'transparent' ? 'transparent' : 
-                       `radial-gradient(circle, transparent 60%, ${avatarBackgroundColor || '#000000'}60 85%, ${avatarBackgroundColor || '#000000'}20 95%, transparent 100%)`,
+                       `radial-gradient(circle, transparent 60%, ${
+                          isDarkTheme && (avatarBackgroundColor === '#000000' || avatarBackgroundColor === '#ffffff') ? '#ffffff' : 
+                          avatarBackgroundColor === '#ffffff' && !isDarkTheme ? '#e0e0e0' : 
+                          avatarBackgroundColor
+                        }60 85%, ${
+                          isDarkTheme && (avatarBackgroundColor === '#000000' || avatarBackgroundColor === '#ffffff') ? '#ffffff' : 
+                          avatarBackgroundColor === '#ffffff' && !isDarkTheme ? '#e0e0e0' : 
+                          avatarBackgroundColor
+                        }20 95%, transparent 100%)`,
             boxShadow: avatarBackgroundColor === 'transparent' ? 'none' : 
-                      `0 0 10px 2px ${avatarBackgroundColor || '#000000'}70, 0 0 15px 5px ${avatarBackgroundColor || '#000000'}40`,
+                      `0 0 10px 2px ${
+                          isDarkTheme && (avatarBackgroundColor === '#000000' || avatarBackgroundColor === '#ffffff') ? '#ffffff70' : 
+                          avatarBackgroundColor === '#ffffff' && !isDarkTheme ? '#e0e0e070' : 
+                          `${avatarBackgroundColor}70`
+                      }, 0 0 15px 5px ${
+                          isDarkTheme && (avatarBackgroundColor === '#000000' || avatarBackgroundColor === '#ffffff') ? '#ffffff40' : 
+                          avatarBackgroundColor === '#ffffff' && !isDarkTheme ? '#e0e0e040' : 
+                          `${avatarBackgroundColor}40`
+                      }`,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -143,7 +165,10 @@ const IntroPreview = ({ formData }) => {
                   sx={{ 
                     width: 166, 
                     height: 166,
-                    border: avatarBackgroundColor === 'transparent' ? 'none' : '3px solid rgba(255,255,255,0.85)',
+                    border: avatarBackgroundColor === 'transparent' ? 'none' : 
+                            (avatarBackgroundColor === '#ffffff' ? 
+                              `3px solid ${isDarkTheme ? '#ffffff' : '#e0e0e0'}` : 
+                              `3px solid ${isDarkTheme ? '#ffffff' : 'rgba(255,255,255,0.85)'}`),
                   }}
                 />
               </Box>
@@ -154,7 +179,10 @@ const IntroPreview = ({ formData }) => {
                 sx={{ 
                   width: 166, 
                   height: 166,
-                  border: avatarBackgroundColor === 'transparent' ? 'none' : '3px solid rgba(255,255,255,0.85)',
+                  border: avatarBackgroundColor === 'transparent' ? 'none' : 
+                          (avatarBackgroundColor === '#ffffff' ? 
+                            `3px solid ${isDarkTheme ? '#ffffff' : '#e0e0e0'}` : 
+                            `3px solid ${isDarkTheme ? '#ffffff' : 'rgba(255,255,255,0.85)'}`),
                 }}
               />
             )}
@@ -211,7 +239,7 @@ const IntroPreview = ({ formData }) => {
         }}>
           <Typography 
             variant="subtitle1" 
-            color="text.secondary"
+            color={isDarkTheme ? 'rgba(255, 255, 255, 0.7)' : 'text.secondary'}
             sx={{ 
               overflow: 'hidden', 
               textOverflow: 'ellipsis',
@@ -225,7 +253,7 @@ const IntroPreview = ({ formData }) => {
           {companyName && (
             <Typography 
               variant="body2" 
-              color="text.secondary"
+              color={isDarkTheme ? '#ffffff' : 'text.secondary'}
               sx={{ 
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -239,11 +267,14 @@ const IntroPreview = ({ formData }) => {
                   target="_blank"
                   rel="noopener"
                   sx={{ 
-                    color: 'primary.main', 
+                    color: isDarkTheme ? '#ffffff' : 'primary.main', 
                     textDecoration: 'none',
                     display: 'inline-flex',
                     alignItems: 'center',
-                    '&:hover': { textDecoration: 'underline' }
+                    '&:hover': { 
+                      textDecoration: 'underline',
+                      color: isDarkTheme ? '#ffffff' : 'primary.dark'
+                    }
                   }}
                 >
                   {" "}@{companyName}
@@ -268,6 +299,7 @@ const IntroPreview = ({ formData }) => {
           <Typography 
             variant="body1" 
             align="center"
+            color={isDarkTheme ? 'rgba(255, 255, 255, 0.9)' : 'inherit'}
             sx={{ 
               wordWrap: 'break-word',
               overflowWrap: 'break-word'
@@ -299,7 +331,13 @@ const IntroPreview = ({ formData }) => {
                   maxWidth: '90%',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap'
+                  whiteSpace: 'nowrap',
+                  color: isDarkTheme ? '#ffffff' : undefined,
+                  borderColor: isDarkTheme ? 'rgba(255, 255, 255, 0.5)' : undefined,
+                  '&:hover': isDarkTheme ? {
+                    borderColor: '#ffffff',
+                    backgroundColor: 'rgba(255, 255, 255, 0.08)'
+                  } : undefined
                 }}
               >
                 Visit My Website
@@ -323,7 +361,13 @@ const IntroPreview = ({ formData }) => {
                   maxWidth: '90%',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap'
+                  whiteSpace: 'nowrap',
+                  color: isDarkTheme ? '#ffffff' : undefined,
+                  borderColor: isDarkTheme ? 'rgba(255, 255, 255, 0.5)' : undefined,
+                  '&:hover': isDarkTheme ? {
+                    borderColor: '#ffffff',
+                    backgroundColor: 'rgba(255, 255, 255, 0.08)'
+                  } : undefined
                 }}
               >
                 Schedule a Meeting
@@ -347,7 +391,13 @@ const IntroPreview = ({ formData }) => {
                   maxWidth: '90%',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap'
+                  whiteSpace: 'nowrap',
+                  color: isDarkTheme ? '#ffffff' : undefined,
+                  borderColor: isDarkTheme ? 'rgba(255, 255, 255, 0.5)' : undefined,
+                  '&:hover': isDarkTheme ? {
+                    borderColor: '#ffffff',
+                    backgroundColor: 'rgba(255, 255, 255, 0.08)'
+                  } : undefined
                 }}
               >
                 Visit Project Site
@@ -366,31 +416,56 @@ const IntroPreview = ({ formData }) => {
             justifyContent="center" 
           >
             {linkedinUrl && (
-              <IconButton href={sanitizeUrl(linkedinUrl)} target="_blank" rel="noopener">
+              <IconButton 
+                href={sanitizeUrl(linkedinUrl)} 
+                target="_blank" 
+                rel="noopener" 
+                sx={{ color: isDarkTheme ? '#ffffff' : 'inherit' }}
+              >
                 <LinkedInIcon />
               </IconButton>
             )}
             
             {githubUrl && (
-              <IconButton href={sanitizeUrl(githubUrl)} target="_blank" rel="noopener">
+              <IconButton 
+                href={sanitizeUrl(githubUrl)} 
+                target="_blank" 
+                rel="noopener" 
+                sx={{ color: isDarkTheme ? '#ffffff' : 'inherit' }}
+              >
                 <GitHubIcon />
               </IconButton>
             )}
             
             {twitterUrl && (
-              <IconButton href={sanitizeUrl(twitterUrl)} target="_blank" rel="noopener">
+              <IconButton 
+                href={sanitizeUrl(twitterUrl)} 
+                target="_blank" 
+                rel="noopener" 
+                sx={{ color: isDarkTheme ? '#ffffff' : 'inherit' }}
+              >
                 <TwitterIcon />
               </IconButton>
             )}
             
             {instagramUrl && (
-              <IconButton href={sanitizeUrl(instagramUrl)} target="_blank" rel="noopener">
+              <IconButton 
+                href={sanitizeUrl(instagramUrl)} 
+                target="_blank" 
+                rel="noopener" 
+                sx={{ color: isDarkTheme ? '#ffffff' : 'inherit' }}
+              >
                 <InstagramIcon />
               </IconButton>
             )}
 
             {facebookUrl && (
-              <IconButton href={sanitizeUrl(facebookUrl)} target="_blank" rel="noopener">
+              <IconButton 
+                href={sanitizeUrl(facebookUrl)} 
+                target="_blank" 
+                rel="noopener" 
+                sx={{ color: isDarkTheme ? '#ffffff' : 'inherit' }}
+              >
                 <FacebookIcon />
               </IconButton>
             )}
