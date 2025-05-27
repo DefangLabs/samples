@@ -71,9 +71,6 @@ const ColorPicker = ({ color, onChange }) => {
         >
           &nbsp;
         </Button>
-        <Typography variant="body2" color="text.secondary" sx={{ opacity: 0.7, fontSize: '0.85rem' }}>
-          Background shade
-        </Typography>
       </Box>
 
       <Popover

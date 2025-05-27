@@ -11,7 +11,7 @@ services:
         target: 5432
         published: 5432
 
-  todo_list:
+  cards:
     build:
       context: ./client
       dockerfile: Dockerfile

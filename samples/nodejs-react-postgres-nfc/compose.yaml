@@ -1,11 +1,22 @@
 services:
-  todo_list:
+  db:
+    image: postgres:15
+    restart: unless-stopped
+    x-defang-postgres: true
+    environment:
+      - POSTGRES_PASSWORD
+    ports:
+      - mode: host
+        target: 5432
+        published: 5432
+
+  cards:
     restart: unless-stopped
     build:
       context: ./client
       dockerfile: Dockerfile
       args:
-        - REACT_APP_API_URL=https://<YOUR_USERNAME>-server--3010.prod1.defang.dev #replace <YOUR_USERNAME> with your username
+        - REACT_APP_API_URL=https://kevyvo-server--3010.prod1.defang.dev #replace <YOUR_USERNAME> with your username
     ports:
       - mode: ingress
         target: 3000
@@ -26,7 +37,7 @@ services:
         mode: ingress
         published: 3010
     environment:
-     - DATABASE_URL    # To use your production database connection string, use `defang config set DATABASE_URL`
+      - DATABASE_URL=postgres://postgres:${POSTGRES_PASSWORD}@db:5432/postgres
     #deploy:
     #  resources:
     #    reservations:

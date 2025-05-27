@@ -5,7 +5,8 @@ import {
   IconButton, 
   Badge, 
   Typography,
-  styled
+  styled,
+  Button
 } from '@mui/material';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -46,6 +47,16 @@ const AvatarUpload = ({ avatarImage, avatarBgColor = '#d2e961', onAvatarChange, 
     }
   };
   
+  // Create a reference for the file input
+  const fileInputRef = React.useRef(null);
+  
+  // Handle avatar click when no image is present
+  const handleAvatarClick = () => {
+    if (!avatarImage) {
+      fileInputRef.current.click();
+    }
+  };
+  
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', ml: 3 }}>
       <Typography variant="caption" color="text.secondary" sx={{ mb: 1, fontSize: '12px', fontWeight: 500, display: { xs: 'none', sm: 'block' } }}>
@@ -58,15 +69,15 @@ const AvatarUpload = ({ avatarImage, avatarBgColor = '#d2e961', onAvatarChange, 
           <IconButton 
             component="label" 
             sx={{ 
-              width: 22, 
-              height: 22, 
+              width: 36, 
+              height: 36, 
               bgcolor: '#f0f0f0', 
               border: '1px solid #ddd',
               '&:hover': { bgcolor: '#e0e0e0' } 
             }}
-            size="small"
+            size="medium"
           >
-            <AddAPhotoIcon fontSize="small" sx={{ fontSize: '14px', color: '#555' }} />
+            <AddAPhotoIcon sx={{ fontSize: '20px', color: '#555' }} />
             <VisuallyHiddenInput type="file" accept="image/*" onChange={handleFileChange} />
             <Typography 
               variant="caption" 
@@ -91,49 +102,74 @@ const AvatarUpload = ({ avatarImage, avatarBgColor = '#d2e961', onAvatarChange, 
             </Typography>
           </IconButton>
         }
-      >          <Box sx={{
-            width: 150,
-            height: 150,
+      >
+        <Box
+          sx={{
+            width: 80,
+            height: 80,
             borderRadius: '50%',
             backgroundColor: avatarBgColor,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-          }}>
-            <Avatar
-              src={avatarImage || ''}
-              alt="Profile"
-              sx={{
-                width: 140,
-                height: 140,
-                bgcolor: avatarImage ? 'transparent' : '#f5f5f5',
-                border: '2px solid #fff',
-              }}
-            >
-              {!avatarImage && (
-                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <AddAPhotoIcon sx={{ fontSize: 18, mb: 0.5, color: '#999' }} />
-                  <Typography variant="caption" color="text.secondary" sx={{ fontSize: '10px' }}>Add</Typography>
-                </Box>
-              )}
-            </Avatar>
-          </Box>
+            cursor: !avatarImage ? 'pointer' : 'default',
+          }}
+          onClick={handleAvatarClick}
+        >
+          <Avatar
+            src={avatarImage || ''}
+            alt="Profile"
+            sx={{
+              width: 74,
+              height: 74,
+              bgcolor: avatarImage ? 'transparent' : '#f5f5f5',
+              border: '2px solid #fff',
+              cursor: !avatarImage ? 'pointer' : 'default',
+            }}
+          >
+            {!avatarImage && (
+              <Box sx={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                alignItems: 'center',
+                '&:hover': { opacity: 0.8 }
+              }}>
+                <AddAPhotoIcon sx={{ fontSize: 16, mb: 0.5, color: '#777' }} />
+                <Typography variant="caption" color="text.secondary" sx={{ fontSize: '8px' }}>Add photo</Typography>
+              </Box>
+            )}
+          </Avatar>
+        </Box>
       </Badge>
       
+      {/* Hidden file input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+        style={{ display: 'none' }}
+      />
+      
       {avatarImage && (
-        <IconButton
-          size="small"
+        <Button 
+          variant="outlined" 
+          startIcon={<DeleteIcon />} 
           onClick={onAvatarRemove}
+          size="small"
           sx={{ 
-            mt: 1,
+            mt: 2,
             fontSize: '12px',
             color: '#666',
-            '&:hover': { color: '#333' }
+            borderColor: '#ccc',
+            '&:hover': { 
+              color: '#333',
+              borderColor: '#999'
+            }
           }}
         >
-          <DeleteIcon fontSize="small" sx={{ mr: 0.5, fontSize: '14px' }} />
-          <Typography variant="caption">Remove</Typography>
-        </IconButton>
+          Remove
+        </Button>
       )}
     </Box>
   );

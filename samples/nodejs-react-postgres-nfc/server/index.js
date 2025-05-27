@@ -4,7 +4,8 @@ const cors = require("cors");
 const pool = require("./db")
 
 app.use(cors());
-app.use(express.json())
+// Increase JSON request size limit to handle larger avatar images
+app.use(express.json({ limit: '10mb' }));
 
 // Create the cards table first
 const createCardsTable = `CREATE TABLE IF NOT EXISTS cards(
@@ -33,15 +34,18 @@ const createCardTable = `CREATE TABLE IF NOT EXISTS card(
   date_created TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   date_updated TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   -- Fields for the card profile
-  first_name VARCHAR(255) NOT NULL,
-  last_name VARCHAR(255) NOT NULL,
-  additional_name VARCHAR(255),
+  name VARCHAR(255) NOT NULL,
   headline VARCHAR(255) NOT NULL,
   bio VARCHAR(255),
+  company_name VARCHAR(255),
+  company_url VARCHAR(255),
   social_media_id INTEGER REFERENCES social_media(social_media_id),
   meeting_link VARCHAR(255),
   personal_website VARCHAR(255),
-  additional_urls VARCHAR(255)
+  additional_urls VARCHAR(255),
+  background_color VARCHAR(30) DEFAULT '#ffffff', -- Background color field
+  avatar_bg_color VARCHAR(30) DEFAULT '#d2e961', -- Avatar background color field
+  avatar TEXT -- Field for profile avatar image data (base64)
 )`
 
 // Create tables when server starts
@@ -70,14 +74,17 @@ app.post("/cards", async (req, res) => {
     // Extract data from request body
     const { 
       card_name,
-      first_name, 
-      last_name, 
-      additional_name, 
+      name,
       headline, 
       bio, 
+      company_name,
+      company_url,
       meeting_link, 
       personal_website,
       additional_urls,
+      background_color, // Field for card background color
+      avatar_bg_color, // Field for avatar background color
+      avatar, // Field for profile avatar
       social_media 
     } = req.body;
     
@@ -106,8 +113,8 @@ app.post("/cards", async (req, res) => {
     // 3. Create card with reference to card and social media
     // Using the same card_name from the parent cards table to ensure consistency
     const cardResult2 = await pool.query(
-      "INSERT INTO card (card_id, card_name, first_name, last_name, additional_name, headline, bio, social_media_id, meeting_link, personal_website, additional_urls) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *",
-      [cardId, savedCardName, first_name, last_name, additional_name, headline, bio, socialMediaId, meeting_link, personal_website, additional_urls]
+      "INSERT INTO card (card_id, card_name, name, headline, bio, company_name, company_url, social_media_id, meeting_link, personal_website, additional_urls, background_color, avatar_bg_color, avatar) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *",
+      [cardId, savedCardName, name, headline, bio, company_name, company_url, socialMediaId, meeting_link, personal_website, additional_urls, background_color || '#ffffff', avatar_bg_color || '#d2e961', avatar || null]
     );
     
     // Commit transaction
@@ -266,14 +273,17 @@ app.put("/cards/:id", async (req, res) => {
     // Extract data from request body
     const { 
       card_name,
-      first_name, 
-      last_name, 
-      additional_name, 
+      name,
       headline, 
       bio, 
+      company_name,
+      company_url,
       meeting_link, 
       personal_website,
       additional_urls,
+      background_color,
+      avatar_bg_color,
+      avatar,
       social_media 
     } = req.body;
     
@@ -316,8 +326,8 @@ app.put("/cards/:id", async (req, res) => {
     
     // 5. Update card entry
     const cardUpdateResult = await pool.query(
-      "UPDATE card SET card_name = $1, first_name = $2, last_name = $3, additional_name = $4, headline = $5, bio = $6, meeting_link = $7, personal_website = $8, additional_urls = $9, date_updated = CURRENT_TIMESTAMP WHERE card_id = $10 RETURNING *",
-      [updatedCardName, first_name, last_name, additional_name, headline, bio, meeting_link, personal_website, additional_urls, id]
+      "UPDATE card SET card_name = $1, name = $2, headline = $3, bio = $4, company_name = $5, company_url = $6, meeting_link = $7, personal_website = $8, additional_urls = $9, background_color = $10, avatar_bg_color = $11, avatar = $12, date_updated = CURRENT_TIMESTAMP WHERE card_id = $13 RETURNING *",
+      [updatedCardName, name, headline, bio, company_name, company_url, meeting_link, personal_website, additional_urls, background_color || '#ffffff', avatar_bg_color || '#d2e961', avatar || null, id]
     );
     
     // Commit transaction
