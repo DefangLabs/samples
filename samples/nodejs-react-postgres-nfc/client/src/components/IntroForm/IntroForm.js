@@ -45,6 +45,207 @@ const IntroForm = () => {
     }));
   };
 
+  // Helper function to format URLs properly
+  const formatUrl = (url) => {
+    if (!url) return '';
+    
+    // Clean up URL - trim whitespace
+    let cleanUrl = url.trim();
+    
+    // If URL doesn't start with http:// or https://, add https://
+    if (!/^https?:\/\//i.test(cleanUrl)) {
+      return `https://${cleanUrl}`;
+    }
+    return cleanUrl;
+  };
+
+  // Helper function to format social media URLs
+  const formatSocialUrl = (url, type) => {
+    if (!url) return '';
+    
+    // Clean up the URL
+    let cleanUrl = url.trim();
+    
+    // Special handling for localhost URLs with social domains
+    if (cleanUrl.includes('localhost') || cleanUrl.includes('127.0.0.1')) {
+      // Extract the username and domain for URLs like http://localhost:3000/github.com/username
+      const socialDomains = {
+        github: /github\.com\/([^\/\?#]+)/i,
+        linkedin: /linkedin\.com\/in\/([^\/\?#]+)/i,
+        twitter: /(?:twitter\.com|x\.com)\/([^\/\?#]+)/i,
+        instagram: /instagram\.com\/([^\/\?#]+)/i,
+        facebook: /facebook\.com\/([^\/\?#]+)/i
+      };
+      
+      const currentDomain = socialDomains[type];
+      if (currentDomain) {
+        const match = cleanUrl.match(currentDomain);
+        if (match && match[1]) {
+          // Extract the username from the URL
+          if (type === 'linkedin') {
+            return formatUrl(`linkedin.com/in/${match[1]}`);
+          } else if (type === 'twitter') {
+            return formatUrl(`x.com/${match[1]}`);
+          } else {
+            return formatUrl(`${type}.com/${match[1]}`);
+          }
+        }
+      }
+    }
+    
+    // Remove http://, https://, and www. prefixes for cleaner comparison
+    cleanUrl = cleanUrl.replace(/^(https?:\/\/)?(www\.)?/i, '');
+    
+    // Standard URL processing
+    switch (type) {
+      case 'linkedin':
+        if (!cleanUrl.startsWith('linkedin.com/in/')) {
+          if (cleanUrl.startsWith('linkedin.com/')) {
+            return formatUrl(cleanUrl);
+          }
+          return formatUrl(`linkedin.com/in/${cleanUrl}`);
+        }
+        break;
+      case 'github':
+        if (!cleanUrl.startsWith('github.com/')) {
+          return formatUrl(`github.com/${cleanUrl}`);
+        }
+        break;
+      case 'twitter':
+        if (!cleanUrl.startsWith('twitter.com/') && !cleanUrl.startsWith('x.com/')) {
+          return formatUrl(`x.com/${cleanUrl}`);
+        }
+        break;
+      case 'instagram':
+        if (!cleanUrl.startsWith('instagram.com/')) {
+          return formatUrl(`instagram.com/${cleanUrl}`);
+        }
+        break;
+      case 'facebook':
+        if (!cleanUrl.startsWith('facebook.com/')) {
+          return formatUrl(`facebook.com/${cleanUrl}`);
+        }
+        break;
+      default:
+        // For any other social media type, just format the URL as is
+        console.log(`Unknown social media type: ${type}`);
+        break;
+    }
+    
+    return formatUrl(cleanUrl);
+  };
+
+  // Helper function for social media URLs - accepts various inputs
+  const handleSocialMediaChange = (e) => {
+    const { name, value } = e.target;
+    let cleanUrl = value;
+    
+    if (value) {
+      // Handle localhost URLs - extract just the username part
+      if (value.includes('localhost') || value.includes('127.0.0.1')) {
+        // For URLs like http://localhost:3000/github.com/KevyVo
+        if (name === 'githubUrl' && value.includes('github.com/')) {
+          const parts = value.split('github.com/');
+          if (parts.length > 1) {
+            cleanUrl = `github.com/${parts[1].split(/[?#/]/)[0]}`;
+          }
+        } else if (name === 'linkedinUrl' && value.includes('linkedin.com/in/')) {
+          const parts = value.split('linkedin.com/in/');
+          if (parts.length > 1) {
+            cleanUrl = `linkedin.com/in/${parts[1].split(/[?#/]/)[0]}`;
+          }
+        } else if (name === 'twitterUrl' && (value.includes('twitter.com/') || value.includes('x.com/'))) {
+          if (value.includes('twitter.com/')) {
+            const parts = value.split('twitter.com/');
+            if (parts.length > 1) {
+              cleanUrl = `x.com/${parts[1].split(/[?#/]/)[0]}`;
+            }
+          } else {
+            const parts = value.split('x.com/');
+            if (parts.length > 1) {
+              cleanUrl = `x.com/${parts[1].split(/[?#/]/)[0]}`;
+            }
+          }
+        } else if (name === 'instagramUrl' && value.includes('instagram.com/')) {
+          const parts = value.split('instagram.com/');
+          if (parts.length > 1) {
+            cleanUrl = `instagram.com/${parts[1].split(/[?#/]/)[0]}`;
+          }
+        } else if (name === 'facebookUrl' && value.includes('facebook.com/')) {
+          const parts = value.split('facebook.com/');
+          if (parts.length > 1) {
+            cleanUrl = `facebook.com/${parts[1].split(/[?#/]/)[0]}`;
+          }
+        }
+      } else {
+        // Normal case - not localhost
+        if (name === 'githubUrl') {
+          if (value.includes('github.com/')) {
+            const parts = value.split('github.com/');
+            if (parts.length > 1) {
+              cleanUrl = `github.com/${parts[1].split(/[?#/]/)[0]}`;
+            }
+          } else if (!value.includes('github') && !value.includes('http') && !value.includes('/')) {
+            // Simple username entry
+            cleanUrl = `github.com/${value}`;
+          }
+        } else if (name === 'linkedinUrl') {
+          if (value.includes('linkedin.com/in/')) {
+            const parts = value.split('linkedin.com/in/');
+            if (parts.length > 1) {
+              cleanUrl = `linkedin.com/in/${parts[1].split(/[?#/]/)[0]}`;
+            }
+          } else if (!value.includes('linkedin') && !value.includes('http') && !value.includes('/')) {
+            // Simple username entry
+            cleanUrl = `linkedin.com/in/${value}`;
+          }
+        } else if (name === 'twitterUrl') {
+          if (value.includes('twitter.com/') || value.includes('x.com/')) {
+            if (value.includes('twitter.com/')) {
+              const parts = value.split('twitter.com/');
+              if (parts.length > 1) {
+                cleanUrl = `x.com/${parts[1].split(/[?#/]/)[0]}`;
+              }
+            } else {
+              const parts = value.split('x.com/');
+              if (parts.length > 1) {
+                cleanUrl = `x.com/${parts[1].split(/[?#/]/)[0]}`;
+              }
+            }
+          } else if (!value.includes('twitter') && !value.includes('x.com') && !value.includes('http') && !value.includes('/')) {
+            // Simple username entry
+            cleanUrl = `x.com/${value}`;
+          }
+        } else if (name === 'instagramUrl') {
+          if (value.includes('instagram.com/')) {
+            const parts = value.split('instagram.com/');
+            if (parts.length > 1) {
+              cleanUrl = `instagram.com/${parts[1].split(/[?#/]/)[0]}`;
+            }
+          } else if (!value.includes('instagram') && !value.includes('http') && !value.includes('/')) {
+            // Simple username entry
+            cleanUrl = `instagram.com/${value}`;
+          }
+        } else if (name === 'facebookUrl') {
+          if (value.includes('facebook.com/')) {
+            const parts = value.split('facebook.com/');
+            if (parts.length > 1) {
+              cleanUrl = `facebook.com/${parts[1].split(/[?#/]/)[0]}`;
+            }
+          } else if (!value.includes('facebook') && !value.includes('http') && !value.includes('/')) {
+            // Simple username entry
+            cleanUrl = `facebook.com/${value}`;
+          }
+        }
+      }
+    }
+    
+    setFormData(prev => ({
+      ...prev,
+      [name]: cleanUrl
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     
@@ -55,16 +256,16 @@ const IntroForm = () => {
       headline: formData.tagline,
       bio: formData.bio,
       company_name: formData.companyName,
-      company_url: formData.companyUrl,
-      meeting_link: formData.meetingUrl,
-      personal_website: formData.personalWebsiteUrl, // Updated to use new field
-      additional_urls: formData.websiteUrl,
+      company_url: formatUrl(formData.companyUrl),
+      meeting_link: formatUrl(formData.meetingUrl),
+      personal_website: formatUrl(formData.personalWebsiteUrl),
+      additional_urls: formatUrl(formData.websiteUrl),
       social_media: {
-        linkedin: formData.linkedinUrl,
-        github: formData.githubUrl,
-        twitter: formData.twitterUrl,
-        instagram: formData.instagramUrl,
-        facebook: formData.facebookUrl
+        linkedin: formatSocialUrl(formData.linkedinUrl, 'linkedin'),
+        github: formatSocialUrl(formData.githubUrl, 'github'),
+        twitter: formatSocialUrl(formData.twitterUrl, 'twitter'),
+        instagram: formatSocialUrl(formData.instagramUrl, 'instagram'),
+        facebook: formatSocialUrl(formData.facebookUrl, 'facebook')
       }
     };
     
@@ -190,7 +391,7 @@ const IntroForm = () => {
                   fullWidth
                   name="linkedinUrl"
                   value={formData.linkedinUrl}
-                  onChange={handleChange}
+                  onChange={handleSocialMediaChange}
                   placeholder="LinkedIn URL"
                   InputProps={{
                     startAdornment: (
@@ -207,7 +408,7 @@ const IntroForm = () => {
                   fullWidth
                   name="githubUrl"
                   value={formData.githubUrl}
-                  onChange={handleChange}
+                  onChange={handleSocialMediaChange}
                   placeholder="GitHub URL"
                   InputProps={{
                     startAdornment: (
@@ -224,7 +425,7 @@ const IntroForm = () => {
                   fullWidth
                   name="twitterUrl"
                   value={formData.twitterUrl}
-                  onChange={handleChange}
+                  onChange={handleSocialMediaChange}
                   placeholder="Twitter URL"
                   InputProps={{
                     startAdornment: (
@@ -241,7 +442,7 @@ const IntroForm = () => {
                   fullWidth
                   name="instagramUrl"
                   value={formData.instagramUrl}
-                  onChange={handleChange}
+                  onChange={handleSocialMediaChange}
                   placeholder="Instagram URL"
                   InputProps={{
                     startAdornment: (
@@ -258,7 +459,7 @@ const IntroForm = () => {
                   fullWidth
                   name="facebookUrl"
                   value={formData.facebookUrl}
-                  onChange={handleChange}
+                  onChange={handleSocialMediaChange}
                   placeholder="Facebook URL"
                   InputProps={{
                     startAdornment: (

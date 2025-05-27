@@ -5,6 +5,7 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import InstagramIcon from '@mui/icons-material/Instagram';
+import FacebookIcon from '@mui/icons-material/Facebook';
 import LanguageIcon from '@mui/icons-material/Language';
 import EventIcon from '@mui/icons-material/Event';
 
@@ -19,10 +20,14 @@ const IntroPreview = ({ formData }) => {
     linkedinUrl,
     githubUrl,
     instagramUrl,
+    facebookUrl,
     personalWebsiteUrl,
     meetingUrl,
     websiteUrl
   } = formData;
+
+  // Check if any social media links are available
+  const hasSocialLinks = linkedinUrl || githubUrl || twitterUrl || instagramUrl || facebookUrl;
 
   return (
     <Paper
@@ -51,71 +56,107 @@ const IntroPreview = ({ formData }) => {
         </IconButton>
       </Box>
 
-      <Typography 
-        variant="h5" 
-        gutterBottom
-        sx={{ 
-          overflow: 'hidden', 
-          textOverflow: 'ellipsis', 
-          whiteSpace: 'nowrap',
-          width: '100%'
-        }}
-      >
-        {title || 'Your Name'}
-      </Typography>
-      
-      <Typography 
-        variant="subtitle1" 
-        gutterBottom 
-        color="text.secondary"
-        sx={{ 
-          overflow: 'hidden', 
-          textOverflow: 'ellipsis', 
-          whiteSpace: 'nowrap',
-          width: '100%'
-        }}
-      >
-        {tagline || 'Your Tagline'}
-      </Typography>
-      
-      {companyName && (
+      {personalWebsiteUrl ? (
         <Typography 
-          variant="body2" 
-          color="text.secondary"
+          variant="h5" 
+          gutterBottom
+          component="a"
+          href={personalWebsiteUrl}
+          target="_blank"
+          rel="noopener"
           sx={{ 
-            mt: 0.5,
-            mb: bio ? 0 : 1,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 0.5
+            overflow: 'hidden', 
+            textOverflow: 'ellipsis', 
+            whiteSpace: 'nowrap',
+            width: '100%',
+            color: 'inherit',
+            textDecoration: 'none',
+            '&:hover': {
+              color: 'primary.main',
+              textDecoration: 'none'
+            }
           }}
         >
-          {companyUrl ? (
-            <Box 
-              component="a" 
-              href={companyUrl}
-              target="_blank"
-              rel="noopener"
-              sx={{ 
-                color: 'primary.main', 
-                textDecoration: 'none',
-                display: 'inline-flex',
-                alignItems: 'center',
-                '&:hover': { textDecoration: 'underline' }
-              }}
-            >
-              @ {companyName}
-            </Box>
-          ) : (
-            <>@ {companyName}</>
-          )}
+          {title || 'Your Name'}
+        </Typography>
+      ) : (
+        <Typography 
+          variant="h5" 
+          gutterBottom
+          sx={{ 
+            overflow: 'hidden', 
+            textOverflow: 'ellipsis', 
+            whiteSpace: 'nowrap',
+            width: '100%'
+          }}
+        >
+          {title || 'Your Name'}
         </Typography>
       )}
+      
+      <Box sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        mb: 1
+      }}>
+        <Box sx={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          flexWrap: 'wrap',
+          gap: 0.5
+        }}>
+          <Typography 
+            variant="subtitle1" 
+            color="text.secondary"
+            sx={{ 
+              overflow: 'hidden', 
+              textOverflow: 'ellipsis',
+              mb: 0,
+              mr: 0.01
+            }}
+          >
+            {tagline || 'Your Tagline'}
+          </Typography>
+          
+          {companyName && (
+            <Typography 
+              variant="body2" 
+              color="text.secondary"
+              sx={{ 
+                display: 'inline-flex',
+                alignItems: 'center',
+                ml: 0
+              }}
+            >
+              {companyUrl ? (
+                <Box 
+                  component="a" 
+                  href={companyUrl}
+                  target="_blank"
+                  rel="noopener"
+                  sx={{ 
+                    color: 'primary.main', 
+                    textDecoration: 'none',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    '&:hover': { textDecoration: 'underline' }
+                  }}
+                >
+                  {" "}@{companyName}
+                </Box>
+              ) : (
+                <>{" "}@{companyName}</>
+              )}
+            </Typography>
+          )}
+        </Box>
+      </Box>
 
       {bio && (
         <Box sx={{ 
-          mt: companyName ? 3 : 3, 
+          mt: 3, 
           mb: 2, 
           display: 'flex', 
           flexDirection: 'column', 
@@ -212,53 +253,46 @@ const IntroPreview = ({ formData }) => {
         </Box>
       )}
 
-      <Box sx={{ mt: bio ? 'auto' : 2, pt: 2 }}>
-        <Stack 
-          direction="row" 
-          spacing={2} 
-          justifyContent="center" 
-        >
-          {linkedinUrl ? (
-            <IconButton href={linkedinUrl} target="_blank" rel="noopener">
-              <LinkedInIcon />
-            </IconButton>
-          ) : (
-            <IconButton disabled sx={{ color: 'rgba(0, 0, 0, 0.3)' }}>
-              <LinkedInIcon />
-            </IconButton>
-          )}
-          
-          {githubUrl ? (
-            <IconButton href={githubUrl} target="_blank" rel="noopener">
-              <GitHubIcon />
-            </IconButton>
-          ) : (
-            <IconButton disabled sx={{ color: 'rgba(0, 0, 0, 0.3)' }}>
-              <GitHubIcon />
-            </IconButton>
-          )}
-          
-          {twitterUrl ? (
-            <IconButton href={twitterUrl} target="_blank" rel="noopener">
-              <TwitterIcon />
-            </IconButton>
-          ) : (
-            <IconButton disabled sx={{ color: 'rgba(0, 0, 0, 0.3)' }}>
-              <TwitterIcon />
-            </IconButton>
-          )}
-          
-          {instagramUrl ? (
-            <IconButton href={instagramUrl} target="_blank" rel="noopener">
-              <InstagramIcon />
-            </IconButton>
-          ) : (
-            <IconButton disabled sx={{ color: 'rgba(0, 0, 0, 0.3)' }}>
-              <InstagramIcon />
-            </IconButton>
-          )}
-        </Stack>
-      </Box>
+      {/* Only show the social icons section if at least one social link exists */}
+      {hasSocialLinks && (
+        <Box sx={{ mt: bio ? 'auto' : 2, pt: 2 }}>
+          <Stack 
+            direction="row" 
+            spacing={2} 
+            justifyContent="center" 
+          >
+            {linkedinUrl && (
+              <IconButton href={linkedinUrl} target="_blank" rel="noopener">
+                <LinkedInIcon />
+              </IconButton>
+            )}
+            
+            {githubUrl && (
+              <IconButton href={githubUrl} target="_blank" rel="noopener">
+                <GitHubIcon />
+              </IconButton>
+            )}
+            
+            {twitterUrl && (
+              <IconButton href={twitterUrl} target="_blank" rel="noopener">
+                <TwitterIcon />
+              </IconButton>
+            )}
+            
+            {instagramUrl && (
+              <IconButton href={instagramUrl} target="_blank" rel="noopener">
+                <InstagramIcon />
+              </IconButton>
+            )}
+
+            {facebookUrl && (
+              <IconButton href={facebookUrl} target="_blank" rel="noopener">
+                <FacebookIcon />
+              </IconButton>
+            )}
+          </Stack>
+        </Box>
+      )}
     </Paper>
   );
 };
