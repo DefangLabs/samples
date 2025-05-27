@@ -3,8 +3,7 @@ import { Box, AppBar, Toolbar, Typography, Button, Container, useMediaQuery, use
 import { Link, useLocation } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
 import HomeIcon from '@mui/icons-material/Home';
-import CardMembershipIcon from '@mui/icons-material/CardMembership';
-import ViewListIcon from '@mui/icons-material/ViewList';
+import CropPortraitOutlinedIcon from '@mui/icons-material/CropPortraitOutlined';
 import GitHubIcon from '@mui/icons-material/GitHub';
 
 const Layout = ({ children }) => {
@@ -31,7 +30,7 @@ const Layout = ({ children }) => {
                 flexGrow: 1
               }}
             >
-              <CardMembershipIcon sx={{ mr: 1, color: '#3f51b5' }} />
+              <CropPortraitOutlinedIcon sx={{ mr: 1, color: '#3f51b5' }} />
               <Typography 
                 variant={isMobile ? "body1" : "h6"} 
                 component={Link} 
@@ -69,7 +68,7 @@ const Layout = ({ children }) => {
                 color="inherit" 
                 component={Link}
                 to="/cards"
-                startIcon={!isMobile && <ViewListIcon />}
+                startIcon={!isMobile && <CropPortraitOutlinedIcon />}
                 sx={{ 
                   ml: 1,
                   borderRadius: 2,
@@ -78,7 +77,7 @@ const Layout = ({ children }) => {
                   display: location.pathname === '/cards' ? 'none' : 'flex'
                 }}
               >
-                {isMobile ? <ViewListIcon /> : "My Cards"}
+                {isMobile ? <CropPortraitOutlinedIcon /> : "My Cards"}
               </Button>
               
               <Button 

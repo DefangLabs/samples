@@ -3,7 +3,7 @@ import CardCreator from '../../components/CardCreator/CardCreator';
 import { Box, Typography, Container, Paper, Divider, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';
-import ViewListIcon from '@mui/icons-material/ViewList';
+import CropPortraitOutlinedIcon from '@mui/icons-material/CropPortraitOutlined';
 
 const EditPage = () => {
   return (
@@ -35,7 +35,7 @@ const EditPage = () => {
             component={Link}
             to="/cards"
             variant="contained"
-            startIcon={<ViewListIcon />}
+            startIcon={<CropPortraitOutlinedIcon />}
             sx={{
               bgcolor: 'rgba(255, 255, 255, 0.9)',
               color: '#3f51b5',

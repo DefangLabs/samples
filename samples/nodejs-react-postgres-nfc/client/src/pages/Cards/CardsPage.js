@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Typography, Container, Divider, Paper, Button } from '@mui/material';
 import CardDisplay from '../../components/CardDisplay/CardDisplay';
 import { Link } from 'react-router-dom';
-import ViewListIcon from '@mui/icons-material/ViewList';
+import CropPortraitOutlinedIcon from '@mui/icons-material/CropPortraitOutlined';
 import AddIcon from '@mui/icons-material/Add';
 
 const CardsPage = () => {
@@ -24,7 +24,7 @@ const CardsPage = () => {
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', mb: { xs: 2, sm: 0 } }}>
-          <ViewListIcon sx={{ fontSize: 32, mr: 2 }} />
+          <CropPortraitOutlinedIcon sx={{ fontSize: 32, mr: 2 }} />
           <Box>
             <Typography variant="h5" component="h1" fontWeight={600}>
               Your Cards

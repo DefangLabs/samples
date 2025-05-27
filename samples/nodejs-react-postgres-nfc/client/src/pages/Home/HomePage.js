@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ShareIcon from '@mui/icons-material/Share';
 import PaletteIcon from '@mui/icons-material/Palette';
-import ViewListIcon from '@mui/icons-material/ViewList';
+import CropPortraitOutlinedIcon from '@mui/icons-material/CropPortraitOutlined';
 import AddIcon from '@mui/icons-material/Add';
 
 const HomePage = () => {
@@ -68,99 +68,6 @@ const HomePage = () => {
         </Box>
       </Paper>
       
-      {/* Features Section */}
-      <Box sx={{ mb: 8 }}>
-        <Typography 
-          variant="h4" 
-          component="h2" 
-          gutterBottom 
-          align="center" 
-          sx={{ mb: 5, fontWeight: 600 }}
-        >
-          Why Create a Digital Profile Card?
-        </Typography>
-        
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={4}>
-            <Paper 
-              elevation={2} 
-              sx={{ 
-                p: 3, 
-                height: '100%', 
-                borderRadius: 2,
-                transition: 'transform 0.3s ease',
-                '&:hover': {
-                  transform: 'translateY(-5px)',
-                  boxShadow: '0 10px 20px rgba(0,0,0,0.1)'
-                }
-              }}
-            >
-              <Box sx={{ textAlign: 'center', mb: 2 }}>
-                <DashboardIcon color="primary" sx={{ fontSize: 50 }} />
-              </Box>
-              <Typography variant="h6" align="center" gutterBottom>
-                Professional Presence
-              </Typography>
-              <Typography variant="body1" align="center" color="text.secondary">
-                Create a sleek, modern digital card that showcases your professional identity and expertise.
-              </Typography>
-            </Paper>
-          </Grid>
-          
-          <Grid item xs={12} md={4}>
-            <Paper 
-              elevation={2} 
-              sx={{ 
-                p: 3, 
-                height: '100%', 
-                borderRadius: 2,
-                transition: 'transform 0.3s ease',
-                '&:hover': {
-                  transform: 'translateY(-5px)',
-                  boxShadow: '0 10px 20px rgba(0,0,0,0.1)'
-                }
-              }}
-            >
-              <Box sx={{ textAlign: 'center', mb: 2 }}>
-                <ShareIcon color="primary" sx={{ fontSize: 50 }} />
-              </Box>
-              <Typography variant="h6" align="center" gutterBottom>
-                Easy Sharing
-              </Typography>
-              <Typography variant="body1" align="center" color="text.secondary">
-                Share your contact information and social media profiles in one tap through digital or physical means.
-              </Typography>
-            </Paper>
-          </Grid>
-          
-          <Grid item xs={12} md={4}>
-            <Paper 
-              elevation={2} 
-              sx={{ 
-                p: 3, 
-                height: '100%', 
-                borderRadius: 2,
-                transition: 'transform 0.3s ease',
-                '&:hover': {
-                  transform: 'translateY(-5px)',
-                  boxShadow: '0 10px 20px rgba(0,0,0,0.1)'
-                }
-              }}
-            >
-              <Box sx={{ textAlign: 'center', mb: 2 }}>
-                <PaletteIcon color="primary" sx={{ fontSize: 50 }} />
-              </Box>
-              <Typography variant="h6" align="center" gutterBottom>
-                Customizable Design
-              </Typography>
-              <Typography variant="body1" align="center" color="text.secondary">
-                Personalize your card with custom colors, layouts, and styling to match your personal brand.
-              </Typography>
-            </Paper>
-          </Grid>
-        </Grid>
-      </Box>
-      
       {/* Call to Action Section */}
       <Box sx={{ mt: 8, textAlign: 'center' }}>
         <Typography 
@@ -206,7 +113,7 @@ const HomePage = () => {
             to="/cards" 
             variant="outlined" 
             size="large"
-            startIcon={<ViewListIcon />}
+            startIcon={<CropPortraitOutlinedIcon />}
             sx={{ 
               px: 4, 
               py: 2, 
