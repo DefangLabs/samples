@@ -23,7 +23,8 @@ const IntroPreview = ({ formData }) => {
     facebookUrl,
     personalWebsiteUrl,
     meetingUrl,
-    websiteUrl
+    websiteUrl,
+    backgroundColor
   } = formData;
 
   // Check if any social media links are available
@@ -76,7 +77,11 @@ const IntroPreview = ({ formData }) => {
         transition: 'all 0.3s ease',
         overflow: 'hidden',
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        backgroundColor: backgroundColor || '#ffffff',
+        color: backgroundColor && 
+               (backgroundColor === '#212121' || backgroundColor === '#000000') 
+               ? '#ffffff' : 'inherit'
       }}
     >
       <Box sx={{ mb: 2, display: 'flex', justifyContent: 'flex-end' }}>

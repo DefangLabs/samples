@@ -7,7 +7,9 @@ import {
   Button, 
   Paper, 
   Container,
-  InputAdornment
+  InputAdornment,
+  Snackbar,
+  Alert
 } from '@mui/material';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import GitHubIcon from '@mui/icons-material/GitHub';
@@ -16,10 +18,17 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import EventIcon from '@mui/icons-material/Event';
 import LanguageIcon from '@mui/icons-material/Language';
+import PaletteIcon from '@mui/icons-material/Palette';
+import ColorPicker from './ColorPicker';
 import IntroPreview from './IntroPreview';
 
 const IntroForm = () => {
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  
   const [formData, setFormData] = useState({
+    cardName: '', // new field for card identification
     name: '',
     title: '', // keeping this for backward compatibility with preview
     tagline: '', // this will map to headline
@@ -33,7 +42,8 @@ const IntroForm = () => {
     facebookUrl: '',
     meetingUrl: '', // this will map to meeting_link
     personalWebsiteUrl: '', // this will map to personal_website (new field)
-    websiteUrl: '' // this will map to additional_urls
+    websiteUrl: '', // this will map to additional_urls
+    backgroundColor: '#ffffff' // New field for card background color
   });
 
   const handleChange = (e) => {
@@ -95,11 +105,11 @@ const IntroForm = () => {
     if (cleanUrl.includes('localhost') || cleanUrl.includes('127.0.0.1')) {
       // Extract the username and domain for URLs like http://localhost:3000/github.com/username
       const socialDomains = {
-        github: /github\.com\/([^\/\?#]+)/i,
-        linkedin: /linkedin\.com\/in\/([^\/\?#]+)/i,
-        twitter: /(?:twitter\.com|x\.com)\/([^\/\?#]+)/i,
-        instagram: /instagram\.com\/([^\/\?#]+)/i,
-        facebook: /facebook\.com\/([^\/\?#]+)/i
+        github: /github\.com\/([^/?#]+)/i,
+        linkedin: /linkedin\.com\/in\/([^/?#]+)/i,
+        twitter: /(?:twitter\.com|x\.com)\/([^/?#]+)/i,
+        instagram: /instagram\.com\/([^/?#]+)/i,
+        facebook: /facebook\.com\/([^/?#]+)/i
       };
       
       const currentDomain = socialDomains[type];
@@ -282,7 +292,7 @@ const IntroForm = () => {
     
     // Format data for API submission
     const apiData = {
-      card_name: formData.title || formData.name,
+      card_name: formData.cardName || formData.name,
       name: formData.name,
       headline: formData.tagline,
       bio: formData.bio,
@@ -291,6 +301,7 @@ const IntroForm = () => {
       meeting_link: formattedMeetingUrl,
       personal_website: formattedPersonalWebsiteUrl,
       additional_urls: formattedWebsiteUrl,
+      background_color: formData.backgroundColor, // Include background color
       social_media: {
         linkedin: formatSocialUrl(formData.linkedinUrl, 'linkedin'),
         github: formatSocialUrl(formData.githubUrl, 'github'),
@@ -302,16 +313,50 @@ const IntroForm = () => {
     
     console.log('Form submitted:', apiData);
     
-    // Here you would handle the form submission
-    // For example: 
-    // fetch('http://localhost:3010/cards', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(apiData)
-    // })
-    // .then(response => response.json())
-    // .then(data => console.log('Success:', data))
-    // .catch(error => console.error('Error:', error));
+    // Submit the form data to the server
+    fetch('http://localhost:3010/cards', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(apiData)
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('Success:', data);
+      setSnackbarMessage('Card created successfully!');
+      setSnackbarSeverity('success');
+      setOpenSnackbar(true);
+      
+      // Reset all form fields to their initial state
+      setFormData({
+        cardName: '',
+        name: '',
+        title: '',
+        tagline: '',
+        bio: '',
+        companyName: '',
+        companyUrl: '',
+        linkedinUrl: '',
+        githubUrl: '',
+        twitterUrl: '',
+        instagramUrl: '',
+        facebookUrl: '',
+        meetingUrl: '',
+        personalWebsiteUrl: '',
+        websiteUrl: '',
+        backgroundColor: '#ffffff' // Reset background color to default
+      });
+    })
+    .catch(error => {
+      console.error('Error submitting form:', error);
+      setSnackbarMessage('Failed to create card. Please try again.');
+      setSnackbarSeverity('error');
+      setOpenSnackbar(true);
+    });
   };
 
   return (
@@ -323,6 +368,21 @@ const IntroForm = () => {
               Create Your Card
             </Typography>
             <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+              <Box mb={2}>
+                <Typography variant="subtitle1" gutterBottom>
+                  Card Name *
+                </Typography>
+                <TextField
+                  fullWidth
+                  required
+                  name="cardName"
+                  value={formData.cardName}
+                  onChange={handleChange}
+                  placeholder="Enter a name for this card (e.g. Work Card, Personal Card)"
+                  inputProps={{ maxLength: 100 }}
+                />
+              </Box>
+
               <Box mb={2}>
                 <Typography variant="subtitle1" gutterBottom>
                   Name *
@@ -571,6 +631,19 @@ const IntroForm = () => {
                 </Typography>
               </Box>
 
+              <Typography variant="subtitle1" gutterBottom sx={{ mt: 3 }}>
+                Card Theme
+              </Typography>
+              <Box mb={3} sx={{ display: 'flex', alignItems: 'center' }}>
+                <InputAdornment position="start" sx={{ mr: 2 }}>
+                  <PaletteIcon />
+                </InputAdornment>
+                <ColorPicker 
+                  color={formData.backgroundColor} 
+                  onChange={(color) => setFormData(prev => ({...prev, backgroundColor: color}))}
+                />
+              </Box>
+
               <Button 
                 variant="contained" 
                 color="primary" 
@@ -597,6 +670,22 @@ const IntroForm = () => {
           </Box>
         </Grid>
       </Grid>
+      
+      {/* Snackbar notification that fades after a few seconds */}
+      <Snackbar 
+        open={openSnackbar} 
+        autoHideDuration={2000} 
+        onClose={() => setOpenSnackbar(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={() => setOpenSnackbar(false)} 
+          severity={snackbarSeverity} 
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
