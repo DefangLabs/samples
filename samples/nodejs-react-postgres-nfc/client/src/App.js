@@ -1,16 +1,40 @@
-import React, { Fragment } from "react";
+import React from "react";
+import { ThemeProvider, createTheme, CssBaseline, Box, AppBar, Toolbar, Typography } from '@mui/material';
 import "./App.css";
-import Input from "./components/Input";
-import List from "./components/List";
+import IntroForm from "./components/IntroForm/IntroForm";
+
+// Create a theme
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#000000',
+    },
+    background: {
+      default: '#f5f5f5',
+    },
+  },
+  typography: {
+    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+  },
+});
 
 function App() {
   return (
-    <Fragment>
-      <div className="container">
-        <Input />
-        <List />
-      </div>
-    </Fragment>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar position="static" color="primary">
+          <Toolbar>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              Card Creator
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Box sx={{ py: 4 }}>
+          <IntroForm />
+        </Box>
+      </Box>
+    </ThemeProvider>
   );
 }
 
