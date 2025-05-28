@@ -26,11 +26,15 @@ const CardPreview = ({ formData }) => {
     websiteUrl,
     backgroundColor,
     avatarBackgroundColor,
-    avatar
+    avatar,
+    useGradient,
+    backgroundGradient
   } = formData;
 
-  // Check if the background is dark
-  const isDarkTheme = backgroundColor === '#212121' || backgroundColor === '#000000';
+  // Check if the background is dark based on the background type (solid or gradient)
+  const isDarkTheme = useGradient 
+    ? backgroundGradient?.color === '#ffffff'
+    : backgroundColor === '#212121' || backgroundColor === '#000000';
   
   // Check if any social media links are available
   const hasSocialLinks = linkedinUrl || githubUrl || twitterUrl || instagramUrl || facebookUrl;
@@ -72,6 +76,28 @@ const CardPreview = ({ formData }) => {
     return cleanUrl;
   };
 
+  // Determine background style based on useGradient flag
+  const getBackgroundStyle = () => {
+    if (useGradient && backgroundGradient) {
+      return {
+        background: backgroundGradient.gradient,
+        color: backgroundGradient.color || 'inherit'
+      };
+    } else {
+      return {
+        backgroundColor: backgroundColor || '#ffffff',
+        color: backgroundColor && 
+               (backgroundColor === '#212121' || backgroundColor === '#000000') 
+               ? '#ffffff' : 'inherit'
+      };
+    }
+  };
+
+  // Prevent click event propagation for links
+  const handleLinkClick = (event) => {
+    event.stopPropagation();
+  };
+
   return (
     <Paper
       elevation={3}
@@ -91,10 +117,7 @@ const CardPreview = ({ formData }) => {
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: backgroundColor || '#ffffff',
-        color: backgroundColor && 
-               (backgroundColor === '#212121' || backgroundColor === '#000000') 
-               ? '#ffffff' : 'inherit'
+        ...getBackgroundStyle()
       }}
     >
       {/* Share button in top right corner */}
@@ -102,6 +125,7 @@ const CardPreview = ({ formData }) => {
         <IconButton 
           size="small" 
           sx={{ color: isDarkTheme ? '#ffffff' : 'inherit' }}
+          onClick={(e) => e.stopPropagation()}
         >
           <ShareIcon fontSize="small" />
         </IconButton>
@@ -149,6 +173,7 @@ const CardPreview = ({ formData }) => {
                 href={getPrimaryProfileLink()}
                 target="_blank"
                 rel="noopener"
+                onClick={(e) => e.stopPropagation()}
                 sx={{
                   display: 'block',
                   borderRadius: '50%',

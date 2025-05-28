@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Box, 
   Grid, 
@@ -10,8 +10,11 @@ import {
   InputAdornment,
   Snackbar,
   Alert,
-  Divider
+  Divider,
+  FormControlLabel,
+  Switch
 } from '@mui/material';
+import { Link } from 'react-router-dom';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import TwitterIcon from '@mui/icons-material/Twitter';
@@ -20,13 +23,15 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import EventIcon from '@mui/icons-material/Event';
 import LanguageIcon from '@mui/icons-material/Language';
 import PaletteIcon from '@mui/icons-material/Palette';
+import GradientIcon from '@mui/icons-material/Gradient';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ColorPicker from './ColorPicker';
+import GradientPicker from './GradientPicker';
 import AvatarUpload from './AvatarUpload';
 import CardPreview from './CardPreview';
 import 'react-image-crop/dist/ReactCrop.css';
 
-const CardCreator = () => {
+const CardCreator = ({ existingCardData = null, isEditing = false }) => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
@@ -49,7 +54,13 @@ const CardCreator = () => {
     websiteUrl: '', // this will map to additional_urls
     backgroundColor: '#ffffff', // New field for card background color
     avatarBackgroundColor: '#000000', // New field for avatar background color circle
-    avatar: '' // New field for profile avatar (stores base64 image data)
+    avatar: '', // New field for profile avatar (stores base64 image data)
+    useGradient: false, // Whether to use gradient background instead of solid color
+    backgroundGradient: { 
+      id: 'subtle-blue',
+      gradient: 'linear-gradient(135deg, #f5f7fa 0%, #e4eaff 100%)',
+      color: '#333333'
+    } // Gradient background object
   });
 
   const handleChange = (e) => {
@@ -340,6 +351,9 @@ const CardCreator = () => {
     const formattedWebsiteUrl = formatUrl(formData.websiteUrl);
     const formattedCompanyUrl = formatUrl(formData.companyUrl);
     
+    // Determine if we're editing or creating a new card
+    const isUpdating = isEditing && existingCardData?.card_id;
+    
     // Handle avatar image data - compress if needed
     let avatarData = formData.avatar;
     
@@ -380,6 +394,8 @@ const CardCreator = () => {
       background_color: formData.backgroundColor, // Include background color
       avatar_bg_color: formData.avatarBackgroundColor, // Include avatar background color
       avatar: avatarData, // Include compressed avatar image data
+      use_gradient: formData.useGradient, // Whether to use gradient background
+      background_gradient: formData.useGradient ? formData.backgroundGradient : null, // Gradient data
       social_media: {
         linkedin: formatSocialUrl(formData.linkedinUrl, 'linkedin'),
         github: formatSocialUrl(formData.githubUrl, 'github'),
@@ -402,9 +418,15 @@ const CardCreator = () => {
     
     console.log('Form submitted:', apiData);
     
-    // Submit the form data to the server
-    fetch('http://localhost:3010/cards', {
-      method: 'POST',
+    // Submit the form data to the server - either create or update
+    const url = isUpdating 
+      ? `http://localhost:3010/cards/${existingCardData.card_id}` 
+      : 'http://localhost:3010/cards';
+      
+    const method = isUpdating ? 'PUT' : 'POST';
+    
+    fetch(url, {
+      method: method,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(apiData)
     })
@@ -436,14 +458,29 @@ const CardCreator = () => {
         websiteUrl: '',
         backgroundColor: '#ffffff', // Reset background color to default
         avatarBackgroundColor: '#000000', // Reset avatar background color to default
-        avatar: '' // Reset avatar to default (empty)
+        avatar: '', // Reset avatar to default (empty)
+        useGradient: false, // Reset to solid color
+        backgroundGradient: { 
+          id: 'subtle-blue',
+          gradient: 'linear-gradient(135deg, #f5f7fa 0%, #e4eaff 100%)',
+          color: '#333333'
+        } // Reset to default gradient
       });
       
       // Show success message
       const hasAvatar = apiData.avatar ? ' with profile photo' : '';
-      setSnackbarMessage(`Card "${apiData.card_name}"${hasAvatar} created successfully!`);
+      const action = isUpdating ? 'updated' : 'created';
+      setSnackbarMessage(`Card "${apiData.card_name}"${hasAvatar} ${action} successfully!`);
       setSnackbarSeverity('success');
       setOpenSnackbar(true);
+      
+      // If we're editing, redirect back to cards page after successful update
+      if (isUpdating) {
+        // Show success message for a moment before redirecting
+        setTimeout(() => {
+          window.location.href = '/cards';
+        }, 1500);
+      }
     })
     .catch(error => {
       console.error('Error submitting form:', error);
@@ -453,14 +490,104 @@ const CardCreator = () => {
     });
   };
 
+  // Function to handle card deletion
+  const handleDeleteCard = () => {
+    if (!isEditing || !existingCardData?.card_id) return;
+    
+    // Confirm deletion
+    if (window.confirm(`Are you sure you want to delete the card "${formData.cardName}"? This action cannot be undone.`)) {
+      fetch(`http://localhost:3010/cards/${existingCardData.card_id}`, {
+        method: 'DELETE',
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to delete card');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Card deleted:', data);
+        setSnackbarMessage('Card deleted successfully');
+        setSnackbarSeverity('success');
+        setOpenSnackbar(true);
+        
+        // Redirect to cards page after deletion
+        setTimeout(() => {
+          window.location.href = '/cards';
+        }, 1500);
+      })
+      .catch(error => {
+        console.error('Error deleting card:', error);
+        setSnackbarMessage('Failed to delete card');
+        setSnackbarSeverity('error');
+        setOpenSnackbar(true);
+      });
+    }
+  };
+
+  // For existing card data loading
+  useEffect(() => {
+    if (existingCardData) {
+      console.log('Loading existing card data:', existingCardData);
+      setFormData({
+        cardName: existingCardData.card_name || '',
+        name: existingCardData.name || '',
+        title: existingCardData.name || '', // For preview compatibility
+        tagline: existingCardData.headline || '',
+        bio: existingCardData.bio || '',
+        companyName: existingCardData.company_name || '',
+        companyUrl: existingCardData.company_url || '',
+        linkedinUrl: existingCardData.linkedin || existingCardData.social_media?.linkedin || '',
+        githubUrl: existingCardData.github || existingCardData.social_media?.github || '',
+        twitterUrl: existingCardData.twitter || existingCardData.social_media?.twitter || '',
+        instagramUrl: existingCardData.instagram || existingCardData.social_media?.instagram || '',
+        facebookUrl: existingCardData.facebook || existingCardData.social_media?.facebook || '',
+        meetingUrl: existingCardData.meeting_link || '',
+        personalWebsiteUrl: existingCardData.personal_website || '',
+        websiteUrl: existingCardData.additional_urls || '',
+        backgroundColor: existingCardData.background_color || '#ffffff',
+        avatarBackgroundColor: existingCardData.avatar_bg_color || '#000000',
+        avatar: existingCardData.avatar || '',
+        useGradient: existingCardData.use_gradient || false,
+        backgroundGradient: existingCardData.background_gradient || {
+          id: 'subtle-blue',
+          gradient: 'linear-gradient(135deg, #f5f7fa 0%, #e4eaff 100%)',
+          color: '#333333'
+        }
+      });
+    }
+  }, [existingCardData]);
+
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Grid container spacing={{ xs: 2, md: 4 }} direction={{ xs: 'row', sm: 'row' }}>
         <Grid item xs={12} lg={6}>
           <Paper elevation={3} sx={{ p: 3 }}>
-            <Typography variant="h5" gutterBottom>
-              Create Your Card
-            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+              <Typography variant="h5">
+                {isEditing ? 'Edit Your Card' : 'Create Your Card'}
+              </Typography>
+              
+              {isEditing && (
+                <Button
+                  variant="outlined"
+                  color="error"
+                  size="small"
+                  startIcon={<DeleteIcon />}
+                  onClick={handleDeleteCard}
+                  sx={{
+                    borderColor: '#ffcdd2',
+                    color: '#f44336',
+                    '&:hover': {
+                      backgroundColor: '#ffebee',
+                      borderColor: '#ef9a9a'
+                    }
+                  }}
+                >
+                  Delete Card
+                </Button>
+              )}
+            </Box>
             <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
               <Box mb={2}>
                 <Typography variant="subtitle1" gutterBottom>
@@ -500,28 +627,75 @@ const CardCreator = () => {
                       inputProps={{ maxLength: 100 }}
                     />
 
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, mt: 2 }}>
-                      <PaletteIcon fontSize="small" sx={{ mr: 1, color: 'text.secondary', fontSize: '16px' }} />
-                      <Typography variant="caption" color="text.secondary" sx={{ mr: 2, fontSize: '12px' }}>
-                        Card Theme:
-                      </Typography>
-                      <ColorPicker 
-                        color={formData.backgroundColor} 
-                        onChange={(color) => setFormData(prev => ({...prev, backgroundColor: color}))}
-                      />
-                      
-                      {formData.avatar && (
-                        <Box sx={{ display: 'flex', alignItems: 'center', ml: 4 }}>
-                          <Typography variant="caption" color="text.secondary" sx={{ mr: 2, fontSize: '12px' }}>
-                            Photo Outline:
+                    <Box sx={{ mb: 2, mt: 2 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                          <PaletteIcon fontSize="small" sx={{ mr: 1, color: 'text.secondary', fontSize: '16px' }} />
+                          <Typography variant="caption" color="text.secondary" sx={{ fontSize: '12px' }}>
+                            Card Background:
                           </Typography>
-                          <ColorPicker 
-                            color={formData.avatarBackgroundColor}
-                            onChange={(color) => setFormData(prev => ({...prev, avatarBackgroundColor: color}))}
-                            colorType="outline"
-                          />
                         </Box>
-                      )}
+                        
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                          <Typography 
+                            variant="caption" 
+                            color="text.secondary" 
+                            sx={{ mr: 1, fontSize: '12px' }}
+                          >
+                            Solid
+                          </Typography>
+                          <Switch 
+                            size="small"
+                            checked={formData.useGradient}
+                            onChange={(e) => setFormData(prev => ({...prev, useGradient: e.target.checked}))}
+                            sx={{ mx: 0.5 }}
+                          />
+                          <Typography 
+                            variant="caption" 
+                            color="text.secondary" 
+                            sx={{ fontSize: '12px' }}
+                          >
+                            Gradient
+                          </Typography>
+                        </Box>
+                      </Box>
+                      
+                      <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+                        {!formData.useGradient ? (
+                          <>
+                            <Typography variant="caption" color="text.secondary" sx={{ mr: 2, fontSize: '12px' }}>
+                              Color:
+                            </Typography>
+                            <ColorPicker 
+                              color={formData.backgroundColor} 
+                              onChange={(color) => setFormData(prev => ({...prev, backgroundColor: color}))}
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <Typography variant="caption" color="text.secondary" sx={{ mr: 2, fontSize: '12px' }}>
+                              Gradient:
+                            </Typography>
+                            <GradientPicker 
+                              gradient={formData.backgroundGradient}
+                              onSelect={(gradient) => setFormData(prev => ({...prev, backgroundGradient: gradient}))}
+                            />
+                          </>
+                        )}
+                        
+                        {formData.avatar && (
+                          <Box sx={{ display: 'flex', alignItems: 'center', ml: 4 }}>
+                            <Typography variant="caption" color="text.secondary" sx={{ mr: 2, fontSize: '12px' }}>
+                              Photo Outline:
+                            </Typography>
+                            <ColorPicker 
+                              color={formData.avatarBackgroundColor}
+                              onChange={(color) => setFormData(prev => ({...prev, avatarBackgroundColor: color}))}
+                              colorType="outline"
+                            />
+                          </Box>
+                        )}
+                      </Box>
                     </Box>
                   </Box>
                   <AvatarUpload 
@@ -786,15 +960,65 @@ const CardCreator = () => {
                 </Typography>
               </Box>
 
-              <Button 
-                variant="contained" 
-                color="primary" 
-                fullWidth 
-                type="submit" 
-                sx={{ mt: 3, mb: 2, py: 1.5, backgroundColor: '#000', '&:hover': { backgroundColor: '#333' } }}
-              >
-                Generate Card
-              </Button>
+              <Box sx={{ display: 'flex', gap: 2, mt: 3, mb: 2 }}>
+                <Button 
+                  variant="contained" 
+                  color="primary" 
+                  fullWidth 
+                  type="submit" 
+                  sx={{ py: 1.5, backgroundColor: '#000', '&:hover': { backgroundColor: '#333' } }}
+                >
+                  {isEditing ? 'Save Changes' : 'Generate Card'}
+                </Button>
+                
+                {isEditing && (
+                  <Button
+                    variant="outlined"
+                    component={Link}
+                    to="/cards"
+                    sx={{ 
+                      py: 1.5,
+                      width: '30%',
+                      borderColor: '#ccc',
+                      color: '#666',
+                      '&:hover': { 
+                        borderColor: '#999',
+                        backgroundColor: '#f5f5f5'
+                      }
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                )}
+              </Box>
+
+              {isEditing && (
+                <Box sx={{ mt: 3 }}>
+                  <Divider sx={{ mb: 2 }} />
+                  <Typography variant="subtitle1" gutterBottom>
+                    Dangerous Zone: Card Deletion
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" paragraph>
+                    If you want to delete this card, click the button below. This action is irreversible and will permanently delete the card and all its data.
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={handleDeleteCard}
+                    startIcon={<DeleteIcon />}
+                    sx={{ 
+                      py: 1.5, 
+                      width: '100%',
+                      '&:hover': { 
+                        backgroundColor: '#c62828',
+                        transform: 'scale(1.02)'
+                      }
+                    }}
+                  >
+                    Delete This Card
+                  </Button>
+                </Box>
+              )}
             </Box>
           </Paper>
         </Grid>

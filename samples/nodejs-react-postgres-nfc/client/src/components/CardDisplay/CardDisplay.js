@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Paper, CircularProgress, Button, Grid } from '@mui/material';
 import CardPreview from '../CardCreator/CardPreview';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
+
 
 const CardDisplay = () => {
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch cards from the server
@@ -24,7 +26,22 @@ const CardDisplay = () => {
         
         const data = await response.json();
         console.log('Cards fetched successfully:', data);
-        setCards(Array.isArray(data) ? data : []);
+        
+        // Extract the cards array from the nested data structure
+        if (data.data && data.data.cards) {
+          console.log(`Found ${data.data.cards.length} cards in nested structure:`, data.data.cards);
+          // Log card IDs for debugging
+          console.log('Card IDs:', data.data.cards.map(c => c.card_id));
+          setCards(data.data.cards);
+        } else if (Array.isArray(data)) {
+          console.log(`Found ${data.length} cards in array:`, data);
+          // Log card IDs for debugging
+          console.log('Card IDs:', data.map(c => c.card_id));
+          setCards(data);
+        } else {
+          console.warn('No cards found in response:', data);
+          setCards([]);
+        }
         setLoading(false);
       } catch (err) {
         console.error('Error fetching cards:', err);
@@ -48,10 +65,18 @@ const CardDisplay = () => {
     twitterUrl: 'https://twitter.com/alexjdev',
     personalWebsiteUrl: 'https://alexjohnson.dev',
     meetingUrl: 'https://calendly.com/alexjohnson/meeting',
-    backgroundColor: '#212121', // Using dark theme for better showcase
+    backgroundColor: '#212121',
     avatarBackgroundColor: '#3f51b5',
     // Use a more professional placeholder avatar
-    avatar: 'https://i.pravatar.cc/300?img=12'
+    avatar: 'https://i.pravatar.cc/300?img=12',
+    // Showcase the gradient feature
+    useGradient: true,
+    backgroundGradient: {
+      id: 'blue-purple',
+      name: 'Blue Purple',
+      gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      color: '#ffffff'
+    }
   };
 
   // Show loading spinner while fetching cards
@@ -209,6 +234,17 @@ const CardDisplay = () => {
   // If there are cards, display them in a nice grid
   return (
     <Box>
+      {/* Debug info - only visible during development */}
+      {process.env.NODE_ENV === 'development' && (
+        <Box sx={{ mb: 4, p: 2, bgcolor: '#f0f0f0', borderRadius: 2 }}>
+          <Typography variant="subtitle2">Debug Info:</Typography>
+          <Typography variant="body2">Cards found: {cards.length}</Typography>
+          <Typography variant="body2" sx={{ wordBreak: 'break-all', fontSize: '0.75rem' }}>
+            IDs: {cards.map(c => c.card_id || c.id).join(', ')}
+          </Typography>
+        </Box>
+      )}
+      
       <Grid container spacing={4} sx={{ mt: 2 }}>
         {cards.map(card => (
           <Grid 
@@ -216,7 +252,8 @@ const CardDisplay = () => {
             xs={12} 
             md={6} 
             lg={4} 
-            key={card.id} 
+            key={card.card_id || card.id || Math.random()} 
+            className="card-container"
             sx={{ 
               display: 'flex', 
               justifyContent: 'center',
@@ -233,26 +270,43 @@ const CardDisplay = () => {
               display: 'flex',
               justifyContent: 'center'
             }}>
-              <CardPreview 
-                formData={{
-                  title: card.name,
-                  tagline: card.headline,
-                  bio: card.bio,
-                  companyName: card.company_name,
-                  companyUrl: card.company_url,
-                  linkedinUrl: card.social_media?.linkedin,
-                  githubUrl: card.social_media?.github,
-                  twitterUrl: card.social_media?.twitter,
-                  instagramUrl: card.social_media?.instagram,
-                  facebookUrl: card.social_media?.facebook,
-                  personalWebsiteUrl: card.personal_website,
-                  meetingUrl: card.meeting_link,
-                  websiteUrl: card.additional_urls,
-                  backgroundColor: card.background_color || '#ffffff',
-                  avatarBackgroundColor: card.avatar_bg_color || '#000000',
-                  avatar: card.avatar
-                }} 
-              />
+              <Box 
+                sx={{ 
+                  position: 'relative', 
+                  width: '100%',
+                  cursor: 'pointer'
+                }}
+                onClick={() => navigate(`/edit/${card.card_id}`)}
+              >
+                <CardPreview 
+                  formData={{
+                    title: card.name,
+                    tagline: card.headline,
+                    bio: card.bio,
+                    companyName: card.company_name,
+                    companyUrl: card.company_url,
+                    linkedinUrl: card.linkedin || card.social_media?.linkedin || '',
+                    githubUrl: card.github || card.social_media?.github || '',
+                    twitterUrl: card.twitter || card.social_media?.twitter || '',
+                    instagramUrl: card.instagram || card.social_media?.instagram || '',
+                    facebookUrl: card.facebook || card.social_media?.facebook || '',
+                    personalWebsiteUrl: card.personal_website,
+                    meetingUrl: card.meeting_link,
+                    websiteUrl: card.additional_urls,
+                    backgroundColor: card.background_color || '#ffffff',
+                    avatarBackgroundColor: card.avatar_bg_color || '#000000',
+                    avatar: card.avatar,
+                    useGradient: card.use_gradient || false,
+                    backgroundGradient: card.background_gradient || {
+                      id: 'subtle-blue',
+                      gradient: 'linear-gradient(135deg, #f5f7fa 0%, #e4eaff 100%)',
+                      color: '#333333'
+                    }
+                  }}
+                />
+                
+                {/* Edit button removed as the entire card is now clickable */}
+              </Box>
             </Box>
           </Grid>
         ))}

@@ -45,7 +45,9 @@ const createCardTable = `CREATE TABLE IF NOT EXISTS card(
   additional_urls VARCHAR(255),
   background_color VARCHAR(30) DEFAULT '#ffffff', -- Background color field
   avatar_bg_color VARCHAR(30) DEFAULT '#d2e961', -- Avatar background color field
-  avatar TEXT -- Field for profile avatar image data (base64)
+  avatar TEXT, -- Field for profile avatar image data (base64)
+  use_gradient BOOLEAN DEFAULT false, -- Whether to use gradient background
+  background_gradient JSONB -- JSON field for storing gradient data
 )`
 
 // Create tables when server starts
@@ -85,6 +87,8 @@ app.post("/cards", async (req, res) => {
       background_color, // Field for card background color
       avatar_bg_color, // Field for avatar background color
       avatar, // Field for profile avatar
+      use_gradient, // Whether to use gradient background
+      background_gradient, // Gradient data
       social_media 
     } = req.body;
     
@@ -113,8 +117,8 @@ app.post("/cards", async (req, res) => {
     // 3. Create card with reference to card and social media
     // Using the same card_name from the parent cards table to ensure consistency
     const cardResult2 = await pool.query(
-      "INSERT INTO card (card_id, card_name, name, headline, bio, company_name, company_url, social_media_id, meeting_link, personal_website, additional_urls, background_color, avatar_bg_color, avatar) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *",
-      [cardId, savedCardName, name, headline, bio, company_name, company_url, socialMediaId, meeting_link, personal_website, additional_urls, background_color || '#ffffff', avatar_bg_color || '#d2e961', avatar || null]
+      "INSERT INTO card (card_id, card_name, name, headline, bio, company_name, company_url, social_media_id, meeting_link, personal_website, additional_urls, background_color, avatar_bg_color, avatar, use_gradient, background_gradient) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING *",
+      [cardId, savedCardName, name, headline, bio, company_name, company_url, socialMediaId, meeting_link, personal_website, additional_urls, background_color || '#ffffff', avatar_bg_color || '#d2e961', avatar || null, use_gradient || false, background_gradient ? JSON.stringify(background_gradient) : null]
     );
     
     // Commit transaction
@@ -284,6 +288,8 @@ app.put("/cards/:id", async (req, res) => {
       background_color,
       avatar_bg_color,
       avatar,
+      use_gradient,
+      background_gradient,
       social_media 
     } = req.body;
     
@@ -326,8 +332,8 @@ app.put("/cards/:id", async (req, res) => {
     
     // 5. Update card entry
     const cardUpdateResult = await pool.query(
-      "UPDATE card SET card_name = $1, name = $2, headline = $3, bio = $4, company_name = $5, company_url = $6, meeting_link = $7, personal_website = $8, additional_urls = $9, background_color = $10, avatar_bg_color = $11, avatar = $12, date_updated = CURRENT_TIMESTAMP WHERE card_id = $13 RETURNING *",
-      [updatedCardName, name, headline, bio, company_name, company_url, meeting_link, personal_website, additional_urls, background_color || '#ffffff', avatar_bg_color || '#d2e961', avatar || null, id]
+      "UPDATE card SET card_name = $1, name = $2, headline = $3, bio = $4, company_name = $5, company_url = $6, meeting_link = $7, personal_website = $8, additional_urls = $9, background_color = $10, avatar_bg_color = $11, avatar = $12, use_gradient = $13, background_gradient = $14, date_updated = CURRENT_TIMESTAMP WHERE card_id = $15 RETURNING *",
+      [updatedCardName, name, headline, bio, company_name, company_url, meeting_link, personal_website, additional_urls, background_color || '#ffffff', avatar_bg_color || '#d2e961', avatar || null, use_gradient || false, background_gradient ? JSON.stringify(background_gradient) : null, id]
     );
     
     // Commit transaction
@@ -447,6 +453,64 @@ app.delete("/cards/:id", async (req, res) => {
     res.status(500).json({
       status: "error",
       message: "Failed to delete card",
+      error: err.message
+    });
+  }
+});
+
+// Get a specific card by ID
+app.get("/cards/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    console.log(`Fetching card with ID: ${id}`);
+    
+    // Parse the ID as an integer to ensure proper comparison
+    const cardId = parseInt(id, 10);
+    
+    // Query to get the specific card with associated social media info
+    const result = await pool.query(`
+      SELECT c.*, cd.*, sm.*
+      FROM cards cd
+      JOIN card c ON c.card_id = cd.card_id
+      LEFT JOIN social_media sm ON c.social_media_id = sm.social_media_id
+      WHERE cd.card_id = $1
+    `, [cardId]);
+
+    if (result.rows.length === 0) {
+      console.log(`No card found with ID: ${id}`);
+      return res.status(404).json({
+        status: "error",
+        message: "Card not found"
+      });
+    }
+
+    // Extract social media fields into a separate social_media object
+    // to match the expected structure in the CardCreator component
+    const card = { ...result.rows[0] };
+    const social_media = {
+      linkedin: card.linkedin || '',
+      github: card.github || '',
+      twitter: card.twitter || '',
+      instagram: card.instagram || '',
+      facebook: card.facebook || ''
+    };
+
+    // Add social_media object to the card data
+    card.social_media = social_media;
+
+    console.log(`Successfully retrieved card with ID: ${id}`);
+    res.json({
+      status: "success",
+      data: {
+        card: card
+      }
+    });
+  } catch (err) {
+    console.error(`Error fetching card with ID ${req.params.id}:`, err);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to fetch card",
       error: err.message
     });
   }

@@ -1,5 +1,5 @@
 import React from "react";
-import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
+import { ThemeProvider, createTheme, CssBaseline, Box } from '@mui/material';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import "./App.css";
 
@@ -78,14 +78,29 @@ const theme = createTheme({
 });
 
 function App() {
+  // Add some global styles for card hover effects
+  const globalStyles = {};
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      <Box component="style" 
+        dangerouslySetInnerHTML={{ 
+          __html: Object.entries(globalStyles)
+            .map(([selector, styles]) => 
+              `${selector} { ${Object.entries(styles)
+                .map(([prop, value]) => `${prop}: ${value};`)
+                .join(' ')} 
+              }`
+            ).join('\n')
+        }} 
+      />
       <Router>
         <Layout>
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/edit" element={<EditPage />} />
+            <Route path="/edit/:cardId" element={<EditPage />} />
             <Route path="/cards" element={<CardsPage />} />
           </Routes>
         </Layout>
