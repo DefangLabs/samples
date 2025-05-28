@@ -9,7 +9,17 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import LanguageIcon from '@mui/icons-material/Language';
 import EventIcon from '@mui/icons-material/Event';
 
-const CardPreview = ({ formData }) => {
+const getContrastYIQ = (hexcolor) => {
+  let hex = hexcolor.replace('#', '');
+  if (hex.length === 3) hex = hex.split('').map(x => x + x).join('');
+  const r = parseInt(hex.substr(0,2),16);
+  const g = parseInt(hex.substr(2,2),16);
+  const b = parseInt(hex.substr(4,2),16);
+  const yiq = ((r*299)+(g*587)+(b*114))/1000;
+  return (yiq >= 180) ? '#111' : '#fff';
+};
+
+const CardPreview = ({ formData, textColor: propTextColor }) => {
   const {
     title,
     tagline,
@@ -98,6 +108,20 @@ const CardPreview = ({ formData }) => {
     event.stopPropagation();
   };
 
+  // Compute text color for preview
+  let previewTextColor = propTextColor;
+  if (!previewTextColor) {
+    if (useGradient && backgroundGradient && backgroundGradient.color) {
+      previewTextColor = getContrastYIQ(backgroundGradient.color);
+    } else if (backgroundColor) {
+      previewTextColor = getContrastYIQ(backgroundColor);
+    } else {
+      previewTextColor = '#111';
+    }
+  }
+  const colorOverride = { color: previewTextColor + ' !important' };
+  const borderColorOverride = { borderColor: previewTextColor + ' !important' };
+
   return (
     <Paper
       elevation={3}
@@ -117,14 +141,15 @@ const CardPreview = ({ formData }) => {
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
-        ...getBackgroundStyle()
+        ...getBackgroundStyle(),
+        color: previewTextColor,
       }}
     >
       {/* Share button in top right corner */}
       <Box sx={{ position: 'absolute', top: 12, right: 12 }}>
         <IconButton 
           size="small" 
-          sx={{ color: isDarkTheme ? '#ffffff' : 'inherit' }}
+          sx={colorOverride}
           onClick={(e) => e.stopPropagation()}
         >
           <ShareIcon fontSize="small" />
@@ -225,15 +250,15 @@ const CardPreview = ({ formData }) => {
             target="_blank"
             rel="noopener"
             sx={{ 
+              ...colorOverride,
               overflow: 'hidden', 
               textOverflow: 'ellipsis', 
               whiteSpace: 'nowrap',
-              color: 'inherit',
               textDecoration: 'none',
               display: 'block',
               mb: 0.5,
               '&:hover': {
-                color: 'primary.main',
+                color: previewTextColor,
                 textDecoration: 'none'
               }
             }}
@@ -244,6 +269,7 @@ const CardPreview = ({ formData }) => {
           <Typography 
             variant="h5" 
             sx={{ 
+              ...colorOverride,
               overflow: 'hidden', 
               textOverflow: 'ellipsis', 
               whiteSpace: 'nowrap',
@@ -264,8 +290,8 @@ const CardPreview = ({ formData }) => {
         }}>
           <Typography 
             variant="subtitle1" 
-            color={isDarkTheme ? 'rgba(255, 255, 255, 0.7)' : 'text.secondary'}
             sx={{ 
+              ...colorOverride,
               overflow: 'hidden', 
               textOverflow: 'ellipsis',
               mb: 0,
@@ -278,8 +304,8 @@ const CardPreview = ({ formData }) => {
           {companyName && (
             <Typography 
               variant="body2" 
-              color={isDarkTheme ? '#ffffff' : 'text.secondary'}
               sx={{ 
+                ...colorOverride,
                 display: 'inline-flex',
                 alignItems: 'center',
                 ml: 0
@@ -292,20 +318,20 @@ const CardPreview = ({ formData }) => {
                   target="_blank"
                   rel="noopener"
                   sx={{ 
-                    color: isDarkTheme ? '#ffffff' : 'primary.main', 
+                    ...colorOverride,
                     textDecoration: 'none',
                     display: 'inline-flex',
                     alignItems: 'center',
                     '&:hover': { 
                       textDecoration: 'underline',
-                      color: isDarkTheme ? '#ffffff' : 'primary.dark'
+                      color: previewTextColor
                     }
                   }}
                 >
                   {" "}@{companyName}
                 </Box>
               ) : (
-                <>{" "}@{companyName}</>
+                <> {" "}@{companyName}</>
               )}
             </Typography>
           )}
@@ -324,8 +350,8 @@ const CardPreview = ({ formData }) => {
           <Typography 
             variant="body1" 
             align="center"
-            color={isDarkTheme ? 'rgba(255, 255, 255, 0.9)' : 'inherit'}
             sx={{ 
+              ...colorOverride,
               wordWrap: 'break-word',
               overflowWrap: 'break-word'
             }}
@@ -349,6 +375,8 @@ const CardPreview = ({ formData }) => {
                 rel="noopener"
                 startIcon={<LanguageIcon fontSize="small" />}
                 sx={{ 
+                  ...colorOverride,
+                  ...borderColorOverride,
                   borderRadius: 4,
                   textTransform: 'none',
                   px: 2,
@@ -357,18 +385,15 @@ const CardPreview = ({ formData }) => {
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
-                  color: isDarkTheme ? '#ffffff' : undefined,
-                  borderColor: isDarkTheme ? 'rgba(255, 255, 255, 0.5)' : undefined,
-                  '&:hover': isDarkTheme ? {
-                    borderColor: '#ffffff',
-                    backgroundColor: 'rgba(255, 255, 255, 0.08)'
-                  } : undefined
+                  '&:hover': {
+                    borderColor: previewTextColor,
+                    backgroundColor: previewTextColor === '#fff' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'
+                  }
                 }}
               >
                 Visit My Website
               </Button>
             )}
-            
             {meetingUrl && (
               <Button 
                 variant="outlined" 
@@ -379,6 +404,8 @@ const CardPreview = ({ formData }) => {
                 rel="noopener"
                 startIcon={<EventIcon fontSize="small" />}
                 sx={{ 
+                  ...colorOverride,
+                  ...borderColorOverride,
                   borderRadius: 4,
                   textTransform: 'none',
                   px: 2,
@@ -387,18 +414,15 @@ const CardPreview = ({ formData }) => {
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
-                  color: isDarkTheme ? '#ffffff' : undefined,
-                  borderColor: isDarkTheme ? 'rgba(255, 255, 255, 0.5)' : undefined,
-                  '&:hover': isDarkTheme ? {
-                    borderColor: '#ffffff',
-                    backgroundColor: 'rgba(255, 255, 255, 0.08)'
-                  } : undefined
+                  '&:hover': {
+                    borderColor: previewTextColor,
+                    backgroundColor: previewTextColor === '#fff' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'
+                  }
                 }}
               >
                 Schedule a Meeting
               </Button>
             )}
-            
             {websiteUrl && (
               <Button 
                 variant="outlined" 
@@ -409,6 +433,8 @@ const CardPreview = ({ formData }) => {
                 rel="noopener"
                 startIcon={<LanguageIcon fontSize="small" />}
                 sx={{ 
+                  ...colorOverride,
+                  ...borderColorOverride,
                   borderRadius: 4,
                   textTransform: 'none',
                   px: 2,
@@ -417,12 +443,10 @@ const CardPreview = ({ formData }) => {
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
-                  color: isDarkTheme ? '#ffffff' : undefined,
-                  borderColor: isDarkTheme ? 'rgba(255, 255, 255, 0.5)' : undefined,
-                  '&:hover': isDarkTheme ? {
-                    borderColor: '#ffffff',
-                    backgroundColor: 'rgba(255, 255, 255, 0.08)'
-                  } : undefined
+                  '&:hover': {
+                    borderColor: previewTextColor,
+                    backgroundColor: previewTextColor === '#fff' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'
+                  }
                 }}
               >
                 Visit Project Site
@@ -445,51 +469,47 @@ const CardPreview = ({ formData }) => {
                 href={sanitizeUrl(linkedinUrl)} 
                 target="_blank" 
                 rel="noopener" 
-                sx={{ color: isDarkTheme ? '#ffffff' : 'inherit' }}
+                sx={colorOverride}
               >
                 <LinkedInIcon />
               </IconButton>
             )}
-            
             {githubUrl && (
               <IconButton 
                 href={sanitizeUrl(githubUrl)} 
                 target="_blank" 
                 rel="noopener" 
-                sx={{ color: isDarkTheme ? '#ffffff' : 'inherit' }}
+                sx={colorOverride}
               >
                 <GitHubIcon />
               </IconButton>
             )}
-            
             {twitterUrl && (
               <IconButton 
                 href={sanitizeUrl(twitterUrl)} 
                 target="_blank" 
                 rel="noopener" 
-                sx={{ color: isDarkTheme ? '#ffffff' : 'inherit' }}
+                sx={colorOverride}
               >
                 <TwitterIcon />
               </IconButton>
             )}
-            
             {instagramUrl && (
               <IconButton 
                 href={sanitizeUrl(instagramUrl)} 
                 target="_blank" 
                 rel="noopener" 
-                sx={{ color: isDarkTheme ? '#ffffff' : 'inherit' }}
+                sx={colorOverride}
               >
                 <InstagramIcon />
               </IconButton>
             )}
-
             {facebookUrl && (
               <IconButton 
                 href={sanitizeUrl(facebookUrl)} 
                 target="_blank" 
                 rel="noopener" 
-                sx={{ color: isDarkTheme ? '#ffffff' : 'inherit' }}
+                sx={colorOverride}
               >
                 <FacebookIcon />
               </IconButton>

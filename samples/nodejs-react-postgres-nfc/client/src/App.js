@@ -7,6 +7,7 @@ import "./App.css";
 import HomePage from "./pages/Home";
 import EditPage from "./pages/Edit";
 import CardsPage from "./pages/Cards";
+import DefaultCardPage from "./pages/DefaultCardPage";
 import Layout from "./components/Layout";
 
 // Create a theme
@@ -98,7 +99,7 @@ function App() {
       <Router>
         <Layout>
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route path="/" element={<DefaultCardPage />} />
             <Route path="/edit" element={<EditPage />} />
             <Route path="/edit/:cardId" element={<EditPage />} />
             <Route path="/cards" element={<CardsPage />} />

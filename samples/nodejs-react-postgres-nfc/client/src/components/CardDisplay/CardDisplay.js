@@ -3,7 +3,19 @@ import { Box, Typography, Paper, CircularProgress, Button, Grid } from '@mui/mat
 import CardPreview from '../CardCreator/CardPreview';
 import { Link, useNavigate } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import { styled } from '@mui/material/styles';
 
+
+const DefaultCardBox = styled(Box)(({ theme, isdefault }) => ({
+  border: isdefault === 'true' ? `2.5px solid ${theme.palette.primary.main}` : '2px solid transparent',
+  boxShadow: isdefault === 'true' ? '0 0 16px 2px #3f51b540' : theme.shadows[2],
+  borderRadius: 16,
+  transition: 'border 0.2s, box-shadow 0.2s',
+  position: 'relative',
+  background: isdefault === 'true' ? '#f5faff' : '#fff',
+}));
 
 const CardDisplay = () => {
   const [cards, setCards] = useState([]);
@@ -52,6 +64,22 @@ const CardDisplay = () => {
 
     fetchCards();
   }, []);
+
+  // Set default card handler
+  const handleSetDefault = async (e, cardId) => {
+    e.stopPropagation(); // Prevent card click
+    try {
+      const res = await fetch(`http://localhost:3010/cards/${cardId}/set-default`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      if (!res.ok) throw new Error('Failed to set default card');
+      // Update state: only one default
+      setCards(cards => cards.map(card => ({ ...card, is_default: card.card_id === cardId })));
+    } catch (err) {
+      alert('Could not set default card.');
+    }
+  };
 
   // Default card data to show when no cards exist
   const defaultCardData = {
@@ -263,21 +291,40 @@ const CardDisplay = () => {
               }
             }}
           >
-            <Box sx={{ 
-              position: 'relative', 
-              width: '100%',
-              height: '100%',
-              display: 'flex',
-              justifyContent: 'center'
-            }}>
-              <Box 
-                sx={{ 
-                  position: 'relative', 
-                  width: '100%',
-                  cursor: 'pointer'
-                }}
-                onClick={() => navigate(`/edit/${card.card_id}`)}
-              >
+            <DefaultCardBox
+              isdefault={card.is_default ? 'true' : 'false'}
+              sx={{
+                position: 'relative',
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                pb: 2
+              }}
+              onClick={() => navigate(`/edit/${card.card_id}`)}
+            >
+              {/* Checkbox in top-left, stops click propagation */}
+              <Box sx={{ position: 'absolute', top: 10, left: 10, right: 'unset', zIndex: 2 }} onClick={e => e.stopPropagation()}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={!!card.is_default}
+                      onChange={e => handleSetDefault(e, card.card_id)}
+                      color="primary"
+                      inputProps={{ 'aria-label': 'Set as default card' }}
+                    />
+                  }
+                  label={<Typography variant="caption" color="primary">Default</Typography>}
+                  labelPlacement="end"
+                  sx={{ ml: 0 }}
+                />
+              </Box>
+              <Box sx={{ width: '100%' }}>
+                {/* Show card_name above the card */}
+                <Typography variant="subtitle2" color="text.secondary" sx={{ textAlign: 'center', fontWeight: 500, mb: 1, letterSpacing: 0.5 }}>
+                  {card.card_name}
+                </Typography>
                 <CardPreview 
                   formData={{
                     title: card.name,
@@ -304,10 +351,8 @@ const CardDisplay = () => {
                     }
                   }}
                 />
-                
-                {/* Edit button removed as the entire card is now clickable */}
               </Box>
-            </Box>
+            </DefaultCardBox>
           </Grid>
         ))}
       </Grid>
