@@ -24,6 +24,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ColorPicker from './ColorPicker';
 import AvatarUpload from './AvatarUpload';
 import CardPreview from './CardPreview';
+import 'react-image-crop/dist/ReactCrop.css';
 
 const CardCreator = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -175,6 +176,50 @@ const CardCreator = () => {
     return formatUrl(cleanUrl);
   };
 
+  // Compress image and convert to base64
+  const compressImage = (base64Image) => {
+    return new Promise((resolve, reject) => {
+      // Create an image to get dimensions
+      const img = new Image();
+      img.onload = () => {
+        // Target dimensions - reasonable for profile pictures
+        let targetWidth = 400;
+        let targetHeight = 400;
+        
+        // Maintain aspect ratio
+        if (img.width > img.height) {
+          targetHeight = Math.round((targetWidth / img.width) * img.height);
+        } else {
+          targetWidth = Math.round((targetHeight / img.height) * img.width);
+        }
+        
+        // Create canvas for resizing
+        const canvas = document.createElement('canvas');
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+        const ctx = canvas.getContext('2d');
+        
+        // Apply smoothing for better quality
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        
+        // Draw image at new size
+        ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+        
+        // Get compressed image as base64 string with reduced quality
+        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.85);
+        
+        resolve(compressedBase64);
+      };
+      
+      img.onerror = () => {
+        reject(new Error('Failed to load image for compression'));
+      };
+      
+      img.src = base64Image;
+    });
+  };
+
   // Helper function for social media URLs - accepts various inputs
   const handleSocialMediaChange = (e) => {
     const { name, value } = e.target;
@@ -286,7 +331,7 @@ const CardCreator = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     // Make sure to format all URL fields with proper https:// prefixes
@@ -295,18 +340,30 @@ const CardCreator = () => {
     const formattedWebsiteUrl = formatUrl(formData.websiteUrl);
     const formattedCompanyUrl = formatUrl(formData.companyUrl);
     
-    // Check if the avatar image data is too large (over 5MB)
+    // Handle avatar image data - compress if needed
     let avatarData = formData.avatar;
-    if (avatarData && avatarData.length > 5 * 1024 * 1024) {
-      console.warn('Avatar image is too large, compressing...');
-      // For extremely large images, we might need to skip them
-      if (avatarData.length > 10 * 1024 * 1024) {
-        console.error('Avatar image exceeds maximum size limit');
-        setSnackbarMessage('Avatar image is too large. Please use a smaller image (< 5MB).');
-        setSnackbarSeverity('error');
-        setOpenSnackbar(true);
-        return;
+    
+    // Avatars are already compressed in the AvatarUpload component,
+    // but we might need to further compress extremely large images 
+    // that somehow made it through the initial compression
+    try {
+      if (avatarData) {
+        if (avatarData.length > 2 * 1024 * 1024) {
+          console.log('Further compressing large avatar image for database storage...');
+          setSnackbarMessage('Optimizing image for storage...');
+          setSnackbarSeverity('info');
+          setOpenSnackbar(true);
+          
+          // For extremely large images that somehow got through, compress again
+          avatarData = await compressImage(avatarData);
+          console.log('Secondary compression complete');
+        } else {
+          console.log('Avatar image already at optimal size, no further compression needed');
+        }
       }
+    } catch (error) {
+      console.error('Error during secondary image compression:', error);
+      // Continue with existing image if compression fails
     }
     
     // Format data for API submission
@@ -322,7 +379,7 @@ const CardCreator = () => {
       additional_urls: formattedWebsiteUrl,
       background_color: formData.backgroundColor, // Include background color
       avatar_bg_color: formData.avatarBackgroundColor, // Include avatar background color
-      avatar: avatarData, // Include avatar image data
+      avatar: avatarData, // Include compressed avatar image data
       social_media: {
         linkedin: formatSocialUrl(formData.linkedinUrl, 'linkedin'),
         github: formatSocialUrl(formData.githubUrl, 'github'),
@@ -331,6 +388,17 @@ const CardCreator = () => {
         facebook: formatSocialUrl(formData.facebookUrl, 'facebook')
       }
     };
+    
+    // Log size before and after compression
+    if (formData.avatar && avatarData) {
+      const originalSize = Math.round(formData.avatar.length / 1024);
+      const compressedSize = Math.round(avatarData.length / 1024);
+      const reduction = Math.round(((originalSize - compressedSize) / originalSize) * 100);
+      
+      if (originalSize !== compressedSize) {
+        console.log(`Image compression: ${originalSize}KB → ${compressedSize}KB (${reduction}% reduction)`);
+      }
+    }
     
     console.log('Form submitted:', apiData);
     
@@ -463,7 +531,8 @@ const CardCreator = () => {
                       console.log('Avatar changed, updating form data');
                       setFormData(prev => ({ ...prev, avatar: imageData }));
                     }}
-                    onAvatarRemove={() => setFormData(prev => ({ ...prev, avatar: '' }))}
+                    onAvatarRemove={() => setFormData(prev => ({ ...prev, avatar: '' }))
+                    }
                   />
                 </Box>
                 

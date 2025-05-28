@@ -8,6 +8,7 @@ import {
   styled
 } from '@mui/material';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+import 'react-image-crop/dist/ReactCrop.css';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -21,22 +22,102 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
+// Helper function to compress images
+const compressImage = (image, maxWidth = 600, maxHeight = 600, quality = 0.85) => {
+  return new Promise((resolve, reject) => {
+    try {
+      const img = new Image();
+      
+      img.onload = () => {
+        try {
+          let width = img.width;
+          let height = img.height;
+          
+          console.log(`Original image dimensions: ${width}x${height}`);
+          
+          // Calculate new dimensions while maintaining aspect ratio
+          if (width > height) {
+            if (width > maxWidth) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            }
+          } else {
+            if (height > maxHeight) {
+              width = Math.round((width * maxHeight) / height);
+              height = maxHeight;
+            }
+          }
+          
+          console.log(`Resized dimensions: ${width}x${height}`);
+          
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          
+          const ctx = canvas.getContext('2d');
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          // Convert to base64 string with specified quality
+          const compressedImage = canvas.toDataURL('image/jpeg', quality);
+          
+          // Log compression results and calculate reduction percentage
+          const originalSize = Math.round(image.length / 1024);
+          const compressedSize = Math.round(compressedImage.length / 1024);
+          const reduction = Math.round(((originalSize - compressedSize) / originalSize) * 100);
+          
+          console.log(`Image compression: ${originalSize}KB → ${compressedSize}KB (${reduction}% reduction) at quality ${quality}`);
+          
+          resolve(compressedImage);
+        } catch (err) {
+          console.error('Error during image compression process:', err);
+          // If compression fails, return original image
+          resolve(image);
+        }
+      };
+      
+      img.onerror = (error) => {
+        console.error('Error loading image for compression:', error);
+        reject(error);
+      };
+      
+      img.src = image;
+    } catch (error) {
+      console.error('Error in compression setup:', error);
+      reject(error);
+    }
+  });
+};
+
 const AvatarUpload = ({ avatarImage, avatarBgColor = '#000000', onAvatarChange, onAvatarRemove }) => {
   // Handle the file selection
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file && file.type.startsWith('image/')) {
-      // Maximum file size: 2MB
-      const maxSize = 2 * 1024 * 1024;
+      // Maximum file size for upload (now increased to 10MB)
+      const absoluteMaxSize = 10 * 1024 * 1024;
       
-      if (file.size > maxSize) {
-        alert('Image is too large. Please select an image smaller than 2MB.');
+      if (file.size > absoluteMaxSize) {
+        alert('Image is too large. Please select an image smaller than 10MB.');
         return;
       }
       
       const reader = new FileReader();
       reader.onload = () => {
-        onAvatarChange(reader.result);
+        // Adjust compression quality based on file size
+        const quality = file.size > 5 * 1024 * 1024 ? 0.7 : 
+                        file.size > 2 * 1024 * 1024 ? 0.8 : 0.9;
+        
+        // Apply stronger compression to larger files
+        const maxWidth = file.size > 5 * 1024 * 1024 ? 500 : 
+                        file.size > 2 * 1024 * 1024 ? 600 : 800;
+        
+        // Compress all images for consistent quality
+        compressImage(reader.result, maxWidth, maxWidth, quality)
+          .then(compressedImage => {
+            onAvatarChange(compressedImage);
+          });
       };
       reader.onerror = () => {
         console.error('Error reading file');
