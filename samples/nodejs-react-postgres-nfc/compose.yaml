@@ -16,7 +16,7 @@ services:
       context: ./client
       dockerfile: Dockerfile
       args:
-        - REACT_APP_API_URL=https://kevyvo-server--3010.prod1.defang.dev #replace <YOUR_USERNAME> with your username
+        - REACT_APP_API_URL=https://kevyvo-server--3010.prod1a.defang.dev #replace <YOUR_USERNAME> with your username
     ports:
       - mode: ingress
         target: 3000

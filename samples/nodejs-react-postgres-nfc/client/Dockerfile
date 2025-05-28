@@ -6,6 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Argument for API URL
 ARG REACT_APP_API_URL=http://localhost:3010
+ENV REACT_APP_API_URL=${REACT_APP_API_URL}
 
 # Set the working directory to /app
 WORKDIR /app
