@@ -420,8 +420,8 @@ const CardCreator = ({ existingCardData = null, isEditing = false }) => {
     
     // Submit the form data to the server - either create or update
     const url = isUpdating 
-      ? `http://localhost:3010/cards/${existingCardData.card_id}` 
-      : 'http://localhost:3010/cards';
+      ? `${process.env.REACT_APP_API_URL}/${existingCardData.card_id}` 
+      : `${process.env.REACT_APP_API_URL}/cards`;
       
     const method = isUpdating ? 'PUT' : 'POST';
     
@@ -496,7 +496,7 @@ const CardCreator = ({ existingCardData = null, isEditing = false }) => {
     
     // Confirm deletion
     if (window.confirm(`Are you sure you want to delete the card "${formData.cardName}"? This action cannot be undone.`)) {
-      fetch(`http://localhost:3010/cards/${existingCardData.card_id}`, {
+      fetch(`${process.env.REACT_APP_API_URL}/${existingCardData.card_id}`, {
         method: 'DELETE',
       })
       .then(response => {

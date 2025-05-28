@@ -97,14 +97,21 @@ function App() {
         }} 
       />
       <Router>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<DefaultCardPage />} />
-            <Route path="/edit" element={<EditPage />} />
-            <Route path="/edit/:cardId" element={<EditPage />} />
-            <Route path="/cards" element={<CardsPage />} />
-          </Routes>
-        </Layout>
+        <Routes>
+          <Route path="/" element={<DefaultCardPage />} />
+          <Route
+            path="*"
+            element={
+              <Layout>
+                <Routes>
+                  <Route path="/edit" element={<EditPage />} />
+                  <Route path="/edit/:cardId" element={<EditPage />} />
+                  <Route path="/cards" element={<CardsPage />} />
+                </Routes>
+              </Layout>
+            }
+          />
+        </Routes>
       </Router>
     </ThemeProvider>
   );

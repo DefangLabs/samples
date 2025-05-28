@@ -4,6 +4,7 @@ import { Box, Typography, Container, Paper, Divider, Button, CircularProgress } 
 import { Link, useParams } from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';
 import CropPortraitOutlinedIcon from '@mui/icons-material/CropPortraitOutlined';
+import CardPreview from '../../components/CardCreator/CardPreview'; // Import CardPreview component
 
 const EditPage = () => {
   const { cardId } = useParams(); // Get the cardId from URL params
@@ -16,7 +17,7 @@ const EditPage = () => {
     if (cardId) {
       setLoading(true);
       
-      fetch(`http://localhost:3010/cards/${cardId}`)
+      fetch(`${process.env.REACT_APP_API_URL}/cards/${cardId}`)
         .then(response => {
           if (!response.ok) {
             throw new Error(`Failed to fetch card: ${response.status}`);
@@ -97,7 +98,11 @@ const EditPage = () => {
             </Button>
           </Box>
         ) : (
-          <CardCreator existingCardData={cardData} isEditing={Boolean(cardId)} />
+          <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: 'flex-start', gap: 4, mt: 2 }}>
+            <Box sx={{ flex: 1, minWidth: 320, maxWidth: 500 }}>
+              <CardCreator existingCardData={cardData} isEditing={Boolean(cardId)} />
+            </Box>
+          </Box>
         )}
       </Box>
     </Container>

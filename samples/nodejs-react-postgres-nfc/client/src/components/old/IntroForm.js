@@ -335,7 +335,7 @@ const IntroForm = () => {
     console.log('Form submitted:', apiData);
     
     // Submit the form data to the server
-    fetch('http://localhost:3010/cards', {
+    fetch(`${process.env.REACT_APP_API_URL}/cards`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(apiData)

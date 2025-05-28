@@ -11,7 +11,7 @@ const DefaultCardPage = () => {
     const fetchDefaultCard = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:3010/cards/default');
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/cards/default`);
         if (!response.ok) throw new Error('No default card found');
         const data = await response.json();
         setCard(data.data.card);

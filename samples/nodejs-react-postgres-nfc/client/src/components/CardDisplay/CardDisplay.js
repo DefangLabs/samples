@@ -6,6 +6,8 @@ import AddIcon from '@mui/icons-material/Add';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { styled } from '@mui/material/styles';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 const DefaultCardBox = styled(Box)(({ theme, isdefault }) => ({
@@ -29,7 +31,7 @@ const CardDisplay = () => {
       try {
         setLoading(true);
         console.log('Fetching cards from server...');
-        const response = await fetch('http://localhost:3010/cards');
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/cards`);
         
         if (!response.ok) {
           const errorText = await response.text().catch(() => 'Unknown error');
@@ -69,7 +71,7 @@ const CardDisplay = () => {
   const handleSetDefault = async (e, cardId) => {
     e.stopPropagation(); // Prevent card click
     try {
-      const res = await fetch(`http://localhost:3010/cards/${cardId}/set-default`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/cards/${cardId}/set-default`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -78,6 +80,21 @@ const CardDisplay = () => {
       setCards(cards => cards.map(card => ({ ...card, is_default: card.card_id === cardId })));
     } catch (err) {
       alert('Could not set default card.');
+    }
+  };
+
+  // Delete card handler
+  const handleDeleteCard = async (e, cardId) => {
+    e.stopPropagation();
+    if (!window.confirm('Are you sure you want to delete this card?')) return;
+    try {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/cards/${cardId}`, {
+        method: 'DELETE',
+      });
+      if (!res.ok) throw new Error('Failed to delete card');
+      setCards(cards => cards.filter(card => card.card_id !== cardId));
+    } catch (err) {
+      alert('Could not delete card.');
     }
   };
 
@@ -262,16 +279,6 @@ const CardDisplay = () => {
   // If there are cards, display them in a nice grid
   return (
     <Box>
-      {/* Debug info - only visible during development */}
-      {process.env.NODE_ENV === 'development' && (
-        <Box sx={{ mb: 4, p: 2, bgcolor: '#f0f0f0', borderRadius: 2 }}>
-          <Typography variant="subtitle2">Debug Info:</Typography>
-          <Typography variant="body2">Cards found: {cards.length}</Typography>
-          <Typography variant="body2" sx={{ wordBreak: 'break-all', fontSize: '0.75rem' }}>
-            IDs: {cards.map(c => c.card_id || c.id).join(', ')}
-          </Typography>
-        </Box>
-      )}
       
       <Grid container spacing={4} sx={{ mt: 2 }}>
         {cards.map(card => (
@@ -304,8 +311,13 @@ const CardDisplay = () => {
               }}
               onClick={() => navigate(`/edit/${card.card_id}`)}
             >
-              {/* Checkbox in top-left, stops click propagation */}
-              <Box sx={{ position: 'absolute', top: 10, left: 10, right: 'unset', zIndex: 2 }} onClick={e => e.stopPropagation()}>
+              {/* Move delete and default controls higher, outside the card content */}
+              <Box sx={{ position: 'absolute', top: -18, right: 10, zIndex: 3 }} onClick={e => e.stopPropagation()}>
+                <IconButton onClick={e => handleDeleteCard(e, card.card_id)} size="small" sx={{ color: 'error.main', bgcolor: 'white', borderRadius: 1, boxShadow: 1 }}>
+                  <DeleteIcon />
+                </IconButton>
+              </Box>
+              <Box sx={{ position: 'absolute', top: -18, left: 10, right: 'unset', zIndex: 2 }} onClick={e => e.stopPropagation()}>
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -317,7 +329,7 @@ const CardDisplay = () => {
                   }
                   label={<Typography variant="caption" color="primary">Default</Typography>}
                   labelPlacement="end"
-                  sx={{ ml: 0 }}
+                  sx={{ ml: 0, bgcolor: 'white', borderRadius: 1, px: 0.5, boxShadow: 1 }}
                 />
               </Box>
               <Box sx={{ width: '100%' }}>
