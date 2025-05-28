@@ -14,12 +14,23 @@ embedding_client = openai.Client(
     base_url=os.getenv("EMBEDDING_URL"),
 )
 
+# print embedding url and model
+print("@@ EMBEDDING_URL")
+print(os.getenv("EMBEDDING_URL"))
+print("@@ EMBEDDING_MODEL")
+print(os.getenv("EMBEDDING_MODEL"))
+# print llm url and model
+print("@@ LLM_URL")
+print(os.getenv("LLM_URL"))
+print("@@ LLM_MODEL")
+print(os.getenv("LLM_MODEL"))
+
 
 def crewai_summary(text: str):
     from .models import Summary
 
     embedding = embedding_client.embeddings.create(
-        model="ai/mxbai-embed-large",
+        model=os.getenv("EMBEDDING_MODEL"),
         input=text,
     )
 
@@ -63,7 +74,7 @@ def crewai_summary(text: str):
     summary = result.raw
 
     summary_embedding = embedding_client.embeddings.create(
-        model="ai/mxbai-embed-large",
+        model=os.getenv("EMBEDDING_MODEL"),
         input=summary,
     ).data[0].embedding
 

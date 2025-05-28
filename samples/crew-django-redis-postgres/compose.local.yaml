@@ -3,6 +3,7 @@ services:
     extends:
       service: postgres
       file: compose.yaml
+    image: pgvector/pgvector:pg16
     environment:
       POSTGRES_PASSWORD: password
     volumes:
@@ -19,7 +20,7 @@ services:
       file: compose.yaml
     command: ["./dev.sh"]
     environment:
-      DATABASE_URL: postgres://user:password@postgres:5432/app_db
+      DATABASE_URL: postgres://postgres:password@postgres:5432/postgres
       DJANGO_SECRET_KEY: 5k6qi_gzy65bz2soxl6k(rsrw)0z3ws!zmjzsbe+wkp1ovfayg
     volumes:
       - ./app:/app
@@ -32,18 +33,22 @@ services:
       - ./app:/app
     command: sh -c "pip install watchdog && watchmedo auto-restart --directory=./ --pattern=*.py --recursive -- celery -A config worker -l info"
     environment:
-      DATABASE_URL: postgres://user:password@postgres:5432/app_db
+      DATABASE_URL: postgres://postgres:password@postgres:5432/postgres
       DJANGO_SECRET_KEY:
 
   llm:
-    extends:
-      file: compose.yaml
-      service: llm
+    provider:
+      type: model
+      options:
+        model: ai/gemma3:1B-Q4_K_M
+    x-defang-llm: true
 
   embedding:
-    extends:
-      file: compose.yaml
-      service: embedding
+    provider:
+      type: model
+      options:
+        model: ai/mxbai-embed-large
+    x-defang-llm: true
 
 volumes:
   pgdata:
