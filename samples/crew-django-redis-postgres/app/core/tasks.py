@@ -45,10 +45,6 @@ def crewai_summary(text: str):
     print(response.status_code)
     print(response)
     print(response.json())
-    test_summary = response.json().get("choices")[0].get("message").get("content")
-    print("@@ Test Summary")
-    print(test_summary)
-
 
     response = llm_client.chat.completions.create(
         model=os.getenv("LLM_MODEL"),
