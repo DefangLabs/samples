@@ -1,10 +1,9 @@
-from openai import OpenAI
 from typing import Any, Dict, List, Optional, Union
 from crewai.llms.base_llm import BaseLLM
 import os
+from .ai_clients import get_llm_client
 
 LLM_MODEL = os.getenv("LLM_MODEL")
-LLM_URL = os.getenv("LLM_URL")
 
 
 class DockerRunnerLLM(BaseLLM):
@@ -14,21 +13,14 @@ class DockerRunnerLLM(BaseLLM):
     Docker Model Runner is not yet supported by CrewAI, because LiteLLM doesn't
     recognize the format in which the Docker Model Runner names the models.
     """
-    def __init__(self, model: str = LLM_MODEL, url: str = LLM_URL, api_key: str = ""):
+    def __init__(self, model: str = LLM_MODEL):
         super().__init__(model=model)
-        if not api_key or not isinstance(api_key, str):
-            raise ValueError("Invalid API key: must be a non-empty string")
-        if not url or not isinstance(url, str):
-            raise ValueError("Invalid URL: must be a non-empty string")
         if not model or not isinstance(model, str):
             raise ValueError("Invalid model: must be a non-empty string")
 
-        self.api_key = api_key
-        self.url = url
-        self.model = model
         self.stop = []  # Customize stop words if needed
         # OpenAI SDK client with custom url
-        self.client = OpenAI(base_url=self.url, api_key=self.api_key)
+        self.client = get_llm_client()
 
     def call(
         self,

@@ -8,26 +8,60 @@ import os
 from pgvector.django import CosineDistance
 
 from .custom_llm import DockerRunnerLLM
-
-embedding_client = openai.Client(
-    api_key="",
-    base_url=os.getenv("EMBEDDING_URL"),
-)
-
-# print embedding url and model
-print("@@ EMBEDDING_URL")
-print(os.getenv("EMBEDDING_URL"))
-print("@@ EMBEDDING_MODEL")
-print(os.getenv("EMBEDDING_MODEL"))
-# print llm url and model
-print("@@ LLM_URL")
-print(os.getenv("LLM_URL"))
-print("@@ LLM_MODEL")
-print(os.getenv("LLM_MODEL"))
+from .ai_clients import get_embedding_client, get_llm_client
+import requests
 
 
 def crewai_summary(text: str):
     from .models import Summary
+    embedding_client = get_embedding_client()
+    llm_client = get_llm_client()
+
+    # print embedding url and model
+    print("@@ EMBEDDING_URL")
+    print(os.getenv("EMBEDDING_URL"))
+    print("@@ EMBEDDING_MODEL")
+    print(os.getenv("EMBEDDING_MODEL"))
+    # print llm url and model
+    print("@@ LLM_URL")
+    print(os.getenv("LLM_URL"))
+    print("@@ LLM_MODEL")
+    print(os.getenv("LLM_MODEL"))
+
+    # manually send a request to http://llm/api/v1/chat/completions
+    response = requests.post(
+        "http://llm/api/v1/chat/completions",
+        json={
+            "model": os.getenv("LLM_MODEL"),
+            "messages": [
+                {
+                    "role": "user",
+                    "content": f"Please summarize the following text in 3 words (i.e. some sort of catch phrase to respresent the text): \n\n{text}",
+                }
+            ],
+        },
+    )
+    print("@@ Test Response")
+    print(response.status_code)
+    print(response)
+    print(response.json())
+    test_summary = response.json().get("choices")[0].get("message").get("content")
+    print("@@ Test Summary")
+    print(test_summary)
+
+
+    response = llm_client.chat.completions.create(
+        model=os.getenv("LLM_MODEL"),
+        messages=[
+            {
+                "role": "user",
+                "content": f"Please summarize the following text in 3 words (i.e. some sort of catch phrase to respresent the text): \n\n{text}",
+            }
+        ],
+    )
+    test_summary = response.choices[0].message.content
+    print("@@ Test Summary")
+    print(test_summary)
 
     embedding = embedding_client.embeddings.create(
         model=os.getenv("EMBEDDING_MODEL"),
