@@ -9,10 +9,8 @@ services:
         target: 8080
         published: 8080
     environment:
-      # If you want to use MongoDB Atlas, you can set the URI with `defang config set MONGO_URI`
-      # and remove the value from the MONGO_URI environment variable so that it is read from defang
-      # config. For example:
-      # - MONGO_URI
+      # If you want to use MongoDB Atlas, you can set the URI with `defang config set MONGO_URI`.
+      # This will override any value set in the environment variable:
       - MONGO_URI=mongodb://$MONGO_INITDB_ROOT_USERNAME:$MONGO_INITDB_ROOT_PASSWORD@db:27017/
     #deploy:
     #  resources:
@@ -24,7 +22,7 @@ services:
       - db
 
   db:
-    image: mongo:8.0.3
+    image: mongo:5
     restart: unless-stopped
     ports:
       - mode: host
@@ -32,3 +30,11 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME
       - MONGO_INITDB_ROOT_PASSWORD
+    volumes:
+      - db_data:/data/db
+    # The following option will provision a managed MongoDB instance, eg. DocumentDB on AWS.
+    x-defang-mongodb: true
+
+volumes:
+  db_data:
+    driver: local
