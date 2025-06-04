@@ -53,20 +53,25 @@ services:
       DJANGO_SETTINGS_MODULE: config.settings
       DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres?sslmode=${SSL_MODE}
       REDIS_URL: redis://redis:6379/0
+      OPENAI_API_KEY: "defang"
       DJANGO_SECRET_KEY:
 
   llm:
     provider:
       type: model
       options:
-        model: amazon.nova-premier-v1:0:8k
-    environment:
-      - DEBUG=True
+        model: us.amazon.nova-premier-v1:0
     x-defang-llm: true
+    environment:
+      OPENAI_API_KEY: "defang"
+      DEBUG: "true"
 
   embedding:
     provider:
       type: model
       options:
-        model: amazon.titan-embed-g1-text-02
+        model: amazon.titan-embed-text-v2:0
     x-defang-llm: true
+    environment:
+      OPENAI_API_KEY: "defang"
+      DEBUG: "true"
