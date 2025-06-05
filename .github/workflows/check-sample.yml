@@ -25,18 +25,14 @@ jobs:
       - name: Run Checks
         id: checks
         run: |
-          eval "$(curl -fsSL s.defang.io/install)"
           ./scripts/check-sample-files.sh > checklist.txt
           ./scripts/check-modified-samples.sh > modified.txt
           echo "@@ MODIFIED @@"
           cat modified.txt
 
-      # TODO: Uncomment the following lines to validate the Compose files
-      #       once we figure out how to prevent it from erroring on warnings.
-      # - name: Validate Compose Files with Defang CLI
-      #   run: |
-      #     eval "$(curl -fsSL s.defang.io/install)"
-      #     cat modified.txt | xargs -n1 defang compose config -C > /dev/null
+      - name: Validate Compose Files with Defang CLI
+        run: |
+          cat modified.txt | xargs --no-run-if-empty -n1  defang compose config -C
 
       - name: Add checklist to PR description
         uses: actions/github-script@v5

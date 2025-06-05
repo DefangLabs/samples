@@ -2,7 +2,8 @@ name: Trigger Docs Samples Rebuild
 
 on:
   push:
-    branches: main
+    branches:
+      - main
     paths:
       - 'samples/**'
 
