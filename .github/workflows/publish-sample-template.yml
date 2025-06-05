@@ -1,14 +1,18 @@
 name: Publish Sample Template
 
 on:
-  push: 
+  push:
     branches:
       - main
+    paths:
+      - 'samples/**'
+      - 'scripts/template-manager.js'
+      - 'scripts/check-modified-samples.sh'
 
 jobs:
   publish_samples:
     runs-on: ubuntu-latest
-    permissions: 
+    permissions:
       contents: write
       pull-requests: write
     steps:
