@@ -48,6 +48,18 @@ services:
       - MONGO_URI # empty values are read from defang config
 ```
 
+### Using DocumentDB in AWS
+
+If you want to use DocumentDB in AWS, you can add the `x-defang-mongodb` extension to your `compose.yaml` file:
+
+```yaml
+services:
+  db:
+    x-defang-mongodb: true
+```
+
+This will automatically provision a DocumentDB cluster in your AWS account.
+
 ## Deployment
 
 > [!NOTE]
