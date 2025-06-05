@@ -1,0 +1,21 @@
+{
+  "$schema": "https://platformatic.dev/schemas/v1.52.2/service",
+  "server": {
+    "hostname": "0.0.0.0",
+    "port": 3042
+  },
+  "service": {
+    "openapi": true
+  },
+  "watch": true,
+  "plugins": {
+    "paths": [
+      {
+        "path": "./plugins",
+        "encapsulate": false
+      },
+      "./routes"
+    ],
+    "typescript": "{PLT_SERVICE1_TYPESCRIPT}"
+  }
+}
