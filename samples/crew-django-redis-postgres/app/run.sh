@@ -1,7 +1,5 @@
 #!/bin/sh
 
-echo $DATABASE_URL
-
 # Run migrations
 python manage.py migrate --noinput
 python manage.py create_initial_superuser
