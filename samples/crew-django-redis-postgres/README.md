@@ -19,7 +19,6 @@ docker compose -f ./compose.local.yaml up --build
 ```
 
 ## Configuration
-#REMOVE_ME_AFTER_EDITING - this section should be removed if there are no configuration values needed. The intro text can probably stay, but the list of configuration values should be updated/removed if there are none.
 
 For this sample, you will need to provide the following [configuration](https://docs.defang.io/docs/concepts/configuration): 
 
