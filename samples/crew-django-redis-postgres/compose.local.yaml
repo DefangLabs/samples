@@ -34,7 +34,7 @@ services:
     command: sh -c "pip install watchdog && watchmedo auto-restart --directory=./ --pattern=*.py --recursive -- celery -A config worker -l info"
     environment:
       DATABASE_URL: postgres://postgres:password@postgres:5432/postgres
-      DJANGO_SECRET_KEY:
+      DJANGO_SECRET_KEY: 5k6qi_gzy65bz2soxl6k(rsrw)0z3ws!zmjzsbe+wkp1ovfayg
 
   llm:
     provider:
