@@ -30,8 +30,7 @@ services:
 
   redis-service:
     image: redis:6.2
-    # uncomment the following line in BYOC
-    # x-defang-redis: true
+    x-defang-redis: true
     ports:
       - mode: host
         target: 6379
@@ -43,8 +42,7 @@ services:
 
   postgres-service:
     image: postgres:16.4
-    # uncomment the following line in BYOC
-    # x-defang-postgres: true
+    x-defang-postgres: true
     ports:
       - mode: host
         target: 5432
