@@ -22,6 +22,11 @@ services:
     depends_on:
       - redis-service
       - postgres-service
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 256M
 
   redis-service:
     image: redis:6.2
@@ -30,6 +35,11 @@ services:
     ports:
       - mode: host
         target: 6379
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
 
   postgres-service:
     image: postgres:16.4
@@ -42,3 +52,8 @@ services:
       - POSTGRES_PASSWORD
       - POSTGRES_DB=djangodatabase
       - POSTGRES_USER=djangouser
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
