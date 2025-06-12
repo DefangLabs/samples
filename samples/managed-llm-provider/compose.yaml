@@ -8,8 +8,13 @@ services:
     restart: always
     environment:
       - LLM_URL=http://llm/api/v1/
-      - LLM_MODEL=default
       # For other models, see https://docs.defang.io/docs/concepts/managed-llms/openai-access-gateway#model-mapping
+      - LLM_MODEL=default
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=llm
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD
     healthcheck:
       test: ["CMD", "python3", "-c", "import sys, urllib.request; urllib.request.urlopen(sys.argv[1]).read()", "http://localhost:8000/"]
       interval: 30s
@@ -24,14 +29,46 @@ services:
           cpus: 0.25
           memory: 512MB
 
-# Provider Service
-# This service is used to route requests to the LLM API
+  # Provider Service
+  # This service is used to route requests to the LLM API
   llm:
     provider:
       type: model
       options:
         model: ai/smollm2
     x-defang-llm: true
+    deploy:
+      resources:
+        reservations:
+          cpus: 0.25
+          memory: 512MB
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB=llm
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - mode: host
+        target: 5432
+        published: 5432
+    x-defang-postgres: true
+    deploy:
+      resources:
+        reservations:
+          cpus: 0.5
+          memory: 512MB
+
+  cache:
+    image: redis:alpine
+    x-defang-redis: true
+    ports:
+      - mode: host
+        target: 6379
+        published: 6379
     deploy:
       resources:
         reservations:
