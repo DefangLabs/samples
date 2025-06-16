@@ -2,7 +2,7 @@
 
 [![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-jupyter-postgres-template%26template_owner%3DDefangSamples)
 
-This sample shows you how to spin up a postgres database and a Jupyter notebook server. This is useful if you want to use Jupyter notebooks to read data from or persist data to a database.
+This sample shows you how to spin up a postgres database and a Jupyter notebook server. This is useful if you need to use Jupyter notebooks to read data from or persist data to a database.
 
 ## Prerequisites
 
