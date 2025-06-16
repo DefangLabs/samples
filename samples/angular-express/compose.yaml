@@ -11,6 +11,8 @@ services:
       resources:
         reservations:
           memory: 64M
+    depends_on:
+      - backend
 
   backend:
     build:
