@@ -62,7 +62,7 @@ If you want to deploy to your own cloud account, you can [use Defang BYOC](https
 
 ---
 
-Title: Crew.ai Django Sample
+Title: Crew.ai & Django
 
 Short Description: A sample application that uses Crew.ai to summarize text in a background task, streamed to the user in real-time.
 

@@ -54,7 +54,7 @@ If you want to deploy to your own cloud account, you can [use Defang BYOC](https
 
 ---
 
-Title: Django Celery
+Title: Django & Celery
 
 Short Description: A Django application that uses Celery for background tasks, Postgres as the database, and Redis as the message broker.
 
