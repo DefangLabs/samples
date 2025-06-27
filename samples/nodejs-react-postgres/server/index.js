@@ -47,7 +47,7 @@ app.get("/todos/:id", async (req, res) => {
   
       res.json(todo.rows[0]);
     } catch (error) {
-      console.error(err.message);
+      console.error(error.message);
     }
 });
 
@@ -64,7 +64,7 @@ app.put("/todos/:id", async (req, res) => {
   
       res.json("Todo was updated!");
     } catch (error) {
-      console.error(err.message);
+      console.error(error.message);
     }
 });
 
