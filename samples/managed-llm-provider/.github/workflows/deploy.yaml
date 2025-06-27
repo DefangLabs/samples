@@ -19,7 +19,7 @@ jobs:
 
     - name: Deploy
       uses: DefangLabs/defang-github-action@v1.2.0
-      with:
-        config-env-vars: MODEL
-      env:
-        MODEL: ${{ secrets.MODEL }}
+      # with:
+      #   config-env-vars: MODEL
+      # env:
+      #   MODEL: ${{ secrets.MODEL }}
