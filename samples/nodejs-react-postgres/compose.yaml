@@ -13,7 +13,7 @@ services:
     deploy:
       resources:
         reservations:
-          memory: 2GB
+          memory: 1GiB
     depends_on:
       - server
   server:
