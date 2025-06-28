@@ -47,7 +47,7 @@ app.get("/todos/:id", async (req, res) => {
   
       res.json(todo.rows[0]);
     } catch (error) {
-      console.error(err.message);
+      console.error(error.message);
     }
 });
 
@@ -64,7 +64,7 @@ app.put("/todos/:id", async (req, res) => {
   
       res.json("Todo was updated!");
     } catch (error) {
-      console.error(err.message);
+      console.error(error.message);
     }
 });
 
@@ -81,5 +81,5 @@ app.delete("/todos/:id", async (req, res) => {
 });
 
 app.listen(3010, () => {
-    console.log("server has started on port")
+    console.log("server has started on port 3010")
 })
