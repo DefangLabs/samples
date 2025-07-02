@@ -1,7 +1,7 @@
 services:
   app:
     restart: unless-stopped
-    # domainname: mydomain.com # if you want to use your own domain
+    # domainname: demo.example.com  # Uncomment to set a specific domain name for the service
     build:
       context: ./app
       dockerfile: Dockerfile
@@ -17,5 +17,5 @@ services:
     deploy:
       resources:
         reservations:
-          cpus: '0.50'
-          memory: 512M
+          cpus: '0.25'
+          memory: 256M
