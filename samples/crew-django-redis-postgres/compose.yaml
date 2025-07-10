@@ -60,7 +60,7 @@ services:
     provider:
       type: model
       options:
-        model: anthropic.claude-3-haiku-20240307-v1:0
+        model: chat-default
     x-defang-llm: true
     environment:
       OPENAI_API_KEY: "defang"
@@ -70,7 +70,7 @@ services:
     provider:
       type: model
       options:
-        model: amazon.titan-embed-text-v2:0
+        model: embedding-default
     x-defang-llm: true
     environment:
       OPENAI_API_KEY: "defang"
