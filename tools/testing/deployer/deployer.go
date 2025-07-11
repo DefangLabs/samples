@@ -319,6 +319,7 @@ func (d *CliDeployer) Cleanup(ctx context.Context) error {
 }
 
 func (d *CliDeployer) RunCommand(ctx context.Context, opt func(*exec.Cmd), command string, args ...string) (*exec.Cmd, error) {
+	log.Printf("Running command in dir %q: %q %q", d.WorkDir, command, args)
 	cmd := exec.CommandContext(ctx, command, args...)
 	cmd.Env = d.EnvVars
 	if d.WorkDir != "" {

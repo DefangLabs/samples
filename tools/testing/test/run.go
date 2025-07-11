@@ -101,8 +101,8 @@ func Run(ctx context.Context, test TestInfo) (*ItemResult, error) {
 	// declare variable for url
 	var url string
 
-	// Regular expression to capture an "https://" URL that follows "will be available at:"
-	re := regexp.MustCompile(`will be available at:\s*.*?(https://[^\s]+)`)
+	// Regular expression to capture an "https://" URL that follows "DEPLOYMENT_COMPLETED"
+	re := regexp.MustCompile(`DEPLOYMENT_COMPLETED\s*((?:https?://)?[^\s]+)`)
 
 	// Find the first match in the output string
 	match := re.FindStringSubmatch(outputStr)
