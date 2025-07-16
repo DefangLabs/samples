@@ -25,6 +25,10 @@ For this sample, you will need to provide the following [configuration](https://
 ### `POSTGRES_PASSWORD`
 A password that will be used to connect to the Postgres database.
 
+## Database Configuration
+
+This sample is configured to work with standard PostgreSQL containers that don't have SSL enabled. The production configuration uses `POSTGRES_SSL: false` to ensure compatibility with the default `postgres:16` Docker image. If you're using a managed PostgreSQL service with SSL support, you can set `POSTGRES_SSL: true` in your compose.yaml file.
+
 
 ## Deploying
 
