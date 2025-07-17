@@ -4,7 +4,6 @@ services:
     # domainname: www.example.xyz # uncomment if you want to use your own domain
     build:
       context: ./app
-      dockerfile: Dockerfile
 
     ports:
       - target: 3000
