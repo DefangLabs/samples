@@ -5,7 +5,6 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile
-
     ports:
       - target: 3000
         mode: ingress
