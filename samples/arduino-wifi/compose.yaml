@@ -3,7 +3,6 @@ services:
     restart: unless-stopped
     build:
       context: ./app
-      dockerfile: Dockerfile
     deploy:
       resources:
         reservations:
