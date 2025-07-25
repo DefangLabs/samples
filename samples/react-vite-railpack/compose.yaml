@@ -15,5 +15,3 @@ services:
       resources:
         reservations:
           memory: 512M
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5173/"]
