@@ -1,0 +1,14 @@
+services:
+  app:
+    restart: unless-stopped
+    build:
+      context: ./app
+    ports:
+      - mode: ingress
+        target: 8080
+    deploy:
+      resources:
+        reservations:
+          memory: 50M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
