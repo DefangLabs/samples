@@ -103,7 +103,8 @@ jobs:
           TEST_SHARED_SECRETS: ${{ secrets.TEST_SHARED_SECRETS}}
           TEST_ALLOWED_HOSTS: ${{ secrets.TEST_ALLOWED_HOSTS }}
         run: |
-          SAMPLES=$(sed 's|^samples/||' changed_samples.txt | paste -s -d ',' -)
+          # Escape regex special characters and anchor patterns to ensure exact matching of sample names
+          SAMPLES=$(sed 's|^samples/||' changed_samples.txt | awk '{gsub(/[.*+?^${}()|[\]\\]/, "\\\\&"); print "^" $0 "$"}' | paste -s -d ',' -)
           echo "Running tests for samples: $SAMPLES"
           mkdir output
           # concurrency is set to 10 to avoid exhausting our fargate vCPU limits when running
