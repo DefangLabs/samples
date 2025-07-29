@@ -8,6 +8,23 @@ on:
       - "samples/**"
 
 jobs:
+  python-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Ruff linter
+        uses: astral-sh/ruff-action@v1
+        with:
+          args: check ./samples
+
+      - name: Run Ruff formatter check
+        uses: astral-sh/ruff-action@v1
+        with:
+          args: "format --check"
+
+
   build-json:
     runs-on: ubuntu-latest
     steps:
