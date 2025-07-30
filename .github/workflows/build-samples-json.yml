@@ -1,4 +1,6 @@
 name: Trigger Docs Samples Rebuild
+permissions:
+  contents: read
 
 on:
   push:
