@@ -37,7 +37,7 @@
             userInput.value = "";
             output.textContent = "Waiting for response...";
             try {
-                const res = await fetch("http://localhost:3000/agent", {
+                const res = await fetch('/agent', {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ input }),

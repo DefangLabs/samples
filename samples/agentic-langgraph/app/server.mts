@@ -23,4 +23,4 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(process.cwd(), "public", "index.html"));
 });
 
-app.listen(3000, () => console.log("Agent server listening on http://localhost:3000"));
+app.listen(3000, () => console.log("Agent server listening on APP PORT 3000"));
