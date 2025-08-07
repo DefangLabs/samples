@@ -14,7 +14,7 @@
     "optimist": "^0.6.1"
   },
   "devDependencies": {
-    "eslint": "5.16.0"
+    "eslint": "9.32.0"
   },
   "scripts": {
     "start": "NODE_ENV=production node app.js",
