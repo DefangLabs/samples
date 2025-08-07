@@ -4,15 +4,15 @@ import { ChatOpenAI } from "@langchain/openai";
 import { HumanMessage, AIMessage } from "@langchain/core/messages";
 import { ToolNode } from "@langchain/langgraph/prebuilt";
 import { StateGraph, MessagesAnnotation } from "@langchain/langgraph";
-import { get } from "http";
 
 // Define the tools for the agent to use
 const tools = [new TavilySearch({ maxResults: 3 })];
 const toolNode = new ToolNode(tools);
 
 const baseUrl = process.env.LLM_URL || "https://api.openai.com/v1/";
+console.log("Using LLM base URL:", baseUrl);
 const baseModel =  process.env.LLM_MODEL || "gpt-4o-mini";
-
+console.log("Using LLM model:", baseModel);
 // Create a model and give it access to the tools
 const model = new ChatOpenAI({
   model: baseModel,
@@ -56,9 +56,13 @@ const app = workflow.compile();
 
 // Helper function to get agent output for a given input and optional previous messages
 const getAgentOutput = async (input: string, previousMessages: (HumanMessage | AIMessage)[] = []) => {
+  console.log("Getting agent output for input:", input);
+  
   const initialState = {
     messages: [...previousMessages, new HumanMessage(input)],
   };
+  console.log("Initial state messages (JSON):", JSON.stringify(initialState.messages, null, 2));
+
   const finalState = await app.invoke(initialState);
   return {
     content: finalState.messages[finalState.messages.length - 1].content,

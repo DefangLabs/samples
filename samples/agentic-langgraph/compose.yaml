@@ -26,7 +26,6 @@ services:
       - target: 80
         published: 80
         protocol: tcp
-        mode: ingress
     x-defang-llm: true
     deploy:
       resources:
