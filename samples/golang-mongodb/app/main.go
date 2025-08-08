@@ -37,7 +37,7 @@ func main() {
 	}
 	fmt.Println("Connected to MongoDB!")
 
-	collection := client.Database("taskManager").Collection("tasks")
+	collection := client.Database("taskmanager").Collection("tasks")
 
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/", fs)
