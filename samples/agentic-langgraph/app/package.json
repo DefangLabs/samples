@@ -15,6 +15,7 @@
     "@langchain/openai": "^0.6.3",
     "@langchain/tavily": "^0.1.4",
     "express": "^4.21.2",
+    "express-rate-limit": "^8.0.1",
     "ts-node": "^10.9.2"
   },
   "devDependencies": {
