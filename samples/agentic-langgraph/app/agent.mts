@@ -37,7 +37,6 @@ function shouldContinue({ messages }: typeof MessagesAnnotation.State) {
 // Define the function that calls the model
 async function callModel(state: typeof MessagesAnnotation.State) {
   const response = await model.invoke(state.messages);
-  // console.log("Model response:", response);
 
   // We return a list, because this will get added to the existing list
   return { messages: [response] };
@@ -56,12 +55,10 @@ const app = workflow.compile();
 
 // Helper function to get agent output for a given input and optional previous messages
 const getAgentOutput = async (input: string, previousMessages: (HumanMessage | AIMessage)[] = []) => {
-  console.log("Getting agent output for input:", input);
   
   const initialState = {
     messages: [...previousMessages, new HumanMessage(input)],
   };
-  console.log("Initial state messages (JSON):", JSON.stringify(initialState.messages, null, 2));
 
   const finalState = await app.invoke(initialState);
   return {
