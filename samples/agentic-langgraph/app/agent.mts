@@ -72,13 +72,3 @@ export const getAgentOutputAsString = async (input: string, previousMessages: (H
   return getAgentOutput(input, previousMessages).then(result => result.content);
 };
 
-// // Example usage:
-// (async () => {
-//   // First query
-//   const firstResult = await getAgentOutput("what is the weather in sf");
-//   console.log(firstResult.content);
-
-//   // Follow-up query with context
-//   const secondResult = await getAgentOutput("what about ny", firstResult.messages);
-//   console.log(secondResult.content);
-// })();
