@@ -26,6 +26,7 @@ services:
       - target: 80
         published: 80
         protocol: tcp
+        mode: host
     x-defang-llm: true
     deploy:
       resources:
