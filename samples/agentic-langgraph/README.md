@@ -25,7 +25,7 @@ For this sample, you will need to provide the following [configuration](https://
 > Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
 
 ### `TAVILY_API_KEY`
-A Tavily API key for accessing Tavily Search. 
+A Tavily API key for accessing [Tavily Search](https://www.tavily.com/). 
 ```bash
 defang config set TAVILY_API_KEY
 ```
