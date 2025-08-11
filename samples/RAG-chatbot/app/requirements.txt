@@ -1,0 +1,8 @@
+Flask==2.0.1
+Werkzeug==2.0.3
+scikit-learn==0.24.2
+numpy==1.21.0
+sentence-transformers==2.1.0
+torch==1.10.0
+huggingface_hub==0.8.1
+openai==0.28
