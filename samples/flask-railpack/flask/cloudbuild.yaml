@@ -1,0 +1,16 @@
+steps:
+  # Make the railpack plan
+  - name: 'gcr.io/cloudbuildtest-468719/railpack'
+    script: |
+      #!/usr/bin/env bash
+      railpack prepare \. --plan-out /workspace/railpack-plan.json --info-out /workspace/railpack-info.json
+
+  # Docker build and push
+  - name: 'gcr.io/cloudbuildtest-468719/railpack'
+    script: |
+      #!/usr/bin/env bash
+      docker buildx create --use --driver=docker-container 
+      docker buildx build -t gcr.io/cloudbuildtest-468719/railpack-flask --build-arg BUILDKIT_SYNTAX="ghcr.io/railwayapp/railpack-frontend" -f /workspace/railpack-plan.json --output type=docker,name=railpack-flask \.
+    automapSubstitutions: true
+images:
+- 'gcr.io/cloudbuildtest-468719/railpack-flask:latest'
