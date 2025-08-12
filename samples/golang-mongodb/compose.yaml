@@ -11,7 +11,7 @@ services:
     environment:
       # If you want to use MongoDB Atlas, you can set the URI with `defang config set MONGO_URI`.
       # This will override any value set in the environment variable:
-      - MONGO_URI=mongodb://$MONGO_INITDB_ROOT_USERNAME:$MONGO_INITDB_ROOT_PASSWORD@db:27017/
+      - MONGO_URI=mongodb://$MONGO_INITDB_ROOT_USERNAME:$MONGO_INITDB_ROOT_PASSWORD@db:27017/taskmanager
     #deploy:
     #  resources:
     #    reservations:
