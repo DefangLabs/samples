@@ -4,9 +4,10 @@ permissions:
   pull-requests: read
 
 on:
-  push:
+  pull_request:
+    types: [opened, synchronize, reopened]
     branches:
-      - main
+      - "**"
     paths:
       - "samples/**"
 
@@ -44,7 +45,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Get list of changed JS/TS files
         id: changed_js
