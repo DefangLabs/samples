@@ -36,9 +36,5 @@ COPY --from=frontend-build /frontend/dist ./static
 # Optionally expose the same port for both backend and frontend
 EXPOSE 3000
 
-# Healthcheck endpoint
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:3000/health || exit 1
-
 # Start the backend server (which serves both API + frontend files)
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "3000"]
