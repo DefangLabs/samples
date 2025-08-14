@@ -3,7 +3,7 @@ name: Deploy Changed Samples
 on:
   pull_request:
     paths:
-      - 'samples/**'
+      - "samples/**"
 
 permissions:
   contents: read
@@ -103,6 +103,7 @@ jobs:
           TEST_SHARED_SECRETS: ${{ secrets.TEST_SHARED_SECRETS}}
           TEST_TAVILY_API_KEY: ${{ secrets.TEST_TAVILY_API_KEY }}
           TEST_ALLOWED_HOSTS: ${{ secrets.TEST_ALLOWED_HOSTS }}
+          TEST_MISTRAL_API_KEY: ${{ secrets.TEST_MISTRAL_API_KEY }}
         run: |
           SAMPLES=$(sed 's|^samples/||' changed_samples.txt | paste -s -d ',' -)
           echo "Running tests for samples: $SAMPLES"
