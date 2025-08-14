@@ -25,5 +25,3 @@ defang
 defang.exe
 # Ignore our project-level state
 .defang
-
-**/myenv

@@ -2,7 +2,7 @@
 
 [![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-agentic-autogen-template%26template_owner%3DDefangSamples)
 
-This sample shows an agentic Autogen application using Mistral and FastAPI, deployed with Defang. For demonstration purposes, it will require a Mistral API key (see [Configuration](#configuration) for more details). However, you are free to modify it to use a different LLM, say the Defang OpenAI Access Gateway service, as an alternative. Note that the Vite React frontend is served through the FastAPI backend so that they can be treated as one service in production.
+This sample shows an agentic Autogen application using Mistral and FastAPI, deployed with Defang. For demonstration purposes, it will require a [Mistral AI](https://mistral.ai/) API key (see [Configuration](#configuration) for more details). However, you are free to modify it to use a different LLM, say the [Defang OpenAI Access Gateway](https://github.com/DefangLabs/openai-access-gateway/) service, as an alternative. Note that the Vite React frontend is served through the FastAPI backend so that they can be treated as one service in production.
  
 ## Prerequisites
 
@@ -25,7 +25,7 @@ For this sample, you will need to provide the following [configuration](https://
 > Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
 
 ### `MISTRAL_API_KEY`
-An API key to access the [MistralAI] LLM.
+An API key to access the [Mistral AI API](https://mistral.ai/).
 ```bash
 defang config set MISTRAL_API_KEY
 ```
