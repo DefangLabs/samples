@@ -71,7 +71,7 @@ function App() {
       <div className="header">
         <h1 className="title">AI Debate Club</h1>
         <p className="subtitle">
-          Enter a debatable topic and watch two AI agents argue for and against it
+          Enter a debate topic and watch two AI agents argue for and against it
         </p>
       </div>
 
