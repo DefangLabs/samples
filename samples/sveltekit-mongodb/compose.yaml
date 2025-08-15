@@ -4,13 +4,11 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile
-      args:
-        MONGODB_URI: "mongodb://mongo:27017/musicdb"
     environment:
       NODE_ENV: production
       HOST: "0.0.0.0"
       PORT: 3000
-      MONGODB_URI: "mongodb://mongo:27017/musicdb"
+      MONGO_URL: "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/musicdb?retryWrites=false&authMechanism=SCRAM-SHA-1&authSource=admin"
     ports:
       - "3000:3000"
     depends_on:
@@ -31,6 +29,8 @@ services:
     volumes:
       - mongo-data:/data/db
     environment:
+      MONGO_INITDB_ROOT_USERNAME:
+      MONGO_INITDB_ROOT_PASSWORD:
       MONGO_INITDB_DATABASE: musicdb
     #deploy:
     #  resources:

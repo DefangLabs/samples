@@ -18,10 +18,6 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-# Set environment variable for MongoDB URI
-ARG MONGODB_URI
-ENV MONGODB_URI=$MONGODB_URI
-
 # Build the SvelteKit application
 RUN npm run build
 
