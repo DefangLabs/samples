@@ -65,20 +65,17 @@ def message_buffer_handler(**kwargs):
 @tool
 def search_for_fashion_books(query, filters=None) -> str:
     """
-    Get detailed information about fashion books from Open Library.
+    Search for detailed information about fashion books using the Open Library API.
 
     Args:
-        query: The search query for fashion books.
-        filters: Optional filters to apply to the search results, including title, author, or year.
+        query: The search term to look up fashion-related books.
 
     Returns:
-        A string containing the list of books found from the search.
+        A string summarizing the list of matching books, or a message if none are found.
     """
-    def replace_spaces_with_plus(s):
-        return s.replace(' ', '+')
 
     # Replace spaces in the query with plus signs for URL encoding
-    clean_query = replace_spaces_with_plus(query)
+    clean_query = query.replace(' ', '+')
 
     url = f"https://openlibrary.org/search.json"
     headers = {}
@@ -89,14 +86,6 @@ def search_for_fashion_books(query, filters=None) -> str:
         "limit": 10
     }
 
-    if filters:
-        if "title" in filters:
-            params["title"] = filters["title"]
-        if "author" in filters:
-            params["author"] = filters["author"]
-        if "year" in filters:
-            params["year"] = filters["year"]
-        
     try:
         response = requests.get(url, headers=headers, params=params)
         if response.ok:
@@ -126,20 +115,6 @@ TOOL_SPEC = {
             "query": {
                 "type": "string",
                 "description": "Search query for fashion books",
-            },
-            "filters": {
-                "title": {
-                    "type": "string",
-                    "description": "Filter by book title"
-                },
-                "author": {
-                    "type": "string",
-                    "description": "Filter by author name"
-                },
-                "year": {
-                    "type": "integer",
-                    "description": "Filter by publication year"
-                }
             }
         },
         "required": ["query"],
