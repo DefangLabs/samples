@@ -8,9 +8,6 @@ services:
         published: 5001
         mode: ingress
     environment:
-      - LLM_MODEL=default
-      - LLM_URL=http://llm/api/v1/
-
       - AWS_REGION=${AWS_REGION} # replace with your AWS region
       - AWS_PROFILE=${AWS_PROFILE} # replace with your AWS profile name
       # - GCP_PROJECT_ID=${GCP_PROJECT_ID} # replace with your GCP project ID
