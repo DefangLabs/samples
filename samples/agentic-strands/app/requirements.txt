@@ -1,0 +1,7 @@
+strands-agents>=1.5.0
+strands-agents-tools>=0.2.0
+openai===1.99.9
+dotenv===0.9.9
+flask==2.0.1
+werkzeug==2.3.7
+requests==2.31.0

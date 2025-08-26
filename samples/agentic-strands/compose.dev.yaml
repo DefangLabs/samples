@@ -1,0 +1,35 @@
+services:
+  app:
+    extends:
+      file: compose.yaml
+      service: app
+    ports:
+      - target: 5001
+        published: 5001
+        mode: ingress
+    environment:
+      - LLM_MODEL=default
+      - LLM_URL=http://llm/api/v1/
+
+      - AWS_REGION=${AWS_REGION} # replace with your AWS region
+      - AWS_PROFILE=${AWS_PROFILE} # replace with your AWS profile name
+      # - GCP_PROJECT_ID=${GCP_PROJECT_ID} # replace with your GCP project ID
+    volumes:
+      - ./app:/app
+      - type: bind
+        source: ~/.aws
+        target: /root/.aws
+
+  llm:
+    extends:
+      file: compose.yaml
+      service: llm
+    # if using AWS Bedrock for local development, include this section:
+    environment:
+      - AWS_REGION=${AWS_REGION} # replace with your AWS region
+      - AWS_PROFILE=${AWS_PROFILE} # replace with your AWS profile name
+      - PROVIDER=aws
+    volumes:
+      - type: bind
+        source: ~/.aws
+        target: /root/.aws

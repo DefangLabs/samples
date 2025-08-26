@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fashion Stylist AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f9f9f9; }
+        .container { max-width: 600px; margin: auto; background: #fff; padding: 32px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);}
+        h1 { color: #2d3a4b; }
+        p { color: #444; }
+        .chat-container { 
+            margin-top: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 16px;
+            height: 300px;
+            overflow-y: auto;
+        }
+        .message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .user-message {
+            background-color: #e1f5fe;
+            align-self: flex-end;
+            text-align: right;
+        }
+        .agent-message {
+            background-color: #f5f5f5;
+            align-self: flex-start;
+        }
+        .input-area {
+            display: flex;
+            margin-top: 16px;
+        }
+        #user-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        #send-btn {
+            margin-left: 10px;
+            padding: 10px 20px;
+            background-color: #2d3a4b;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #send-btn:hover {
+            background-color: #384c64;
+        }
+        .loading {
+            color: #888;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fashion Stylist AI</h1>
+        <p>Chat with our AI fashion stylist to get personalized style advice.</p>
+        
+        <div class="chat-container" id="chat-container">
+            <!-- Messages will appear here -->
+            <div class="message agent-message">
+                Hello! I'm your fashion stylist assistant. How can I help you with your style today?
+            </div>
+        </div>
+        
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Type your message here...">
+            <button id="send-btn">Send</button>
+        </div>
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const chatContainer = document.getElementById('chat-container');
+                const userInput = document.getElementById('user-input');
+                const sendBtn = document.getElementById('send-btn');
+                
+                // Function to add messages to the chat
+                function addMessage(text, isUser = false) {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `message ${isUser ? 'user-message' : 'agent-message'}`;
+                    messageDiv.innerHTML = text;
+                    chatContainer.appendChild(messageDiv);
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }
+                
+                // Function to send message to the agent.py backend
+                async function sendToAgent(message) {
+                    // Show loading indicator
+                    const loadingDiv = document.createElement('div');
+                    loadingDiv.className = 'message agent-message loading';
+                    loadingDiv.textContent = 'Thinking...';
+                    chatContainer.appendChild(loadingDiv);
+                    
+                    try {
+                        const response = await fetch('/chat', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ message: message })
+                        });
+                        
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorData.message}`);
+                        }
+                        
+                        const data = await response.json();
+
+                        console.log(data);
+                        
+                        // Remove loading indicator
+                        chatContainer.removeChild(loadingDiv);
+                        
+                        const agentResponse = data.response.replace(/\n/g, '<br>');
+                        // Display the agent's response
+                        addMessage(agentResponse, false);
+
+                    } catch (error) {
+                        console.error('Error:', error);
+                        // Remove loading indicator and show error
+                        chatContainer.removeChild(loadingDiv);
+                        addMessage('Sorry, I encountered an error. Please try again.', false);
+                    }
+                }
+                
+                // Event listeners
+                sendBtn.addEventListener('click', function() {
+                    const message = userInput.value.trim();
+                    if (message) {
+                        addMessage(message, true);
+                        sendToAgent(message);
+                        userInput.value = '';
+                    }
+                });
+                
+                userInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        const message = userInput.value.trim();
+                        if (message) {
+                            addMessage(message, true);
+                            sendToAgent(message);
+                            userInput.value = '';
+                        }
+                    }
+                });
+            });
+        </script>
+    </div>
+</body>
+</html>
