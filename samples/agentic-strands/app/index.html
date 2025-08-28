@@ -57,6 +57,10 @@
             color: #888;
             font-style: italic;
         }
+        pre {
+            font-family: Arial, sans-serif;
+            white-space: pre-wrap;
+        }
     </style>
 </head>
 <body>
@@ -88,7 +92,10 @@
                     if (isUser) {
                         messageDiv.textContent = text;
                     } else {
-                        messageDiv.innerHTML = text;
+                        // Use a pre element to preserve new line formatting in agent messages
+                        const pre = document.createElement('pre');
+                        pre.textContent = text;
+                        messageDiv.appendChild(pre);
                     }
                     chatContainer.appendChild(messageDiv);
                     chatContainer.scrollTop = chatContainer.scrollHeight;
@@ -123,7 +130,7 @@
                         // Remove loading indicator
                         chatContainer.removeChild(loadingDiv);
                         
-                        const agentResponse = data.response.replace(/\n/g, '<br>');
+                        const agentResponse = data.response;
                         // Display the agent's response
                         addMessage(agentResponse, false);
 
