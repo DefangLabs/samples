@@ -3,24 +3,24 @@ from strands.models.openai import OpenAIModel
 from flask import Flask, request, jsonify, send_from_directory
 import requests
 
-import json
 import os
-import time
 import dotenv
-from threading import Lock
 
 dotenv.load_dotenv()
 
 message = """
-You are an expert fashion stylist. Your goal is to help users find their personal style. 
-Your task is to provide fashion advice and offer products based on the user's preferences.
-You can use the tools available to you to assist with this.
-Note that for any prompts you ask the user, make sure you actually explicitly state the question you are asking, and possible some sample answers so they know what to type. 
-Keep the questions as simple as possible so the user doesn't have to type much. And don't ask more than 3 questions.
+You are a helpful library assistant. 
+Your goal is to help users discover books available through the library's book API, based on the user's preferences. 
+When a user makes a request, you should search the API and suggest books that match their query. 
+
+When interacting, ask the user clear questions to guide the search. 
+Make sure to explicitly state the question you are asking, 
+and provide simple sample answers so the user knows what to type.
+Keep it to a maximum of 3 simple questions.
 """
 
 app = Flask(__name__)
-latest_response = {"message": "Hello! I'm your fashion stylist assistant. How can I help you with your style today?"}
+latest_response = {"message": "Hello! I'm your library assistant. How can I help you with your reading today?"}
 
 model = OpenAIModel(
     client_args={
@@ -63,12 +63,12 @@ def message_buffer_handler(**kwargs):
         print(f"Error in message_buffer_handler: {str(e)}")
 
 @tool
-def search_for_fashion_books(query, filters=None) -> str:
+def search_for_books(query, filters=None) -> str:
     """
-    Search for detailed information about fashion books using the Open Library API.
+    Search for detailed information about books using the Open Library API.
 
     Args:
-        query: The search term to look up fashion-related books.
+        query: The search term to look up books.
 
     Returns:
         A string summarizing the list of matching books, or a message if none are found.
@@ -81,7 +81,6 @@ def search_for_fashion_books(query, filters=None) -> str:
     headers = {}
     params = {
         "q": clean_query,
-        "subject": "fashion",
         "page": 1,
         "limit": 10
     }
@@ -91,9 +90,9 @@ def search_for_fashion_books(query, filters=None) -> str:
         if response.ok:
             book_list = response.json()
             if book_list.get("num_found", 0) == 0:
-                return "No fashion books found"
+                return "No books found matching your query."
 
-            message = "Here are the fashion books I found:"
+            message = "Here are the books I found:"
             for book in book_list.get("docs", []):
                 title = book.get("title")
                 author = book.get("author_name", ["Unknown"])[0]
@@ -107,14 +106,14 @@ def search_for_fashion_books(query, filters=None) -> str:
         return f"Error: {str(e)}"
 
 TOOL_SPEC = {
-    "name": "search_for_fashion_books",
-    "description": "Get detailed information about fashion books from Open Library, based on a search query.",
+    "name": "search_for_books",
+    "description": "Get detailed information about books from Open Library, based on a search query.",
     "inputSchema": {
         "type": "object",
         "properties": {
             "query": {
                 "type": "string",
-                "description": "Search query for fashion books",
+                "description": "Search query for books",
             }
         },
         "required": ["query"],
@@ -122,7 +121,7 @@ TOOL_SPEC = {
 }
 
 agent = Agent(
-    tools=[search_for_fashion_books], 
+    tools=[search_for_books], 
     model=model, 
     callback_handler=message_buffer_handler, 
     system_prompt=message
