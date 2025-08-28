@@ -7,21 +7,12 @@ services:
       - target: 5001
         published: 5001
         mode: ingress
-    # if using AWS Bedrock for local development, include this section:
-    environment:
-      - AWS_REGION=${AWS_REGION} # replace with your AWS region
-      - AWS_PROFILE=${AWS_PROFILE} # replace with your AWS profile name
-    volumes:
-      - ./app:/app
-      - type: bind
-        source: ~/.aws
-        target: /root/.aws
 
   llm:
     extends:
       file: compose.yaml
       service: llm
-    # if using AWS Bedrock for local development, include this section:
+  # AWS section
     environment:
       - AWS_REGION=${AWS_REGION} # replace with your AWS region
       - AWS_PROFILE=${AWS_PROFILE} # replace with your AWS profile name
@@ -30,6 +21,7 @@ services:
       - type: bind
         source: ~/.aws
         target: /root/.aws
-    # if using GCP for local development, include this section:
+
+  # GCP section
     # environment:
     #   - GCP_PROJECT_ID=${GCP_PROJECT_ID} # replace with your GCP project ID
