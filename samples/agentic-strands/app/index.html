@@ -85,7 +85,11 @@
                 function addMessage(text, isUser = false) {
                     const messageDiv = document.createElement('div');
                     messageDiv.className = `message ${isUser ? 'user-message' : 'agent-message'}`;
-                    messageDiv.innerHTML = text;
+                    if (isUser) {
+                        messageDiv.textContent = text;
+                    } else {
+                        messageDiv.innerHTML = text;
+                    }
                     chatContainer.appendChild(messageDiv);
                     chatContainer.scrollTop = chatContainer.scrollHeight;
                 }
