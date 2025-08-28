@@ -35,9 +35,7 @@ model = OpenAIModel(
 )
 
 def parse_assistant_response(**kwargs):
-    # print(json.dumps(kwargs["message"], indent=2)) # Debugging line
-
-    # Extract the assistant's text message
+    # Extract the assistant's text message from JSON
     assistant_text = kwargs["message"]["content"][0]["text"]
 
     print("Assistant Text: ", assistant_text)
@@ -129,7 +127,6 @@ agent = Agent(
 
 print("Agent model:", agent.model.config)
 
-
 # Flask routes
 @app.route('/')
 def index():
@@ -145,15 +142,12 @@ def chat():
             return jsonify({"error": "No JSON data received"}), 400
             
         user_message = data.get('message')
-
         if not user_message:
             return jsonify({"error": "No message provided"}), 400
-        
         print(f"Received message: {user_message}")
 
         agent(f"Continue the conversation with the user. The user says: {user_message}")
 
-        # # Return the response from latest_response
         response_content = latest_response.get("message", "I'm thinking about your question...")
 
         return jsonify({
@@ -161,8 +155,6 @@ def chat():
         })
     
     except Exception as e:
-        import traceback
-        traceback.print_exc()
         print(f"Error in /chat endpoint: {str(e)}")
         return jsonify({"error": str(e), "response": str(e)}), 500
 
