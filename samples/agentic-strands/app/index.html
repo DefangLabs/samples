@@ -108,6 +108,7 @@
                     loadingDiv.className = 'message agent-message loading';
                     loadingDiv.textContent = 'Thinking...';
                     chatContainer.appendChild(loadingDiv);
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
                     
                     try {
                         const response = await fetch('/chat', {
