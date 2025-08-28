@@ -19,7 +19,6 @@ services:
   llm:
     environment:
       - OPENAI_API_KEY=FAKE_TOKEN
-      - DEBUG=true
     image: defangio/openai-access-gateway:latest
     ports:
       - target: 80
