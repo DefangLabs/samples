@@ -96,7 +96,6 @@ jobs:
           TEST_POSTGRES_PASSWORD: ${{ secrets.TEST_POSTGRES_PASSWORD }}
           TEST_PROJECT_HONEYPOT_KEY: ${{ secrets.TEST_PROJECT_HONEYPOT_KEY}}
           TEST_QUEUE: ${{ secrets.TEST_QUEUE }}
-          TEST_REDISX_URL: ${{ secrets.TEST_REDISX_URL }}
           TEST_SECRET_KEY: ${{ secrets.TEST_SECRET_KEY }}
           TEST_SECRET_KEY_BASE: ${{ secrets.TEST_SECRET_KEY_BASE }}
           TEST_SESSION_SECRET: ${{ secrets.TEST_SESSION_SECRET }}

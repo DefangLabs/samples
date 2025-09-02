@@ -19,7 +19,3 @@ jobs:
 
     - name: Deploy
       uses: DefangLabs/defang-github-action@v1.1.3
-      with:
-        config-env-vars: REDISX_URL
-      env:
-        ENV1: ${{ secrets.REDISX_URL }}
