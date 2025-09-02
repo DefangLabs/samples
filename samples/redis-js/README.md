@@ -19,18 +19,6 @@ To run the application locally, you can use the following command:
 docker compose up --build
 ```
 
-## Configuration
-For this sample, you will need to provide the following [configuration](https://docs.defang.io/docs/concepts/configuration): 
-
-> Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
-
-### `REDISX_URL`
-A Redis connection string of the form `rediss://<username>:<password>@<host>:<port>`. Note that `REDISX` is a prefix which should match of the name of the Redis service (in this case, `redisx`).
-
-```bash
-defang config set REDISX_URL
-```
-
 ## Deployment
 
 > [!NOTE]
