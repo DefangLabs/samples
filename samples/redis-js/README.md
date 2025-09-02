@@ -3,7 +3,7 @@
 
 This is a Redis and JavaScript application, deployed with Defang. 
 
-Note that Defang supports the use of managed Redis in production deployments. You can enable this feature by adding the `x-defang-redis` tag to your Redis service in the `compose.yaml` file. 
+Note that Defang supports the use of managed Redis in production deployments. You can enable this feature by adding the `x-defang-redis: true` tag to your Redis service in the `compose.yaml` file. 
 
 ## Prerequisites
 
