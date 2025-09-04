@@ -42,6 +42,93 @@ If you want to deploy to your own cloud account, you can use Defang BYOC:
    defang --provider=aws compose up
    ```
 
+## Monitoring and Management
+
+### Check Service Status
+
+To check the status of your deployed services:
+
+```bash
+defang services
+```
+
+This command will show you:
+- Service names and their current status
+- Deployment IDs
+- Service URLs
+- Resource allocations
+
+### View Real-time Logs
+
+To view logs from your deployed application:
+
+```bash
+# View logs for all services
+defang tail
+
+# View logs for a specific service
+defang tail --name app
+```
+
+### Monitor via Defang Portal
+
+You can also monitor your application through the web interface:
+- Visit [https://portal.defang.dev/](https://portal.defang.dev/)
+- View service status, logs, and deployment history
+- Monitor resource usage and performance metrics
+
+Note: The Defang Portal displays services deployed to Defang Playground.
+
+### Update Your Application
+
+To deploy updates to your application:
+
+```bash
+defang compose up
+```
+
+Defang will:
+- Build and deploy the new version with zero downtime
+- Keep the current version running while deploying the new one
+- Switch traffic to the new version after health checks pass
+- Stop the old version automatically
+
+### Cleanup and Teardown
+
+To destroy your deployed services and clean up resources:
+
+```bash
+defang compose down
+```
+
+This will:
+- Stop all running services
+- Remove the deployed containers
+- Clean up associated resources
+
+## Troubleshooting
+
+### Common Issues
+
+**Service stuck in PROVISIONING state:**
+- This is normal for initial deployments, which can take a few minutes
+- Check logs with `defang tail --name app` for any error messages
+- Verify your container starts successfully and listens on the correct port (5173)
+
+**Cannot access the deployed application:**
+- Ensure the service status shows as "HEALTHY" using `defang services`
+- Check that the application is configured to listen on `0.0.0.0:5173` (not `localhost`)
+- Verify the port configuration in `compose.yaml` matches your application
+
+**Deployment fails:**
+- Check for syntax errors in `compose.yaml`
+- Ensure the Docker build context is correct
+- Review deployment logs with `defang tail`
+
+**"missing memory reservation" warning:**
+- This sample already includes memory reservations (512MB)
+- Adjust the memory reservation in `compose.yaml` if needed for your use case
+
 ---
 
 Title: React
