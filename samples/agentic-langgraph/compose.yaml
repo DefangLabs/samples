@@ -1,0 +1,34 @@
+services:
+  app:
+    # uncomment to add your own domain
+    # domainname: example.com
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - target: 3000
+        published: 3000
+        mode: ingress
+    environment:
+      TAVILY_API_KEY:
+      LLM_URL: http://llm/api/v1/
+      LLM_MODEL: default
+      OPENAI_API_KEY: FAKE_TOKEN
+    depends_on:
+      - llm
+
+  llm:
+    environment:
+      - OPENAI_API_KEY=FAKE_TOKEN
+    image: defangio/openai-access-gateway:latest
+    ports:
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
+    x-defang-llm: true
+    deploy:
+      resources:
+        reservations:
+          cpus: 0.25
+          memory: 512MB

@@ -50,3 +50,5 @@ services:
       # Make sure the LOAD_MODEL is the same as the app service
       - LOAD_MODEL=llama3.2:1b
       # - LOAD_MODEL=gemma:7b
+    depends_on:
+      - ollama

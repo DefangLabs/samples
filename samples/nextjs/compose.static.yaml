@@ -1,0 +1,10 @@
+services:
+  app:
+    extends:
+      file: compose.yaml
+      service: app
+    build:
+      args:
+        NEXT_OUTPUT: export
+    x-defang-static-files:
+      folder: /static

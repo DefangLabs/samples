@@ -1,17 +1,18 @@
 # Use a smaller base image
-FROM python:3.10.4-slim-buster
+FROM python:3.10-slim-buster
 
 # Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 # Set work directory
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y \
-    gcc \
-    python3-dev \
-    libpq-dev
+RUN apt-get update \
+    && apt-get install -y \
+        gcc \
+        python3-dev \
+        libpq-dev
 
 # Install dependencies
 COPY requirements.txt /app/
