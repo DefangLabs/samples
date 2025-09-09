@@ -13,7 +13,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@remix-run/dev": "^2.2.0",
+    "@remix-run/dev": "^2.17.0",
     "@types/react": "^18.2.34",
     "prisma": "^5.5.2"
   },
