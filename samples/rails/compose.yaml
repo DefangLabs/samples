@@ -25,6 +25,21 @@ services:
       retries: 5
     depends_on:
       - db
+      - migrate
+  migrate:
+    restart: "no"
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      POSTGRES_PASSWORD:
+    command: ["bin/rails", "db:prepare"]
+    depends_on:
+      db:
+        condition: service_healthy
+
   db:
     restart: unless-stopped
     image: postgres:16
