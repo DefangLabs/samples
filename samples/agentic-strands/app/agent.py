@@ -159,9 +159,9 @@ def chat():
         return jsonify({"error": str(e), "response": str(e)}), 500
 
 @app.get("/health")
-async def health_check():
+def health_check():
     """Health check endpoint"""
-    return {"status": "healthy", "message": "AI Library Assistant is running"}
+    return "ok"
 
 
 # Start Flask server when this script is run directly
