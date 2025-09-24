@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Apply database migrations
-python manage.py migrate
-
 # Create superuser if not exists
 python manage.py createsuperauto
 

@@ -158,6 +158,12 @@ def chat():
         print(f"Error in /chat endpoint: {str(e)}")
         return jsonify({"error": str(e), "response": str(e)}), 500
 
+@app.get("/health")
+def health_check():
+    """Health check endpoint"""
+    return "ok"
+
+
 # Start Flask server when this script is run directly
 if __name__ == '__main__':
 
