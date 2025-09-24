@@ -1,11 +1,13 @@
 services:
   blogstarter:
+    restart: unless-stopped
     build:
       context: ./app
       dockerfile: Dockerfile
     ports:
       - mode: ingress
         target: 3000
+        published: 3000
     deploy:
       resources:
         reservations:

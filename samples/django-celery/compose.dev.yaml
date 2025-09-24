@@ -1,0 +1,43 @@
+x-env: &app-env
+  environment:
+    - DEBUG=True
+    - SECRET_KEY=dev-secret-key
+    - POSTGRES_URL=postgres://postgres:password@database:5432/postgres
+
+services:
+  web:
+    extends:
+      file: compose.yaml
+      service: web
+    <<: *app-env
+    volumes:
+      - ./app:/app
+
+  worker:
+    extends:
+      file: compose.yaml
+      service: worker
+    <<: *app-env
+    command: watchmedo auto-restart -d . -p "*.py" --recursive -- celery -A django_celery worker --loglevel=info
+    volumes:
+      - ./app:/app
+
+  database:
+    extends:
+      file: compose.yaml
+      service: database
+    environment:
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  broker:
+    extends:
+      file: compose.yaml
+      service: broker
+    volumes:
+      - redis_data:/data
+
+volumes:
+  postgres_data:
+  redis_data:

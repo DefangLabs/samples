@@ -1,39 +1,66 @@
-# React & Node.js & PostgreSQL
+# Node.js & React & PostgreSQL
 
-This sample project demonstrates how to deploy a full-stack application using React for the frontend, Node.js for the backend, and PostgreSQL for the database. The project uses Docker to containerize the services, making it easy to run in both development and production environments.
+[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-nodejs-react-postgres-template%26template_owner%3DDefangSamples)`
+
+This sample project demonstrates how to deploy a full-stack application using React for the frontend, Node.js for the backend, and PostgreSQL for the database. 
 
 In this sample, we have set up the essential files you need to deploy in production using [Neon](https://neon.tech/) to host your database. We use a connection string to connect Neon to your code. By replacing the pre-configured connection string at .env and at the compose file to yours, you will be ready to deploy this sample with Neon.
 
-## Essential Setup Files
+## Prerequisites
 
-1. Download [Defang CLI] (https://github.com/defang-io/defang)
-2. (optional) If you are using [Defang BYOC] (https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html) authenticated your AWS account.
-3. (optional for local development) [Docker CLI] (https://docs.docker.com/engine/install/)
+1. Download [Defang CLI](https://github.com/DefangLabs/defang)
+2. (Optional) If you are using [Defang BYOC](https://docs.defang.io/docs/concepts/defang-byoc) authenticate with your cloud provider account
+3. (Optional for local development) [Docker CLI](https://docs.docker.com/engine/install/)
 
 ## Development
 
-To start the development environment, run `docker compose -f ./compose.yaml -f ./compose.dev.yaml up`. This will start the Postgres container, the React container, and the NodeJS container. The development container (compose.dev.yaml) will override the production container (compose.yaml).
+To run the application locally, you can use the following command:
 
+```bash
+docker compose -f compose.dev.yaml up --build
+```
 Or run without using Docker by doing the following:
 
-1. run npm install to install the nodejs dependencies in both the `client` directory and the `server` directory
+1. run `npm install` to install the nodejs dependencies in both the `client` directory and the `server` directory
 2. create or modify the .env file in both the `client` directory and the `server` directory with localhost, or create a .env.local to override the .env file.
-3. run npm start
+3. run `npm start`
 
-## Deploying
+## Configuration
+For this sample, you will need to provide the following [configuration](https://docs.defang.io/docs/concepts/configuration): 
 
-1. Open the terminal and type `defang login`
-2. Add your connection string as a defang config value by typing `defang config set DATABASE_URL` and pasting your connection string (which should be in the format `postgres://username:password@host:port/dbname`)
-3. Update your `compose.yaml` file to replace `<YOUR_USERNAME>` with your username (which you can get by running `defang whoami`. "Tenant" is your username.)
-4. Type `defang compose up` in the CLI.
-5. Your app will be running within a few minutes.
+> Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
+
+### `DATABASE_URL`
+A connection to the database, which should be in the format of `postgres://username:password@host:port/dbname`.
+```bash
+defang config set DATABASE_URL
+```
+
+### `REACT_APP_API_URL`
+A URL for the React App. For this, you will need to update the `compose.yaml` file to replace `<YOUR_USERNAME>` with your username, which you can get by running `defang whoami`.
+
+## Deployment
+
+> [!NOTE]
+> Download [Defang CLI](https://github.com/DefangLabs/defang)
+
+### Defang Playground
+
+Deploy your application to the Defang Playground by opening up your terminal and typing:
+```bash
+defang compose up
+```
+
+### BYOC (AWS)
+
+If you want to deploy to your own cloud account, you can [use Defang BYOC](https://docs.defang.io/docs/tutorials/deploy-to-your-cloud):
 
 ---
 
-Title: React & Node.js & PostgreSQL
+Title: Node.js & React & PostgreSQL
 
-Short Description: A full-stack to-do list application
+Short Description: A full-stack to-do list application.
 
-Tags: React, Node.js, full-stack, PostgreSQL
+Tags: Node.js, React, Full-stack, PostgreSQL, JavaScript, SQL
 
-Languages: nodejs, javascript, sql
+Languages: nodejs

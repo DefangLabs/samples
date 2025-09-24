@@ -1,5 +1,6 @@
 services:
   db:
+    restart: unless-stopped
     image: mysql:latest
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: true
@@ -11,10 +12,14 @@ services:
     ports:
       - mode: host
         target: 3306
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      memory: 256M
 
   app:
-    build: ./app
     restart: unless-stopped
+    build: ./app
     environment:
       DATABASE_HOST: db
       DATABASE_USER: admin
@@ -24,6 +29,12 @@ services:
       - "3001:3001"
     depends_on:
       - db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/"]
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      memory: 256M
 
 volumes:
   mysql_data:

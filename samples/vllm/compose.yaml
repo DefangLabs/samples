@@ -13,13 +13,13 @@ services:
           memory: 8192M
           devices:
             - capabilities: ["gpu"]
+              count: 1
     healthcheck:
-      test: ["CMD", "curl", "http://localhost:8000/v1/models"]
-      interval: 5m
-      timeout: 30s
-      retries: 10
+      test: ["CMD", "python3", "-c", "import sys, urllib.request;urllib.request.urlopen(sys.argv[1]).read()", "http://localhost:8000/health"]
+      interval: 1m
     environment:
       - HF_TOKEN
+
   ui:
     restart: unless-stopped
     build:
@@ -28,6 +28,7 @@ services:
     ports:
       - mode: ingress
         target: 3000
+        published: 3000
     deploy:
       resources:
         reservations:
@@ -39,3 +40,5 @@ services:
       retries: 10
     environment:
       - OPENAI_BASE_URL=http://mistral:8000/v1/
+    depends_on:
+      - mistral

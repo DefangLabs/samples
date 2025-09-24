@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>LangGraph Agent Output</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            font-size: 16px;
+        }
+        input, button {
+            font-family: inherit;
+            font-size: inherit;
+        }
+    </style>
+</head>
+<body>
+    <h1>LangGraph Agent Output</h1>
+    <p>Try a query that uses tools, e.g., "Can you search for the weather in New York?"</p>
+    <input type="text" id="userInput" placeholder="Type your input" style="width: 400px; height: 40px; font-size: 1.2em; padding: 8px;" />
+    <button id="sendBtn" style="width: 80px; height: 60px; font-size: 1.2em; padding: 8px;">Send</button>
+    <div id="conversation" style="margin-top: 20px;">
+        <strong>You:</strong> <span id="sentInput"></span><br><br>
+        <strong>Agent:</strong> <pre id="output" style="display:inline; font-family:sans-serif; white-space: pre-wrap;"></pre>
+    </div>
+
+    <script>
+        const sendBtn = document.getElementById("sendBtn");
+        const userInput = document.getElementById("userInput");
+        const output = document.getElementById("output");
+        const sentInput = document.getElementById("sentInput");
+
+        sendBtn.onclick = async () => {
+            const input = userInput.value;
+            if (!input) return;
+            sentInput.textContent = input;
+            userInput.value = "";
+            output.textContent = "Waiting for response...";
+            try {
+                const res = await fetch('/agent', {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ input }),
+                });
+                const json = await res.json();
+                output.textContent = json.output;
+            } catch (err) {
+                output.textContent = "Error: " + err.message;
+            }
+        };
+    </script>
+</body>
+</html>

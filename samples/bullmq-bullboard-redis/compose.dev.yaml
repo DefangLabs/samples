@@ -33,8 +33,8 @@ services:
       - QUEUE=testqueue
     command: npx nodemon index.mjs
 
-  redis:
+  redisx:
     extends:
       file: compose.yaml
-      service: redis
+      service: redisx
     

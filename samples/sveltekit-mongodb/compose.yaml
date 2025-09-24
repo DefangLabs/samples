@@ -1,5 +1,6 @@
 services:
   sveltekit:
+    restart: unless-stopped
     build:
       context: ./app
       dockerfile: Dockerfile
@@ -14,8 +15,15 @@ services:
       - "3000:3000"
     depends_on:
       - mongo
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      memory: 256M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
 
   mongo:
+    restart: unless-stopped
     image: mongo:latest
     ports:
       - mode: host
@@ -24,6 +32,12 @@ services:
       - mongo-data:/data/db
     environment:
       MONGO_INITDB_DATABASE: musicdb
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      memory: 256M
+    # The following option will provision a managed MongoDB instance, eg. DocumentDB on AWS.
+    x-defang-mongodb: true
 
 volumes:
   mongo-data:

@@ -1,5 +1,7 @@
 # Svelte & Node.js & MySQL
 
+[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-svelte-mysql-template%26template_owner%3DDefangSamples)
+
 This sample project demonstrates how to deploy a full-stack application using Svelte for the frontend, Node.js for the backend, and MySQL for the database. The project uses Docker to containerize the services, making it easy to run in both development and production environments.
 
 ## NOTE
@@ -21,7 +23,7 @@ This sample showcases how you could deploy a full-stack application with Defang 
 
 ## Development
 
-For development, we use a local container. This can be seen in the compose.yaml file and the server.js file where we create a pool of connections. To run the sample locally after clonging the respository, you can run on docker by doing _docker compose up --build_ or run without using Docker by doing the following:
+For development, we use a local container. This can be seen in the compose.yaml file and the server.js file where we create a pool of connections. To run the sample locally after clonging the respository, you can run on docker by doing _docker compose up --build --build_ or run without using Docker by doing the following:
 
 1. run npm install to install the nodejs dependencies
 2. create an .env file on the svelte directory specifying the appropriate environment variables.
@@ -41,8 +43,8 @@ If you want to edit the database, such that you can deploy them to production, y
 
 Title: Svelte & Node.js & MySQL
 
-Short Description: A full-stack application using Svelte for the frontend, Node.js for the backend, and MySQL for the database
+Short Description: A full-stack application using Svelte for the frontend, Node.js for the backend, and MySQL for the database.
 
-Tags: svelte, nodejs, mysql, full-stack
+Tags: Svelte, Node.js, MySQL, Full-stack, JavaScript, TypeScript, SQL
 
-Languages: nodejs, javascript, sql, typescript
+Languages: nodejs

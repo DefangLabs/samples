@@ -1,5 +1,7 @@
 # Mistral & vLLM
 
+[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-vllm-template%26template_owner%3DDefangSamples)
+
 This guide demonstrates how to deploy Mistral using vLLM. You'll need a Hugging Face token to begin.
 
 ## Prerequisites
@@ -43,8 +45,8 @@ By following these steps, you should be able to deploy Mistral along with a cust
 
 Title: Mistral & vLLM
 
-Short Description: Deploy Mistral with a custom UI using vLLM
+Short Description: Deploy Mistral with a custom UI using vLLM.
 
-Tags: mistral, vllm, ai, nextjs, gpu
+Tags: Mistral, vLLM, AI, Nextjs, GPU, Node.js, TypeScript, JavaScript
 
-Languages: nodejs, typescript
+Languages: nodejs

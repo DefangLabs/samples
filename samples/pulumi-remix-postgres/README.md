@@ -1,5 +1,7 @@
 # Pulumi & Remix & Postgres
 
+[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-pulumi-remix-postgres-template%26template_owner%3DDefangSamples)
+
 In this example, we run a Remix application connected to a Postgres database using Prisma as an ORM. When we deploy our service to [Defang](https://defang.io/), we also deploy a Postgres service and database using [Aiven](https://aiven.io/) so we can run our full application in the cloud.
 
 ## Running Locally
@@ -39,10 +41,10 @@ Now, run `pulumi up` to deploy your application to Defang and Aiven! Head to the
 
 ---
 
-Title: Pulumi & Remix & Postgres
+Title: Pulumi & Remix & PostgreSQL
 
-Short Description: A full stack example using Remix, Prisma, and Aiven
+Short Description: A full-stack example using Remix, Prisma, and Aiven.
 
-Tags: full stack, remix, prisma, aiven, postgres, pulumi
+Tags: Full-stack, Remix, Prisma, Aiven, PostgreSQL, Pulumi, Node.js, TypeScript, SQL
 
-Languages: nodejs, sql, typescript
+Languages: nodejs

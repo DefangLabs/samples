@@ -1,5 +1,7 @@
 # Python & Flask & OpenAI
 
+[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-python-openai-template%26template_owner%3DDefangSamples)
+
 ## Setup
 
 This sample requires an API key to access the OpenAI API. The name of the config value is referenced in the compose.yaml file. To provide a value for it, you can use the Defang CLI like this:
@@ -26,8 +28,8 @@ cat prompt.txt | curl -H "Content-Type: application/text" -d @- https://xxxxxxxx
 
 Title: Python & Flask & OpenAI
 
-Short Description: An app that demonstrates how to use the OpenAI API with Python and Flask
+Short Description: An app that demonstrates how to use the OpenAI API with Python and Flask.
 
-Tags: python, flask, openai, ai
+Tags: Python, Flask, OpenAI, AI, Python
 
 Languages: python

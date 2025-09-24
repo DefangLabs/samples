@@ -1,5 +1,7 @@
 # Sveltekit
 
+[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-sveltekit-template%26template_owner%3DDefangSamples)
+
 This sample shows how to get a minimal SvelteKit app up and running with Defang.
 
 ## Prerequisites
@@ -11,7 +13,7 @@ This sample shows how to get a minimal SvelteKit app up and running with Defang.
 
 ## Development
 
-To develop this app, you can run the sveltekit commands as you normally would on your local machine in the sveltekit directory. If you plan on adding other services, you might want to run it with docker compose. We have provided a `compose.dev.yaml` file and a `dev.Dockefile` to help you get started. Just run `docker compose -f compose.dev.yaml up` to start your Sveltekit app in dev mode in a container.
+To develop this app, you can run the sveltekit commands as you normally would on your local machine in the sveltekit directory. If you plan on adding other services, you might want to run it with docker compose. We have provided a `compose.dev.yaml` file and a `dev.Dockefile` to help you get started. Just run `docker compose -f compose.dev.yaml up --build` to start your Sveltekit app in dev mode in a container.
 
 ## Deploying
 
@@ -21,10 +23,10 @@ To develop this app, you can run the sveltekit commands as you normally would on
 
 ---
 
-Title: Sveltekit
+Title: SvelteKit
 
 Short Description: A minimal SvelteKit app running on Defang.
 
-Tags: sveltekit, typescript, javascript, svelte, nodejs, frontend
+Tags: SvelteKit, TypeScript, JavaScript, Svelte, Node.js, Frontend, TypeScript, JavaScript
 
-Languages: nodejs, typescript, javascript
+Languages: nodejs

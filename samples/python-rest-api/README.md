@@ -1,5 +1,7 @@
 # Python & REST API
 
+[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-python-rest-api-template%26template_owner%3DDefangSamples)
+
 This Flask application fetches average interest rates from the Fiscal Data Treasury API. It provides endpoints to check the status of the API and to retrieve the latest average interest rates. Note that alognside your .py file, include a requirements.txt so that the Dockerfile can install the necessary packages with pip.
 
 ## Features
@@ -27,8 +29,8 @@ Endpoint to fetch average interest rates from the Fiscal Data Treasury API.
 
 Title: Python & REST API
 
-Short Description: A Flask application that fetches average interest rates from the Fiscal Data Treasury API
+Short Description: A Flask application that fetches average interest rates from the Fiscal Data Treasury API.
 
-Tags: flask, rest, python
+Tags: Flask, REST API, Python
 
 Languages: python

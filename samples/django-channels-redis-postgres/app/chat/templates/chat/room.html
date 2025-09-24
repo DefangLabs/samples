@@ -1,0 +1,137 @@
+{% extends './layout.html' %}
+
+{% block content %}
+  <style>
+    body,
+    html {
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    #wrapper {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      position: relative;
+    }
+    
+    #chat-log {
+      flex-grow: 1;
+      overflow-y: scroll;
+    }
+    
+    #form {
+      position: absolute;
+      bottom: 0;
+    }
+    
+    .chat-message {
+      padding: 0.5em;
+      margin: 0.5em;
+      background-color: #5036a3;
+      border-radius: 1em;
+      margin-right: 20%;
+      color: white;
+      border-bottom-left-radius: 0;
+    }
+    
+    .chat-message.self {
+      background: #f0f0f0;
+      margin-left: 20%;
+      margin-right: 0;
+      background-color: #066ebc;
+      border-bottom-left-radius: 1em;
+      border-bottom-right-radius: 0;
+    }
+
+    .chat-message:last-child {
+      margin-bottom: 100px;
+    }
+    .meta {
+      font-size: 0.8em;
+      color: #ddd;
+      font-weight: 300;
+    }
+  </style>
+  <div class="container" id="wrapper">
+    <div id="chat-log"></div>
+    <fieldset role="group" id="form">
+      <input id="chat-message-username" type="text" style="flex-shrink: 2;" placeholder="Username" />
+      <input id="chat-message-input" type="text" placeholder="Message" />
+      <input id="chat-message-submit" type="button" value="Send" />
+    </fieldset>
+  </div>
+
+  {{ room_name|json_script:'room-name' }}
+  {{ messages|json_script:'messages' }}
+
+  <script>
+    function getUsername() {
+      return document.querySelector('#chat-message-username').value
+    }
+    
+    /**
+     * Append a message to the chat log.
+     * @param {Object} data
+     * @param {string} data.user - The user who sent the message
+     * @param {string} data.message - The message content
+     * @param {string} data.timestamp - The timestamp of the message
+     */
+    function appendMessage(data) {
+      const messageElement = document.createElement('div')
+      messageElement.innerText = data.message
+      const currentUsername = getUsername()
+      const metaDiv = document.createElement('div')
+      const readableTime = new Date(data.timestamp).toLocaleTimeString()
+      metaDiv.innerText = ` - ${data.user} @ ${readableTime}`
+      metaDiv.classList.add('meta')
+      messageElement.append(metaDiv)
+      messageElement.classList.add('chat-message')
+      if (data.user === currentUsername) {
+        messageElement.classList.add('self')
+      }
+      document.querySelector('#chat-log').append(messageElement)
+      // scroll to the bottom
+      document.querySelector('#chat-log').scrollTo(0, document.querySelector('#chat-log').scrollHeight)
+    }
+    
+    const roomName = JSON.parse(document.getElementById('room-name').textContent)
+    const messages = JSON.parse(document.getElementById('messages').textContent)
+    
+    messages.forEach(appendMessage)
+    
+    const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://'
+    const chatSocket = new WebSocket(protocol + window.location.host + '/ws/' + roomName + '/')
+    
+    chatSocket.onmessage = function (e) {
+      const data = JSON.parse(e.data)
+      appendMessage(data)
+    }
+    
+    chatSocket.onclose = function (e) {
+      console.error('Chat socket closed unexpectedly')
+    }
+    
+    document.querySelector('#chat-message-input').focus()
+    document.querySelector('#chat-message-input').onkeyup = function (e) {
+      if (e.keyCode === 13) {
+        // enter, return
+        document.querySelector('#chat-message-submit').click()
+      }
+    }
+    
+    document.querySelector('#chat-message-submit').onclick = function (e) {
+      const messageInputDom = document.querySelector('#chat-message-input')
+      const message = messageInputDom.value
+      chatSocket.send(
+        JSON.stringify({
+          message: message,
+          user: getUsername()
+        })
+      )
+      messageInputDom.value = ''
+    }
+  </script>
+{% endblock %}

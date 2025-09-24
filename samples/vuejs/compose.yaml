@@ -1,0 +1,16 @@
+services:
+  app: 
+    restart: unless-stopped
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - target: 5173
+        published: 5173
+        mode: ingress
+    deploy:
+      resources:
+        reservations:
+          memory: 512M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5173/"]

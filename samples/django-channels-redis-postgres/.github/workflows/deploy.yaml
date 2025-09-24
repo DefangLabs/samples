@@ -1,0 +1,25 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v4
+
+    - name: Deploy
+      uses: DefangLabs/defang-github-action@v1.0.4
+      with:
+        config-env-vars: SECRET_KEY POSTGRES_PASSWORD
+      env:
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}

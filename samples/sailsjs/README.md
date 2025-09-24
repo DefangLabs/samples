@@ -1,5 +1,7 @@
 # Sailsjs
 
+[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-sailsjs-template%26template_owner%3DDefangSamples)
+
 This sample demosntrates how to deploy a very basic Sailsjs sample with Defang. The sample simply outputs hello world on the webpage.
 
 ## Prerequisites
@@ -22,10 +24,10 @@ For development, we use a local container. This can be seen in the compose.yaml 
 
 ---
 
-Title: Sailsjs
+Title: Sails.js
 
-Short Description: A short hello world application demosntrating how to deploy Sailsjs onto defang.
+Short Description: A short hello world application demonstrating how to deploy Sails.js onto Defang.
 
-Tags: Sailsjs
+Tags: Sails.js, Node.js
 
-Languages: nodejs, javascript
+Languages: nodejs

@@ -1,4 +1,6 @@
-# Sailsjs & Postgres
+# Sails.js & PostgreSQL
+
+[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-sailsjs-postgres-template%26template_owner%3DDefangSamples)
 
 This sample project demonstrates how to deploy
 
@@ -30,14 +32,10 @@ docker compose -f compose.dev.yaml up --build
 
 ---
 
-Title: Sailsjs & Postgres
+Title: Sails.js & PostgreSQL
 
-Short Description: A sample project demonstrating how to deploy a project with Postgres + Sailsjs
+Short Description: A sample project demonstrating how to deploy a project with PostgreSQL and Sails.js.
 
-Tags: Postgres, Sailsjs,
+Tags: PostgreSQL, Sails.js, SQL, JavaScript
 
-Languages: sql, nodejs
-
-```
-
-```
+Languages: nodejs

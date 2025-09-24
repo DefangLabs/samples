@@ -1,5 +1,10 @@
 # Use an official Python runtime as a parent image
-FROM python:3.12.2
+FROM python:3.11-slim
+
+RUN apt-get update -qq \
+  && apt-get install -y curl \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -19,4 +24,4 @@ COPY . /code/
 RUN python manage.py collectstatic --noinput
 
 # Start server
-CMD python manage.py migrate && python manage.py createsuperuser && gunicorn crm_platform.wsgi:application --bind 0.0.0.0:8000 
+CMD python manage.py migrate && python manage.py createsuperauto && gunicorn app.wsgi:application --bind 0.0.0.0:8000

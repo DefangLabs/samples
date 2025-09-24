@@ -1,5 +1,6 @@
 services:
   bot:
+    restart: unless-stopped
     build:
       context: ./app
       dockerfile: Dockerfile
@@ -9,3 +10,9 @@ services:
     environment:
       - SLACK_TOKEN
       - SLACK_CHANNEL_ID
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      memory: 256M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]

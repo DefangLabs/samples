@@ -1,5 +1,6 @@
 services:
   board:
+    restart: unless-stopped
     build:
       context: ./board
       dockerfile: Dockerfile
@@ -11,10 +12,17 @@ services:
       - REDIS=redis://redisx:6379
       - BOARD_PASSWORD
       - QUEUE
+    healthcheck:
+      test: ["CMD", "curl", "-f", "127.0.0.1:3000"]
     depends_on:
-      - redis
+      - redisx
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      memory: 256M
 
   api:
+    restart: unless-stopped
     build:
       context: ./api
       dockerfile: Dockerfile
@@ -25,22 +33,31 @@ services:
     environment:
       - REDIS=redis://redisx:6379
       - QUEUE
+    healthcheck:
+      test: ["CMD", "curl", "-f", "127.0.0.1:3001"]
     depends_on:
-      - redis
+      - redisx
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      memory: 256M
 
   worker:
+    restart: unless-stopped
     deploy:
-      replicas: 2
+      replicas: 1
     build:
       context: ./worker
       dockerfile: Dockerfile
     environment:
       - REDIS=redis://redisx:6379
       - QUEUE
-    healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "127.0.0.1:3000"]
     depends_on:
-      - redis
+      - redisx
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      memory: 256M
 
   redisx:
     image: redis:6.2

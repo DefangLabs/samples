@@ -1,5 +1,7 @@
 # Sveltekit & MongoDB
 
+[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-sveltekit-mongodb-template%26template_owner%3DDefangSamples)
+
 This is a project that demonstrate both client side component rendering and hydration as well as serverside rendering with external API route configuration. Furthermore, there is also a mongodb connection (not hosted on the atlas) to cache the queried results.
 
 ## NOTE
@@ -34,10 +36,10 @@ For development, we use a local container. This can be seen in the compose.yaml 
 
 ---
 
-Title: Sveltekit & MongoDB
+Title: SvelteKit & MongoDB
 
-Short Description: A full-stack application using Sveltekit for the frontend and MongoDB for the database
+Short Description: A full-stack application using SvelteKit for the frontend and MongoDB for the database.
 
-Tags: sveltekit, mongodb, full-stack
+Tags: SvelteKit, MongoDB, Full-stack, Node.js, JavaScript
 
-Languages: nodejs, javascript
+Languages: nodejs

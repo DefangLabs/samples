@@ -1,0 +1,30 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    environment: playground
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v4
+
+    - name: Deploy
+      uses: DefangLabs/defang-github-action@v1.1.0
+      with:
+        config-env-vars: NC_DB NC_S3_ENDPOINT NC_S3_BUCKET_NAME NC_S3_REGION NC_S3_ACCESS_KEY NC_S3_ACCESS_SECRET
+      env:
+        NC_DB: ${{ secrets.NC_DB }}
+        NC_S3_ENDPOINT: ${{ secrets.NC_S3_ENDPOINT }}
+        NC_S3_BUCKET_NAME: ${{ secrets.NC_S3_BUCKET_NAME }}
+        NC_S3_REGION: ${{ secrets.NC_S3_REGION }}
+        NC_S3_ACCESS_KEY: ${{ secrets.NC_S3_ACCESS_KEY }}
+        NC_S3_ACCESS_SECRET: ${{ secrets.NC_S3_ACCESS_SECRET }}

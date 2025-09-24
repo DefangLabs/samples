@@ -1,5 +1,7 @@
 # Phoenix & Postgres
 
+[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-phoenix-postgres-template%26template_owner%3DDefangSamples)
+
 Defang is the easiest way to deploy containerized apps like this Phoenix + Postgres sample to AWS. This is a sample Phoenix application that uses a PostgreSQL database. The sample doesn't add anything to the database, but is based off of the default Phoenix getting started instructions which add a postgres database to the application.
 
 ## Prerequisites
@@ -13,7 +15,7 @@ Defang is the easiest way to deploy containerized apps like this Phoenix + Postg
 To run the application locally, you can use the following command:
 
 ```bash
-docker compose -f compose.yaml -f compose.dev.yaml up
+docker compose -f compose.yaml -f compose.dev.yaml up --build
 ```
 
 This will run Phoenix in development mode. If you need to run any commands in the container, after you have run the command above and started the container, you can run the command in a new terminal:
@@ -33,10 +35,10 @@ docker compose -f compose.yaml -f compose.dev.yaml exec phoenix bash
 
 ---
 
-Title: Phoenix & Postgres
+Title: Phoenix & PostgreSQL
 
 Short Description: A sample Phoenix application that uses a PostgreSQL database.
 
-Tags: phoenix, postgres, database, elixir
+Tags: Phoenix, PostgreSQL, Database, Elixir
 
-Languages: elixir
+Languages: Elixir

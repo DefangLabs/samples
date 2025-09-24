@@ -1,0 +1,14 @@
+services:
+  langchain-app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    environment:
+      - OPENAI_KEY
+    ports:
+      - target: 80
+        published: 8080
+        protocol: tcp
+        mode: ingress
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]

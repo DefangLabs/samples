@@ -1,17 +1,13 @@
-name: deploy
+name: Deploy
 
 on:
   push:
     branches:
       - main
-      - pr-test/*
-
-concurrency:
-  group: deploy
-  cancel-in-progress: false
 
 jobs:
   deploy:
+    environment: playground
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -21,11 +17,9 @@ jobs:
     - name: Checkout Repo
       uses: actions/checkout@v4
 
-    - name: Install defang
-      run: . <(curl -Ls https://s.defang.io/install)
-
-    - name: Login to Defang
-      run: defang login
-
     - name: Deploy
-      run: defang compose up -v --detach
+      uses: DefangLabs/defang-github-action@v1.1.0
+      with:
+        config-env-vars: POSTGRES_PASSWORD
+      env:
+        POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}

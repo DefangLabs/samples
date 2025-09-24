@@ -1,0 +1,19 @@
+services:
+  app:
+    extends:
+      file: compose.yaml
+      service: app
+    volumes:
+      - ./app:/app
+  llm:
+    extends:
+      file: compose.yaml
+      service: llm
+    # if using AWS Bedrock for local development, include this section:
+    environment:
+      - AWS_REGION=${AWS_REGION} # replace with your AWS region
+      - AWS_PROFILE=${AWS_PROFILE} # replace with your AWS profile name
+    volumes:
+      - type: bind
+        source: ~/.aws
+        target: /root/.aws

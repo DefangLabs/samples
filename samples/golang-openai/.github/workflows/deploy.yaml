@@ -1,17 +1,13 @@
-name: deploy
+name: Deploy
 
 on:
   push:
     branches:
       - main
-      - pr-test/*
-
-concurrency:
-  group: deploy
-  cancel-in-progress: false
 
 jobs:
   deploy:
+    environment: playground
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -33,4 +29,4 @@ jobs:
         OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
 
     - name: Deploy
-      run: defang compose up -v --detach
+      uses: DefangLabs/defang-github-action@v1.1.0

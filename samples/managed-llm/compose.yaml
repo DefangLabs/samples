@@ -1,0 +1,46 @@
+services:
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    restart: always
+    environment:
+      - LLM_URL=http://llm/api/v1/   # endpoint to the gateway service
+      - LLM_MODEL=default  # LLM model ID used for the gateway.
+       # For other models, see https://docs.defang.io/docs/concepts/managed-llms/openai-access-gateway#model-mapping
+      - OPENAI_API_KEY=FAKE_TOKEN   # the actual value will be ignored when using the gateway, but it should match the one in the llm service
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import sys, urllib.request; urllib.request.urlopen(sys.argv[1]).read()", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    depends_on:
+      - llm
+    networks:
+      - default
+      - private
+
+# Defang OpenAI Access Gateway
+# This service is used to route requests to the LLM API
+  llm:
+    x-defang-llm: true # this must be set to true for the gateway to work
+    image: docker.io/defangio/openai-access-gateway:latest
+    ports:
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
+    networks:
+      - private
+    environment:
+      - OPENAI_API_KEY=FAKE_TOKEN # this value must match the one in the app service
+      # if using GCP for BYOC deployment, add these environment variables:
+      # - GCP_PROJECT_ID=${GCP_PROJECT_ID}
+      # - GCP_REGION=${GCP_REGION}
+
+networks:
+  default:
+  private:
