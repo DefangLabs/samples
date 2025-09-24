@@ -2,9 +2,12 @@ services:
   app:
     # uncomment to add your own domain
     # domainname: example.com
-    build:
-      context: ./app
-      dockerfile: Dockerfile
+    # build:
+    #   context: ./app
+    #   dockerfile: Dockerfile
+    #   args:
+    #     - DEBUG=True
+    image: app:latest
     ports:
       - target: 8000
         published: 8000
