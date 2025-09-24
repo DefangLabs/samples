@@ -22,6 +22,7 @@ services:
     depends_on:
       - redis-service
       - postgres-service
+      - migrate
 
   redis-service:
     image: redis:6.2
@@ -30,6 +31,18 @@ services:
     ports:
       - mode: host
         target: 6379
+
+  migrate:
+    restart: "no"
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    command: python manage.py migrate
+    depends_on:
+      - postgres-service
+    environment:
+      - POSTGRES_URL=postgres://djangouser:${POSTGRES_PASSWORD}@postgres-service:5432/djangodatabase?
+      - SECRET_KEY
 
   postgres-service:
     image: postgres:16.4

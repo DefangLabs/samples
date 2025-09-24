@@ -13,8 +13,16 @@ services:
     depends_on:
       - redis-service
       - postgres-service
-    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+      - migrate
+    command: sh -c "python manage.py runserver 0.0.0.0:8000"
 
+  migrate:
+    extends:
+      file: compose.yaml
+      service: migrate
+    environment:
+      - POSTGRES_URL=postgres://djangouser:djangopassword@postgres-service:5432/djangodatabase
+  
   redis-service:
     extends:
       file: compose.yaml
