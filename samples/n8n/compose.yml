@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+  release:
+    # This is a one-off job to initialize the database with a non-root user
+    build:
+      dockerfile: release.Dockerfile
+    command: "/init-data.sh"
+    environment:
+      - POSTGRES_HOST=${POSTGRES_USER}
+      - POSTGRES_USER=${POSTGRES_USER}
+      # Need to set PGPASSWORD so the password can be used by psql in the script init-data.sh
+      - PGPASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_NON_ROOT_USER=${POSTGRES_NON_ROOT_USER}
+      - POSTGRES_NON_ROOT_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
+    restart: "no"
+    depends_on:
+      - postgres
+
+  postgres:
+    extends:
+      file: compose.dev.yaml
+      service: postgres
+
+  n8n:
+    extends:
+      file: compose.dev.yaml
+      service: n8n
+    depends_on:
+      release:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
