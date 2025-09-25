@@ -3,7 +3,6 @@ services:
     restart: unless-stopped
     build:
       context: ./flask
-      dockerfile: Dockerfile
     deploy:
       resources:
         reservations:
