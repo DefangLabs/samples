@@ -1,0 +1,20 @@
+{
+  "name": "app",
+  "workspaces": [
+    "services/*"
+  ],
+  "scripts": {
+    "start": "platformatic start"
+  },
+  "devDependencies": {
+    "fastify": "^4.26.2",
+    "borp": "^0.16.0"
+  },
+  "dependencies": {
+    "@platformatic/runtime": "^1.52.2",
+    "platformatic": "^1.52.2"
+  },
+  "engines": {
+    "node": "^18.8.0 || >=20.6.0"
+  }
+}
