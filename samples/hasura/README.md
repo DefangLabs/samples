@@ -1,6 +1,6 @@
 # Hasura & PostgreSQL
 
-[![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-hasura-template%26template_owner%3DDefangSamples)
+[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-hasura-template%26template_owner%3DDefangSamples)
 
 This sample project demonstrates how to deploy Hasura with Defang and connect it to a Postgres database. 
 
@@ -35,10 +35,10 @@ For this sample, you will need to provide the following [configuration](https://
 
 > Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
 
-### `HASURA_GRAPHQL_DATABASE_URL` 
-A connection string of the format `postgres://username:password@host:port/dbname`.
+### `POSTGRES_PASSWORD` 
+A password for your database.
 ```bash
-defang config set HASURA_GRAPHQL_DATABASE_URL
+defang config set POSTGRES_PASSWORD
 ```
 
 ### `HASURA_GRAPHQL_ADMIN_SECRET` 

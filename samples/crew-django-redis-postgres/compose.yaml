@@ -1,0 +1,79 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_PASSWORD:
+    x-defang-postgres: true
+    ports:
+      - mode: host
+        target: 5432  
+        published: 5432
+
+  redis:
+    image: redis:6.2
+    x-defang-redis: true
+    ports:
+      - mode: host
+        target: 6379
+        published: 6379
+
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    command: ./run.sh
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings
+      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres?sslmode=${SSL_MODE}
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+      DJANGO_SECRET_KEY:
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+
+  worker:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    command: celery -A config worker -l info
+    depends_on:
+      - postgres
+      - redis
+      - llm
+      - embedding
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings
+      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres?sslmode=${SSL_MODE}
+      REDIS_URL: redis://redis:6379/0
+      OPENAI_API_KEY: "defang"
+      DJANGO_SECRET_KEY:
+
+  llm:
+    provider:
+      type: model
+      options:
+        model: chat-default
+    x-defang-llm: true
+    environment:
+      OPENAI_API_KEY: "defang"
+      DEBUG: "true"
+
+  embedding:
+    provider:
+      type: model
+      options:
+        model: embedding-default
+    x-defang-llm: true
+    environment:
+      OPENAI_API_KEY: "defang"
+      DEBUG: "true"

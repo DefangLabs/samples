@@ -1,6 +1,6 @@
 # Starter Sample #REMOVE_ME_AFTER_EDITING
 
-[![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-<YOUR_SAMPLE_DIR#REMOVE_ME_AFTER_EDITING>-template%26template_owner%3DDefangSamples)
+[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-<YOUR_SAMPLE_DIR#REMOVE_ME_AFTER_EDITING>-template%26template_owner%3DDefangSamples)
 
 This is a sample that shows the rough structure of an actual Defang sample. This top paragraph should give a bit of context about the project and what it does. The rest of the README should be a guide on how to use the sample. #REMOVE_ME_AFTER_EDITING
 
@@ -44,15 +44,9 @@ Deploy your application to the Defang Playground by opening up your terminal and
 defang compose up
 ```
 
-### BYOC (AWS)
+### BYOC
 
-If you want to deploy to your own cloud account, you can use Defang BYOC:
-
-1. [Authenticate your AWS account](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html), and check that you have properly set your environment variables like `AWS_PROFILE`, `AWS_REGION`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`.
-2. Run in a terminal that has access to your AWS environment variables:
-    ```bash
-    defang --provider=aws compose up
-    ```
+If you want to deploy to your own cloud account, you can [use Defang BYOC](https://docs.defang.io/docs/tutorials/deploy-to-your-cloud).
 
 ---
 

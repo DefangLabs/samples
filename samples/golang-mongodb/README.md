@@ -1,6 +1,6 @@
 # Go & MongoDB
 
-[![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-golang-mongodb-template%26template_owner%3DDefangSamples)
+[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-golang-mongodb-template%26template_owner%3DDefangSamples)
 
 This sample is a task manager application that uses Go and MongoDB, deployed with Defang.
 
@@ -47,6 +47,18 @@ services:
     environment:
       - MONGO_URI # empty values are read from defang config
 ```
+
+### Using DocumentDB in AWS
+
+If you want to use DocumentDB in AWS, you can add the `x-defang-mongodb` extension to your `compose.yaml` file:
+
+```yaml
+services:
+  db:
+    x-defang-mongodb: true
+```
+
+This will automatically provision a DocumentDB cluster in your AWS account.
 
 ## Deployment
 

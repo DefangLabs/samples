@@ -1,0 +1,10 @@
+services:
+  nextjs-claude:
+    extends:
+      file: compose.yaml
+      service: nextjs-claude
+    volumes:
+      - type: bind
+        source: ./ui
+        target: /app
+    command: ["npm", "run", "dev"]

@@ -1,0 +1,151 @@
+<html>
+
+<head>
+    <title>Task Overview</title>
+    {% load static %}
+    <!-- Add Google Fonts for Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Apply Inter font */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Two column layout; responsive stacking */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .left-column,
+        .right-column {
+            flex: 1 1 300px;
+            padding: 1rem;
+        }
+
+        @media (max-width: 600px) {
+
+            .left-column,
+            .right-column {
+                flex: 1 1 100%;
+            }
+        }
+
+        /* Updated header to navbar style */
+        .navbar {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            margin-bottom: 1rem;
+        }
+
+        .logo {
+            max-height: 40px;
+            margin-right: 2rem;
+        }
+
+        .nav-links a {
+            color: #1769ff;
+            text-decoration: none;
+            margin-right: 1.5rem;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Form styles */
+        form.task-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        form.task-form input,
+        form.task-form button {
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        form.task-form button {
+            background-color: #1769ff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        form.task-form button:hover {
+            background-color: #093e9f #093e9f;
+        }
+
+        a.show-status-button {
+            background-color: #1769ff;
+            color: #fff;
+            padding: 0.5rem;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+        <img src="{% static 'tasks/images/defang-blue.svg' %}" alt="Logo" class="logo">
+        <div class="nav-links">
+            <a href="https://docs.defang.io/docs/getting-started" target="_blank">Get Started Guide</a>
+            <a href="https://portal.defang.io/projects" target="_blank">View Deployed Apps</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="left-column">
+            {% if added_task %}
+            <p>{{ added_task }}</p>
+            {% endif %}
+
+            <h2>Add Task</h2>
+            <form action="/add" method="get" class="task-form">
+                <label for="key">Key:</label>
+                <input type="text" name="key" id="key" required value="process-thing">
+                <br>
+                <label for="value">Value:</label>
+                <input type="text" name="value" id="value" required value="thing-id-123">
+                <br>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        <div class="right-column">
+            {% if show_status %}
+
+            <h2>Active Tasks</h2>
+            <p>Total: {{ active.total }}</p>
+            <ul>
+                {% for worker, count in active.per_worker.items %}
+                <li>{{ worker }}: {{ count }}</li>
+                {% endfor %}
+            </ul>
+
+            <h2>Scheduled Tasks</h2>
+            <p>Total: {{ scheduled.total }}</p>
+            <ul>
+                {% for worker, count in scheduled.per_worker.items %}
+                <li>{{ worker }}: {{ count }}</li>
+                {% endfor %}
+            </ul>
+
+            <h2>Reserved Tasks</h2>
+            <p>Total: {{ reserved.total }}</p>
+            <ul>
+                {% for worker, count in reserved.per_worker.items %}
+                <li>{{ worker }}: {{ count }}</li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <a href="?status=true" class="show-status-button">Show Queue Status</a>
+            {% endif %}
+        </div>
+    </div>
+</body>
+
+</html>

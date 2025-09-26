@@ -1,0 +1,18 @@
+services:
+  app:
+    # uncomment to add your own domain
+    # domainname: example.com
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - target: 3000
+        published: 3000
+        mode: ingress
+    environment: # Secrets and env vars
+     - NODE_ENV=production
+    healthcheck:
+      # wget or curl required for healthchecks on services with a published port
+      # this gets parsed by Defang and provided to the load balancers as well
+      test: ["CMD", "wget", "--spider", "http://localhost:3000/"]

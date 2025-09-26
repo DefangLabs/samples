@@ -1,6 +1,6 @@
 # ImgProxy
 
-[![1-click-deploy](https://defang.io/deploy-with-defang.png)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-imgproxy-template%26template_owner%3DDefangSamples)
+[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-imgproxy-template%26template_owner%3DDefangSamples)
 
 This sample shows how to deploy ImgProxy with Defang. ImgProxy is a fast and secure standalone server for resizing and converting remote images. It can be deployed using the official Docker image, as documented [here](https://docs.imgproxy.net/installation#docker).
 

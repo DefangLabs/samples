@@ -1,0 +1,59 @@
+services:
+  db:
+    extends:
+      file: compose.yaml
+      service: db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=password
+
+  runmigrations:
+    restart: on-failure
+    build: ./app
+    environment:
+      - DB_HOST=db
+      - DEBUG=True
+      - POSTGRES_USER=django
+      - POSTGRES_DB=django
+      - POSTGRES_PASSWORD=password
+      - SECRET_KEY=django-insecure-^0jq%7b(%aj$j@n0_$gk@#73&z#t%4o#klquddg1e1hdal^9!s
+      - ALLOWED_HOSTS=*
+    volumes: 
+      - "./app:/code"
+    command: python manage.py migrate
+    depends_on:
+      - db
+
+  createsuperuser:
+    restart: on-failure
+    build: ./app
+    environment:
+      - DB_HOST=db
+      - DEBUG=True
+      - POSTGRES_USER=django
+      - POSTGRES_DB=django
+      - POSTGRES_PASSWORD=password
+    volumes: 
+      - "./app:/code"
+    command: python manage.py createsuperauto 
+    depends_on:
+      - db
+
+  django:
+    extends:
+      file: compose.yaml
+      service: django
+    environment:
+      - DEBUG=True
+      - POSTGRES_PASSWORD=password
+      - SECRET_KEY=-x!x@_u71m7*cbb0ggh2w8**w_#of43q@ht05-h9gdwz9+1_pd
+      - ALLOWED_HOSTS=*
+    volumes: 
+      - "./app:/code"
+    command: python manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - createsuperuser
+
+volumes:
+  postgres_data:

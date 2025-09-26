@@ -1,0 +1,7 @@
+[project]
+name = "service-2"
+version = "0.1.0"
+description = "MCP client to query Anthropic's Claude AI and utilize MCP tools to augment response."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
