@@ -47,11 +47,11 @@ The name of your Postgres database. You need to set this before deploying for th
 
 ### `POSTGRES_NON_ROOT_USER`
 
-The non-root user for your Postgres database, it will be used in the service release to setup non-root access for your Postgres database. It is also used in the script called `init-data.sh`. You need to set this before deploying for the first time.
+The non-root user for your Postgres database, it will be used in the service setup to setup non-root access for your Postgres database. It is also used in the script called `init-data.sh`. You need to set this before deploying for the first time.
 
 ### `POSTGRES_NON_ROOT_PASSWORD`
 
-The POSTGRES_NON_ROOT_USER's password for your Postgres database, it will be used in the service release to setup non-root access for your Postgres database. It is also used in the script called `init-data.sh`. You need to set this before deploying for the first time.
+The POSTGRES_NON_ROOT_USER's password for your Postgres database, it will be used in the service setup to setup non-root access for your Postgres database. It is also used in the script called `init-data.sh`. You need to set this before deploying for the first time.
 
 ## Deployment
 
@@ -75,7 +75,7 @@ This will use `compose.yaml` which extends `compose.dev.yaml` but:
 
 - Removes volume mounts (not supported by Defang)
 - Removes PostgreSQL port exposure for security
-- Adds a `release` service to initialize the database with proper user permissions
+- Adds a `setup` service to initialize the database with proper user permissions
 - Optimizes environment variables for cloud deployment
 
 ### BYOC (AWS)

@@ -1,0 +1,63 @@
+services:
+  setup:
+    # This is a one-off job to initialize the database with a non-root user
+    build:
+      dockerfile: setup.Dockerfile
+    command: "/init-data.sh"
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_HOST=${POSTGRES_USER}
+      # Need to pass PGPASSWORD so the password can be used by psql in the script init-data.sh
+      - PGPASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB
+      - POSTGRES_NON_ROOT_USER
+      - POSTGRES_NON_ROOT_PASSWORD
+    restart: "no"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:16
+    restart: always
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+      - POSTGRES_NON_ROOT_USER
+      - POSTGRES_NON_ROOT_PASSWORD
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -h localhost -U ${POSTGRES_USER} -d ${POSTGRES_DB}",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    restart: always
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
+      - DB_POSTGRESDB_USER=${POSTGRES_NON_ROOT_USER}
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
+      # https://community.n8n.io/t/how-to-change-localhost-5678-from-webhook-url/27033/8
+      - N8N_HOST=n8n--5678.n8n.kevyvo.defang.app
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - NODE_ENV=production
+      - WEBHOOK_URL=https://n8n--5678.n8n.kevyvo.defang.app
+    ports:
+      - 5678:5678
+    links:
+      - postgres
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy

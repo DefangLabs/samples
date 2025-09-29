@@ -1,29 +1,23 @@
-version: '3.8'
-
-# Defang does not support volumes, therefore these volumes are only used for local development and will be ignored in production. 
-# Consider using s3 buckets instead: https://docs.n8n.io/hosting/scaling/external-storage/
 volumes:
   db_storage:
   n8n_storage:
 
 services:
   postgres:
-    image: postgres:16
-    restart: always
+    extends:
+      file: compose.yaml
+      service: postgres
     environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_NON_ROOT_USER=${POSTGRES_NON_ROOT_USER}
-      - POSTGRES_NON_ROOT_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=defang12345
+      - POSTGRES_DB=n8n
+      - POSTGRES_NON_ROOT_USER=defang_user
+      - POSTGRES_NON_ROOT_PASSWORD=defang12345
     volumes:
       - db_storage:/var/lib/postgresql/data
       - ./init-data.sh:/docker-entrypoint-initdb.d/init-data.sh
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -h localhost -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
-      interval: 5s
-      timeout: 5s
-      retries: 10
+      test: ["CMD-SHELL", "pg_isready -h localhost -U postgres -d n8n"]
 
   n8n:
     image: docker.n8n.io/n8nio/n8n
@@ -32,9 +26,9 @@ services:
       - DB_TYPE=postgresdb
       - DB_POSTGRESDB_HOST=postgres
       - DB_POSTGRESDB_PORT=5432
-      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
-      - DB_POSTGRESDB_USER=${POSTGRES_NON_ROOT_USER}
-      - DB_POSTGRESDB_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
+      - DB_POSTGRESDB_DATABASE=n8n
+      - DB_POSTGRESDB_USER=defang_user
+      - DB_POSTGRESDB_PASSWORD=defang12345
     ports:
       - 5678:5678
     links:

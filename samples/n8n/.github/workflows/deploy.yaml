@@ -7,15 +7,22 @@ on:
 
 jobs:
   deploy:
-    environment: playground
     runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
 
     steps:
-    - name: Checkout Repo
-      uses: actions/checkout@v4
+      - name: Checkout Repo
+        uses: actions/checkout@v4
 
-    - name: Deploy
-      uses: DefangLabs/defang-github-action@v1.1.0
+      - name: Deploy
+        uses: DefangLabs/defang-github-action@v1.0.4
+        with:
+          config-env-vars: POSTGRES_USER POSTGRES_PASSWORD POSTGRES_DB POSTGRES_NON_ROOT_USER POSTGRES_NON_ROOT_PASSWORD
+        env:
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_NON_ROOT_USER: ${{ secrets.POSTGRES_NON_ROOT_USER }}
+          POSTGRES_NON_ROOT_PASSWORD: ${{ secrets.POSTGRES_NON_ROOT_PASSWORD }}
