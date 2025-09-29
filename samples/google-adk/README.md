@@ -31,6 +31,15 @@ Deploy your application to the Defang Playground by opening up your terminal and
 defang compose up
 ```
 
+### BYOC (GCP)
+
+If you want to deploy to your own cloud account, you can use Defang BYOC:
+
+1. [Authenticate your GCP account](https://cloud.google.com/sdk/docs/quickstart).
+2. Run in a terminal that has access to your GCP project id:
+    ```bash
+    GCP_PROJECT_ID=my-project-12345 defang --provider=gcp compose up
+
 ### BYOC (AWS)
 
 If you want to deploy to your own cloud account, you can use Defang BYOC:
