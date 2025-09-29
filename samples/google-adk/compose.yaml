@@ -3,3 +3,14 @@ services:
     build: .
     ports:
       - "8080:8080"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python3",
+          "-c",
+          "import urllib.request; exit(0) if urllib.request.urlopen('http://localhost:8080/').status==200 else exit(1)",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
