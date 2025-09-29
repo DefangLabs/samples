@@ -1,0 +1,25 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    environment: playground
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v4
+
+    - name: Deploy
+      uses: DefangLabs/defang-github-action@v1.1.3
+      with:
+        config-env-vars: TAVILY_API_KEY
+      env:
+        TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}

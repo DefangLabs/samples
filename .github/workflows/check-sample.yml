@@ -29,6 +29,8 @@ jobs:
           ./scripts/check-modified-samples.sh > modified.txt
           echo "@@ MODIFIED @@"
           cat modified.txt
+          echo "@@ CHECKLIST @@"
+          cat checklist.txt
 
       - name: Validate Compose Files with Defang CLI
         run: |

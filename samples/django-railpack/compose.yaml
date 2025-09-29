@@ -1,0 +1,16 @@
+services:
+  django:
+    restart: unless-stopped
+    build:
+      context: ./app
+    ports:
+      - mode: ingress
+        target: 8000
+        # published: 8000 # uncomment for local dev
+    environment:
+      - DEBUG=False # set to "True" for local dev
+    command: ["python manage.py migrate && python manage.py createsuperauto && gunicorn defang_sample.wsgi:application --bind 0.0.0.0:8000"]
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      memory: 256M

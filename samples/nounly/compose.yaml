@@ -18,6 +18,8 @@ services:
       REDIS: redis:6379
       PROJECT_HONEYPOT_KEY:
       SHARED_SECRETS: "{}"
+    depends_on:
+      - redis
 
   redis:
     restart: always

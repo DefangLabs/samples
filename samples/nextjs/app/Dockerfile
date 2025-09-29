@@ -14,7 +14,14 @@ RUN npm install
 COPY . .
 
 # Build the Next.js app
+ARG NEXT_OUTPUT
 RUN npm run build
+
+# If we're doing an export, copy all files from the out directory to /static
+# This is a workaround for Next.JS issue https://github.com/vercel/next.js/issues/59988
+RUN if [ "$NEXT_OUTPUT" = "export" ]; then \
+    cp -R out/* /static/; \
+    fi
 
 # Expose the port that your app runs on
 EXPOSE 3000
