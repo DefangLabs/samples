@@ -2,7 +2,9 @@
 
 [![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](ASK RAPH)
 
-This sample shows how to get a [n8n](https://n8n.io/) app up using PostgreSQL as a database and running with Defang. The original sample can be found [here](https://github.com/n8n-io/n8n-hosting/tree/main/docker-compose/withPostgres). The official n8n guide for setting up with PostgreSQL [here](https://docs.n8n.io/hosting/installation/server-setups/docker-compose/) does not work with Defang. To use the version compatible with Defang, please refer to this sample instead.
+This sample shows how to get a [n8n](https://n8n.io/) app up using PostgreSQL as a database and running with Defang. The original sample can be found [here](https://github.com/n8n-io/n8n-hosting/tree/main/docker-compose/withPostgres). The official n8n guide for setting up with PostgreSQL [here](https://docs.n8n.io/hosting/installation/server-setups/docker-compose/) does not work with Defang. The reason the sample does not work is because it relies on certain Docker features that are not supported by Defang, which are volumes. To use the version compatible with Defang, please refer to this sample instead.
+
+This sample demonstrates how to run an [n8n](https://n8n.io/) app with PostgreSQL as the database using Defang. The original sample can be found [here](https://github.com/n8n-io/n8n-hosting/tree/main/docker-compose/withPostgres). However, the official n8n [guide](https://docs.n8n.io/hosting/installation/server-setups/docker-compose/) for setting up with PostgreSQL is not compatible with Defang. The incompatibility comes from its reliance on Docker volumes feature not supported by Defang. To use a version that works with Defang, please refer to this sample instead.
 
 ## Prerequisites
 
@@ -11,8 +13,6 @@ This sample shows how to get a [n8n](https://n8n.io/) app up using PostgreSQL as
 3. (Optional for local development) [Docker CLI](https://docs.docker.com/engine/install/)
 
 ## Development
-
-**IMPORTANT:** But before you do that change the default users and passwords in the [`.env`](.env) file!
 
 To run the application locally for development, use the development compose file:
 
@@ -57,8 +57,8 @@ The POSTGRES_NON_ROOT_USER's password for your Postgres database, it will be use
 
 The project includes two compose files:
 
-- **`compose.dev.yaml`** - For local development with volume persistence and port exposure
-- **`compose.yaml`** - For cloud deployment (extends `compose.dev.yaml` with cloud-specific optimizations)
+- **`compose.dev.yaml`** - For local development with volume persistence
+- **`compose.yaml`** - For cloud deployment with Defang
 
 > [!NOTE]
 > Download [Defang CLI](https://github.com/DefangLabs/defang)
@@ -70,13 +70,6 @@ Deploy your application to the Defang Playground by opening up your terminal and
 ```bash
 defang compose up
 ```
-
-This will use `compose.yaml` which extends `compose.dev.yaml` but:
-
-- Removes volume mounts (not supported by Defang)
-- Removes PostgreSQL port exposure for security
-- Adds a `setup` service to initialize the database with proper user permissions
-- Optimizes environment variables for cloud deployment
 
 ### BYOC (AWS)
 
