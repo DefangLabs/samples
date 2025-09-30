@@ -15,7 +15,8 @@ import asyncio
 import json
 import logging
 import os
-from datetime import datetime
+from contextlib import asynccontextmanager
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -157,7 +158,8 @@ async def notification_listener(stop_event: asyncio.Event) -> None:
     """Listen for ``pg_notify`` events until the app shuts down."""
 
     loop = asyncio.get_running_loop()
-    conn = await asyncpg.connect(dsn=app.state.database_dsn)
+    database_dsn = build_database_dsn()
+    conn = await asyncpg.connect(dsn=database_dsn)
 
     def _listener(_connection: asyncpg.Connection, _pid: int, _channel: str, payload: str) -> None:
         loop.create_task(forward_notification(payload))
@@ -170,34 +172,22 @@ async def notification_listener(stop_event: asyncio.Event) -> None:
         await conn.close()
 
 
-app = FastAPI(title="FastAPI Postgres Pub/Sub Chat")
-app.state.connections = WebSocketRegistry()
-app.state.listener_stop: asyncio.Event | None = None
-app.state.listener_task: asyncio.Task | None = None
-app.state.db_pool: asyncpg.Pool | None = None
-app.state.database_dsn = build_database_dsn()
-
-
-def get_pool() -> asyncpg.Pool:
-    pool = app.state.db_pool
-    if pool is None:
-        raise HTTPException(status_code=500, detail="Database connection not ready")
-    return pool
-
-
-@app.on_event("startup")
-async def startup() -> None:
-    pool = await asyncpg.create_pool(dsn=app.state.database_dsn, min_size=1, max_size=5)
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Manage application lifespan events."""
+    # Startup
+    database_dsn = build_database_dsn()
+    pool = await asyncpg.create_pool(dsn=database_dsn, min_size=1, max_size=5)
     app.state.db_pool = pool
     await create_tables(pool)
 
     stop_event = asyncio.Event()
     app.state.listener_stop = stop_event
     app.state.listener_task = asyncio.create_task(notification_listener(stop_event))
-
-
-@app.on_event("shutdown")
-async def shutdown() -> None:
+    
+    yield
+    
+    # Shutdown
     stop_event = app.state.listener_stop
     if stop_event:
         stop_event.set()
@@ -208,6 +198,22 @@ async def shutdown() -> None:
     pool = app.state.db_pool
     if pool:
         await pool.close()
+
+
+app = FastAPI(title="FastAPI Postgres Pub/Sub Chat", lifespan=lifespan)
+app.state.connections = WebSocketRegistry()
+app.state.listener_stop: asyncio.Event | None = None
+app.state.listener_task: asyncio.Task | None = None
+app.state.db_pool: asyncpg.Pool | None = None
+
+
+def get_pool() -> asyncpg.Pool:
+    pool = app.state.db_pool
+    if pool is None:
+        raise HTTPException(status_code=500, detail="Database connection not ready")
+    return pool
+
+
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -247,4 +253,4 @@ async def healthcheck() -> dict[str, str]:
     pool = get_pool()
     async with pool.acquire() as conn:
         await conn.execute("SELECT 1")
-    return {"status": "ok", "timestamp": datetime.utcnow().isoformat()}
+    return {"status": "ok", "timestamp": datetime.now(timezone.utc).isoformat()}
