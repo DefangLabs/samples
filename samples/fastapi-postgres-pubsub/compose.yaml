@@ -8,6 +8,7 @@ services:
         condition: service_healthy
     environment:
       DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres?sslmode=${SSL_MODE}
+      SSL_MODE: # just here so it gets picked up by our tests
     ports:
       - "8000:8000"
     healthcheck:
