@@ -102,6 +102,7 @@ jobs:
           TEST_SLACK_CHANNEL_ID: ${{ secrets.TEST_SLACK_CHANNEL_ID }}
           TEST_SLACK_TOKEN: ${{ secrets.TEST_SLACK_TOKEN }}
           TEST_SHARED_SECRETS: ${{ secrets.TEST_SHARED_SECRETS}}
+          TEST_SSL_MODE: disable
           TEST_TAVILY_API_KEY: ${{ secrets.TEST_TAVILY_API_KEY }}
           TEST_ALLOWED_HOSTS: ${{ secrets.TEST_ALLOWED_HOSTS }}
         run: |
