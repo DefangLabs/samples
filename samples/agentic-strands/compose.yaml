@@ -4,7 +4,6 @@ services:
     # domainname: example.com
     build:
       context: ./app
-      dockerfile: Dockerfile
     ports:
       - target: 5001
         published: 5001
