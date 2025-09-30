@@ -19,6 +19,7 @@ services:
 
   postgres:
     image: postgres:16
+    x-defang-postgres: true
     restart: always
     environment:
       - POSTGRES_USER
@@ -52,6 +53,8 @@ services:
       - N8N_PROTOCOL=https
       - NODE_ENV=production
       - WEBHOOK_URL=https://n8n--5678.n8n.kevyvo.defang.app
+      - DB_POSTGRESDB_SSL_ENABLED=true #https://community.n8n.io/t/error-while-deploying-n8n-docker/77926
+      - DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED=false
     ports:
       - 5678:5678
     links:
