@@ -1,7 +1,3 @@
-# Note: universal image is not compatible with the devcontainer tools.
-#       we use the typescript-node image instead here but should switch out per 
-#       project requirements. #REMOVE_ME_AFTER_EDITING
-
 # FROM mcr.microsoft.com/devcontainers/go:1.22-bookworm
 # FROM mcr.microsoft.com/devcontainers/python:3.12-bookworm
 # FROM mcr.microsoft.com/devcontainers/php:8.3-bookworm
