@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <title>Ask the AI Model</title>
+        <link rel="stylesheet" href="./static/style.css">
+        <script type="text/javascript" src="./static/app.js"></script>
+    </head>
+    <body>
+        <h1>Ask the AI Model</h1>
+        <form method="post" id="askForm" onsubmit="event.preventDefault(); submitForm(event);">
+            <textarea id="prompt" name="prompt" autofocus="autofocus" rows="5" cols="60" placeholder="Enter your question here..."
+              onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();this.form.dispatchEvent(new Event('submit', {cancelable:true}));}"></textarea>
+            <br><br>
+            <input type="submit" value="Ask">
+        </form>
+        <hr>
+        <h2>Model's Reply:</h2>
+        <p id="reply"></p>
+    </body>
+</html>

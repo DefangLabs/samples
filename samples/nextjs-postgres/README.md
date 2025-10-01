@@ -1,6 +1,6 @@
 # Next.js & Postgres
 
-[![1-click-deploy](https://defang.io/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-nextjs-postgres-template%26template_owner%3DDefangSamples)
+[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-nextjs-postgres-template%26template_owner%3DDefangSamples)
 
 This is a sample Next.js application that uses Postgres as a database. It is a simple example that demonstrates how to connect to a Postgres database from a Next.js application: on each request it takes the user's IP address, geo-locates it, and stores the result in the database, then displays the last 20 results on the home page.
 

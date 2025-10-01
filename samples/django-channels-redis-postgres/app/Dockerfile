@@ -1,17 +1,19 @@
 # Use a smaller base image
-FROM python:3.10.4-slim-buster
+FROM python:3.10-slim-bullseye
 
 # Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 # Set work directory
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y \
-    gcc \
-    python3-dev \
-    libpq-dev
+RUN apt-get update \
+    && apt-get install -y \
+        gcc \
+        python3-dev \
+        libpq-dev \
+        netcat-openbsd
 
 # Install dependencies
 COPY requirements.txt /app/
@@ -31,4 +33,4 @@ RUN adduser --disabled-password --gecos '' django
 USER django
 
 # Start server
-CMD ["sh", "-c", "python manage.py migrate && daphne -b 0.0.0.0 -p 8000 django_defang.asgi:application"]
+CMD ["sh", "-c", "daphne -b 0.0.0.0 -p 8000 django_defang.asgi:application"]

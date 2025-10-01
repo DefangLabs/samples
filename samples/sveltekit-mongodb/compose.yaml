@@ -36,6 +36,8 @@ services:
     #  resources:
     #    reservations:
     #      memory: 256M
+    # The following option will provision a managed MongoDB instance, eg. DocumentDB on AWS.
+    x-defang-mongodb: true
 
 volumes:
   mongo-data:

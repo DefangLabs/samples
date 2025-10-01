@@ -15,6 +15,8 @@ services:
       - MCP_SERVICE_URL=http://service-2:8000
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+    depends_on:
+      - service-2
 
   service-2: # MCP Service (MCP Client and Server)
     build:
