@@ -41,7 +41,13 @@ A password for your database.
 defang config set POSTGRES_PASSWORD
 ```
 
-### `HASURA_GRAPHQL_ADMIN_SECRET` 
+### `SSL_MODE` 
+Either `disable` if you're using the Defang Playground or `require` if you're using BYOC. 
+```bash
+defang config set SSL_MODE
+```
+
+### `HASURA_GRAPHQL_ADMIN_SECRET`
 A password you would like to log into Hasura with. 
 ```bash
 defang config set HASURA_GRAPHQL_ADMIN_SECRET
