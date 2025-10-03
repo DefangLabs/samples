@@ -27,3 +27,10 @@ services:
     ports:
       - mode: host
         target: 5432
+
+    # Adjust resources as needed
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      cpus: "1.0"
+    #      memory: 512M

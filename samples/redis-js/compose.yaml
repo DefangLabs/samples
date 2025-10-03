@@ -16,3 +16,10 @@ services:
         published: 6379
         protocol: tcp
         mode: host
+
+    # Adjust resources as needed
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      cpus: "1.0"
+    #      memory: 512M
