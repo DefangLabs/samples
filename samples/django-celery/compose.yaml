@@ -69,6 +69,13 @@ services:
       timeout: 5s
       retries: 5
 
+    # Adjust resources as needed
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      cpus: "1.0"
+    #      memory: 512M
+
   broker:
     image: redis:7
     x-defang-redis: true
@@ -82,3 +89,10 @@ services:
       timeout: 5s
       retries: 5
 
+
+    # Adjust resources as needed
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      cpus: "1.0"
+    #      memory: 512M
