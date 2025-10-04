@@ -60,8 +60,10 @@ The project includes two compose files:
 - **`compose.dev.yaml`** - For local development with volume persistence
 - **`compose.yaml`** - For cloud deployment with Defang
 
-> [!NOTE]
+### Important Notes
+
 > Download [Defang CLI](https://github.com/DefangLabs/defang)
+> When you deploy to Defang for the first time, the managed PostgreSQL may take up to 10 minutes to be ready. The `init-data.sh` script includes retry logic to handle this delay. If the initialization fails after all attempts, please redeploy your application again as the managed PostgreSQL may be ready on the next deployment.
 
 ### Defang Playground
 

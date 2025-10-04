@@ -7,7 +7,6 @@ services:
     environment:
       - POSTGRES_USER
       - POSTGRES_HOST=${POSTGRES_USER}
-      # Need to pass PGPASSWORD so the password can be used by psql in the script init-data.sh
       - PGPASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB
       - POSTGRES_NON_ROOT_USER
@@ -47,13 +46,12 @@ services:
       - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
       - DB_POSTGRESDB_USER=${POSTGRES_NON_ROOT_USER}
       - DB_POSTGRESDB_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
-      # https://community.n8n.io/t/how-to-change-localhost-5678-from-webhook-url/27033/8
-      - N8N_HOST=n8n--5678.n8n.kevyvo.defang.app
+      - N8N_HOST=n8n
       - N8N_PORT=5678
       - N8N_PROTOCOL=https
       - NODE_ENV=production
-      - WEBHOOK_URL=https://n8n--5678.n8n.kevyvo.defang.app
-      - DB_POSTGRESDB_SSL_ENABLED=true #https://community.n8n.io/t/error-while-deploying-n8n-docker/77926
+      - WEBHOOK_URL=https://n8n
+      - DB_POSTGRESDB_SSL_ENABLED=true
       - DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED=false
     ports:
       - 5678:5678
