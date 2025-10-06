@@ -21,6 +21,8 @@ services:
   n8n:
     image: docker.n8n.io/n8nio/n8n
     restart: always
+    # Uncomment this if you are using a custom domain
+    # domainname: yourappdomain.com
     environment:
       - DB_TYPE=postgresdb
       - DB_POSTGRESDB_HOST=postgres
@@ -28,12 +30,12 @@ services:
       - DB_POSTGRESDB_DATABASE=n8ndatabase
       - DB_POSTGRESDB_USER=n8nuser
       - N8N_RUNNERS_ENABLED=true
-      - N8N_HOST=n8n.raph-n8n.raphaeltm.defang.app
+      - N8N_HOST=n8n.yourappdomain.com
       - N8N_PORT=5678
       - N8N_PROTOCOL=https
       - N8N_PROXY_HOPS=1 # Required behind a load balancer
       - NODE_ENV=production
-      - WEBHOOK_URL=https://n8n.raph-n8n.raphaeltm.defang.app
+      - WEBHOOK_URL=https://yourappdomain.com
       - DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED=${DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED}
       - DB_POSTGRESDB_SSL_ENABLED=${DB_POSTGRESDB_SSL_ENABLED}
       # MANAGED CONFIG
