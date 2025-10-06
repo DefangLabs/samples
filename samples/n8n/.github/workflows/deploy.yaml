@@ -7,6 +7,7 @@ on:
 
 jobs:
   deploy:
+    environment: playground
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -17,11 +18,11 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Deploy
-        uses: DefangLabs/defang-github-action@v1.0.4
+        uses: DefangLabs/defang-github-action@v1.2.0
         with:
           config-env-vars: POSTGRES_USER N8N_ENCRYPTION_KEY DB_POSTGRESDB_SSL_ENABLED DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED
         env:
-          POSTGRES_PASSWORD: ${{ secrets.TEST_POSTGRES_PASSWORD }}
-          N8N_ENCRYPTION_KEY: ${{ secrets.TEST_N8N_ENCRYPTION_KEY }}
-          DB_POSTGRESDB_SSL_ENABLED: ${{ secrets.TEST_DB_POSTGRESDB_SSL_ENABLED }}
-          DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED: ${{ secrets.TEST_DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          N8N_ENCRYPTION_KEY: ${{ secrets.N8N_ENCRYPTION_KEY }}
+          DB_POSTGRESDB_SSL_ENABLED: ${{ secrets.DB_POSTGRESDB_SSL_ENABLED }}
+          DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED: ${{ secrets.DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED }}
