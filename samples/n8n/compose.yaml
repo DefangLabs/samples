@@ -1,36 +1,18 @@
 services:
-  setup:
-    # This is a one-off job to initialize the database with a non-root user
-    build:
-      dockerfile: setup.Dockerfile
-    command: "/init-data.sh"
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_HOST=${POSTGRES_USER}
-      - PGPASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_NON_ROOT_USER=${POSTGRES_NON_ROOT_USER}
-      - POSTGRES_NON_ROOT_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
-    restart: "no"
-    depends_on:
-      postgres:
-        condition: service_healthy
-
   postgres:
     image: postgres:16
     x-defang-postgres: true
     restart: always
     environment:
-      - POSTGRES_USER
-      - POSTGRES_PASSWORD
-      - POSTGRES_DB
-      - POSTGRES_NON_ROOT_USER
-      - POSTGRES_NON_ROOT_PASSWORD
+      - POSTGRES_USER=n8nuser
+      - POSTGRES_DB=n8ndatabase
+      # MANAGED CONFIG
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     healthcheck:
       test:
         [
           "CMD-SHELL",
-          "pg_isready -h localhost -U ${POSTGRES_USER} -d ${POSTGRES_DB}",
+          "pg_isready -h localhost -U n8nuser -d n8ndatabase",
         ]
       interval: 5s
       timeout: 5s
@@ -43,22 +25,31 @@ services:
       - DB_TYPE=postgresdb
       - DB_POSTGRESDB_HOST=postgres
       - DB_POSTGRESDB_PORT=5432
-      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
-      - DB_POSTGRESDB_USER=${POSTGRES_NON_ROOT_USER}
-      - DB_POSTGRESDB_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
-      - N8N_HOST=n8n
+      - DB_POSTGRESDB_DATABASE=n8ndatabase
+      - DB_POSTGRESDB_USER=n8nuser
+      - N8N_RUNNERS_ENABLED=true
+      - N8N_HOST=n8n.raph-n8n.raphaeltm.defang.app
       - N8N_PORT=5678
       - N8N_PROTOCOL=https
+      - N8N_PROXY_HOPS=1 # Required behind a load balancer
       - NODE_ENV=production
-      - WEBHOOK_URL=https://n8n
-      - DB_POSTGRESDB_SSL_ENABLED=true
-      - DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED=false
+      - WEBHOOK_URL=https://n8n.raph-n8n.raphaeltm.defang.app
+      - DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED=${DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED}
+      - DB_POSTGRESDB_SSL_ENABLED=${DB_POSTGRESDB_SSL_ENABLED}
+      # MANAGED CONFIG
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - 5678:5678
     links:
       - postgres
     depends_on:
-      setup:
-        condition: service_completed_successfully
       postgres:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "node --eval \"const r = await fetch('http://localhost:5678/healthz'); if(r.status === 200 || r.status === 201) { process.exit(0); } else { process.exit(1); };\""]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 120s
+      
