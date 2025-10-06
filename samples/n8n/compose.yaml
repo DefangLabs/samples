@@ -5,12 +5,12 @@ services:
       dockerfile: setup.Dockerfile
     command: "/init-data.sh"
     environment:
-      - POSTGRES_USER
+      - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_HOST=${POSTGRES_USER}
       - PGPASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB
-      - POSTGRES_NON_ROOT_USER
-      - POSTGRES_NON_ROOT_PASSWORD
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_NON_ROOT_USER=${POSTGRES_NON_ROOT_USER}
+      - POSTGRES_NON_ROOT_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
     restart: "no"
     depends_on:
       postgres:
