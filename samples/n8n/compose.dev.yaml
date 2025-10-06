@@ -1,34 +1,24 @@
-volumes:
-  db_storage:
-  n8n_storage:
-
 services:
   postgres:
     extends:
       file: compose.yaml
       service: postgres
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=defang12345
-      - POSTGRES_DB=n8n
-      - POSTGRES_NON_ROOT_USER=defang_user
-      - POSTGRES_NON_ROOT_PASSWORD=defang12345
+      - POSTGRES_PASSWORD=password
     volumes:
       - db_storage:/var/lib/postgresql/data
-      - ./init-data.sh:/docker-entrypoint-initdb.d/init-data.sh
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -h localhost -U postgres -d n8n"]
+      test: ["CMD-SHELL", "pg_isready -h localhost -U n8nuser -d n8ndatabase"]
 
   n8n:
-    image: docker.n8n.io/n8nio/n8n
-    restart: always
+    extends:
+      file: compose.yaml
+      service: n8n
     environment:
-      - DB_TYPE=postgresdb
-      - DB_POSTGRESDB_HOST=postgres
-      - DB_POSTGRESDB_PORT=5432
-      - DB_POSTGRESDB_DATABASE=n8n
-      - DB_POSTGRESDB_USER=defang_user
-      - DB_POSTGRESDB_PASSWORD=defang12345
+      - DB_POSTGRESDB_SSL_ENABLED=false
+      - DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED=true # counterintuitive, but leave this as true to *disable* SSL (required for local dev)
+      - N8N_ENCRYPTION_KEY=unsafe-encryption-key
+      - DB_POSTGRESDB_PASSWORD=password
     ports:
       - 5678:5678
     links:
@@ -38,3 +28,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+
+volumes:
+  db_storage:
+  n8n_storage:
