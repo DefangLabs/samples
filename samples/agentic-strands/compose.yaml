@@ -4,7 +4,6 @@ services:
     # domainname: example.com
     build:
       context: ./app
-      dockerfile: Dockerfile
     ports:
       - target: 5001
         published: 5001
@@ -13,13 +12,25 @@ services:
       LLM_URL: http://llm/api/v1/
       LLM_MODEL: default
       OPENAI_API_KEY: FAKE_TOKEN
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python3",
+          "-c",
+          "import urllib.request; exit(0) if urllib.request.urlopen('http://localhost:5001/health').status == 200 else exit(1)",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     depends_on:
       - llm
 
   llm:
     environment:
       - OPENAI_API_KEY=FAKE_TOKEN
-    image: defangio/openai-access-gateway:06339c7
+    image: defangio/openai-access-gateway
     ports:
       - target: 80
         published: 80

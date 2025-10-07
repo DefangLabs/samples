@@ -30,6 +30,8 @@ jobs:
           ./scripts/check-modified-samples.sh > modified.txt
           echo "@@ MODIFIED @@"
           cat modified.txt
+          echo "@@ CHECKLIST @@"
+          cat checklist.txt
 
       # TODO: Uncomment the following lines to validate the Compose files
       #       once we figure out how to prevent it from erroring on warnings.

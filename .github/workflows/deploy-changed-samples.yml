@@ -76,6 +76,7 @@ jobs:
           TEST_DATABASE_USERNAME: ${{ secrets.TEST_DATABASE_USERNAME }}
           TEST_HASURA_GRAPHQL_ADMIN_SECRET: ${{ secrets.TEST_HASURA_GRAPHQL_ADMIN_SECRET }}
           TEST_HASURA_GRAPHQL_DATABASE_URL: ${{ secrets.TEST_HASURA_GRAPHQL_DATABASE_URL }}
+          TEST_JUPYTER_TOKEN: ${{ secrets.TEST_JUPYTER_TOKEN }}
           TEST_HF_TOKEN: ${{ secrets.TEST_HF_TOKEN }}
           TEST_MB_DB_DBNAME: ${{ secrets.TEST_MB_DB_DBNAME }}
           TEST_MB_DB_HOST: ${{ secrets.TEST_MB_DB_HOST }}
@@ -102,6 +103,7 @@ jobs:
           TEST_SLACK_CHANNEL_ID: ${{ secrets.TEST_SLACK_CHANNEL_ID }}
           TEST_SLACK_TOKEN: ${{ secrets.TEST_SLACK_TOKEN }}
           TEST_SHARED_SECRETS: ${{ secrets.TEST_SHARED_SECRETS}}
+          TEST_SSL_MODE: ${{ secrets.TEST_SSL_MODE }}
           TEST_TAVILY_API_KEY: ${{ secrets.TEST_TAVILY_API_KEY }}
           TEST_ALLOWED_HOSTS: ${{ secrets.TEST_ALLOWED_HOSTS }}
           TEST_N8N_ENCRYPTION_KEY: ${{ secrets.TEST_N8N_ENCRYPTION_KEY }}
