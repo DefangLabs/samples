@@ -36,7 +36,7 @@ services:
       - DB_POSTGRESDB_SSL_ENABLED
       # MANAGED CONFIG
       - N8N_ENCRYPTION_KEY
-      - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_POSTGRESDB_PASSWORD
     ports:
       - 5678:5678
     links:
