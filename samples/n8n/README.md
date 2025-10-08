@@ -34,13 +34,13 @@ For this sample, you will need to provide the following [configuration](https://
 
 The password for your Postgres database. You need to set this before deploying for the first time.
 
-_You can easily set this to a random string using `defang config set POSTGRES_PASSWORD --random`_
+*You can easily set this to a random string using `defang config set POSTGRES_PASSWORD --random`*
 
 ### `N8N_ENCRYPTION_KEY`
 
 The encryption key for your n8n instance. This is used to encrypt sensitive data in the database.
 
-_You can easily set this to a random string using `defang config set N8N_ENCRYPTION_KEY --random`_
+*You can easily set this to a random string using `defang config set N8N_ENCRYPTION_KEY --random`*
 
 ## Deployment
 
