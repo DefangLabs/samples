@@ -7,8 +7,6 @@ services:
       - POSTGRES_PASSWORD=password
     volumes:
       - db_storage:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -h localhost -U n8nuser -d n8ndatabase"]
 
   n8n:
     extends:
@@ -18,16 +16,13 @@ services:
       - DB_POSTGRESDB_SSL_ENABLED=false
       - DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED=true # counterintuitive, but leave this as true to *disable* SSL (required for local dev)
       - N8N_ENCRYPTION_KEY=unsafe-encryption-key
+      - N8N_PROTOCOL=http
+      - N8N_HOST=localhost
+      - WEBHOOK_URL=http://localhost:5678/
+      - N8N_PROXY_HOPS=0
       - DB_POSTGRESDB_PASSWORD=password
-    ports:
-      - 5678:5678
-    links:
-      - postgres
     volumes:
       - n8n_storage:/home/node/.n8n
-    depends_on:
-      postgres:
-        condition: service_healthy
 
 volumes:
   db_storage:

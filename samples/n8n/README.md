@@ -34,22 +34,13 @@ For this sample, you will need to provide the following [configuration](https://
 
 The password for your Postgres database. You need to set this before deploying for the first time.
 
-*You can easily set this to a random string using `defang config set POSTGRES_PASSWORD --random`*
+_You can easily set this to a random string using `defang config set POSTGRES_PASSWORD --random`_
 
 ### `N8N_ENCRYPTION_KEY`
 
-The encryption key for your n8n instance. This is used to encrypt sensitive data in the database. 
+The encryption key for your n8n instance. This is used to encrypt sensitive data in the database.
 
-*You can easily set this to a random string using `defang config set N8N_ENCRYPTION_KEY --random`*
-
-### `DB_POSTGRESDB_SSL_ENABLED`
-
-Set to `true` to enable SSL. Set to `false` to disable SSL.
-
-### `DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED`
-
-Set to `true` to reject unauthorized certificates. Set to `false` to accept unauthorized certificates. Counterintuitive, but leave this as **true** to **disable SSL** (required for local dev and playground).
-
+_You can easily set this to a random string using `defang config set N8N_ENCRYPTION_KEY --random`_
 
 ## Deployment
 
@@ -61,12 +52,26 @@ Set to `true` to reject unauthorized certificates. Set to `false` to accept unau
 Deploy your application to the Defang Playground by opening up your terminal and typing:
 
 ```bash
-defang compose up
+defang compose -f compose.playground.yaml up
 ```
 
 ### BYOC
 
 If you want to deploy to your own cloud account, you can [use Defang BYOC](https://docs.defang.io/docs/tutorials/deploy-to-your-cloud).
+
+There no need to specify a compose file, as the default `compose.yaml` will be used.
+
+## Tips and Troubleshooting
+
+If you like to learn more about n8n configuration, check out the [n8n docs](https://docs.n8n.io/hosting/configuration/environment-variables/).
+
+### `DB_POSTGRESDB_SSL_ENABLED`
+
+Set to `true` to enable SSL. Set to `false` to disable SSL.
+
+### `DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED`
+
+Set to `true` to reject unauthorized certificates. Set to `false` to accept unauthorized certificates. Counterintuitive, but leave this as **true** to **disable SSL** (required for local dev and playground).
 
 ---
 

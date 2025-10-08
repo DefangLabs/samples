@@ -107,8 +107,6 @@ jobs:
           TEST_TAVILY_API_KEY: ${{ secrets.TEST_TAVILY_API_KEY }}
           TEST_ALLOWED_HOSTS: ${{ secrets.TEST_ALLOWED_HOSTS }}
           TEST_N8N_ENCRYPTION_KEY: ${{ secrets.TEST_N8N_ENCRYPTION_KEY }}
-          TEST_DB_POSTGRESDB_SSL_ENABLED: ${{ secrets.TEST_DB_POSTGRESDB_SSL_ENABLED }}
-          TEST_DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED: ${{ secrets.TEST_DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED }}
           TEST_DB_POSTGRESDB_PASSWORD: ${{ secrets.TEST_POSTGRES_PASSWORD }}
         run: |
           SAMPLES=$(sed 's|^samples/||' changed_samples.txt | paste -s -d ',' -)

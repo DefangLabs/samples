@@ -32,8 +32,8 @@ services:
       - N8N_PROXY_HOPS=1 # Required behind a load balancer
       - NODE_ENV=production
       - WEBHOOK_URL=https://n8n
-      - DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED
-      - DB_POSTGRESDB_SSL_ENABLED
+      - DB_POSTGRESDB_SSL_ENABLED=true
+      - DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED=false
       # MANAGED CONFIG
       - N8N_ENCRYPTION_KEY
       - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}

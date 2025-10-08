@@ -1,0 +1,13 @@
+services:
+  postgres:
+    extends:
+      file: compose.yaml
+      service: postgres
+
+  n8n:
+    extends:
+      file: compose.yaml
+      service: n8n
+    environment:
+      - DB_POSTGRESDB_SSL_ENABLED=false
+      - DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED=true
