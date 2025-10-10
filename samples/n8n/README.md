@@ -64,9 +64,12 @@ Deploy your application to the Defang Playground by opening up your terminal and
 defang compose up
 ```
 
-### BYOC
+### BYOC (Deploy to you own AWS or GCP cloud account)
 
 If you want to deploy to your own cloud account, you can [use Defang BYOC](https://docs.defang.io/docs/tutorials/deploy-to-your-cloud).
+
+> [!NOTE]
+> This project spins up a managed database when deploying to your own cloud. It may take upwards of 25 minutes for your deployment to complete, please be patient.
 
 ---
 
