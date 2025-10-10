@@ -4,6 +4,10 @@
 
 This sample shows how to get a [n8n](https://n8n.io/) app up using PostgreSQL as a database and running with Defang. We based it in part on the [original sample](https://github.com/n8n-io/n8n-hosting/tree/main/docker-compose/withPostgres) from the n8n team, but we have adapted it to be consistent with the way our other samples are configured.
 
+## Video Tutorial
+
+[![n8n Tutorial](https://img.youtube.com/vi/hOlNWu2FX1g/0.jpg)](https://www.youtube.com/watch?v=hOlNWu2FX1g)
+
 ## Prerequisites
 
 1. Download [Defang CLI](https://github.com/DefangLabs/defang)
