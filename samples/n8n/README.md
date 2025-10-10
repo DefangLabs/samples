@@ -73,7 +73,7 @@ defang compose up
 If you want to deploy to your own cloud account, you can [use Defang BYOC](https://docs.defang.io/docs/tutorials/deploy-to-your-cloud).
 
 > [!WARNING]
-> **Extended deployment time:** This sample creates a managed PostgreSQL database which takes upwards of 20 minutes to provision on first deployment. Subsequent deployments are much faster (2-5 minutes).
+> **Extended deployment time:** This sample creates a managed PostgreSQL database which may take upwards of 20 minutes to provision on first deployment. Subsequent deployments are much faster (2-5 minutes).
 ---
 
 Title: n8n
