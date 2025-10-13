@@ -66,3 +66,10 @@ services:
     ports:
       - mode: host
         target: 6379
+
+    # Adjust resources as needed
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      cpus: "1.0"
+    #      memory: 512M
