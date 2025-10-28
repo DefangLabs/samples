@@ -32,6 +32,11 @@ def get_api_key():
 async def home():
     return FileResponse("static/index.html", media_type="text/html")
 
+# Health check endpoint
+@app.get("/health")
+async def health():
+    return {"status": "healthy"}
+
 # Handle form submission
 @app.post("/ask", response_class=JSONResponse)
 async def ask(prompt: str = Form(...)):

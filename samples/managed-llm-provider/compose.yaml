@@ -9,9 +9,10 @@ services:
     environment:
       - LLM_URL=http://llm/api/v1/
       - LLM_MODEL=default
+      - OPENAI_API_KEY=FAKE_TOKEN
       # For other models, see https://docs.defang.io/docs/concepts/managed-llms/openai-access-gateway#model-mapping
     healthcheck:
-      test: ["CMD", "python3", "-c", "import sys, urllib.request; urllib.request.urlopen(sys.argv[1]).read()", "http://localhost:8000/"]
+      test: ["CMD", "python3", "-c", "import sys, urllib.request; urllib.request.urlopen(sys.argv[1]).read()", "http://localhost:8000/health"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -32,6 +33,8 @@ services:
       options:
         model: ai/smollm2
     x-defang-llm: true
+    environment:
+      - OPENAI_API_KEY=FAKE_TOKEN
     deploy:
       resources:
         reservations:
