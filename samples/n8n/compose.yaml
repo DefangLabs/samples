@@ -13,6 +13,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    networks:
+      - priv
 
   n8n:
     image: docker.n8n.io/n8nio/n8n
@@ -34,6 +36,8 @@ services:
       - WEBHOOK_URL=https://n8n
       - DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED
       - DB_POSTGRESDB_SSL_ENABLED
+
+      
       # MANAGED CONFIG
       - N8N_ENCRYPTION_KEY
       - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}
@@ -44,6 +48,9 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    networks:
+      - default
+      - priv
     healthcheck:
       test:
         [
@@ -54,3 +61,7 @@ services:
       timeout: 5s
       retries: 5
       start_period: 120s
+
+networks:
+  priv:
+  default:
