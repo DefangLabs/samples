@@ -1,0 +1,31 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DB_URL: postgres://postgres:password@database:5432/postgres
+      GOOGLE_GENERATIVE_AI_API_KEY: xxx
+      GITHUB_TOKEN: xxx
+    volumes:
+      - ./next-app/src:/app/src
+      - ./next-app/public:/app/public
+    restart: always
+    ports:
+      - 3000:3000
+
+  database:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+    ports:
+      - target: 5432
+        published: 5432
+        mode: host
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+volumes:
+  postgres: {}
