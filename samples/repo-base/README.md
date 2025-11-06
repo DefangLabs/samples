@@ -1,36 +1,107 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Repo Base
 
-## Getting Started
+[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-repo-base-template%26template_owner%3DDefangSamples)
 
-First, run the development server:
+This sample shows how to deploy an AI-powered GitHub repository chat tool using [Mastra](https://mastra.ai/), a TypeScript AI framework. Repo Base allows you to chat with and understand any GitHub repository by fetching file trees, contents, pull requests, and issues, making it easy to navigate and understand codebases of any size.
+
+## Features
+
+- **Repository Analysis**: Enter a GitHub repository URL and instantly start a conversation about it
+- **Code Exploration**: Navigate file trees, view file contents, and understand code structure
+- **PR & Issue Access**: Query information about pull requests and issues directly in chat
+- **Large Codebase Support**: Powered by Google's Gemini Flash model with its large context window
+- **Intuitive UI**: Built with assistant-UI for a seamless chat experience with retries, copy, and message branching
+
+## Prerequisites
+
+1. Download [Defang CLI](https://github.com/DefangLabs/defang)
+2. (Optional) If you are using [Defang BYOC](https://docs.defang.io/docs/concepts/defang-byoc) authenticate with your cloud provider account
+3. (Optional for local development) [Docker CLI](https://docs.docker.com/engine/install/)
+
+## Development
+
+To run the application locally for development, use the development compose file:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+docker compose -f compose.dev.yaml up
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This will:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Start PostgreSQL with volume persistence for local development
+- Expose PostgreSQL on port 5432 for direct access if needed
+- Start the Next.js application on port 3000 with hot reload
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+You can access Repo Base at `http://localhost:3000` once the containers are running.
 
-## Learn More
+## Configuration
 
-To learn more about Next.js, take a look at the following resources:
+For this sample, you will need to provide the following [configuration](https://docs.defang.io/docs/concepts/configuration). Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### `GOOGLE_GENERATIVE_AI_API_KEY`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Your Google Generative AI API key for accessing the Gemini Flash model. You can get this from the [Google AI Studio](https://aistudio.google.com/).
 
-## Deploy on Vercel
+### `DB_URL`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The PostgreSQL database connection string. This will be automatically configured when using Defang's managed database services.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### `DB_SSL`
+
+Set to `true` to enable SSL. Set to `false` to disable SSL. (Can be set directly in the docker compose file)
+
+### `GITHUB_TOKEN` (Optional)
+
+A GitHub personal access token to increase API rate limits when fetching repository data. This is optional but recommended for better performance.
+
+## Usage
+
+1. Enter a GitHub repository URL in the input field (e.g., `https://github.com/facebook/react`)
+2. Start chatting with Repo Base about the repository
+3. Use commands like:
+   - "Show me the file structure"
+   - "What are the recent pull requests?"
+   - "Explain the purpose of [filename]"
+   - "How many open issues are there?"
+
+## How It Works
+
+Repo Base uses a tool-based approach rather than traditional RAG systems, making it more efficient for large codebases. When you provide a repository URL, Repo Base uses tools to:
+
+1. Fetch the repository's file tree
+2. Access file contents on demand
+3. Retrieve information about pull requests and issues
+4. Store conversation history using Mastra's memory package
+
+The large context window of Gemini Flash allows the agent to hold more code in memory, making the conversation more coherent and informed.
+
+## Deployment
+
+> [!NOTE]
+> Download [Defang CLI](https://github.com/DefangLabs/defang)
+
+### Defang Playground
+
+Deploy your application to the Defang Playground by opening up your terminal and typing:
+
+```bash
+defang compose up
+```
+
+### BYOC (Deploy to your own AWS or GCP cloud account)
+
+If you want to deploy to your own cloud account, you can [use Defang BYOC](https://docs.defang.io/docs/tutorials/deploy-to-your-cloud).
+
+> [!WARNING] > **Extended deployment time:** This sample creates a managed PostgreSQL database which may take upwards of 20 minutes to provision on first deployment. Subsequent deployments are much faster (2-5 minutes).
+
+This sample was base off of mastra's [repo-chat sample](https://github.com/mastra-ai/repo-base).
+
+---
+
+Title: Repo Base
+
+Short Description: An AI-powered tool for chatting with GitHub repositories using Mastra and Google Gemini.
+
+Tags: AI, GitHub, Mastra, Next.js, PostgreSQL, TypeScript
+
+Languages: TypeScript, JavaScript, Docker
