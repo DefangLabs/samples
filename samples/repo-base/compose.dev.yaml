@@ -13,6 +13,7 @@ services:
     restart: always
     ports:
       - 3000:3000
+    command: ["pnpm", "run", "start"]
 
   database:
     image: postgres:16
