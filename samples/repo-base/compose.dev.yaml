@@ -8,8 +8,8 @@ services:
       GOOGLE_GENERATIVE_AI_API_KEY: xxx
       GITHUB_TOKEN: xxx
     volumes:
-      - ./next-app/src:/app/src
-      - ./next-app/public:/app/public
+      - ./src:/app/src
+      - ./public:/app/public
     restart: always
     ports:
       - 3000:3000
