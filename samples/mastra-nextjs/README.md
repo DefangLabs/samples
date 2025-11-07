@@ -63,7 +63,7 @@ Setting the permissions to public repositories only is sufficient, unless you wa
 
 ## Usage
 
-1. Enter a GitHub repository URL in the input field (e.g., `https://github.com/facebook/react`)
+1. Enter a GitHub repository URL in the input field (e.g., `https://github.com/DefangLabs/defang`)
 2. Start chatting with mastra-nextjs about the repository
 3. Use commands like:
    - "Show me the file structure"
@@ -73,7 +73,7 @@ Setting the permissions to public repositories only is sufficient, unless you wa
 
 ## How It Works
 
-Repo Base uses a tool-based approach rather than traditional RAG systems, making it more efficient for large codebases. When you provide a repository URL, Repo Base uses tools to:
+Mastra-nextjs uses a tool-based approach rather than traditional RAG systems, making it more efficient for large codebases. When you provide a repository URL, Mastra-nextjs uses tools to:
 
 1. Fetch the repository's file tree
 2. Access file contents on demand

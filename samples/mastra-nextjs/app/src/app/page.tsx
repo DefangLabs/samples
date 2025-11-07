@@ -13,6 +13,21 @@ export default function Page() {
             <p className="text-lg text-secondary-foreground">
               Chat with any GitHub repository. Understand code faster.
             </p>
+            <p className="text-lg text-secondary-foreground">
+              Powered by <a href="https://defang.io/" className="underline inline-flex items-center gap-1">
+                Defang.io 
+                <img 
+                  src="https://defang.io/_next/static/media/defang-icon-dark-colour.25f95b77.svg" 
+                  alt="Defang" 
+                  className="w-6 h-6 block dark:hidden" 
+                />
+                <img 
+                  src="https://defang.io/_next/static/media/defang-icon-white-colour.55515156.svg" 
+                  alt="Defang" 
+                  className="w-6 h-6 hidden dark:block" 
+                />
+              </a>
+            </p>
 
             <p className="text-sm text-muted-foreground">
               Made with ❤️ love from{" "}
@@ -40,8 +55,8 @@ export default function Page() {
           <h2 className="text-xl font-semibold">Popular Repositories</h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <SuggestedRepo owner="mastra-ai" repo="mastra" />
+            <SuggestedRepo owner="DefangLabs" repo="defang" />
             <SuggestedRepo owner="assistant-ui" repo="assistant-ui" />
-            <SuggestedRepo owner="vercel" repo="next.js" />
             <SuggestedRepo owner="facebook" repo="react" />
             <SuggestedRepo owner="tailwindlabs" repo="tailwindcss" />
             <SuggestedRepo owner="shadcn" repo="ui" />

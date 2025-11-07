@@ -44,7 +44,7 @@ export const AppSidebar = async ({
             <SidebarMenuItem>
               <SidebarMenuButton asChild>
                 <Link href="/">
-                  <Home /> Repo Base
+                  <Home /> Mastra-Nextjs
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>

@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Repo Base",
+  title: "Mastra-Nextjs",
   description:
     "Turn your favorite repository into a knowledge base and get ai powered insights",
 };
