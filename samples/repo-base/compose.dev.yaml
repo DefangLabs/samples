@@ -8,13 +8,9 @@ services:
       DB_SSL: false
       GOOGLE_GENERATIVE_AI_API_KEY: xxx
       GITHUB_TOKEN: xxx
-    volumes:
-      - ./:/app
-      - /app/node_modules
     restart: always
     ports:
       - 3000:3000
-    command: ["pnpm", "run", "dev"]
 
   database:
     image: postgres:16

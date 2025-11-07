@@ -2,9 +2,10 @@ services:
   app:
     build:
       context: .
+      dockerfile: Dockerfile
     environment:
       - DB_URL=postgres://postgres:${POSTGRES_PASSWORD}@database:5432/postgres
-      - DB_SSL=true
+      - DB_SSL=false
       - GOOGLE_GENERATIVE_AI_API_KEY
       - GITHUB_TOKEN
     restart: unless-stopped
