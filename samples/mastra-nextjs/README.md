@@ -54,7 +54,7 @@ The [PostgreSQL database connection string](https://www.postgresql.org/docs/curr
 
 ### `DB_SSL`
 
-Set to `true` to enable SSL. Set to `false` to disable SSL. (Can be set directly in the docker compose file)
+Set to `true` to enable SSL. Set to `false` to disable SSL. (Can be set directly in the Docker Compose file.)
 
 ### `GITHUB_TOKEN` (Optional)
 
@@ -101,7 +101,7 @@ If you want to deploy to your own cloud account, you can [use Defang BYOC](https
 
 > [!WARNING] > **Extended deployment time:** This sample creates a managed PostgreSQL database which may take upwards of 20 minutes to provision on first deployment. Subsequent deployments are much faster (2-5 minutes).
 
-This sample was base off of mastra's [repo-chat sample](https://github.com/mastra-ai/repo-base).
+This sample was based off of mastra's [repo-chat sample](https://github.com/mastra-ai/repo-base).
 
 ---
 
