@@ -1,8 +1,8 @@
-# Repo Base
+# Mastra and Next.js Sample
 
-[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-repo-base-template%26template_owner%3DDefangSamples)
+[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-mastra-nextjs-template%26template_owner%3DDefangSamples)
 
-This sample shows how to deploy an AI-powered GitHub repository chat tool using [Mastra](https://mastra.ai/), a TypeScript AI framework. Repo Base allows you to chat with and understand any GitHub repository by fetching file trees, contents, pull requests, and issues, making it easy to navigate and understand codebases of any size.
+This sample shows how to deploy an AI-powered GitHub repository chat tool using [Mastra](https://mastra.ai/), a TypeScript AI framework. Mastra-nextjs allows you to chat with and understand any GitHub repository by fetching file trees, contents, pull requests, and issues, making it easy to navigate and understand codebases of any size.
 
 ## Features
 
@@ -32,7 +32,7 @@ This will:
 - Expose PostgreSQL on port 5432 for direct access if needed
 - Start the Next.js application on port 3000 with hot reload
 
-You can access Repo Base at `http://localhost:3000` once the containers are running.
+You can access mastra-nextjs at `http://localhost:3000` once the containers are running.
 
 ## Configuration
 
@@ -42,9 +42,15 @@ For this sample, you will need to provide the following [configuration](https://
 
 Your Google Generative AI API key for accessing the Gemini Flash model. You can get this from the [Google AI Studio](https://aistudio.google.com/).
 
+### `POSTGRES_PASSWORD`
+
+The password for your Postgres database. You need to set this before deploying for the first time.
+
+_You can easily set this to a random string using `defang config set POSTGRES_PASSWORD --random`_
+
 ### `DB_URL`
 
-The PostgreSQL database connection string. This will be automatically configured when using Defang's managed database services.
+The [PostgreSQL database connection string](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING). This will be automatically configured when using BYOC managed database services. It should look something like this: `postgresql://[user[:password]@][netloc][:port][/dbname][?param1=value1&...]`.
 
 ### `DB_SSL`
 
@@ -52,12 +58,13 @@ Set to `true` to enable SSL. Set to `false` to disable SSL. (Can be set directly
 
 ### `GITHUB_TOKEN` (Optional)
 
-A GitHub personal access token to increase API rate limits when fetching repository data. This is optional but recommended for better performance.
+A [GitHub personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token) to increase API rate limits when fetching repository data. This is optional but recommended for better performance.
+Setting the permissions to public repositories only is sufficient, unless you want to access private repositories that you have access to.
 
 ## Usage
 
 1. Enter a GitHub repository URL in the input field (e.g., `https://github.com/facebook/react`)
-2. Start chatting with Repo Base about the repository
+2. Start chatting with mastra-nextjs about the repository
 3. Use commands like:
    - "Show me the file structure"
    - "What are the recent pull requests?"
@@ -98,7 +105,7 @@ This sample was base off of mastra's [repo-chat sample](https://github.com/mastr
 
 ---
 
-Title: Repo Base
+Title: Mastra & Next.js
 
 Short Description: An AI-powered tool for chatting with GitHub repositories using Mastra and Google Gemini.
 
