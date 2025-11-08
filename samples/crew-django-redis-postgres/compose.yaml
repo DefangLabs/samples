@@ -9,6 +9,13 @@ services:
         target: 5432  
         published: 5432
 
+    # Adjust resources as needed
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      cpus: "1.0"
+    #      memory: 512M
+
   redis:
     image: redis:6.2
     x-defang-redis: true
@@ -16,6 +23,13 @@ services:
       - mode: host
         target: 6379
         published: 6379
+
+    # Adjust resources as needed
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      cpus: "1.0"
+    #      memory: 512M
 
   app:
     build:
