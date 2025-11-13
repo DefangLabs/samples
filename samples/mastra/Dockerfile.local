@@ -1,0 +1,23 @@
+FROM node:22
+
+WORKDIR /app
+COPY package*.json ./
+# Use npm install instead of npm ci for better optional dependency handling
+RUN npm install
+COPY src ./src
+
+RUN groupadd -g 1001 nodejs && \
+    useradd -r -u 1001 -g nodejs mastra -m && \
+    chown -R mastra:nodejs /app && \
+    mkdir -p /home/mastra/.config && \
+    chown -R mastra:nodejs /home/mastra
+
+USER mastra
+
+ENV PORT=8080
+# ENV NODE_ENV=development
+# ENV READINESS_CHECK_PATH="/api"
+
+EXPOSE 8080
+
+CMD ["npm", "run", "dev"]

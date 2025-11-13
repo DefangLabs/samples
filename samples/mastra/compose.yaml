@@ -1,0 +1,30 @@
+services:
+  db:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB=postgres
+    ports:
+      - mode: host
+        target: 5432
+
+  mastra:
+    # uncomment to add your own domain
+    # domainname: example.com
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - mode: ingress
+        target: 8080
+        published: 8080
+    environment:
+      - GOOGLE_GENERATIVE_AI_API_KEY
+      - DATABASE_URL=postgres://postgres:${POSTGRES_PASSWORD}@db:5432/postgres
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+    depends_on:
+      - db
