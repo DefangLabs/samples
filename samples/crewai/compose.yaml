@@ -78,29 +78,11 @@ services:
         reservations:
           cpus: "0.5"
           memory: 512M
-  chat:
-    provider:
-      type: model
-      options:
-        model: chat-default
+
+models:
+  llm:
+    model: chat-default
     x-defang-llm: true
-    environment:
-      OPENAI_API_KEY: defang
-    deploy:
-      resources:
-        reservations:
-          cpus: "0.5"
-          memory: 512M
   embedding:
-    provider:
-      type: model
-      options:
-        model: embedding-default
+    model: embedding-default
     x-defang-llm: true
-    environment:
-      OPENAI_API_KEY: defang
-    deploy:
-      resources:
-        reservations:
-          cpus: "0.5"
-          memory: 512M
