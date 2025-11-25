@@ -6,7 +6,7 @@ services:
     x-defang-postgres: true
     ports:
       - mode: host
-        target: 5432  
+        target: 5432
         published: 5432
 
   redis:
@@ -58,22 +58,8 @@ services:
       OPENAI_API_KEY: "defang"
       DJANGO_SECRET_KEY:
 
+models:
   llm:
-    provider:
-      type: model
-      options:
-        model: chat-default
-    x-defang-llm: true
-    environment:
-      OPENAI_API_KEY: "defang"
-      DEBUG: "true"
-
+    model: chat-default
   embedding:
-    provider:
-      type: model
-      options:
-        model: embedding-default
-    x-defang-llm: true
-    environment:
-      OPENAI_API_KEY: "defang"
-      DEBUG: "true"
+    model: embedding-default
