@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { actionClient } from ".";
 import { redirect } from "next/navigation";
-import { gh } from "@/lib/utils";
+import { gh } from "@/lib/octokit";
 import { RepositoryError } from "./errors";
 import { cookies } from "next/headers";
 
@@ -25,7 +25,7 @@ const RepositoryInputSchema = z
           return { owner: pathSegments[0], repo: pathSegments[1] };
         }
       }
-    } catch {}
+    } catch { }
 
     const parts = val.split("/").filter(Boolean);
     if (parts.length === 2) {
@@ -74,9 +74,15 @@ export const validateRepositoryInput = actionClient
     }
 
     const resourceId = (await cookies()).get("resourceId")?.value;
+
     if (!resourceId) throw new Error("Could not create thread");
 
-    const resourceThreads = await ctx.mastra.memory?.getThreadsByResourceId({
+    const agent = ctx.mastra.getAgent('agent');
+    const memory = await agent.getMemory();
+
+    if (!memory) throw new Error("Could not get memory");
+
+    const resourceThreads = await memory.getThreadsByResourceId({
       resourceId,
     });
 
@@ -86,7 +92,7 @@ export const validateRepositoryInput = actionClient
     );
 
     if (!threads || threads.length === 0) {
-      const thread = await ctx.mastra.memory?.createThread({
+      const thread = await memory.createThread({
         resourceId,
         metadata: { owner, repo },
       });
@@ -97,6 +103,9 @@ export const validateRepositoryInput = actionClient
         throw new Error("Could not create thread");
       }
     } else {
-      if (shouldRedirect) redirect(`/${owner}/${repo}`);
+      const thread = threads[0];
+      if (shouldRedirect) {
+        redirect(`/${owner}/${repo}/${thread?.id}`);
+      }
     }
   });

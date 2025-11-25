@@ -6,7 +6,7 @@ RUN apk add --no-cache curl
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
-COPY package.json package-lock.json* pnpm-lock.yaml* .npmrc* ./
+COPY package.json pnpm-lock.yaml* .npmrc* ./
 
 RUN corepack enable pnpm && pnpm install --frozen-lockfile --prefer-offline
 

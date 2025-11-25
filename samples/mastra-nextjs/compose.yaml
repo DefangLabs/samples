@@ -5,8 +5,7 @@ services:
       dockerfile: Dockerfile
     environment:
       - DB_URL=postgres://postgres:${POSTGRES_PASSWORD}@database:5432/postgres
-      - DB_SSL=true
-      - NODE_ENV=production
+      - DB_SSL=true #set this to false if deploying to defang playground
       - GOOGLE_GENERATIVE_AI_API_KEY
       - GITHUB_TOKEN
     restart: unless-stopped
@@ -21,7 +20,7 @@ services:
 
   database:
     image: postgres:16
-    x-defang-postgres: true
+    x-defang-postgres: true # comment when deploying to defang playground
     restart: always
     environment:
       - POSTGRES_PASSWORD
