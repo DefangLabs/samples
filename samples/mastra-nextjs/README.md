@@ -54,7 +54,7 @@ The [PostgreSQL database connection string](https://www.postgresql.org/docs/curr
 
 ### `DB_SSL`
 
-Set to `true` to enable SSL. Set to `false` to disable SSL. (Can be set directly in the Docker Compose file.)
+Set to `true` to enable SSL. Set to `false` to disable SSL, which is used for Defang Playground. (Can be set directly in the Docker Compose file.)
 
 ### `GITHUB_TOKEN` (Optional)
 

@@ -6,7 +6,6 @@ services:
     environment:
       - DB_URL=postgres://postgres:password@database:5432/postgres
       - DB_SSL=false #set this to true if deploying to defang playground
-      - NODE_ENV=development
       - GOOGLE_GENERATIVE_AI_API_KEY=xxx
       - GITHUB_TOKEN=xxx # remove this line if unused
 
