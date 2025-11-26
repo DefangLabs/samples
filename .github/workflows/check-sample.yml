@@ -3,7 +3,7 @@ name: Check Samples
 on:
   pull_request:
     paths:
-      - 'samples/**'
+      - "samples/**"
 
 jobs:
   check_samples:
@@ -42,7 +42,10 @@ jobs:
 
       - name: Add checklist to PR description
         uses: actions/github-script@v5
+        env:
+          PUSH_TOKEN: ${{ secrets.TEMPLATES_MANAGER_TOKEN }}
         with:
+          github-token: ${{ secrets.TEMPLATES_MANAGER_TOKEN }}
           script: |
             const script = require('./scripts/add-checklist-to-pr.js');
             try {
