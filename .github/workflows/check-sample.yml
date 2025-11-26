@@ -43,9 +43,9 @@ jobs:
       - name: Add checklist to PR description
         uses: actions/github-script@v5
         env:
-          PUSH_TOKEN: ${{ secrets.TEMPLATES_MANAGER_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.USERPAT }}
         with:
-          github-token: ${{ secrets.TEMPLATES_MANAGER_TOKEN }}
+          github-token: ${{ secrets.USERPAT }}
           script: |
             const script = require('./scripts/add-checklist-to-pr.js');
             try {
