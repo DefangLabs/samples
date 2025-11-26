@@ -16,8 +16,9 @@ services:
       POSTGRES_PORT: 5432
       POSTGRES_DB: postgres
       POSTGRES_SSL: true
+      NewTesting: true
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000" ]
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
     depends_on:
       - database
 
