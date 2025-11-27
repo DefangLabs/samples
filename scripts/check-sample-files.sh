@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Export DEFANG_ACCESS_TOKEN if it's set
+if [[ -n "$DEFANG_ACCESS_TOKEN" ]]; then
+  export DEFANG_ACCESS_TOKEN
+fi
+
 for dir in ./samples/*/; do
   # set variable pulumi to true if there is a Pulumi.yaml file in the directory, or there is a directory called pulumi
   pulumi=false

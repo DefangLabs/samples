@@ -25,7 +25,7 @@ jobs:
       - name: Run Checks
         id: checks
         env:
-          GITHUB_TOKEN: ${{ secrets.TEMPLATES_MANAGER_TOKEN }}
+          DEFANG_ACCESS_TOKEN: ${{ secrets.TEMPLATES_MANAGER_TOKEN }}
         run: |
           eval "$(curl -fsSL s.defang.io/install)"
           ./scripts/check-sample-files.sh > checklist.txt
