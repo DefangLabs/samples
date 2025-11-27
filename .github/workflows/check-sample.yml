@@ -24,6 +24,8 @@ jobs:
 
       - name: Run Checks
         id: checks
+        env:
+          GITHUB_TOKEN: ${{ secrets.TEMPLATES_MANAGER_TOKEN }}
         run: |
           eval "$(curl -fsSL s.defang.io/install)"
           ./scripts/check-sample-files.sh > checklist.txt
@@ -42,10 +44,7 @@ jobs:
 
       - name: Add checklist to PR description
         uses: actions/github-script@v5
-        env:
-          GITHUB_TOKEN: ${{ secrets.USERPAT }}
         with:
-          github-token: ${{ secrets.USERPAT }}
           script: |
             const script = require('./scripts/add-checklist-to-pr.js');
             try {
