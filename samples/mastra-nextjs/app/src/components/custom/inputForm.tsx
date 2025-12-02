@@ -45,7 +45,7 @@ export const InputForm: FC = () => {
       action={handleSubmit}
     >
       <Input
-        placeholder="defanglabs/defang"
+        placeholder="facebook/react"
         className={cn("h-12 text-lg", hasErrored && "ring-1 ring-destructive")}
         type="text"
         name="input"
