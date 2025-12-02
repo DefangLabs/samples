@@ -12,6 +12,13 @@ services:
         target: 5432
         published: 5432
 
+    # Adjust resources as needed
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      cpus: "1.0"
+    #      memory: 512M
+
   django:
     # uncomment to add your own domain
     # domainname: example.com

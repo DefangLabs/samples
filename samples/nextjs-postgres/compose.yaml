@@ -30,3 +30,9 @@ services:
       - target: 5432
         published: 5432
         mode: host
+    # Adjust resources as needed
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      cpus: "1.0"
+    #      memory: 512M
