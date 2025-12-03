@@ -7,7 +7,7 @@ click-didyoumean==0.3.1
 click-plugins==1.1.1
 click-repl==0.3.0
 dj-database-url==2.3.0
-Django==5.1.7
+Django==5.1.15
 gitdb==4.0.11
 GitPython==3.1.41
 kombu==5.5.0
