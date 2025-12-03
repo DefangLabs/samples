@@ -37,7 +37,7 @@ decorator==5.2.1
 Deprecated==1.2.18
 distro==1.9.0
 dj-database-url==2.3.0
-Django==4.2.21
+Django==4.2.27
 django-cors-headers==4.7.0
 docstring_parser==0.16
 durationpy==0.10
