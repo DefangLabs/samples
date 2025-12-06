@@ -1,4 +1,7 @@
 AWS_REGION="us-west-2"
 DEFANG_MODE="affordable"
-DEFANG_PROVIDER="aws"
+DEFANG_PROVIDER="gcp"
 AWS_PROFILE="defang-lab"
+GCP_PROJECT_ID="cloudbuildtest-468719"
+DEFANG_DEBUG="true"
+DEFANG_VERBOSE="true"

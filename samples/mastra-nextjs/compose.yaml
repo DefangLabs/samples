@@ -8,7 +8,8 @@ services:
       - DB_URL=postgres://postgres:${POSTGRES_PASSWORD}@database:5432/postgres
       - DB_SSL=true #set this to false if deploying to defang playground
       - GITHUB_TOKEN
-      - DEFANG_PROVIDER=aws
+      - DEFANG_PROVIDER=gcp
+      - LLM_MODEL=gemini-2.5-flash #anthropic.claude-3-5-sonnet-20241022-v2:0
     restart: unless-stopped
     ports:
       - mode: ingress

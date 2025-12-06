@@ -1,6 +1,7 @@
 import { Agent } from "@mastra/core/agent";
 import { createAmazonBedrock } from "@ai-sdk/amazon-bedrock";
 import { fromNodeProviderChain } from "@aws-sdk/credential-providers";
+import { createVertex } from "@ai-sdk/google-vertex";
 
 import { getMemory } from "../memory";
 import { instructions } from "./instructions";
@@ -11,29 +12,27 @@ import { getRepositoryCommits } from "../tools/getRepositoryCommits";
 import { getRepositoryPullRequests } from "../tools/getRepositoryPullRequests";
 import { getRepositoryStars } from "../tools/getRepositoryStars";
 
-function makeModel(modelName: string, cloudProvider: string) {
-  if (cloudProvider === "aws") {
-    return createAmazonBedrock({
-      credentialProvider: fromNodeProviderChain(),
-    })(modelName);
-  }
-
-  if (cloudProvider === "gcp") {
-    throw new Error("GCP provider is not implemented yet");
-  }
-
-  return null;
+function AWSModelProvider(modelName: string) {
+  return createAmazonBedrock({
+    credentialProvider: fromNodeProviderChain(),
+  })(modelName);
 }
 
-const bedrock = createAmazonBedrock({
-  credentialProvider: fromNodeProviderChain(),
-});
+function GCPModelProvider(model: string) {
+  return createVertex({
+    project: "cloudbuildtest-468719",
+    location: "us-central1",
+  })(model);
+}
 
 export const agent = new Agent({
   name: "agent",
   instructions,
   memory: getMemory,
-  model: bedrock("us.amazon.nova-lite-v1:0"),
+  model:
+    process.env.DEFANG_PROVIDER === "aws"
+      ? AWSModelProvider(process.env.LLM_MODEL || "us.amazon.nova-lite-v1:0")
+      : GCPModelProvider(process.env.LLM_MODEL || "gemini-2.5-pro"),
   tools: {
     getFilePaths,
     getFileContent,
