@@ -1,0 +1,4 @@
+AWS_REGION="us-west-2"
+DEFANG_MODE="affordable"
+DEFANG_PROVIDER="aws"
+AWS_PROFILE="defang-lab"

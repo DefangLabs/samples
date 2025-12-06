@@ -1,13 +1,14 @@
 services:
   app:
+    x-defang-llm: true
     build:
       context: ./app
       dockerfile: Dockerfile
     environment:
       - DB_URL=postgres://postgres:${POSTGRES_PASSWORD}@database:5432/postgres
       - DB_SSL=true #set this to false if deploying to defang playground
-      - GOOGLE_GENERATIVE_AI_API_KEY
       - GITHUB_TOKEN
+      - DEFANG_PROVIDER=aws
     restart: unless-stopped
     ports:
       - mode: ingress
