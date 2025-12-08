@@ -11,12 +11,12 @@ importers:
       '@ai-sdk/amazon-bedrock':
         specifier: ^3.0.67
         version: 3.0.67(zod@4.1.13)
-      '@ai-sdk/google':
-        specifier: ^2.0.44
-        version: 2.0.44(zod@4.1.13)
       '@ai-sdk/google-vertex':
         specifier: ^3.0.86
         version: 3.0.86(zod@4.1.13)
+      '@ai-sdk/provider':
+        specifier: ^2.0.0
+        version: 2.0.0
       '@assistant-ui/react':
         specifier: ^0.11.39
         version: 0.11.47(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(use-sync-external-store@1.6.0(react@19.2.0))

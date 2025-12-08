@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@ai-sdk/amazon-bedrock": "^3.0.67",
-    "@ai-sdk/google": "^2.0.44",
     "@ai-sdk/google-vertex": "^3.0.86",
+    "@ai-sdk/provider": "^2.0.0",
     "@assistant-ui/react": "^0.11.39",
     "@assistant-ui/react-ai-sdk": "^1.1.11",
     "@assistant-ui/react-markdown": "^0.11.4",

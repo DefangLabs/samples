@@ -7,9 +7,11 @@ services:
     environment:
       - DB_URL=postgres://postgres:${POSTGRES_PASSWORD}@database:5432/postgres
       - DB_SSL=true #set this to false if deploying to defang playground
-      - GITHUB_TOKEN
-      - DEFANG_PROVIDER=gcp
-      - LLM_MODEL=gemini-2.5-flash #anthropic.claude-3-5-sonnet-20241022-v2:0
+      - GITHUB_TOKEN #optional, remove this line if unused
+      - DEFANG_PROVIDER=aws # change to gcp when deploying to Google Cloud
+      - DEFANG_GCP_PROJECT # change to your GCP project when deploying to Google Cloud
+      - DEFANG_GCP_LOCATION #should be us-central1 when deploying to Google Cloud, else change to your perferred location
+      - LLM_MODEL=anthropic.claude-3-5-sonnet-20241022-v2:0 #gemini-2.5-flash for GCP, anthroipc.claude-3-5-sonnet-20241022-v2 for AWS
     restart: unless-stopped
     ports:
       - mode: ingress
