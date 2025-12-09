@@ -6,6 +6,7 @@ services:
     environment:
       - DB_URL=postgres://postgres:password@database:5432/postgres
       - DB_SSL=false #set this to true if deploying to defang playground
+      - LLM_MODEL=gemini-2.5-flash
       - GOOGLE_GENERATIVE_AI_API_KEY=xxx
       - GITHUB_TOKEN=xxx # remove this line if unused
 

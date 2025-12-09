@@ -1,17 +1,17 @@
 services:
   app:
+    domainname: example.com
     x-defang-llm: true
     build:
       context: ./app
       dockerfile: Dockerfile
     environment:
       - DB_URL=postgres://postgres:${POSTGRES_PASSWORD}@database:5432/postgres
-      - DB_SSL=true #set this to false if deploying to defang playground
-      - GITHUB_TOKEN #optional, remove this line if unused
-      - DEFANG_PROVIDER # use "gcp" when deploying to Google Cloud, "aws" when deploying to AWS
-      - DEFANG_GCP_PROJECT # change to your GCP project when deploying to Google Cloud
-      - DEFANG_GCP_LOCATION #should be us-central1 when deploying to Google Cloud, else change to your perferred location
-      - LLM_MODEL=anthropic.claude-3-5-sonnet-20241022-v2:0 #gemini-2.5-flash for GCP, anthroipc.claude-3-5-sonnet-20241022-v2 for AWS
+      - DB_SSL=true # set this to false if deploying to defang playground, true otherwise
+      - GOOGLE_VERTEX_PROJECT= # your GCP project ID
+      - GOOGLE_VERTEX_LOCATION= # your GCP region, e.g., us-central1
+      - LLM_MODEL # gemini-2.5-flash for GCP, anthropic.claude-3-5-sonnet-20241022-v2:0 for AWS
+      - GITHUB_TOKEN # optional, remove this line if unused
     restart: unless-stopped
     ports:
       - mode: ingress
