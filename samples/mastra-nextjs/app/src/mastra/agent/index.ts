@@ -13,24 +13,22 @@ import { getRepositoryPullRequests } from "../tools/getRepositoryPullRequests";
 import { getRepositoryStars } from "../tools/getRepositoryStars";
 
 function getModel() {
-  const provider = process.env.AWS_REGION ? "aws" : "gcp";
   const modelName = process.env.LLM_MODEL;
   if (modelName === undefined) {
     throw new Error("LLM_MODEL is not defined in environment variables");
   }
 
-  switch (provider) {
-    case "aws":
-      // https://ai-sdk.dev/providers/ai-sdk-providers/amazon-bedrock#using-aws-sdk-credentials-chain-instance-profiles-instance-roles-ecs-roles-eks-service-accounts-etc
-      return createAmazonBedrock({
-        credentialProvider: fromNodeProviderChain(),
-      })(modelName);
-    case "gcp":
-      // https://ai-sdk.dev/providers/ai-sdk-providers/google-vertex
-      return vertex(modelName);
-    default:
-      return modelName;
+  if (process.env.AWS_REGION) {
+    // https://ai-sdk.dev/providers/ai-sdk-providers/amazon-bedrock#using-aws-sdk-credentials-chain-instance-profiles-instance-roles-ecs-roles-eks-service-accounts-etc
+    return createAmazonBedrock({
+      credentialProvider: fromNodeProviderChain(),
+    })(modelName);
+  } else if (process.env.GOOGLE_VERTEX_LOCATION) {
+    // https://ai-sdk.dev/providers/ai-sdk-providers/google-vertex
+    return vertex(modelName);
   }
+
+  return modelName;
 }
 
 export const agent = new Agent({
