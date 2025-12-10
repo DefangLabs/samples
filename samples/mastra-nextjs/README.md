@@ -26,6 +26,14 @@ To run the application locally for development, use the development compose file
 docker compose -f compose.dev.yaml up
 ```
 
+### `GOOGLE_GENERATIVE_AI_API_KEY`
+
+When running locally with Docker Compose, you will need to set the `GOOGLE_GENERATIVE_AI_API_KEY` environment variable to your GCP API key. You can get the API key from the [Google AI Studio](https://aistudio.google.com/).
+
+### `LLM_MODEL`
+
+When running locally with Docker Compose, you are limited to the models on this list: [Google models](https://mastra.ai/models/providers/google).
+
 This will:
 
 - Start PostgreSQL with volume persistence for local development
@@ -44,17 +52,13 @@ The password for your Postgres database. You need to set this before deploying f
 
 _You can easily set this to a random string using `defang config set POSTGRES_PASSWORD --random`_
 
-### `DEFANG_PROVIDER`
+### `GOOGLE_VERTEX_PROJECT` (Only for GCP deployments)
 
-Set to `gcp` when deploying to Google Cloud, or `aws` when deploying to AWS.
+The GCP project ID where you want to deploy the application. You can find this in the [GCP Console](https://console.cloud.google.com/). This environment variable is used in this library: [google-vertex-ai](https://ai-sdk.dev/providers/ai-sdk-providers/google-vertex).
 
-### `DEFANG_GCP_PROJECT` (Only for GCP deployments)
+### `GOOGLE_VERTEX_LOCATION` (Only for GCP deployments)
 
-The GCP project ID where you want to deploy the application. You can find this in the [GCP Console](https://console.cloud.google.com/).
-
-### `DEFANG_GCP_LOCATION` (Only for GCP deployments)
-
-The GCP region where you want to deploy the application. This should typically be set to `us-central1`, but you can change it to your preferred location.
+The GCP region where you want to deploy the application. This should typically be set to `us-central1`, but you can change it to your preferred location.This environment variable is used in this library: [google-vertex-ai](https://ai-sdk.dev/providers/ai-sdk-providers/google-vertex).
 
 ### `LLM_MODEL`
 
