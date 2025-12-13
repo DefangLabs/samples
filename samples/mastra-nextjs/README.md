@@ -26,6 +26,14 @@ To run the application locally for development, use the development compose file
 docker compose -f compose.dev.yaml up
 ```
 
+### `GOOGLE_GENERATIVE_AI_API_KEY`
+
+When running locally with Docker Compose, you will need to set the `GOOGLE_GENERATIVE_AI_API_KEY` environment variable to your GCP API key. You can get the API key from the [Google AI Studio](https://aistudio.google.com/).
+
+### `LLM_MODEL`
+
+When running locally with Docker Compose, you are limited to the models on this list: [Google models](https://mastra.ai/models/providers/google).
+
 This will:
 
 - Start PostgreSQL with volume persistence for local development
@@ -38,15 +46,23 @@ You can access mastra-nextjs at `http://localhost:3000` once the containers are 
 
 For this sample, you will need to provide the following [configuration](https://docs.defang.io/docs/concepts/configuration). Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
 
-### `GOOGLE_GENERATIVE_AI_API_KEY`
-
-Your Google Generative AI API key for accessing the Gemini Flash model. You can get this from the [Google AI Studio](https://aistudio.google.com/).
-
 ### `POSTGRES_PASSWORD`
 
 The password for your Postgres database. You need to set this before deploying for the first time.
 
 _You can easily set this to a random string using `defang config set POSTGRES_PASSWORD --random`_
+
+### `GOOGLE_VERTEX_PROJECT` (Only for GCP deployments)
+
+The GCP project ID where you want to deploy the application. You can find this in the [GCP Console](https://console.cloud.google.com/). This environment variable is used in this library: [google-vertex-ai](https://ai-sdk.dev/providers/ai-sdk-providers/google-vertex).
+
+### `GOOGLE_VERTEX_LOCATION` (Only for GCP deployments)
+
+The GCP region where you want to deploy the application. This should typically be set to `us-central1`, but you can change it to your preferred location.This environment variable is used in this library: [google-vertex-ai](https://ai-sdk.dev/providers/ai-sdk-providers/google-vertex).
+
+### `LLM_MODEL`
+
+The large language model to use for the AI-powered chat. This can be set to models like `anthropic.claude-3-5-sonnet-20241022-v2:0` for AWS or `gemini-2.5-flash` for Google Cloud. Here is a list of supported models for [GCP](https://ai-sdk.dev/providers/ai-sdk-providers/google-vertex#model-capabilities) and [AWS](https://ai-sdk.dev/providers/ai-sdk-providers/amazon-bedrock#model-capabilities). For AWS make sure you [request access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html) to the model in the AWS Bedrock console.
 
 ### `DB_URL`
 
