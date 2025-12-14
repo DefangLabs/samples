@@ -28,6 +28,7 @@ function getModel() {
     return vertex(modelName);
   }
 
+  // https://ai-sdk.dev/providers/ai-sdk-providers/google-generative-ai
   return modelName;
 }
 
