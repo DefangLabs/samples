@@ -9,10 +9,9 @@ The sample populates the database with some sample data so you can quickly start
 ## Prerequisites
 
 1. Download [Defang CLI](https://github.com/DefangLabs/defang)
-2. Have a managed database service configured and ready, such as [Neon PostgreSQL](https://neon.tech/)
-3. (Optional) If you are using [Defang BYOC](https://docs.defang.io/docs/concepts/defang-byoc) authenticate with your cloud provider account
-4. (Optional for local development) [Docker CLI](https://docs.docker.com/engine/install/)
-5. (Optional) Install the [Hasura CLI](https://hasura.io/docs/latest/hasura-cli/install-hasura-cli/) to create migrations and update metadata for your Hasura GraphQL API
+2. (Optional) If you are using [Defang BYOC](https://docs.defang.io/docs/concepts/defang-byoc) authenticate with your cloud provider account
+3. (Optional for local development) [Docker CLI](https://docs.docker.com/engine/install/)
+Comment view5. (Optional) Install the [Hasura CLI](https://hasura.io/docs/latest/hasura-cli/install-hasura-cli/) to create migrations and update metadata for your Hasura GraphQL API
 
 ## Development
 
