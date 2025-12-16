@@ -44,7 +44,7 @@ durationpy==0.10
 et_xmlfile==2.0.0
 executing==2.2.0
 fastapi==0.115.9
-filelock==3.18.0
+filelock==3.20.1
 flatbuffers==25.2.10
 frozenlist==1.6.0
 fsspec==2025.5.0
