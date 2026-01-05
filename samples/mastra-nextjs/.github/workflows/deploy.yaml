@@ -20,7 +20,8 @@ jobs:
       - name: Deploy
         uses: DefangLabs/defang-github-action@v1.2.0
         with:
-          config-env-vars: POSTGRES_PASSWORD GITHUB_TOKEN
+          config-env-vars: POSTGRES_PASSWORD LLM_MODEL GITHUB_TOKEN
         env:
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          LLM_MODEL: ${{ secrets.LLM_MODEL }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

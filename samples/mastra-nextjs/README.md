@@ -54,6 +54,8 @@ _You can easily set this to a random string using `defang config set POSTGRES_PA
 
 ### `LLM_MODEL`
 
+_You can easily set this using `defang config set LLM_MODEL=<SELECTED_MODEL>`_
+
 The large language model to use for the AI-powered chat. This can be set to models like `anthropic.claude-3-5-sonnet-20241022-v2:0` for AWS or `gemini-2.5-flash` for Google Cloud. Here is a list of supported models for [GCP](https://ai-sdk.dev/providers/ai-sdk-providers/google-vertex#model-capabilities) and [AWS](https://ai-sdk.dev/providers/ai-sdk-providers/amazon-bedrock#model-capabilities). For AWS make sure you [request access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html) to the model in AWS Bedrock console and for GCP make sure you have [request access](https://docs.cloud.google.com/marketplace/docs/enable-ai-models#get-ai-models) to the model in GCP Vertex AI console.
 
 ### `DB_SSL`
@@ -61,6 +63,8 @@ The large language model to use for the AI-powered chat. This can be set to mode
 Set to `true` to enable SSL. Set to `false` to disable SSL, which is used for Defang Playground. (Can be set directly in the Docker Compose file.)
 
 ### `GITHUB_TOKEN` (Optional)
+
+_You can easily set this using `defang config set GITHUB_TOKEN=<YOUR_GITHUB_TOKEN>`_
 
 A [GitHub personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token) to increase API rate limits when fetching repository data. This is optional but recommended for better performance.
 Setting the permissions to public repositories only is sufficient, unless you want to access private repositories that you have access to.
