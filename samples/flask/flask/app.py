@@ -12,7 +12,7 @@ def home():
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Todo List</title>
+    <title>Testing URL Depolyment Extraction</title>
 </head>
 <body>
     <h1>Todo List</h1>
