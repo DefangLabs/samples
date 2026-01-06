@@ -3,18 +3,23 @@ services:
     extends:
       file: compose.yaml
       service: app
+    command: ["pnpm", "run", "dev"]
     environment:
       - DB_URL=postgres://postgres:password@database:5432/postgres
-      - DB_SSL=false #set this to true if deploying to defang playground
-      - GOOGLE_GENERATIVE_AI_API_KEY=xxx
-      - GITHUB_TOKEN=xxx # remove this line if unused
+      - DB_SSL=false
+      - LLM_MODEL=google/gemini-2.5-flash #https://mastra.ai/models/providers/google
+      - GOOGLE_GENERATIVE_AI_API_KEY= #require for local docker compose development
+      - GITHUB_TOKEN= # remove this line if unused
+    volumes: # for hot-reloading during development
+      - ./app:/app
+      - /app/node_modules
 
   database:
-    image: postgres:16
+    extends:
+      file: compose.yaml
+      service: database
     environment:
       - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
     volumes:
       - postgres:/var/lib/postgresql/data
 

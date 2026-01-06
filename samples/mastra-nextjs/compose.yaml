@@ -1,13 +1,14 @@
 services:
   app:
+    x-defang-llm: true
     build:
       context: ./app
       dockerfile: Dockerfile
     environment:
       - DB_URL=postgres://postgres:${POSTGRES_PASSWORD}@database:5432/postgres
-      - DB_SSL=true #set this to false if deploying to defang playground
-      - GOOGLE_GENERATIVE_AI_API_KEY
-      - GITHUB_TOKEN
+      - DB_SSL=false # set this to false if deploying to defang playground, true otherwise
+      - LLM_MODEL # gemini-2.5-flash for GCP, anthropic.claude-3-5-sonnet-20241022-v2:0 for AWS
+      - GITHUB_TOKEN # optional, remove this line if unused
     restart: unless-stopped
     ports:
       - mode: ingress
@@ -20,7 +21,7 @@ services:
 
   database:
     image: postgres:16
-    x-defang-postgres: true # comment when deploying to defang playground
+    x-defang-postgres: true
     restart: always
     environment:
       - POSTGRES_PASSWORD
