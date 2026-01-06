@@ -97,7 +97,7 @@ The large context window of Gemini Flash allows the agent to hold more code in m
 
 ### Defang Playground
 
-When deploying we only allow you to use the model `claude-3-5-haiku-20241022` due to resource constraints in the Playground environment. If you want to use other models, please use [Defang BYOC](https://docs.defang.io/docs/tutorials/deploy-to-your-cloud).
+When deploying, the Playground environment is limited by resource constraints, so only Google Gemini flash or flash-lite models are supported. That said, I recommend using one of the flash models from this[list](https://ai-sdk.dev/providers/ai-sdk-providers/google-vertex#model-capabilities). If you want to use other models, please use [Defang BYOC](https://docs.defang.io/docs/tutorials/deploy-to-your-cloud).
 
 Deploy your application to the Defang Playground by opening up your terminal and typing:
 
