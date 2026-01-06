@@ -122,30 +122,22 @@ func (d *CliDeployer) Deploy(ctx context.Context) error {
 
 // Regex to extract the ENDPOINT column from the service table output
 // Table format: SERVICE   DEPLOYMENT    STATE    FQDN    ENDPOINT    STATUS
-// This captures the 5th column (ENDPOINT)
-var urlRegex = regexp.MustCompile(`^\s*\S+\s+\S+\s+\S+\s+\S+\s+(\S+)`)
+// This captures the 5th column (ENDPOINT), using negative lookahead to skip the header
+var urlRegex = regexp.MustCompile(`(?m)^\s*(?!SERVICE\s)\S+\s+\S+\s+\S+\s+\S+\s+(\S+)`)
 var internalURLRegex = regexp.MustCompile(`\.internal(:\d+)?$`)
 
 func findUrlsInOutput(output string) []string {
 	var urls []string
-	lines := strings.Split(output, "\n")
-	for _, line := range lines {
-		// Skip the header line
-		if strings.HasPrefix(strings.TrimSpace(line), "SERVICE") {
+	matches := urlRegex.FindAllStringSubmatch(output, -1)
+	for _, m := range matches {
+		if len(m) < 2 || m[1] == "" {
 			continue
 		}
-
-		match := urlRegex.FindStringSubmatch(line)
-		if match == nil || len(match) < 2 || match[1] == "" {
-			continue
-		}
-
-		endpoint := match[1]
+		endpoint := m[1]
 		if internalURLRegex.MatchString(endpoint) {
 			log.Printf("Skipping internal URL %v", endpoint)
 			continue
 		}
-
 		// Check if the URL starts with a scheme (http, https, etc.)
 		if strings.HasPrefix(endpoint, "https://") {
 			urls = append(urls, endpoint)
