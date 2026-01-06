@@ -120,23 +120,23 @@ func (d *CliDeployer) Deploy(ctx context.Context) error {
 	return err
 }
 
-var urlRegex = regexp.MustCompile(`DEPLOYMENT_COMPLETED\s*([^\s]+)`)
+var urlRegex = regexp.MustCompile(`DEPLOYMENT_COMPLETED\s+(\S+)\s+(\S+)`)
 var internalURLRegex = regexp.MustCompile(`\.internal:\d+$`)
 
 func findUrlsInOutput(output string) []string {
 	var urls []string
 	match := urlRegex.FindAllStringSubmatch(output, -1)
 	for _, m := range match {
-		if m[1] == "" {
+		if len(m) < 3 || m[2] == "" {
 			continue
 		}
-		if internalURLRegex.MatchString(m[1]) {
-			log.Printf("Skipping internal URL %v", m[1])
+		if internalURLRegex.MatchString(m[2]) {
+			log.Printf("Skipping internal URL %v", m[2])
 			continue
 		}
 		// Check if the URL starts with a scheme (http, https, etc.)
-		if strings.HasPrefix(m[1], "https://") {
-			urls = append(urls, m[1])
+		if strings.HasPrefix(m[2], "https://") {
+			urls = append(urls, m[2])
 		}
 	}
 	return urls
