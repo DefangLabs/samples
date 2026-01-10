@@ -60,7 +60,9 @@ The large language model to use for the AI-powered chat. This can be set to mode
 
 ### `DB_SSL`
 
-Set to `true` to enable SSL. Set to `false` to disable SSL, which is used for Defang Playground. (Can be set directly in the Docker Compose file.)
+_You can easily set this using `defang config set DB_SSL=<true|false>`_
+
+Set to `true` to enable SSL for AWS and GCP. Set to `false` to disable SSL, which is used for Defang Playground.
 
 ### `GITHUB_TOKEN` (Optional)
 
