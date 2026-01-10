@@ -6,9 +6,9 @@ services:
       dockerfile: Dockerfile
     environment:
       - DB_URL=postgres://postgres:${POSTGRES_PASSWORD}@database:5432/postgres
-      - DB_SSL=false # set this to false if deploying to defang playground, true otherwise
-      - LLM_MODEL # gemini-2.5-flash for GCP, anthropic.claude-3-5-sonnet-20241022-v2:0 for AWS
-      - GITHUB_TOKEN # optional, remove this line if unused
+      - DB_SSL # set this to true if deploying to AWS and GCP, otherwise it is false deploying to Defang Playground
+      - LLM_MODEL # recommended gemini-2.5-flash for GCP or anthropic.claude-3-5-sonnet-20241022-v2:0 for AWS
+      - GITHUB_TOKEN # remove this line if unused; optional, but recommended to avoid rate limiting when fetching from GitHub
     restart: unless-stopped
     ports:
       - mode: ingress
