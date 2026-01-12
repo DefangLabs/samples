@@ -1,0 +1,17 @@
+services:
+  app:
+    restart: "unless-stopped"
+    # uncomment to add your own domain
+    # domainname: example.com
+    build:
+      context: ./app
+    environment:
+      PORT: 5173
+    ports:
+      - target: 5173
+        published: 5173
+        mode: ingress
+    deploy:
+      resources:
+        reservations:
+          memory: 512M

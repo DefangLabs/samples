@@ -10,6 +10,7 @@ services:
       - POSTGRES_URL=postgres://postgres:${POSTGRES_PASSWORD}@database:5432/postgres
     depends_on:
       - database
+      - migrate
       - broker
     ports:
       - mode: ingress
@@ -21,6 +22,19 @@ services:
       timeout: 10s
       retries: 3
       start_period: 20s
+
+  migrate:
+    restart: no
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    environment:
+      - SECRET_KEY
+      - REDIS_URL=redis://broker:6379/0
+      - POSTGRES_URL=postgres://postgres:${POSTGRES_PASSWORD}@database:5432/postgres
+    depends_on:
+      - database
+    command: python manage.py migrate
 
   worker:
     restart: unless-stopped
@@ -37,6 +51,7 @@ services:
     depends_on:
       - database
       - broker
+      - migrate
     command: celery -A django_celery worker --loglevel=info
 
   database:
@@ -55,7 +70,7 @@ services:
       retries: 5
 
   broker:
-    image: redis:7
+    image: redis:7.1
     x-defang-redis: true
     ports:
       - mode: host

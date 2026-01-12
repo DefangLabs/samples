@@ -1,0 +1,29 @@
+services:
+  postgres:
+    extends:
+      file: compose.yaml
+      service: postgres
+    environment:
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - db_storage:/var/lib/postgresql/data
+
+  n8n:
+    extends:
+      file: compose.yaml
+      service: n8n
+    environment:
+      - DB_POSTGRESDB_SSL_ENABLED=false
+      - DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED=true # counterintuitive, but leave this as true to *disable* SSL (required for local dev)
+      - N8N_ENCRYPTION_KEY=unsafe-encryption-key
+      - N8N_PROTOCOL=http
+      - N8N_HOST=localhost
+      - WEBHOOK_URL=http://localhost:5678/
+      - N8N_PROXY_HOPS=0
+      - DB_POSTGRESDB_PASSWORD=password
+    volumes:
+      - n8n_storage:/home/node/.n8n
+
+volumes:
+  db_storage:
+  n8n_storage:

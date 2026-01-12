@@ -120,7 +120,26 @@ func (d *CliDeployer) Deploy(ctx context.Context) error {
 	return err
 }
 
-var urlRegex = regexp.MustCompile(`will be available at:\s*.*?(https://[^\s]+)`)
+var urlRegex = regexp.MustCompile(`DEPLOYMENT_COMPLETED.+(https://\S+)`)
+var internalURLRegex = regexp.MustCompile(`\.internal:\d+$`)
+
+func findUrlsInOutput(output string) []string {
+	var urls []string
+	match := urlRegex.FindAllStringSubmatch(output, -1)
+
+	// Will never be nil if there is a match
+	for _, m := range match {
+		// Skip internal URLs
+		if internalURLRegex.MatchString(m[1]) {
+			log.Printf("Skipping internal URL %v", m[1])
+			continue
+		}
+
+		// Add the URL if there a https URL found
+		urls = append(urls, m[1])
+	}
+	return urls
+}
 
 func (d *CliDeployer) RunDeployTest(ctx context.Context, t test.TestInfo) (*test.ItemResult, error) {
 	log := d.Logger
@@ -155,22 +174,6 @@ func (d *CliDeployer) RunDeployTest(ctx context.Context, t test.TestInfo) (*test
 		},
 	}
 
-	d.RunCommand(cmdCtx, func(cmd *exec.Cmd) {
-		if t.Stdout != nil {
-			cmd.Stdout = io.MultiWriter(&d.Stdout, t.Stdout, detector)
-		} else {
-			cmd.Stdout = io.MultiWriter(&d.Stdout, detector)
-		}
-		if t.Stderr != nil {
-			cmd.Stderr = io.MultiWriter(&d.Stderr, t.Stderr, detector)
-		} else {
-			cmd.Stderr = io.MultiWriter(&d.Stderr, detector)
-		}
-		cmd.Cancel = func() error {
-			return cmd.Process.Signal(os.Interrupt) // Use interrupt signal to stop the command when context is cancelled
-		}
-	}, "defang", "-C", "/tmp/", "compose", "down", "--detach")
-
 	d.HasDeployed = true
 	start := time.Now()
 	cmd, err := d.RunCommand(cmdCtx, func(cmd *exec.Cmd) {
@@ -204,10 +207,11 @@ func (d *CliDeployer) RunDeployTest(ctx context.Context, t test.TestInfo) (*test
 		result.DeploySucceeded = cmd.ProcessState.Success()
 	}
 
-	var urls []string
-	match := urlRegex.FindAllStringSubmatch(d.Stdout.String(), -1)
-	for _, m := range match {
-		urls = append(urls, m[1])
+	urls := findUrlsInOutput(d.Stdout.String())
+	if len(urls) == 0 {
+		result.Message = "No service URLs found in deployment output"
+		log.Printf(result.Message)
+		return result, fmt.Errorf(result.Message)
 	}
 
 	result.TotalServices = len(urls)
