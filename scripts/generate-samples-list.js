@@ -78,10 +78,10 @@ function generateTable(samples) {
     // Create link with title as display text
     const link = `[${title}](./samples/${name})`;
 
-    // Escape any pipe characters in the content
-    description = description.replace(/\|/g, "\\|");
-    tags = tags.replace(/\|/g, "\\|");
-    languages = languages.replace(/\|/g, "\\|");
+    // Escape backslashes and pipe characters for markdown table
+    description = escapeMarkdownTableCell(description);
+    tags = escapeMarkdownTableCell(tags);
+    languages = escapeMarkdownTableCell(languages);
 
     lines.push(`| ${link} | ${description} | ${tags} | ${languages} |`);
   }
@@ -174,7 +174,15 @@ ${END_MARKER}`;
 }
 
 function escapeRegExp(string) {
-  return string.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&");
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/**
+ * Escape a string for use in a markdown table cell.
+ * Backslashes must be escaped first, then pipes.
+ */
+function escapeMarkdownTableCell(text) {
+  return text.replace(/\\/g, "\\\\").replace(/\|/g, "\\|");
 }
 
 main();
