@@ -32,6 +32,13 @@ services:
       - mode: host
         target: 6379
 
+    # Adjust resources as needed
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      cpus: "1.0"
+    #      memory: 512M
+
   migrate:
     restart: "no"
     build:
@@ -55,3 +62,10 @@ services:
       - POSTGRES_PASSWORD
       - POSTGRES_DB=djangodatabase
       - POSTGRES_USER=djangouser
+
+    # Adjust resources as needed
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      cpus: "1.0"
+    #      memory: 512M

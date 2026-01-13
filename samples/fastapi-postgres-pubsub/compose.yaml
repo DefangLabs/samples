@@ -18,6 +18,13 @@ services:
       retries: 3
       start_period: 10s
 
+    # Adjust resources as needed
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      cpus: "1.0"
+    #      memory: 512M
+
   app_b:
     build:
       context: ./app
@@ -53,3 +60,10 @@ services:
       retries: 5
       start_period: 5s
 
+
+    # Adjust resources as needed
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      cpus: "1.0"
+    #      memory: 512M
