@@ -1,0 +1,27 @@
+services:
+  app:
+    extends:
+      file: compose.yaml
+      service: app
+    command: ["pnpm", "run", "dev"]
+    environment:
+      - DB_URL=postgres://postgres:password@database:5432/postgres
+      - DB_SSL=false
+      - LLM_MODEL=google/gemini-2.5-flash #https://mastra.ai/models/providers/google
+      - GOOGLE_GENERATIVE_AI_API_KEY= #require for local docker compose development
+      - GITHUB_TOKEN= # remove this line if unused
+    volumes: # for hot-reloading during development
+      - ./app:/app
+      - /app/node_modules
+
+  database:
+    extends:
+      file: compose.yaml
+      service: database
+    environment:
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+volumes:
+  postgres: {}
