@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FastAPI Chat</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #f4f4f5;
+            display: flex;
+            justify-content: center;
+            padding: 2rem;
+            margin: 0;
+        }
+        main {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            width: min(640px, 100%);
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+        }
+        h1 {
+            margin-top: 0;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+        li {
+            padding: 0.5rem 0.75rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        li:last-child {
+            border-bottom: none;
+        }
+        form {
+            display: flex;
+            gap: 0.75rem;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            border: 1px solid #cbd5f5;
+            font-size: 1rem;
+        }
+        button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            background: #2563eb;
+            color: #ffffff;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        #status {
+            margin-top: 0.75rem;
+            color: #475569;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>FastAPI Chat</h1>
+        <p id="status">Connecting…</p>
+        <ul id="messages"></ul>
+        <form id="form" autocomplete="off">
+            <input type="text" id="input" placeholder="Type a message" required maxlength="500">
+            <button type="submit">Send</button>
+        </form>
+    </main>
+
+    <script>
+        const statusEl = document.getElementById('status');
+        const messagesEl = document.getElementById('messages');
+        const formEl = document.getElementById('form');
+        const inputEl = document.getElementById('input');
+        let socket;
+
+        function addMessage(entry) {
+            const item = document.createElement('li');
+            const created = new Date(entry.created_at).toLocaleTimeString();
+            item.textContent = `[${created}] ${entry.message}`;
+            messagesEl.appendChild(item);
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+
+        function setHistory(messages) {
+            messagesEl.innerHTML = '';
+            messages.forEach(addMessage);
+        }
+
+        async function sendMessage(text) {
+            await fetch('/messages', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: text })
+            });
+        }
+
+        function connect() {
+            const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+            socket = new WebSocket(`${protocol}://${window.location.host}/ws`);
+
+            socket.addEventListener('open', () => {
+                statusEl.textContent = 'Connected. Messages now stream in real time.';
+            });
+
+            socket.addEventListener('message', (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    if (data.type === 'history') {
+                        setHistory(data.messages || []);
+                    } else if (data.type === 'message') {
+                        addMessage(data.data);
+                    }
+                } catch (error) {
+                    console.error('Failed to read message', error);
+                }
+            });
+
+            socket.addEventListener('close', () => {
+                statusEl.textContent = 'Disconnected. Reconnecting…';
+                setTimeout(connect, 2000);
+            });
+
+            socket.addEventListener('error', () => {
+                socket.close();
+            });
+        }
+
+        formEl.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const text = inputEl.value.trim();
+            if (!text) {
+                return;
+            }
+            inputEl.value = '';
+            inputEl.focus();
+            try {
+                await sendMessage(text);
+            } catch (error) {
+                statusEl.textContent = 'Failed to send message. Try again in a moment.';
+                console.error(error);
+            }
+        });
+
+        connect();
+    </script>
+</body>
+</html>

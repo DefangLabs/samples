@@ -1,0 +1,30 @@
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Python
+__pycache__/
+/myenv
+
+# Node.js
+node_modules/
+npm-debug.log*
+.pnpm-debug.log*
+
+# Frontend build
+frontend/dist/
+frontend/build/
+
+# IDE
+.vscode/
+.idea/
+*~
+
+# OS
+.DS_Store
+._*
+Thumbs.db
+
+# Optional npm cache directory
+.npm

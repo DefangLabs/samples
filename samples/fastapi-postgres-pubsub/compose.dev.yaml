@@ -1,0 +1,34 @@
+services:
+  app_a:
+    extends:
+      file: compose.yaml
+      service: app_a
+    volumes:
+      - ./app:/app
+    environment:
+      DATABASE_URL: postgresql://postgres:password@postgres:5432/postgres
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+  app_b:
+    extends:
+      file: compose.yaml
+      service: app_b
+    volumes:
+      - ./app:/app
+    environment:
+      DATABASE_URL: postgresql://postgres:password@postgres:5432/postgres
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+  postgres:
+    extends:
+      file: compose.yaml
+      service: postgres
+    environment:
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "55432:5432"
+
+volumes:
+  postgres_data:
