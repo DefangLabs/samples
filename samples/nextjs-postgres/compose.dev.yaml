@@ -3,7 +3,7 @@ services:
     extends:
       file: compose.yaml
       service: app
-    build: 
+    build:
       target: development
     volumes:
       - ./app:/app
@@ -13,7 +13,7 @@ services:
       POSTGRES_HOST: database
       POSTGRES_PORT: 5432
       POSTGRES_DB: postgres
-      POSTGRES_SSL: ""
+      POSTGRES_SSL: false
     healthcheck: {}
     command: npm run dev
 
@@ -28,4 +28,3 @@ services:
 
 volumes:
   postgres: {}
-  

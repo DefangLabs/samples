@@ -15,9 +15,9 @@ services:
       POSTGRES_HOST: database
       POSTGRES_PORT: 5432
       POSTGRES_DB: postgres
-      POSTGRES_SSL: false
+      POSTGRES_SSL: # SSL only supported on AWS and GCP managed Postgres instances; otherwise false for Defang Playground
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000" ]
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
     depends_on:
       - database
 
