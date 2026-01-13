@@ -14,12 +14,13 @@ jobs:
       id-token: write
 
     steps:
-    - name: Checkout Repo
-      uses: actions/checkout@v4
+      - name: Checkout Repo
+        uses: actions/checkout@v4
 
-    - name: Deploy
-      uses: DefangLabs/defang-github-action@v1.1.0
-      with:
-        config-env-vars: POSTGRES_PASSWORD
-      env:
-        POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      - name: Deploy
+        uses: DefangLabs/defang-github-action@v1.1.0
+        with:
+          config-env-vars: POSTGRES_PASSWORD POSTGRES_SSL
+        env:
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_SSL: ${{ secrets.POSTGRES_SSL }}

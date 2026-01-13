@@ -23,8 +23,16 @@ docker compose -f compose.dev.yaml up --build
 For this sample, you will need to provide the following [configuration](https://docs.defang.io/docs/concepts/configuration). Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
 
 ### `POSTGRES_PASSWORD`
+
 A password that will be used to connect to the Postgres database.
 
+_You can easily set this to a random string using `defang config set POSTGRES_PASSWORD --random`_
+
+## `POSTGRES_SSL`
+
+We recommend enabling SSL when deploying to AWS and GCP to use managed Postgres instances on cloud providers like AWS RDS or GCP Cloud SQL. If you are using such a managed database, set this value to `true`. If you are using the Defang Playground Postgres instance or want to use a containerized Postgres instance without SSL, set this value to `false`.
+
+_You can easily set this using `defang config set POSTGRES_SSL=<true|false>`_
 
 ## Deploying
 

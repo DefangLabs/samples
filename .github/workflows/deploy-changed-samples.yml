@@ -103,6 +103,7 @@ jobs:
           TEST_NC_S3_ACCESS_SECRET: ${{ secrets.TEST_NC_S3_ACCESS_SECRET }}
           TEST_OPENAI_KEY: ${{ secrets.TEST_OPENAI_KEY }}
           TEST_POSTGRES_PASSWORD: ${{ secrets.TEST_POSTGRES_PASSWORD }}
+          TEST_POSTGRES_SSL: ${{ secrets.TEST_POSTGRES_SSL }}
           TEST_PROJECT_HONEYPOT_KEY: ${{ secrets.TEST_PROJECT_HONEYPOT_KEY}}
           TEST_QUEUE: ${{ secrets.TEST_QUEUE }}
           TEST_SECRET_KEY: ${{ secrets.TEST_SECRET_KEY }}
