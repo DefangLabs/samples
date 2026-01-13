@@ -36,19 +36,11 @@ services:
       DATABASE_URL: postgres://postgres:password@postgres:5432/postgres
       DJANGO_SECRET_KEY: 5k6qi_gzy65bz2soxl6k(rsrw)0z3ws!zmjzsbe+wkp1ovfayg
 
+models:
   llm:
-    provider:
-      type: model
-      options:
-        model: ai/gemma3:1B-Q4_K_M
-    x-defang-llm: true
-
+    model: ai/gemma3:1B-Q4_K_M
   embedding:
-    provider:
-      type: model
-      options:
-        model: ai/mxbai-embed-large
-    x-defang-llm: true
+    model: ai/mxbai-embed-large
 
 volumes:
   pgdata:
