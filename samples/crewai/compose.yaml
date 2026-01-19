@@ -6,8 +6,12 @@ services:
     x-defang-postgres: true
     ports:
       - mode: host
-        target: 5432  
+        target: 5432
         published: 5432
+    deploy:
+      resources:
+        reservations:
+          memory: 256M
 
   redis:
     image: redis:6.2
@@ -16,6 +20,10 @@ services:
       - mode: host
         target: 6379
         published: 6379
+    deploy:
+      resources:
+        reservations:
+          memory: 128M
 
   app:
     build:
@@ -40,6 +48,10 @@ services:
       timeout: 10s
       retries: 10
       start_period: 60s
+    deploy:
+      resources:
+        reservations:
+          memory: 512M
 
   worker:
     build:
@@ -57,6 +69,10 @@ services:
       REDIS_URL: redis://redis:6379/0
       OPENAI_API_KEY: "defang"
       DJANGO_SECRET_KEY:
+    deploy:
+      resources:
+        reservations:
+          memory: 256M
 
   llm:
     provider:
@@ -67,6 +83,10 @@ services:
     environment:
       OPENAI_API_KEY: "defang"
       DEBUG: "true"
+    deploy:
+      resources:
+        reservations:
+          memory: 512M
 
   embedding:
     provider:
@@ -77,3 +97,7 @@ services:
     environment:
       OPENAI_API_KEY: "defang"
       DEBUG: "true"
+    deploy:
+      resources:
+        reservations:
+          memory: 256M
