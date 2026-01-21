@@ -1,3 +1,4 @@
+name: react-vite-railpack
 services:
   app:
     restart: unless-stopped
@@ -13,4 +14,3 @@ services:
       resources:
         reservations:
           memory: 512M
-name: react-vite-railpack

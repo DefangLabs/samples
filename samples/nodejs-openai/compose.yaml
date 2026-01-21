@@ -1,3 +1,4 @@
+name: nodejs-openai
 services:
   app:
     restart: unless-stopped
@@ -20,4 +21,3 @@ services:
       - curl
       - -f
       - http://localhost:3000/
-name: nodejs-openai

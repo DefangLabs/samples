@@ -1,3 +1,4 @@
+name: huginn
 services:
   huginn:
     image: ghcr.io/huginn/huginn
@@ -38,4 +39,3 @@ services:
     - mode: host
       target: 5432
       published: 5432
-name: huginn

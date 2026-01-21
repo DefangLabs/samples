@@ -1,3 +1,4 @@
+name: django-celery
 services:
   web:
     restart: unless-stopped
@@ -83,4 +84,3 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-name: django-celery

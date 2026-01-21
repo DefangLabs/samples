@@ -1,3 +1,4 @@
+name: platformatic
 services:
   app:
     build:
@@ -20,4 +21,3 @@ services:
         limits:
           cpus: '0.5'
           memory: 512M
-name: platformatic

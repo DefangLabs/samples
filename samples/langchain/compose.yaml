@@ -1,3 +1,4 @@
+name: langchain
 services:
   langchain-app:
     build:
@@ -16,4 +17,3 @@ services:
       - curl
       - -f
       - http://localhost:8080/
-name: langchain

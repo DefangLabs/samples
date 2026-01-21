@@ -1,3 +1,4 @@
+name: metabase
 services:
   metabase:
     restart: unless-stopped
@@ -27,4 +28,3 @@ services:
         reservations:
           cpus: '0.5'
           memory: 1024M
-name: metabase

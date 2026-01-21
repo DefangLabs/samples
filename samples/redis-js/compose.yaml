@@ -1,3 +1,4 @@
+name: redis-js
 services:
   app:
     build: ./app
@@ -16,4 +17,3 @@ services:
       published: 6379
       protocol: tcp
       mode: host
-name: redis-js

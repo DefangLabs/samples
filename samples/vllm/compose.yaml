@@ -1,3 +1,4 @@
+name: vllm
 services:
   mistral:
     restart: unless-stopped
@@ -65,4 +66,3 @@ services:
     - OPENAI_BASE_URL=http://mistral:8000/v1/
     depends_on:
     - mistral
-name: vllm

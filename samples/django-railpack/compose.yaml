@@ -1,3 +1,4 @@
+name: django-railpack
 services:
   django:
     restart: unless-stopped
@@ -11,4 +12,3 @@ services:
     command:
     - python manage.py migrate && python manage.py createsuperauto && gunicorn defang_sample.wsgi:application
       --bind 0.0.0.0:8000
-name: django-railpack

@@ -1,3 +1,4 @@
+name: csharp-dotnet
 services:
   web:
     image: csharp-dotnet
@@ -8,4 +9,3 @@ services:
     - target: 80
       published: 8080
       mode: ingress
-name: csharp-dotnet

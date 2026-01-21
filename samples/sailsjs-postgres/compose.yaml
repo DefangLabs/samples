@@ -1,3 +1,4 @@
+name: sailsjs-postgres
 services:
   app:
     restart: unless-stopped
@@ -24,4 +25,3 @@ services:
 networks:
   app-network:
     driver: bridge
-name: sailsjs-postgres

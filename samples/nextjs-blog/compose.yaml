@@ -1,3 +1,4 @@
+name: nextjs-blog
 services:
   blogstarter:
     restart: unless-stopped
@@ -12,4 +13,3 @@ services:
       resources:
         reservations:
           memory: 1GB
-name: nextjs-blog

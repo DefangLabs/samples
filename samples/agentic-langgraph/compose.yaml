@@ -1,3 +1,4 @@
+name: agentic-langgraph
 services:
   app:
     build:
@@ -29,4 +30,3 @@ services:
         reservations:
           cpus: 0.25
           memory: 512MB
-name: agentic-langgraph

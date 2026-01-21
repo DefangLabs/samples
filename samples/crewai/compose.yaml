@@ -1,3 +1,4 @@
+name: crewai
 services:
   postgres:
     image: pgvector/pgvector:pg16
@@ -76,4 +77,3 @@ services:
     environment:
       OPENAI_API_KEY: defang
       DEBUG: 'true'
-name: crewai

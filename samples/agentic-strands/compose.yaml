@@ -1,3 +1,4 @@
+name: agentic-strands
 services:
   app:
     build:
@@ -38,4 +39,3 @@ services:
         reservations:
           cpus: 0.25
           memory: 512MB
-name: agentic-strands

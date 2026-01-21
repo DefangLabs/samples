@@ -1,3 +1,4 @@
+name: python-minimal
 services:
   app:
     restart: unless-stopped
@@ -17,4 +18,3 @@ services:
       - curl
       - -f
       - http://localhost:5000/
-name: python-minimal

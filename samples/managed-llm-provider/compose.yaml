@@ -1,3 +1,4 @@
+name: managed-llm-provider
 services:
   app:
     build:
@@ -41,4 +42,3 @@ services:
         reservations:
           cpus: 0.25
           memory: 512MB
-name: managed-llm-provider

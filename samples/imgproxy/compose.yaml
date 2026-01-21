@@ -1,3 +1,4 @@
+name: imgproxy
 services:
   imgproxy:
     restart: unless-stopped
@@ -11,4 +12,3 @@ services:
       resources:
         reservations:
           memory: 256M
-name: imgproxy

@@ -1,3 +1,4 @@
+name: fastapi
 services:
   fastapi:
     restart: always
@@ -8,4 +9,3 @@ services:
     - mode: ingress
       target: 8000
       published: 8000
-name: fastapi

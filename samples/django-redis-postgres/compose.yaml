@@ -1,3 +1,4 @@
+name: django-redis-postgres
 services:
   app:
     build:
@@ -48,4 +49,3 @@ services:
     - POSTGRES_PASSWORD
     - POSTGRES_DB=djangodatabase
     - POSTGRES_USER=djangouser
-name: django-redis-postgres

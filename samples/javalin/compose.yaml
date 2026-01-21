@@ -1,3 +1,4 @@
+name: javalin
 services:
   javalin-app:
     build:
@@ -12,4 +13,3 @@ services:
       - curl
       - -f
       - http://localhost:7000/
-name: javalin

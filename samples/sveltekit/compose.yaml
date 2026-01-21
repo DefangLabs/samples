@@ -1,3 +1,4 @@
+name: sveltekit
 services:
   sveltekit:
     restart: unless-stopped
@@ -13,4 +14,3 @@ services:
         reservations:
           cpus: '0.50'
           memory: 512M
-name: sveltekit

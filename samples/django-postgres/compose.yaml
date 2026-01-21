@@ -1,3 +1,4 @@
+name: django-postgres
 services:
   db:
     restart: unless-stopped
@@ -28,4 +29,3 @@ services:
     - ALLOWED_HOSTS
     depends_on:
     - db
-name: django-postgres

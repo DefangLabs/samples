@@ -1,3 +1,4 @@
+name: golang-openai
 services:
   app:
     restart: unless-stopped
@@ -19,4 +20,3 @@ services:
       - curl
       - -f
       - http://localhost:8080/
-name: golang-openai

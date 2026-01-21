@@ -1,3 +1,4 @@
+name: nextjs-claude
 services:
   nextjs-claude:
     build:
@@ -19,4 +20,3 @@ services:
       - curl
       - -f
       - http://localhost:3000/
-name: nextjs-claude

@@ -1,3 +1,4 @@
+name: bullmq-bullboard-redis
 services:
   board:
     restart: unless-stopped
@@ -59,4 +60,3 @@ services:
     ports:
     - mode: host
       target: 6379
-name: bullmq-bullboard-redis

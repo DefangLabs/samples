@@ -1,3 +1,4 @@
+name: jupyter-postgres
 services:
   jupyter:
     build:
@@ -36,4 +37,3 @@ services:
       - pg_isready -U postgres
     environment:
       POSTGRES_PASSWORD: null
-name: jupyter-postgres

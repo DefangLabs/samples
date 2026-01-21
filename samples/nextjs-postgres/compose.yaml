@@ -1,3 +1,4 @@
+name: nextjs-postgres
 services:
   app:
     build:
@@ -31,4 +32,3 @@ services:
     - target: 5432
       published: 5432
       mode: host
-name: nextjs-postgres

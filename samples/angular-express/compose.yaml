@@ -1,3 +1,4 @@
+name: angular-express
 services:
   angular-frontend:
     build:
@@ -28,4 +29,3 @@ services:
         reservations:
           memory: 64M
     command: npm run prod
-name: angular-express

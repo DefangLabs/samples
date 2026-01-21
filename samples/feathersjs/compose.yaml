@@ -1,3 +1,4 @@
+name: feathersjs
 services:
   app:
     build:
@@ -10,4 +11,3 @@ services:
       mode: ingress
     environment:
     - NODE_ENV=production
-name: feathersjs

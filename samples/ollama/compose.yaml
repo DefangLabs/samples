@@ -1,3 +1,4 @@
+name: ollama
 services:
   ollama:
     build:
@@ -43,4 +44,3 @@ services:
     - LOAD_MODEL=llama3.2:1b
     depends_on:
     - ollama
-name: ollama

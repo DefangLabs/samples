@@ -1,3 +1,4 @@
+name: fastapi-postgres
 services:
   fastapi:
     restart: unless-stopped
@@ -22,4 +23,3 @@ services:
     ports:
     - mode: host
       target: 5432
-name: fastapi-postgres

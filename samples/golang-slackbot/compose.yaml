@@ -1,3 +1,4 @@
+name: golang-slackbot
 services:
   bot:
     restart: unless-stopped
@@ -16,4 +17,3 @@ services:
       - curl
       - -f
       - http://localhost:8080/
-name: golang-slackbot

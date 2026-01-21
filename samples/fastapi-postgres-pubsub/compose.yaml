@@ -1,3 +1,4 @@
+name: fastapi-postgres-pubsub
 services:
   app_a:
     build:
@@ -60,4 +61,3 @@ services:
       timeout: 5s
       retries: 5
       start_period: 5s
-name: fastapi-postgres-pubsub

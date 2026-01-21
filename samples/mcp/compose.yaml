@@ -1,3 +1,4 @@
+name: mcp
 services:
   service-1:
     build:
@@ -31,4 +32,3 @@ services:
       mode: host
     environment:
     - ANTHROPIC_API_KEY
-name: mcp

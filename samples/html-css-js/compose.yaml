@@ -1,3 +1,4 @@
+name: html-css-js
 services:
   app:
     restart: unless-stopped
@@ -18,4 +19,3 @@ services:
       - curl
       - -f
       - http://localhost:8080/
-name: html-css-js

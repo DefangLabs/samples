@@ -1,3 +1,4 @@
+name: flask
 services:
   flask:
     restart: unless-stopped
@@ -20,4 +21,3 @@ services:
       - -c
       - import sys, urllib.request; urllib.request.urlopen(sys.argv[1]).read()
       - http://localhost:5000/
-name: flask

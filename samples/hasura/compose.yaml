@@ -1,3 +1,4 @@
+name: hasura
 services:
   hasura:
     restart: unless-stopped
@@ -28,4 +29,3 @@ services:
     - POSTGRES_USER=postgres
     - POSTGRES_DB=postgres
     - POSTGRES_PASSWORD
-name: hasura

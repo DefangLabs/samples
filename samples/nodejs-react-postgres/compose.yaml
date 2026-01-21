@@ -1,3 +1,4 @@
+name: nodejs-react-postgres
 services:
   todo_list:
     restart: unless-stopped
@@ -27,4 +28,3 @@ services:
       published: 3010
     environment:
     - DATABASE_URL
-name: nodejs-react-postgres

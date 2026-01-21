@@ -1,3 +1,4 @@
+name: nextjs
 services:
   app:
     restart: unless-stopped
@@ -15,4 +16,3 @@ services:
         reservations:
           cpus: '0.25'
           memory: 256M
-name: nextjs

@@ -1,3 +1,4 @@
+name: sveltekit-mongodb
 services:
   sveltekit:
     restart: unless-stopped
@@ -34,4 +35,3 @@ services:
     x-defang-mongodb: true
 volumes:
   mongo-data: null
-name: sveltekit-mongodb

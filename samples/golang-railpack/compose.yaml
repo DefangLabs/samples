@@ -1,3 +1,4 @@
+name: golang-railpack
 services:
   app:
     restart: unless-stopped
@@ -10,4 +11,3 @@ services:
       resources:
         reservations:
           memory: 50M
-name: golang-railpack
