@@ -1,3 +1,4 @@
+name: csharp-dotnet
 services:
   web:
     image: csharp-dotnet
@@ -5,6 +6,11 @@ services:
       context: ./app
       dockerfile: Dockerfile
     ports:
-      - target: 80
-        published: 8080
-        mode: ingress
+    - target: 80
+      published: 8080
+      mode: ingress
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M

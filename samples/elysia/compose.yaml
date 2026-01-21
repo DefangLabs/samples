@@ -1,15 +1,15 @@
+name: elysia
 services:
   elysia:
     restart: unless-stopped
-    # domainname: mydomain.com # if you want to use your own domain
     build:
       context: ./elysia
       dockerfile: Dockerfile
       target: production
     ports:
-      - target: 3000
-        mode: ingress
-        published: 3000
+    - target: 3000
+      mode: ingress
+      published: 3000
     deploy:
       resources:
         reservations:

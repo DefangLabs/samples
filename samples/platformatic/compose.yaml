@@ -1,12 +1,13 @@
+name: platformatic
 services:
   app:
     build:
       context: ./app
       dockerfile: Dockerfile
     ports:
-      - target: 3042
-        published: 3042
-        mode: ingress
+    - target: 3042
+      published: 3042
+      mode: ingress
     environment:
       NODE_ENV: production
       PLT_SERVER_HOSTNAME: 0.0.0.0
@@ -18,5 +19,5 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.5"
-          memory: "512M"
+          cpus: '0.5'
+          memory: 512M

@@ -1,33 +1,41 @@
+name: django-postgres
 services:
   db:
     restart: unless-stopped
     image: postgres:16
     x-defang-postgres: true
     environment:
-      - POSTGRES_DB=django
-      - POSTGRES_USER=django
-      - POSTGRES_PASSWORD
+    - POSTGRES_DB=django
+    - POSTGRES_USER=django
+    - POSTGRES_PASSWORD
     ports:
-      - mode: host
-        target: 5432
-        published: 5432
-
+    - mode: host
+      target: 5432
+      published: 5432
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
   django:
-    # uncomment to add your own domain
-    # domainname: example.com
     restart: unless-stopped
     build: ./app
     ports:
-      - mode: ingress
-        target: 8000
-        published: 8000
+    - mode: ingress
+      target: 8000
+      published: 8000
     environment:
-      - DB_HOST=db
-      - DEBUG=False
-      - POSTGRES_USER=django
-      - POSTGRES_DB=django
-      - POSTGRES_PASSWORD
-      - SECRET_KEY
-      - ALLOWED_HOSTS
+    - DB_HOST=db
+    - DEBUG=False
+    - POSTGRES_USER=django
+    - POSTGRES_DB=django
+    - POSTGRES_PASSWORD
+    - SECRET_KEY
+    - ALLOWED_HOSTS
     depends_on:
-      - db
+    - db
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M

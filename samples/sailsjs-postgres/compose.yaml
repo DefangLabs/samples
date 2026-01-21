@@ -1,24 +1,32 @@
+name: sailsjs-postgres
 services:
   app:
     restart: unless-stopped
     build: ./app
     ports:
-      - target: 1337
-        published: 1337
-        mode: ingress
+    - target: 1337
+      published: 1337
+      mode: ingress
     environment:
-      DATABASE_URL:
-      SESSION_SECRET:
-    command: ["sails", "lift", "--prod"]
+      DATABASE_URL: null
+      SESSION_SECRET: null
+    command:
+    - sails
+    - lift
+    - --prod
     networks:
-      - app-network
-    #deploy:
-    #  resources:
-    #    reservations:
-    #      memory: 256M
+    - app-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:1337/"]
-
+      test:
+      - CMD
+      - curl
+      - -f
+      - http://localhost:1337/
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
 networks:
   app-network:
     driver: bridge

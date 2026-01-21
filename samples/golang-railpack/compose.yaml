@@ -1,11 +1,12 @@
+name: golang-railpack
 services:
   app:
     restart: unless-stopped
     build:
       context: ./app
     ports:
-      - mode: ingress
-        target: 8080
+    - mode: ingress
+      target: 8080
     deploy:
       resources:
         reservations:

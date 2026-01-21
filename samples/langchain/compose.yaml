@@ -1,14 +1,24 @@
+name: langchain
 services:
   langchain-app:
     build:
       context: ./app
       dockerfile: Dockerfile
     environment:
-      - OPENAI_KEY
+    - OPENAI_KEY
     ports:
-      - target: 80
-        published: 8080
-        protocol: tcp
-        mode: ingress
+    - target: 80
+      published: 8080
+      protocol: tcp
+      mode: ingress
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      test:
+      - CMD
+      - curl
+      - -f
+      - http://localhost:8080/
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M

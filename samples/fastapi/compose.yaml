@@ -1,3 +1,4 @@
+name: fastapi
 services:
   fastapi:
     restart: always
@@ -5,10 +6,11 @@ services:
       context: ./fastapi
       dockerfile: Dockerfile
     ports:
-      - mode: ingress
-        target: 8000
-        published: 8000
-    #deploy:
-    #  resources:
-    #    reservations:
-    #      memory: 256M
+    - mode: ingress
+      target: 8000
+      published: 8000
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M

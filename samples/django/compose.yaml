@@ -1,3 +1,4 @@
+name: django
 services:
   django:
     restart: unless-stopped
@@ -5,12 +6,12 @@ services:
       context: ./app
       dockerfile: Dockerfile
     ports:
-      - mode: ingress
-        target: 8000
-        # published: 8000 # uncomment for local dev
+    - mode: ingress
+      target: 8000
     environment:
-      - DEBUG=False # set to "True" for local dev
-    #deploy:
-    #  resources:
-    #    reservations:
-    #      memory: 256M
+    - DEBUG=False
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M

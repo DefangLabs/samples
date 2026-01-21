@@ -1,15 +1,21 @@
+name: rocket
 services:
   app:
-    # uncomment to add your own domain
-    # domainname: example.com
     build:
       context: ./app
       dockerfile: Dockerfile
     ports:
-      - target: 8080
-        published: 8080
-        mode: ingress
+    - target: 8080
+      published: 8080
+      mode: ingress
     healthcheck:
-      # wget or curl required for healthchecks on services with a published port
-      # this gets parsed by Defang and provided to the load balancers as well
-      test: ["CMD", "curl", "-f", "http://localhost:8080" ]
+      test:
+      - CMD
+      - curl
+      - -f
+      - http://localhost:8080
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M

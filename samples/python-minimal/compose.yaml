@@ -1,3 +1,4 @@
+name: python-minimal
 services:
   app:
     restart: unless-stopped
@@ -5,11 +6,15 @@ services:
       context: ./app
       dockerfile: Dockerfile
     ports:
-      - mode: ingress
-        target: 5000
+    - mode: ingress
+      target: 5000
     deploy:
       resources:
         reservations:
           memory: 256M
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      test:
+      - CMD
+      - curl
+      - -f
+      - http://localhost:5000/

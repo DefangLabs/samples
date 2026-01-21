@@ -1,20 +1,17 @@
+name: nextjs-railpack
 services:
   app:
     restart: unless-stopped
-    # domainname: www.example.xyz # uncomment if you want to use your own domain
     build:
       context: ./app
-
     ports:
-      - target: 3000
-        mode: ingress
-        published: 3000
-
+    - target: 3000
+      mode: ingress
+      published: 3000
     environment:
       PORT: 3000
-
     deploy:
       resources:
         reservations:
-          cpus: "0.25"
+          cpus: '0.25'
           memory: 256M

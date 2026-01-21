@@ -1,56 +1,67 @@
+name: rails
 services:
   rails:
-    # uncomment to add your own domain
-    # domainname: example.com
     restart: unless-stopped
     build:
       context: ./app
       dockerfile: Dockerfile
     env_file:
-      - .env
+    - .env
     environment:
-      POSTGRES_PASSWORD:
+      POSTGRES_PASSWORD: null
     ports:
-      - mode: ingress
-        target: 3000
-        published: 3000
+    - mode: ingress
+      target: 3000
+      published: 3000
     deploy:
       resources:
         reservations:
           memory: 1GB
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      test:
+      - CMD
+      - curl
+      - -f
+      - http://localhost:3000
       interval: 10s
       timeout: 5s
       retries: 5
     depends_on:
-      - db
-      - migrate
+    - db
+    - migrate
   migrate:
-    restart: "no"
+    restart: 'no'
     build:
       context: ./app
       dockerfile: Dockerfile
     env_file:
-      - .env
+    - .env
     environment:
-      POSTGRES_PASSWORD:
-    command: ["bin/rails", "db:prepare"]
+      POSTGRES_PASSWORD: null
+    command:
+    - bin/rails
+    - db:prepare
     depends_on:
       db:
         condition: service_healthy
-
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
   db:
     restart: unless-stopped
     image: postgres:16
     x-defang-postgres: true
     environment:
-      POSTGRES_PASSWORD:
+      POSTGRES_PASSWORD: null
     ports:
-      - mode: host
-        target: 5432
+    - mode: host
+      target: 5432
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test:
+      - CMD-SHELL
+      - pg_isready -U postgres
       interval: 10s
       timeout: 5s
       retries: 5

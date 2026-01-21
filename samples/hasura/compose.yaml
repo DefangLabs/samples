@@ -1,33 +1,41 @@
+name: hasura
 services:
   hasura:
     restart: unless-stopped
     build:
       dockerfile: Dockerfile
       context: ./hasura
-    # If you want to add your own domain name in Defang BYOC, uncomment the following line and replace the domain name with your own
-    # domainname: hasura.mycoolapp.com
     ports:
-      - target: 8080
-        published: 8080
-        mode: ingress
+    - target: 8080
+      published: 8080
+      mode: ingress
     environment:
-      - HASURA_GRAPHQL_ADMIN_SECRET
-      - HASURA_GRAPHQL_DATABASE_URL=postgres://postgres:${POSTGRES_PASSWORD}@database:5432/postgres
-      - HASURA_GRAPHQL_ENABLE_CONSOLE=true
-      - HASURA_GRAPHQL_UNAUTHORIZED_ROLE=public
-      - HASURA_GRAPHQL_EXPERIMENTAL_FEATURES=naming_convention
-      - HASURA_GRAPHQL_DEFAULT_NAMING_CONVENTION=graphql-default
-      - HASURA_GRAPHQL_MIGRATIONS_DIR=/hasura/migrations
-      - HASURA_GRAPHQL_METADATA_DIR=/hasura/metadata
-      - POSTGRES_PASSWORD
-  
+    - HASURA_GRAPHQL_ADMIN_SECRET
+    - HASURA_GRAPHQL_DATABASE_URL=postgres://postgres:${POSTGRES_PASSWORD}@database:5432/postgres
+    - HASURA_GRAPHQL_ENABLE_CONSOLE=true
+    - HASURA_GRAPHQL_UNAUTHORIZED_ROLE=public
+    - HASURA_GRAPHQL_EXPERIMENTAL_FEATURES=naming_convention
+    - HASURA_GRAPHQL_DEFAULT_NAMING_CONVENTION=graphql-default
+    - HASURA_GRAPHQL_MIGRATIONS_DIR=/hasura/migrations
+    - HASURA_GRAPHQL_METADATA_DIR=/hasura/metadata
+    - POSTGRES_PASSWORD
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
   database:
     image: postgres:16
     x-defang-postgres: true
     ports:
-      - target: 5432
-        mode: host
+    - target: 5432
+      mode: host
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=postgres
-      - POSTGRES_PASSWORD
+    - POSTGRES_USER=postgres
+    - POSTGRES_DB=postgres
+    - POSTGRES_PASSWORD
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
