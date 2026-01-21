@@ -3,42 +3,66 @@ services:
     restart: unless-stopped
     image: ghcr.io/mistralai/mistral-src/vllm:latest
     ports:
-      - mode: host
-        target: 8000
-    command: ["--host", "0.0.0.0", "--model", "TheBloke/Mistral-7B-Instruct-v0.2-AWQ", "--quantization", "awq", "--dtype", "auto", "--tensor-parallel-size", "1", "--gpu-memory-utilization", ".95", "--max-model-len", "8000"]
+    - mode: host
+      target: 8000
+    command:
+    - --host
+    - 0.0.0.0
+    - --model
+    - TheBloke/Mistral-7B-Instruct-v0.2-AWQ
+    - --quantization
+    - awq
+    - --dtype
+    - auto
+    - --tensor-parallel-size
+    - '1'
+    - --gpu-memory-utilization
+    - '.95'
+    - --max-model-len
+    - '8000'
     deploy:
       resources:
         reservations:
           cpus: '2.0'
           memory: 8192M
           devices:
-            - capabilities: ["gpu"]
-              count: 1
+          - capabilities:
+            - gpu
+            count: 1
     healthcheck:
-      test: ["CMD", "python3", "-c", "import sys, urllib.request;urllib.request.urlopen(sys.argv[1]).read()", "http://localhost:8000/health"]
+      test:
+      - CMD
+      - python3
+      - -c
+      - import sys, urllib.request;urllib.request.urlopen(sys.argv[1]).read()
+      - http://localhost:8000/health
       interval: 1m
     environment:
-      - HF_TOKEN
-
+    - HF_TOKEN
   ui:
     restart: unless-stopped
     build:
       context: ui
       dockerfile: Dockerfile
     ports:
-      - mode: ingress
-        target: 3000
-        published: 3000
+    - mode: ingress
+      target: 3000
+      published: 3000
     deploy:
       resources:
         reservations:
           memory: 256M
     healthcheck:
-      test: ["CMD", "wget", "--spider", "http://localhost:3000"]
+      test:
+      - CMD
+      - wget
+      - --spider
+      - http://localhost:3000
       interval: 10s
       timeout: 2s
       retries: 10
     environment:
-      - OPENAI_BASE_URL=http://mistral:8000/v1/
+    - OPENAI_BASE_URL=http://mistral:8000/v1/
     depends_on:
-      - mistral
+    - mistral
+name: vllm

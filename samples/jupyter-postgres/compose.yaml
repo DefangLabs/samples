@@ -1,35 +1,39 @@
 services:
   jupyter:
-    # Uncomment the following line and run `defang cert generate` to generate an new ssl certificate for your domain
-    # domainname: notebooks.mycompany.com
     build:
       context: ./jupyter
     ports:
-      - mode: ingress
-        target: 8888
-        published: 8888
+    - mode: ingress
+      target: 8888
+      published: 8888
     deploy:
       resources:
         limits:
           cpus: '1.0'
           memory: 1G
     environment:
-      JUPYTER_TOKEN:
-      POSTGRES_PASSWORD:
+      JUPYTER_TOKEN: null
+      POSTGRES_PASSWORD: null
       DATABASE_HOST: db
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8888/login" ]
+      test:
+      - CMD
+      - curl
+      - -f
+      - http://localhost:8888/login
     depends_on:
-      - db
-
+    - db
   db:
     image: postgres:14
     x-defang-postgres: true
     ports:
-      - mode: host
-        target: 5432
-        published: 5432
+    - mode: host
+      target: 5432
+      published: 5432
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test:
+      - CMD-SHELL
+      - pg_isready -U postgres
     environment:
-      POSTGRES_PASSWORD:
+      POSTGRES_PASSWORD: null
+name: jupyter-postgres

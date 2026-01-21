@@ -4,29 +4,30 @@ services:
       context: ./app
       dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+    - 8000:8000
     restart: always
     environment:
-      - LLM_URL=http://llm/api/v1/
-      - LLM_MODEL=default
-      - OPENAI_API_KEY=FAKE_TOKEN
-      # For other models, see https://docs.defang.io/docs/concepts/managed-llms/openai-access-gateway#model-mapping
+    - LLM_URL=http://llm/api/v1/
+    - LLM_MODEL=default
+    - OPENAI_API_KEY=FAKE_TOKEN
     healthcheck:
-      test: ["CMD", "python3", "-c", "import sys, urllib.request; urllib.request.urlopen(sys.argv[1]).read()", "http://localhost:8000/health"]
+      test:
+      - CMD
+      - python3
+      - -c
+      - import sys, urllib.request; urllib.request.urlopen(sys.argv[1]).read()
+      - http://localhost:8000/health
       interval: 30s
       timeout: 5s
       retries: 3
       start_period: 5s
     depends_on:
-      - llm
+    - llm
     deploy:
       resources:
         reservations:
           cpus: 0.25
           memory: 512MB
-
-# Provider Service
-# This service is used to route requests to the LLM API
   llm:
     provider:
       type: model
@@ -34,9 +35,10 @@ services:
         model: ai/smollm2
     x-defang-llm: true
     environment:
-      - OPENAI_API_KEY=FAKE_TOKEN
+    - OPENAI_API_KEY=FAKE_TOKEN
     deploy:
       resources:
         reservations:
           cpus: 0.25
           memory: 512MB
+name: managed-llm-provider

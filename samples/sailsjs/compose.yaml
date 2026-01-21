@@ -4,17 +4,14 @@ services:
     build:
       context: ./sails
     ports:
-      - target: 1337
-        published: 1337
-        protocol: tcp
-        mode: ingress
+    - target: 1337
+      published: 1337
+      protocol: tcp
+      mode: ingress
     volumes:
-      - ./sails:/usr/src/app
-      - /usr/src/app/node_modules
+    - ./sails:/usr/src/app
+    - /usr/src/app/node_modules
     environment:
-      - NODE_ENV=production
+    - NODE_ENV=production
     command: sails lift --prod
-    #deploy:
-    #  resources:
-    #    reservations:
-    #      memory: 256M
+name: sailsjs

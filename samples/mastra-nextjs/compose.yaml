@@ -5,33 +5,39 @@ services:
       context: ./app
       dockerfile: Dockerfile
     environment:
-      - DB_URL=postgres://postgres:${POSTGRES_PASSWORD}@database:5432/postgres
-      - DB_SSL # set this to true if deploying to AWS and GCP, otherwise it is false deploying to Defang Playground
-      - LLM_MODEL # recommended gemini-2.5-flash for GCP or anthropic.claude-3-5-sonnet-20241022-v2:0 for AWS
-      - GITHUB_TOKEN # remove this line if unused; optional, but recommended to avoid rate limiting when fetching from GitHub
+    - DB_URL=postgres://postgres:${POSTGRES_PASSWORD}@database:5432/postgres
+    - DB_SSL
+    - LLM_MODEL
+    - GITHUB_TOKEN
     restart: unless-stopped
     ports:
-      - mode: ingress
-        target: 3000
-        published: 3000
+    - mode: ingress
+      target: 3000
+      published: 3000
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      test:
+      - CMD
+      - curl
+      - -f
+      - http://localhost:3000
     depends_on:
-      - database
-
+    - database
   database:
     image: postgres:16
     x-defang-postgres: true
     restart: always
     environment:
-      - POSTGRES_PASSWORD
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD
+    - POSTGRES_DB=postgres
+    - POSTGRES_USER=postgres
     ports:
-      - mode: host
-        target: 5432
+    - mode: host
+      target: 5432
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -h localhost -U postgres -d postgres"]
+      test:
+      - CMD-SHELL
+      - pg_isready -h localhost -U postgres -d postgres
       interval: 5s
       timeout: 5s
       retries: 10
+name: mastra-nextjs

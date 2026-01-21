@@ -5,80 +5,82 @@ services:
       context: ./app
       dockerfile: Dockerfile
     environment:
-      - SECRET_KEY
-      - REDIS_URL=redis://broker:6379/0
-      - POSTGRES_URL=postgres://postgres:${POSTGRES_PASSWORD}@database:5432/postgres
+    - SECRET_KEY
+    - REDIS_URL=redis://broker:6379/0
+    - POSTGRES_URL=postgres://postgres:${POSTGRES_PASSWORD}@database:5432/postgres
     depends_on:
-      - database
-      - migrate
-      - broker
+    - database
+    - migrate
+    - broker
     ports:
-      - mode: ingress
-        target: 8000
-        published: 8000
+    - mode: ingress
+      target: 8000
+      published: 8000
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health/"]
+      test:
+      - CMD
+      - curl
+      - -f
+      - http://localhost:8000/health/
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 20s
-
   migrate:
-    restart: no
+    restart: false
     build:
       context: ./app
       dockerfile: Dockerfile
     environment:
-      - SECRET_KEY
-      - REDIS_URL=redis://broker:6379/0
-      - POSTGRES_URL=postgres://postgres:${POSTGRES_PASSWORD}@database:5432/postgres
+    - SECRET_KEY
+    - REDIS_URL=redis://broker:6379/0
+    - POSTGRES_URL=postgres://postgres:${POSTGRES_PASSWORD}@database:5432/postgres
     depends_on:
-      - database
+    - database
     command: python manage.py migrate
-
   worker:
     restart: unless-stopped
     build:
       context: ./app
       dockerfile: Dockerfile
-    # If you need more than one worker, uncomment the following lines
-    # deploy:
-    #   replicas: 2
     environment:
-      - SECRET_KEY
-      - REDIS_URL=redis://broker:6379/0
-      - POSTGRES_URL=postgres://postgres:${POSTGRES_PASSWORD}@database:5432/postgres
+    - SECRET_KEY
+    - REDIS_URL=redis://broker:6379/0
+    - POSTGRES_URL=postgres://postgres:${POSTGRES_PASSWORD}@database:5432/postgres
     depends_on:
-      - database
-      - broker
-      - migrate
+    - database
+    - broker
+    - migrate
     command: celery -A django_celery worker --loglevel=info
-
   database:
     image: postgres:16
     x-defang-postgres: true
     ports:
-      - mode: host
-        target: 5432
-        published: 5432
+    - mode: host
+      target: 5432
+      published: 5432
     environment:
-      - POSTGRES_PASSWORD
+    - POSTGRES_PASSWORD
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test:
+      - CMD-SHELL
+      - pg_isready -U postgres
       interval: 10s
       timeout: 5s
       retries: 5
-
   broker:
     image: redis:7.1
     x-defang-redis: true
     ports:
-      - mode: host
-        target: 6379
-        published: 6379
+    - mode: host
+      target: 6379
+      published: 6379
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test:
+      - CMD
+      - redis-cli
+      - ping
       interval: 10s
       timeout: 5s
       retries: 5
-
+name: django-celery

@@ -5,25 +5,21 @@ services:
       context: ./fastapi
       dockerfile: Dockerfile
     ports:
-      - mode: ingress
-        target: 8000
-        published: 8000
+    - mode: ingress
+      target: 8000
+      published: 8000
     environment:
-      - DB_URL=postgres://postgres:${POSTGRES_PASSWORD}@db:5432/postgres
+    - DB_URL=postgres://postgres:${POSTGRES_PASSWORD}@db:5432/postgres
     depends_on:
-      - db
-    #deploy:
-    #  resources:
-    #    reservations:
-    #      memory: 256M
-
+    - db
   db:
     image: postgres:15
     restart: unless-stopped
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD
-      - POSTGRES_DB=postgres
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD
+    - POSTGRES_DB=postgres
     ports:
-      - mode: host
-        target: 5432
+    - mode: host
+      target: 5432
+name: fastapi-postgres

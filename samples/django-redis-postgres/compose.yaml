@@ -1,57 +1,51 @@
 services:
   app:
-    # uncomment to add your own domain
-    # domainname: example.com
     build:
       context: ./app
       dockerfile: Dockerfile
     ports:
-      - target: 8000
-        published: 8000
-        mode: ingress
+    - target: 8000
+      published: 8000
+      mode: ingress
     environment:
-      - REDIS_URL=redis://redis-service:6379
-      # if using BYOC add sslmode=require to the POSTGRES_URL query params
-      - POSTGRES_URL=postgres://djangouser:${POSTGRES_PASSWORD}@postgres-service:5432/djangodatabase?
-      - SECRET_KEY
+    - REDIS_URL=redis://redis-service:6379
+    - POSTGRES_URL=postgres://djangouser:${POSTGRES_PASSWORD}@postgres-service:5432/djangodatabase?
+    - SECRET_KEY
     healthcheck:
-      # wget or curl required for healthchecks on services with a published port
-      # this gets parsed by Defang and provided to the load balancers as well
-      test: ["CMD", "python3", "-c", "import sys, urllib.request; urllib.request.urlopen(sys.argv[1]).read()", "http://localhost:8000/"]
+      test:
+      - CMD
+      - python3
+      - -c
+      - import sys, urllib.request; urllib.request.urlopen(sys.argv[1]).read()
+      - http://localhost:8000/
       interval: 10s
     depends_on:
-      - redis-service
-      - postgres-service
-      - migrate
-
+    - redis-service
+    - postgres-service
+    - migrate
   redis-service:
     image: redis:6.2
-    # uncomment the following line in BYOC
-    # x-defang-redis: true
     ports:
-      - mode: host
-        target: 6379
-
+    - mode: host
+      target: 6379
   migrate:
-    restart: "no"
+    restart: 'no'
     build:
       context: ./app
       dockerfile: Dockerfile
     command: python manage.py migrate
     depends_on:
-      - postgres-service
+    - postgres-service
     environment:
-      - POSTGRES_URL=postgres://djangouser:${POSTGRES_PASSWORD}@postgres-service:5432/djangodatabase?
-      - SECRET_KEY
-
+    - POSTGRES_URL=postgres://djangouser:${POSTGRES_PASSWORD}@postgres-service:5432/djangodatabase?
+    - SECRET_KEY
   postgres-service:
     image: postgres:16.4
-    # uncomment the following line in BYOC
-    # x-defang-postgres: true
     ports:
-      - mode: host
-        target: 5432
+    - mode: host
+      target: 5432
     environment:
-      - POSTGRES_PASSWORD
-      - POSTGRES_DB=djangodatabase
-      - POSTGRES_USER=djangouser
+    - POSTGRES_PASSWORD
+    - POSTGRES_DB=djangodatabase
+    - POSTGRES_USER=djangouser
+name: django-redis-postgres

@@ -3,34 +3,39 @@ services:
     image: ghcr.io/huginn/huginn
     restart: unless-stopped
     ports:
-      - target: 3000
-        published: 3000
-        mode: ingress
+    - target: 3000
+      published: 3000
+      mode: ingress
     deploy:
       resources:
         reservations:
           cpus: '1.0'
           memory: 1G
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      test:
+      - CMD
+      - curl
+      - -f
+      - http://localhost:3000/
       interval: 1m30s
       timeout: 30s
       retries: 10
     environment:
-      - DATABASE_ADAPTER=postgresql
-      - DATABASE_NAME=huginn
-      - DATABASE_USERNAME=huginn
-      - DATABASE_HOST=db
-      - DATABASE_PASSWORD="${POSTGRES_PASSWORD}"
+    - DATABASE_ADAPTER=postgresql
+    - DATABASE_NAME=huginn
+    - DATABASE_USERNAME=huginn
+    - DATABASE_HOST=db
+    - DATABASE_PASSWORD="${POSTGRES_PASSWORD}"
     depends_on:
-      - db
+    - db
   db:
     image: postgres:16
     environment:
-      - POSTGRES_USER=huginn
-      - POSTGRES_DB=huginn
-      - POSTGRES_PASSWORD
+    - POSTGRES_USER=huginn
+    - POSTGRES_DB=huginn
+    - POSTGRES_PASSWORD
     ports:
-      - mode: host
-        target: 5432
-        published: 5432
+    - mode: host
+      target: 5432
+      published: 5432
+name: huginn

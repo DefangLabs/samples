@@ -5,14 +5,15 @@ services:
       context: ./app
       dockerfile: Dockerfile
     ports:
-      - mode: ingress
-        target: 8080
+    - mode: ingress
+      target: 8080
     environment:
-      - SLACK_TOKEN
-      - SLACK_CHANNEL_ID
-    #deploy:
-    #  resources:
-    #    reservations:
-    #      memory: 256M
+    - SLACK_TOKEN
+    - SLACK_CHANNEL_ID
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      test:
+      - CMD
+      - curl
+      - -f
+      - http://localhost:8080/
+name: golang-slackbot

@@ -5,43 +5,41 @@ services:
       context: ./board
       dockerfile: Dockerfile
     ports:
-      - mode: ingress
-        target: 3000
-        published: 3000
+    - mode: ingress
+      target: 3000
+      published: 3000
     environment:
-      - REDIS=redis://redisx:6379
-      - BOARD_PASSWORD
-      - QUEUE
+    - REDIS=redis://redisx:6379
+    - BOARD_PASSWORD
+    - QUEUE
     healthcheck:
-      test: ["CMD", "curl", "-f", "127.0.0.1:3000"]
+      test:
+      - CMD
+      - curl
+      - -f
+      - 127.0.0.1:3000
     depends_on:
-      - redisx
-    #deploy:
-    #  resources:
-    #    reservations:
-    #      memory: 256M
-
+    - redisx
   api:
     restart: unless-stopped
     build:
       context: ./api
       dockerfile: Dockerfile
     ports:
-      - mode: ingress
-        target: 3001
-        published: 3001
+    - mode: ingress
+      target: 3001
+      published: 3001
     environment:
-      - REDIS=redis://redisx:6379
-      - QUEUE
+    - REDIS=redis://redisx:6379
+    - QUEUE
     healthcheck:
-      test: ["CMD", "curl", "-f", "127.0.0.1:3001"]
+      test:
+      - CMD
+      - curl
+      - -f
+      - 127.0.0.1:3001
     depends_on:
-      - redisx
-    #deploy:
-    #  resources:
-    #    reservations:
-    #      memory: 256M
-
+    - redisx
   worker:
     restart: unless-stopped
     deploy:
@@ -50,19 +48,15 @@ services:
       context: ./worker
       dockerfile: Dockerfile
     environment:
-      - REDIS=redis://redisx:6379
-      - QUEUE
+    - REDIS=redis://redisx:6379
+    - QUEUE
     depends_on:
-      - redisx
-    #deploy:
-    #  resources:
-    #    reservations:
-    #      memory: 256M
-
+    - redisx
   redisx:
     image: redis:6.2
     x-defang-redis: true
     restart: unless-stopped
     ports:
-      - mode: host
-        target: 6379
+    - mode: host
+      target: 6379
+name: bullmq-bullboard-redis

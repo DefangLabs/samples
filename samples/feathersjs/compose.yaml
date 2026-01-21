@@ -4,9 +4,10 @@ services:
       context: ./src
       dockerfile: Dockerfile
     ports:
-      - target: 3030
-        published: 3030
-        protocol: tcp
-        mode: ingress
+    - target: 3030
+      published: 3030
+      protocol: tcp
+      mode: ingress
     environment:
-      - NODE_ENV=production
+    - NODE_ENV=production
+name: feathersjs

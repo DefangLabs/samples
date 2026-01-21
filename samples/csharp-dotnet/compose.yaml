@@ -5,6 +5,7 @@ services:
       context: ./app
       dockerfile: Dockerfile
     ports:
-      - target: 80
-        published: 8080
-        mode: ingress
+    - target: 80
+      published: 8080
+      mode: ingress
+name: csharp-dotnet
