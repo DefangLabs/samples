@@ -10,7 +10,7 @@ services:
     environment:
       LLM_URL: http://llm/api/v1/
       LLM_MODEL: default
-      OPENAI_API_KEY: FAKE_TOKEN
+      OPENAI_API_KEY: SAMPLE_TOKEN
     healthcheck:
       test:
       - CMD
@@ -31,7 +31,7 @@ services:
           memory: 512M
   llm:
     environment:
-    - OPENAI_API_KEY=FAKE_TOKEN
+      OPENAI_API_KEY: SAMPLE_TOKEN
     image: defangio/openai-access-gateway
     ports:
     - target: 80
