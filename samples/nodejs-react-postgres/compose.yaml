@@ -28,3 +28,8 @@ services:
       published: 3010
     environment:
     - DATABASE_URL
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M

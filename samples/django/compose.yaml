@@ -10,3 +10,8 @@ services:
       target: 8000
     environment:
     - DEBUG=False
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M

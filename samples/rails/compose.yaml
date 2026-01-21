@@ -44,6 +44,11 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
   db:
     restart: unless-stopped
     image: postgres:16

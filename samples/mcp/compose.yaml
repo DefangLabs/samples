@@ -32,3 +32,8 @@ services:
       mode: host
     environment:
     - ANTHROPIC_API_KEY
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M

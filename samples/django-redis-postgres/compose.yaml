@@ -24,11 +24,21 @@ services:
     - redis-service
     - postgres-service
     - migrate
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
   redis-service:
     image: redis:6.2
     ports:
     - mode: host
       target: 6379
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
   migrate:
     restart: 'no'
     build:
@@ -40,6 +50,11 @@ services:
     environment:
     - POSTGRES_URL=postgres://djangouser:${POSTGRES_PASSWORD}@postgres-service:5432/djangodatabase?
     - SECRET_KEY
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
   postgres-service:
     image: postgres:16.4
     ports:
@@ -49,3 +64,8 @@ services:
     - POSTGRES_PASSWORD
     - POSTGRES_DB=djangodatabase
     - POSTGRES_USER=djangouser
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M

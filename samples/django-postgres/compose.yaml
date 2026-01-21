@@ -12,6 +12,11 @@ services:
     - mode: host
       target: 5432
       published: 5432
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
   django:
     restart: unless-stopped
     build: ./app
@@ -29,3 +34,8 @@ services:
     - ALLOWED_HOSTS
     depends_on:
     - db
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M

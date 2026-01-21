@@ -14,3 +14,8 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M

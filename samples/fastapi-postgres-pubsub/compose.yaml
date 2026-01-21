@@ -22,6 +22,11 @@ services:
       timeout: 5s
       retries: 3
       start_period: 10s
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
   app_b:
     build:
       context: ./app
@@ -43,6 +48,11 @@ services:
       timeout: 5s
       retries: 3
       start_period: 10s
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
   postgres:
     image: postgres:16
     restart: always
@@ -61,3 +71,8 @@ services:
       timeout: 5s
       retries: 5
       start_period: 5s
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M

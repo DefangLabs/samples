@@ -13,3 +13,8 @@ services:
       - curl
       - -f
       - http://localhost:7000/
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M

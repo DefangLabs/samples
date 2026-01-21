@@ -22,6 +22,11 @@ services:
       - curl
       - -f
       - http://localhost:3000/
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
   mongo:
     restart: unless-stopped
     image: mongo:latest
@@ -33,5 +38,10 @@ services:
     environment:
       MONGO_INITDB_DATABASE: musicdb
     x-defang-mongodb: true
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
 volumes:
   mongo-data: null

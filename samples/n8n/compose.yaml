@@ -15,6 +15,11 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
   n8n:
     image: docker.n8n.io/n8nio/n8n
     restart: always
@@ -52,3 +57,8 @@ services:
       timeout: 5s
       retries: 5
       start_period: 120s
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M

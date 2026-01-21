@@ -19,6 +19,11 @@ services:
     - HASURA_GRAPHQL_MIGRATIONS_DIR=/hasura/migrations
     - HASURA_GRAPHQL_METADATA_DIR=/hasura/metadata
     - POSTGRES_PASSWORD
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
   database:
     image: postgres:16
     x-defang-postgres: true
@@ -29,3 +34,8 @@ services:
     - POSTGRES_USER=postgres
     - POSTGRES_DB=postgres
     - POSTGRES_PASSWORD
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M

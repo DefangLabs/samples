@@ -15,6 +15,11 @@ services:
       OPENAI_API_KEY: FAKE_TOKEN
     depends_on:
     - llm
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
   llm:
     environment:
     - OPENAI_API_KEY=FAKE_TOKEN

@@ -19,6 +19,11 @@ services:
       - http://localhost:8080/
     depends_on:
     - db
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
   db:
     image: mongo:5
     restart: unless-stopped
@@ -31,6 +36,11 @@ services:
     volumes:
     - db_data:/data/db
     x-defang-mongodb: true
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
 volumes:
   db_data:
     driver: local

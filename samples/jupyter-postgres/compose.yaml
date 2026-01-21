@@ -37,3 +37,8 @@ services:
       - pg_isready -U postgres
     environment:
       POSTGRES_PASSWORD: null
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M

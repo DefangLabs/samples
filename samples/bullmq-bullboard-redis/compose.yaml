@@ -21,6 +21,11 @@ services:
       - 127.0.0.1:3000
     depends_on:
     - redisx
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
   api:
     restart: unless-stopped
     build:
@@ -41,10 +46,19 @@ services:
       - 127.0.0.1:3001
     depends_on:
     - redisx
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
   worker:
     restart: unless-stopped
     deploy:
       replicas: 1
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
     build:
       context: ./worker
       dockerfile: Dockerfile
@@ -60,3 +74,8 @@ services:
     ports:
     - mode: host
       target: 6379
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M

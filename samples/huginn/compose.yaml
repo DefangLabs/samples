@@ -39,3 +39,8 @@ services:
     - mode: host
       target: 5432
       published: 5432
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M

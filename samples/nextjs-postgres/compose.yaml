@@ -23,6 +23,11 @@ services:
       - http://localhost:3000
     depends_on:
     - database
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
   database:
     image: postgres:16
     x-defang-postgres: true
@@ -32,3 +37,8 @@ services:
     - target: 5432
       published: 5432
       mode: host
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M

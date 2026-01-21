@@ -9,6 +9,11 @@ services:
     - mode: host
       target: 5432
       published: 5432
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
   redis:
     image: redis:6.2
     x-defang-redis: true
@@ -16,6 +21,11 @@ services:
     - mode: host
       target: 6379
       published: 6379
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
   app:
     build:
       context: ./app
@@ -43,6 +53,11 @@ services:
       timeout: 10s
       retries: 10
       start_period: 60s
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
   worker:
     build:
       context: ./app
@@ -59,6 +74,11 @@ services:
       REDIS_URL: redis://redis:6379/0
       OPENAI_API_KEY: defang
       DJANGO_SECRET_KEY: null
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
   llm:
     provider:
       type: model
@@ -68,6 +88,11 @@ services:
     environment:
       OPENAI_API_KEY: defang
       DEBUG: 'true'
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
   embedding:
     provider:
       type: model
@@ -77,3 +102,8 @@ services:
     environment:
       OPENAI_API_KEY: defang
       DEBUG: 'true'
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M

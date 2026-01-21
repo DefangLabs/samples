@@ -13,6 +13,11 @@ services:
     ports:
     - mode: host
       target: 3306
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
   app:
     restart: unless-stopped
     build: ./app
@@ -31,5 +36,10 @@ services:
       - curl
       - -f
       - http://localhost:3001/
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
 volumes:
   mysql_data: null

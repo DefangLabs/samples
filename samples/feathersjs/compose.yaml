@@ -11,3 +11,8 @@ services:
       mode: ingress
     environment:
     - NODE_ENV=production
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M

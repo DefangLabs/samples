@@ -8,6 +8,11 @@ services:
     - REDISX_URL=redis://redisx:6379
     depends_on:
     - redisx
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
   redisx:
     image: redis:latest
     x-defang-redis: true
@@ -17,3 +22,8 @@ services:
       published: 6379
       protocol: tcp
       mode: host
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: 512M
