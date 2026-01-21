@@ -33,7 +33,7 @@ services:
           cpus: '0.5'
           memory: 512M
   migrate:
-    restart: false
+    restart: 'no'
     build:
       context: ./app
       dockerfile: Dockerfile
