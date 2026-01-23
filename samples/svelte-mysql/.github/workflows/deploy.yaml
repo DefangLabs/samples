@@ -7,15 +7,15 @@ on:
 
 jobs:
   deploy:
-    environment: playground
+    environment: production
     runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
 
     steps:
-    - name: Checkout Repo
-      uses: actions/checkout@v4
+      - name: Checkout Repo
+        uses: actions/checkout@v4
 
-    - name: Deploy
-      uses: DefangLabs/defang-github-action@v1.3.2
+      - name: Deploy
+        uses: DefangLabs/defang-github-action@v1.3.2
