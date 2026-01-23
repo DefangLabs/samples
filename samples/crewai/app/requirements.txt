@@ -118,7 +118,7 @@ posthog==4.1.0
 priority==1.3.0
 prompt_toolkit==3.0.51
 propcache==0.3.1
-protobuf==5.29.4
+protobuf==7.34.0rc1
 psycopg==3.2.9
 psycopg-binary==3.2.9
 ptyprocess==0.7.0
