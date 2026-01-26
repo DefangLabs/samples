@@ -1,0 +1,21 @@
+name: Down
+
+on:
+  workflow_dispatch:
+
+jobs:
+  down:
+    environment: production
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Down
+        uses: DefangLabs/defang-github-action@v1.3.2
+        with:
+          command: "down"
