@@ -7,19 +7,19 @@ on:
 
 jobs:
   deploy:
-    environment: playground
+    environment: production
     runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
 
     steps:
-    - name: Checkout Repo
-      uses: actions/checkout@v4
+      - name: Checkout Repo
+        uses: actions/checkout@v4
 
-    - name: Deploy
-      uses: DefangLabs/defang-github-action@v1.3.2
-      with:
-        config-env-vars: MISTRAL_API_KEY
-      env:
-        MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+      - name: Deploy
+        uses: DefangLabs/defang-github-action@v1.3.2
+        with:
+          config-env-vars: MISTRAL_API_KEY
+        env:
+          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
