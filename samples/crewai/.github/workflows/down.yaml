@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
+  down:
     environment: production
     runs-on: ubuntu-latest
     permissions:
@@ -15,7 +15,7 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Deploy
+      - name: Down
         uses: DefangLabs/defang-github-action@v1.3.2
         with:
           command: "down"
