@@ -21,6 +21,7 @@ jobs:
         uses: DefangLabs/defang-github-action@v1.3.2
         with:
           config-env-vars: DJANGO_SECRET_KEY POSTGRES_PASSWORD SSL_MODE
+          config-vars-init-random: DJANGO_SECRET_KEY POSTGRES_PASSWORD
         env:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
