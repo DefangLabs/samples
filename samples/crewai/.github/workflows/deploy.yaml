@@ -25,3 +25,7 @@ jobs:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           SSL_MODE: ${{ secrets.SSL_MODE }}
+      - name: Deployment Summary
+        uses: DefangLabs/defang-github-action@v1.3.2
+        with:
+          command: services
