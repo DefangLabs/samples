@@ -29,15 +29,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Defang ${{ github.event.inputs.action }}
-        uses: DefangLabs/defang-github-action@main
+        uses: DefangLabs/defang-github-action@v1.4.0
         with:
-          config-env-vars: DJANGO_SECRET_KEY POSTGRES_PASSWORD SSL_MODE
+          cli-version: nightly # for config-vars-init-random
           config-vars-init-random: DJANGO_SECRET_KEY POSTGRES_PASSWORD
           command: ${{ github.event.inputs.action }}
         env:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          SSL_MODE: ${{ secrets.SSL_MODE }}
       - name: Deployment Summary
         uses: DefangLabs/defang-github-action@v1.3.2
         with:
