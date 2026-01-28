@@ -17,7 +17,7 @@ on:
 
 jobs:
   defang:
-    name: Defang ${{ github.event.inputs.action }}
+    name: Defang ${{ github.event.inputs.action || 'up' }}
     environment: production
     runs-on: ubuntu-latest
     permissions:
@@ -28,12 +28,12 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Defang ${{ github.event.inputs.action }}
+      - name: Defang ${{ github.event.inputs.action || 'up' }}
         uses: DefangLabs/defang-github-action@v1.4.0
         with:
           cli-version: nightly # for config-vars-init-random
           config-vars-init-random: DJANGO_SECRET_KEY POSTGRES_PASSWORD
-          command: ${{ github.event.inputs.action }}
+          command: ${{ github.event.inputs.action || 'up' }}
         env:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
