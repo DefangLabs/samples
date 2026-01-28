@@ -87,7 +87,6 @@ services:
     x-defang-llm: true
     environment:
       OPENAI_API_KEY: defang
-      DEBUG: 'true'
     deploy:
       resources:
         reservations:
@@ -101,7 +100,6 @@ services:
     x-defang-llm: true
     environment:
       OPENAI_API_KEY: defang
-      DEBUG: 'true'
     deploy:
       resources:
         reservations:
