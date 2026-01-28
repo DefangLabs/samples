@@ -37,7 +37,8 @@ jobs:
         env:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+
       - name: Deployment Summary
-        uses: DefangLabs/defang-github-action@v1.3.2
+        uses: DefangLabs/defang-github-action@v1.4.0
         with:
           command: services
