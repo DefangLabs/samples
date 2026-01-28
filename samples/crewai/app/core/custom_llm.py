@@ -1,19 +1,21 @@
-from typing import Any, Dict, List, Optional, Union
-from crewai.llms.base_llm import BaseLLM
 import os
+from typing import Any, Dict, List, Optional, Union
+
+from crewai.llms.base_llm import BaseLLM
+
 from .ai_clients import get_llm_client
 
-LLM_MODEL = os.getenv("LLM_MODEL")
+CHAT_MODEL = os.getenv("CHAT_MODEL")
 
 
 class DockerRunnerLLM(BaseLLM):
     """
     Custom LLM that uses the OpenAI-compatible API.
-    Implements CrewAI's BaseLLM interface. We create this because the 
+    Implements CrewAI's BaseLLM interface. We create this because the
     Docker Model Runner is not yet supported by CrewAI, because LiteLLM doesn't
     recognize the format in which the Docker Model Runner names the models.
     """
-    def __init__(self, model: str = LLM_MODEL):
+    def __init__(self, model: str = CHAT_MODEL):
         super().__init__(model=model)
         if not model or not isinstance(model, str):
             raise ValueError("Invalid model: must be a non-empty string")
