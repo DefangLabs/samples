@@ -12,7 +12,7 @@
     "@anthropic-ai/sdk": "^0.36.3",
     "@modelcontextprotocol/sdk": "^1.4.0",
     "ai": "^3.4.4",
-    "next": "^15.1.6",
+    "next": "^16.1.5",
     "react": "^18",
     "react-dom": "^18",
     "react-markdown": "^9.0.1",
