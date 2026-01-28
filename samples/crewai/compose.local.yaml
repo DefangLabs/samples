@@ -36,7 +36,7 @@ services:
       DATABASE_URL: postgres://postgres:password@postgres:5432/postgres
       DJANGO_SECRET_KEY: 5k6qi_gzy65bz2soxl6k(rsrw)0z3ws!zmjzsbe+wkp1ovfayg
 
-  llm:
+  chat:
     provider:
       type: model
       options:
