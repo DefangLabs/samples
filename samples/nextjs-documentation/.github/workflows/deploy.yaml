@@ -4,9 +4,23 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Whether to deploy up or down"
+        required: true
+        default: "up"
+        type: choice
+        options:
+          - up
+          - down
+      stack:
+        description: "The stack to deploy up or down. (Leave blank for default)"
+        default: ""
 
 jobs:
-  deploy:
+  defang:
+    name: Defang ${{ github.event.inputs.action || 'up' }} ${{ github.event.inputs.stack || 'default stack' }}
     environment: production
     runs-on: ubuntu-latest
     permissions:
@@ -17,5 +31,13 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Deploy
-        uses: DefangLabs/defang-github-action@v1.3.2
+      - name: Defang ${{ github.event.inputs.action || 'up' }} ${{ github.event.inputs.stack || 'default stack' }}
+        uses: DefangLabs/defang-github-action@v1.4.0
+        with:
+          command: ${{ github.event.inputs.action || 'up' }}
+          stack: ${{ github.event.inputs.stack || '' }}
+
+      - name: Deployment Summary
+        uses: DefangLabs/defang-github-action@v1.4.0
+        with:
+          command: services

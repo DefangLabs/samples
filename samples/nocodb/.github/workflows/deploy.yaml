@@ -4,9 +4,23 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Whether to deploy up or down"
+        required: true
+        default: "up"
+        type: choice
+        options:
+          - up
+          - down
+      stack:
+        description: "The stack to deploy up or down. (Leave blank for default)"
+        default: ""
 
 jobs:
-  deploy:
+  defang:
+    name: Defang ${{ github.event.inputs.action || 'up' }} ${{ github.event.inputs.stack || 'default stack' }}
     environment: production
     runs-on: ubuntu-latest
     permissions:
@@ -17,14 +31,27 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Deploy
-        uses: DefangLabs/defang-github-action@v1.3.2
+      - name: Defang ${{ github.event.inputs.action || 'up' }} ${{ github.event.inputs.stack || 'default stack' }}
+        uses: DefangLabs/defang-github-action@v1.4.0
         with:
-          config-env-vars: NC_DB NC_S3_ENDPOINT NC_S3_BUCKET_NAME NC_S3_REGION NC_S3_ACCESS_KEY NC_S3_ACCESS_SECRET
+          # Defang will initialize these config vars with random secrets
+          # If you wish to provide your own secrets:
+          #   1. Set them in the repo secrets,
+          #   2. Remove them from the `config-vars-init-random` list
+          #   3. Add them to the `config-env-vars` list below
+          config-vars-init-random: NC_S3_ACCESS_KEY NC_S3_ACCESS_SECRET
+          config-env-vars: NC_DB NC_S3_ENDPOINT NC_S3_BUCKET_NAME NC_S3_REGION
+          command: ${{ github.event.inputs.action || 'up' }}
+          stack: ${{ github.event.inputs.stack || '' }}
         env:
           NC_DB: ${{ secrets.NC_DB }}
+          NC_S3_ACCESS_KEY: ${{ secrets.NC_S3_ACCESS_KEY }}
+          NC_S3_ACCESS_SECRET: ${{ secrets.NC_S3_ACCESS_SECRET }}
           NC_S3_ENDPOINT: ${{ secrets.NC_S3_ENDPOINT }}
           NC_S3_BUCKET_NAME: ${{ secrets.NC_S3_BUCKET_NAME }}
           NC_S3_REGION: ${{ secrets.NC_S3_REGION }}
-          NC_S3_ACCESS_KEY: ${{ secrets.NC_S3_ACCESS_KEY }}
-          NC_S3_ACCESS_SECRET: ${{ secrets.NC_S3_ACCESS_SECRET }}
+
+      - name: Deployment Summary
+        uses: DefangLabs/defang-github-action@v1.4.0
+        with:
+          command: services
