@@ -5,18 +5,18 @@ services:
       context: ./ui
       dockerfile: Dockerfile
     ports:
-    - target: 3000
-      published: 3000
-      mode: ingress
+      - target: 3000
+        published: 3000
+        mode: ingress
     deploy:
       resources:
         reservations:
           memory: 256M
     environment:
-    - ANTHROPIC_API_KEY
+      - ANTHROPIC_API_KEY
     healthcheck:
       test:
-      - CMD
-      - curl
-      - -f
-      - http://localhost:3000/
+        - CMD
+        - curl
+        - -f
+        - http://localhost:3000/

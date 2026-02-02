@@ -9,14 +9,14 @@ services:
       MYSQL_USER: admin
       MYSQL_PASSWORD: Defang12345
     volumes:
-    - mysql_data:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
     ports:
-    - mode: host
-      target: 3306
+      - mode: host
+        target: 3306
     deploy:
       resources:
         reservations:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 512M
   app:
     restart: unless-stopped
@@ -27,19 +27,19 @@ services:
       DATABASE_PASSWORD: Defang12345
       DATABASE_NAME: todoApp
     ports:
-    - 3001:3001
+      - 3001:3001
     depends_on:
-    - db
+      - db
     healthcheck:
       test:
-      - CMD
-      - curl
-      - -f
-      - http://localhost:3001/
+        - CMD
+        - curl
+        - -f
+        - http://localhost:3001/
     deploy:
       resources:
         reservations:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 512M
 volumes:
   mysql_data: null

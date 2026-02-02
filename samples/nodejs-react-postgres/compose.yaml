@@ -6,30 +6,30 @@ services:
       context: ./client
       dockerfile: Dockerfile
       args:
-      - REACT_APP_API_URL=https://<YOUR_USERNAME>-server--3010.prod1.defang.dev
+        - REACT_APP_API_URL=https://<YOUR_USERNAME>-server--3010.prod1.defang.dev
     ports:
-    - mode: ingress
-      target: 3000
-      published: 3000
+      - mode: ingress
+        target: 3000
+        published: 3000
     deploy:
       resources:
         reservations:
           memory: 1g
     depends_on:
-    - server
+      - server
   server:
     restart: unless-stopped
     build:
       context: ./server
       dockerfile: Dockerfile
     ports:
-    - target: 3010
-      mode: ingress
-      published: 3010
+      - target: 3010
+        mode: ingress
+        published: 3010
     environment:
-    - DATABASE_URL
+      - DATABASE_URL
     deploy:
       resources:
         reservations:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 512M

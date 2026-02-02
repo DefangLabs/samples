@@ -5,8 +5,8 @@ services:
     build:
       context: ./app
     ports:
-    - mode: ingress
-      target: 8080
+      - mode: ingress
+        target: 8080
     deploy:
       resources:
         reservations:

@@ -6,15 +6,15 @@ services:
       context: ./server
       dockerfile: Dockerfile
     ports:
-    - target: 4000
-      mode: ingress
-      published: 4000
+      - target: 4000
+        mode: ingress
+        published: 4000
     deploy:
       resources:
         reservations:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 1024M
     environment:
-    - PORT=4000
-    - SECRET_KEY_BASE
-    - DATABASE_URL
+      - PORT=4000
+      - SECRET_KEY_BASE
+      - DATABASE_URL

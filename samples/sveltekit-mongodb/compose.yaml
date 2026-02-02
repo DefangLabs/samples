@@ -13,35 +13,35 @@ services:
       PORT: 3000
       MONGODB_URI: mongodb://mongo:27017/musicdb
     ports:
-    - 3000:3000
+      - 3000:3000
     depends_on:
-    - mongo
+      - mongo
     healthcheck:
       test:
-      - CMD
-      - curl
-      - -f
-      - http://localhost:3000/
+        - CMD
+        - curl
+        - -f
+        - http://localhost:3000/
     deploy:
       resources:
         reservations:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 512M
   mongo:
     restart: unless-stopped
     image: mongo:latest
     ports:
-    - mode: host
-      target: 27017
+      - mode: host
+        target: 27017
     volumes:
-    - mongo-data:/data/db
+      - mongo-data:/data/db
     environment:
       MONGO_INITDB_DATABASE: musicdb
     x-defang-mongodb: true
     deploy:
       resources:
         reservations:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 512M
 volumes:
   mongo-data: null

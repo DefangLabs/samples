@@ -5,35 +5,35 @@ services:
       context: ./service-1
       dockerfile: Dockerfile
     ports:
-    - target: 3000
-      published: 3000
-      mode: ingress
+      - target: 3000
+        published: 3000
+        mode: ingress
     deploy:
       resources:
         reservations:
           memory: 256M
     environment:
-    - MCP_SERVICE_URL=http://service-2:8000
+      - MCP_SERVICE_URL=http://service-2:8000
     healthcheck:
       test:
-      - CMD
-      - curl
-      - -f
-      - http://localhost:3000/
+        - CMD
+        - curl
+        - -f
+        - http://localhost:3000/
     depends_on:
-    - service-2
+      - service-2
   service-2:
     build:
       context: ./service-2
       dockerfile: Dockerfile
     ports:
-    - target: 8000
-      published: 8000
-      mode: host
+      - target: 8000
+        published: 8000
+        mode: host
     environment:
-    - ANTHROPIC_API_KEY
+      - ANTHROPIC_API_KEY
     deploy:
       resources:
         reservations:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 512M

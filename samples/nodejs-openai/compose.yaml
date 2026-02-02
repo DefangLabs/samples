@@ -6,18 +6,18 @@ services:
       context: ./app
       dockerfile: Dockerfile
     ports:
-    - mode: ingress
-      target: 3000
-      published: 3000
+      - mode: ingress
+        target: 3000
+        published: 3000
     environment:
-    - OPENAI_KEY
+      - OPENAI_KEY
     deploy:
       resources:
         reservations:
           memory: 256M
     healthcheck:
       test:
-      - CMD
-      - curl
-      - -f
-      - http://localhost:3000/
+        - CMD
+        - curl
+        - -f
+        - http://localhost:3000/

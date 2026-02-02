@@ -4,28 +4,28 @@ services:
     restart: unless-stopped
     build: ./app
     ports:
-    - target: 1337
-      published: 1337
-      mode: ingress
+      - target: 1337
+        published: 1337
+        mode: ingress
     environment:
       DATABASE_URL: null
       SESSION_SECRET: null
     command:
-    - sails
-    - lift
-    - --prod
+      - sails
+      - lift
+      - --prod
     networks:
-    - app-network
+      - app-network
     healthcheck:
       test:
-      - CMD
-      - curl
-      - -f
-      - http://localhost:1337/
+        - CMD
+        - curl
+        - -f
+        - http://localhost:1337/
     deploy:
       resources:
         reservations:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 512M
 networks:
   app-network:
