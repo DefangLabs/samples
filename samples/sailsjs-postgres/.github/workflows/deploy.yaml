@@ -27,6 +27,9 @@ jobs:
       contents: read
       id-token: write
 
+    concurrency:
+      cancel-in-progress: false
+      group: deploy-sailsjs-postgres-${{ github.event.inputs.stack || 'default' }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
