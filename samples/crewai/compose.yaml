@@ -38,7 +38,7 @@ services:
       - redis
     environment:
       DJANGO_SETTINGS_MODULE: config.settings
-      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres?sslmode=${SSL_MODE}
+      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres?sslmode=require # remove sslmode for Playground
       REDIS_URL: redis://redis:6379/0
       CELERY_BROKER_URL: redis://redis:6379/0
       CELERY_RESULT_BACKEND: redis://redis:6379/0
@@ -71,7 +71,7 @@ services:
       - embedding
     environment:
       DJANGO_SETTINGS_MODULE: config.settings
-      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres?sslmode=${SSL_MODE}
+      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres?sslmode=require # remove sslmode for Playground
       REDIS_URL: redis://redis:6379/0
       OPENAI_API_KEY: defang
       DJANGO_SECRET_KEY: null
