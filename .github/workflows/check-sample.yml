@@ -3,7 +3,7 @@ name: Check Samples
 on:
   pull_request:
     paths:
-      - 'samples/**'
+      - "samples/**"
 
 jobs:
   check_samples:
@@ -13,19 +13,20 @@ jobs:
       pull-requests: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           # Fetch two to see changes in current commit
           fetch-depth: 2
 
-      - name: Install Defang
+      - name: Install Defang (nightly)
         run: |
           eval "$(curl -fsSL s.defang.io/install)"
+        env:
+          DEFANG_INSTALL_VERSION: nightly
 
       - name: Run Checks
         id: checks
         run: |
-          eval "$(curl -fsSL s.defang.io/install)"
           ./scripts/check-sample-files.sh > checklist.txt
           ./scripts/check-modified-samples.sh > modified.txt
           echo "@@ MODIFIED @@"
