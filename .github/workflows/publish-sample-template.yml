@@ -1,19 +1,19 @@
 name: Publish Sample Template
 
 on:
-  push: 
+  push:
     branches:
       - main
 
 jobs:
   publish_samples:
     runs-on: ubuntu-latest
-    permissions: 
+    permissions:
       contents: write
       pull-requests: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           # Fetch two to see changes in current commit
           fetch-depth: 2
