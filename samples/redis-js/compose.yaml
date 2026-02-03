@@ -3,27 +3,27 @@ services:
   app:
     build: ./app
     ports:
-    - 3000:3000
+      - 3000:3000
     environment:
-    - REDISX_URL=redis://redisx:6379
+      - REDISX_URL=redis://redisx:6379
     depends_on:
-    - redisx
+      - redisx
     deploy:
       resources:
         reservations:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 512M
   redisx:
     image: redis:latest
     x-defang-redis: true
     restart: unless-stopped
     ports:
-    - target: 6379
-      published: 6379
-      protocol: tcp
-      mode: host
+      - target: 6379
+        published: 6379
+        protocol: tcp
+        mode: host
     deploy:
       resources:
         reservations:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 512M

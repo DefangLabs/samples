@@ -6,23 +6,23 @@ services:
       context: ./app
       dockerfile: Dockerfile
     environment:
-    - SECRET_KEY
-    - REDIS_URL=redis://broker:6379/0
-    - POSTGRES_URL=postgres://postgres:${POSTGRES_PASSWORD}@database:5432/postgres
+      - SECRET_KEY
+      - REDIS_URL=redis://broker:6379/0
+      - POSTGRES_URL=postgres://postgres:${POSTGRES_PASSWORD}@database:5432/postgres
     depends_on:
-    - database
-    - migrate
-    - broker
+      - database
+      - migrate
+      - broker
     ports:
-    - mode: ingress
-      target: 8000
-      published: 8000
+      - mode: ingress
+        target: 8000
+        published: 8000
     healthcheck:
       test:
-      - CMD
-      - curl
-      - -f
-      - http://localhost:8000/health/
+        - CMD
+        - curl
+        - -f
+        - http://localhost:8000/health/
       interval: 30s
       timeout: 10s
       retries: 3
@@ -30,24 +30,24 @@ services:
     deploy:
       resources:
         reservations:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 512M
   migrate:
-    restart: 'no'
+    restart: "no"
     build:
       context: ./app
       dockerfile: Dockerfile
     environment:
-    - SECRET_KEY
-    - REDIS_URL=redis://broker:6379/0
-    - POSTGRES_URL=postgres://postgres:${POSTGRES_PASSWORD}@database:5432/postgres
+      - SECRET_KEY
+      - REDIS_URL=redis://broker:6379/0
+      - POSTGRES_URL=postgres://postgres:${POSTGRES_PASSWORD}@database:5432/postgres
     depends_on:
-    - database
+      - database
     command: python manage.py migrate
     deploy:
       resources:
         reservations:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 512M
   worker:
     restart: unless-stopped
@@ -55,57 +55,57 @@ services:
       context: ./app
       dockerfile: Dockerfile
     environment:
-    - SECRET_KEY
-    - REDIS_URL=redis://broker:6379/0
-    - POSTGRES_URL=postgres://postgres:${POSTGRES_PASSWORD}@database:5432/postgres
+      - SECRET_KEY
+      - REDIS_URL=redis://broker:6379/0
+      - POSTGRES_URL=postgres://postgres:${POSTGRES_PASSWORD}@database:5432/postgres
     depends_on:
-    - database
-    - broker
-    - migrate
+      - database
+      - broker
+      - migrate
     command: celery -A django_celery worker --loglevel=info
     deploy:
       resources:
         reservations:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 512M
   database:
     image: postgres:16
     x-defang-postgres: true
     ports:
-    - mode: host
-      target: 5432
-      published: 5432
+      - mode: host
+        target: 5432
+        published: 5432
     environment:
-    - POSTGRES_PASSWORD
+      - POSTGRES_PASSWORD
     healthcheck:
       test:
-      - CMD-SHELL
-      - pg_isready -U postgres
+        - CMD-SHELL
+        - pg_isready -U postgres
       interval: 10s
       timeout: 5s
       retries: 5
     deploy:
       resources:
         reservations:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 512M
   broker:
     image: redis:7.1
     x-defang-redis: true
     ports:
-    - mode: host
-      target: 6379
-      published: 6379
+      - mode: host
+        target: 6379
+        published: 6379
     healthcheck:
       test:
-      - CMD
-      - redis-cli
-      - ping
+        - CMD
+        - redis-cli
+        - ping
       interval: 10s
       timeout: 5s
       retries: 5
     deploy:
       resources:
         reservations:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 512M

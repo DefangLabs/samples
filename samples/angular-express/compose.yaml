@@ -4,25 +4,25 @@ services:
     build:
       context: ./frontend
     ports:
-    - target: 80
-      published: 80
-      mode: ingress
+      - target: 80
+        published: 80
+        mode: ingress
     restart: unless-stopped
     deploy:
       resources:
         reservations:
           memory: 64M
     depends_on:
-    - backend
+      - backend
   backend:
     build:
       context: ./backend
     ports:
-    - target: 3000
-      published: 3000
-      mode: ingress
+      - target: 3000
+        published: 3000
+        mode: ingress
     environment:
-    - PORT=3000
+      - PORT=3000
     restart: unless-stopped
     deploy:
       resources:

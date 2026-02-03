@@ -6,11 +6,11 @@ services:
       context: ./fastapi
       dockerfile: Dockerfile
     ports:
-    - mode: ingress
-      target: 8000
-      published: 8000
+      - mode: ingress
+        target: 8000
+        published: 8000
     deploy:
       resources:
         reservations:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 512M

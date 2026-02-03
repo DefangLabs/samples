@@ -11,13 +11,13 @@ services:
       DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres?sslmode=${SSL_MODE}
       SSL_MODE: null
     ports:
-    - 8000:8000
+      - 8000:8000
     healthcheck:
       test:
-      - CMD
-      - curl
-      - -f
-      - http://localhost:8000/healthz
+        - CMD
+        - curl
+        - -f
+        - http://localhost:8000/healthz
       interval: 30s
       timeout: 5s
       retries: 3
@@ -25,7 +25,7 @@ services:
     deploy:
       resources:
         reservations:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 512M
   app_b:
     build:
@@ -37,13 +37,13 @@ services:
     environment:
       DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres?sslmode=${SSL_MODE}
     ports:
-    - 8001:8000
+      - 8001:8000
     healthcheck:
       test:
-      - CMD
-      - curl
-      - -f
-      - http://localhost:8000/healthz
+        - CMD
+        - curl
+        - -f
+        - http://localhost:8000/healthz
       interval: 30s
       timeout: 5s
       retries: 3
@@ -51,7 +51,7 @@ services:
     deploy:
       resources:
         reservations:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 512M
   postgres:
     image: postgres:16
@@ -59,14 +59,14 @@ services:
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-    - mode: host
-      target: 5432
-      published: 5432
+      - mode: host
+        target: 5432
+        published: 5432
     x-defang-postgres: true
     healthcheck:
       test:
-      - CMD-SHELL
-      - pg_isready -U postgres -d postgres
+        - CMD-SHELL
+        - pg_isready -U postgres -d postgres
       interval: 10s
       timeout: 5s
       retries: 5
@@ -74,5 +74,5 @@ services:
     deploy:
       resources:
         reservations:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 512M

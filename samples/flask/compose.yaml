@@ -8,16 +8,16 @@ services:
     deploy:
       resources:
         reservations:
-          cpus: '1.0'
+          cpus: "1.0"
           memory: 512M
     ports:
-    - mode: ingress
-      target: 5000
-      published: 5000
+      - mode: ingress
+        target: 5000
+        published: 5000
     healthcheck:
       test:
-      - CMD
-      - python3
-      - -c
-      - import sys, urllib.request; urllib.request.urlopen(sys.argv[1]).read()
-      - http://localhost:5000/
+        - CMD
+        - python3
+        - -c
+        - import sys, urllib.request; urllib.request.urlopen(sys.argv[1]).read()
+        - http://localhost:5000/

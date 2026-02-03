@@ -5,9 +5,9 @@ services:
       context: ./app
       dockerfile: Dockerfile
     ports:
-    - target: 3000
-      published: 3000
-      mode: ingress
+      - target: 3000
+        published: 3000
+        mode: ingress
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: null
@@ -17,16 +17,16 @@ services:
       POSTGRES_SSL: null
     healthcheck:
       test:
-      - CMD
-      - curl
-      - -f
-      - http://localhost:3000
+        - CMD
+        - curl
+        - -f
+        - http://localhost:3000
     depends_on:
-    - database
+      - database
     deploy:
       resources:
         reservations:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 512M
   database:
     image: postgres:16
@@ -34,11 +34,11 @@ services:
     environment:
       POSTGRES_PASSWORD: null
     ports:
-    - target: 5432
-      published: 5432
-      mode: host
+      - target: 5432
+        published: 5432
+        mode: host
     deploy:
       resources:
         reservations:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 512M
