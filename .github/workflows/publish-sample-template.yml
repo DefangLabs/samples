@@ -37,5 +37,5 @@ jobs:
           github-token: ${{ secrets.TEMPLATES_MANAGER_TOKEN }}
           script: |
             const script = require('./scripts/template-manager.js')
-            const output = script({github, context, core});
+            const output = await script({github, context, core});
             console.log("@@ output", output)
