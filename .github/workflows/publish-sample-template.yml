@@ -25,6 +25,10 @@ jobs:
           echo "@@ MODIFIED @@"
           cat modified.txt
 
+      - name: Install script dependencies
+        run: npm install
+        working-directory: scripts
+
       - name: Create / Update Template Repo Main
         uses: actions/github-script@v7
         env:
