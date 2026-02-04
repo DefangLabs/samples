@@ -1,3 +1,4 @@
+name: crewai
 services:
   postgres:
     image: pgvector/pgvector:pg16
