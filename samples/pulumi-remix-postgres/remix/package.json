@@ -3,17 +3,17 @@
   "dependencies": {
     "@defang-io/pulumi-defang": "^0.15.1",
     "@prisma/client": "^5.5.2",
-    "@remix-run/express": "^2.2.0",
-    "@remix-run/node": "^2.2.0",
-    "@remix-run/react": "^2.2.0",
-    "@remix-run/serve": "^2.2.0",
+    "@remix-run/express": "^2.17.4",
+    "@remix-run/node": "^2.17.4",
+    "@remix-run/react": "^2.17.4",
+    "@remix-run/serve": "^2.17.4",
     "express": "^4.19.2",
     "isbot": "^3.7.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@remix-run/dev": "^2.2.0",
+    "@remix-run/dev": "^2.17.4",
     "@types/react": "^18.2.34",
     "prisma": "^5.5.2"
   },
