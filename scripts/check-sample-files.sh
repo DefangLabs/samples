@@ -25,9 +25,9 @@ for dir in ./samples/*/; do
     )
   fi
 
-  # Check that we have a .github/workflows/deploy.yaml file
-  if [[ ! -f "${dir}.github/workflows/deploy.yaml" && "$pulumi" == "false" ]]; then
-      echo " - [ ] add .github/workflows/deploy.yaml to ${dir} (see starter-sample)"
+  # Check that we NOT have a .github/workflows/deploy.yaml file; it's generated from templates/deploy.yaml
+  if [[ -f "${dir}.github/workflows/deploy.yaml" && "$pulumi" == "false" ]]; then
+      echo " - [ ] remove .github/workflows/deploy.yaml to ${dir} (generated file)"
   fi
 
   if [[ ! -f "${dir}README.md" ]]; then

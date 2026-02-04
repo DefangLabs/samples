@@ -42,7 +42,7 @@ jobs:
       #     cat modified.txt | xargs -n1 defang compose config -C > /dev/null
 
       - name: Add checklist to PR description
-        uses: actions/github-script@v5
+        uses: actions/github-script@v7
         with:
           script: |
             const script = require('./scripts/add-checklist-to-pr.js');
@@ -52,6 +52,10 @@ jobs:
             } catch (error) {
               core.setFailed(`Script execution failed: ${error.message}`);
             }
+
+      - name: Install script dependencies
+        run: npm install
+        working-directory: scripts
 
       - name: Create / Update Template Repo
         uses: actions/github-script@v7
