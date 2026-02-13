@@ -1,3 +1,4 @@
+name: fastapi-postgres
 services:
   fastapi:
     restart: unless-stopped
@@ -12,11 +13,11 @@ services:
       - DB_URL=postgres://postgres:${POSTGRES_PASSWORD}@db:5432/postgres
     depends_on:
       - db
-    #deploy:
-    #  resources:
-    #    reservations:
-    #      memory: 256M
-
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M
   db:
     image: postgres:15
     restart: unless-stopped
@@ -27,3 +28,8 @@ services:
     ports:
       - mode: host
         target: 5432
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M

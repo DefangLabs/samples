@@ -1,11 +1,10 @@
+name: phoenix-postgres
 services:
   phoenix:
     restart: unless-stopped
     build:
       context: ./server
       dockerfile: Dockerfile
-    # uncomment to add your own domain
-    # domainname: mydomain.com
     ports:
       - target: 4000
         mode: ingress
@@ -13,7 +12,7 @@ services:
     deploy:
       resources:
         reservations:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 1024M
     environment:
       - PORT=4000

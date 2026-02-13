@@ -1,3 +1,4 @@
+name: django-celery
 services:
   web:
     restart: unless-stopped
@@ -17,14 +18,22 @@ services:
         target: 8000
         published: 8000
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health/"]
+      test:
+        - CMD
+        - curl
+        - -f
+        - http://localhost:8000/health/
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 20s
-
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M
   migrate:
-    restart: no
+    restart: "no"
     build:
       context: ./app
       dockerfile: Dockerfile
@@ -35,15 +44,16 @@ services:
     depends_on:
       - database
     command: python manage.py migrate
-
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M
   worker:
     restart: unless-stopped
     build:
       context: ./app
       dockerfile: Dockerfile
-    # If you need more than one worker, uncomment the following lines
-    # deploy:
-    #   replicas: 2
     environment:
       - SECRET_KEY
       - REDIS_URL=redis://broker:6379/0
@@ -53,7 +63,11 @@ services:
       - broker
       - migrate
     command: celery -A django_celery worker --loglevel=info
-
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M
   database:
     image: postgres:16
     x-defang-postgres: true
@@ -64,11 +78,17 @@ services:
     environment:
       - POSTGRES_PASSWORD
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test:
+        - CMD-SHELL
+        - pg_isready -U postgres
       interval: 10s
       timeout: 5s
       retries: 5
-
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M
   broker:
     image: redis:7.1
     x-defang-redis: true
@@ -77,8 +97,15 @@ services:
         target: 6379
         published: 6379
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test:
+        - CMD
+        - redis-cli
+        - ping
       interval: 10s
       timeout: 5s
       retries: 5
-
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M

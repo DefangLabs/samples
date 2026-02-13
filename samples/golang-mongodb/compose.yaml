@@ -1,3 +1,4 @@
+name: golang-mongodb
 services:
   app:
     restart: unless-stopped
@@ -9,18 +10,20 @@ services:
         target: 8080
         published: 8080
     environment:
-      # If you want to use MongoDB Atlas, you can set the URI with `defang config set MONGO_URI`.
-      # This will override any value set in the environment variable:
       - MONGO_URI=mongodb://$MONGO_INITDB_ROOT_USERNAME:$MONGO_INITDB_ROOT_PASSWORD@db:27017/taskmanager
-    #deploy:
-    #  resources:
-    #    reservations:
-    #      memory: 256M
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      test:
+        - CMD
+        - curl
+        - -f
+        - http://localhost:8080/
     depends_on:
       - db
-
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M
   db:
     image: mongo:5
     restart: unless-stopped
@@ -32,9 +35,12 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD
     volumes:
       - db_data:/data/db
-    # The following option will provision a managed MongoDB instance, eg. DocumentDB on AWS.
     x-defang-mongodb: true
-
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M
 volumes:
   db_data:
     driver: local

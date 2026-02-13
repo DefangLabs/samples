@@ -1,3 +1,4 @@
+name: langchain
 services:
   langchain-app:
     build:
@@ -11,4 +12,13 @@ services:
         protocol: tcp
         mode: ingress
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      test:
+        - CMD
+        - curl
+        - -f
+        - http://localhost:8080/
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M

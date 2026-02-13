@@ -23,11 +23,18 @@ for dir in ./samples/*/; do
         echo " - [ ] ${dir}compose.yaml is not valid according to \`defang compose config\`:  $output"
       fi
     )
+
+    # Ensure the name: in Compose matches the sample/folder name
+    sample_name=$(basename "$dir")
+    compose_name=$(grep -E '^name:' "${dir}compose.yaml" | awk '{print $2}')
+    if [[ "$sample_name" != "$compose_name" ]]; then
+      echo " - [ ] fix name: in ${dir}compose.yaml to be '$sample_name' (currently '$compose_name')"
+    fi
   fi
 
-  # Check that we have a .github/workflows/deploy.yaml file
-  if [[ ! -f "${dir}.github/workflows/deploy.yaml" && "$pulumi" == "false" ]]; then
-      echo " - [ ] add .github/workflows/deploy.yaml to ${dir} (see starter-sample)"
+  # Check that we NOT have a .github/workflows/deploy.yaml file; it's generated from templates/deploy.yaml
+  if [[ -f "${dir}.github/workflows/deploy.yaml" && "$pulumi" == "false" ]]; then
+      echo " - [ ] remove .github/workflows/deploy.yaml to ${dir} (generated file)"
   fi
 
   if [[ ! -f "${dir}README.md" ]]; then

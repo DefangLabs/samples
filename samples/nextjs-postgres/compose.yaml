@@ -1,7 +1,6 @@
+name: nextjs-postgres
 services:
   app:
-    # uncomment to add your own domain
-    # domainname: example.com
     build:
       context: ./app
       dockerfile: Dockerfile
@@ -11,22 +10,35 @@ services:
         mode: ingress
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD:
+      POSTGRES_PASSWORD: null
       POSTGRES_HOST: database
       POSTGRES_PORT: 5432
       POSTGRES_DB: postgres
-      POSTGRES_SSL: true
+      POSTGRES_SSL: null
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000" ]
+      test:
+        - CMD
+        - curl
+        - -f
+        - http://localhost:3000
     depends_on:
       - database
-
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M
   database:
     image: postgres:16
     x-defang-postgres: true
     environment:
-      POSTGRES_PASSWORD:
+      POSTGRES_PASSWORD: null
     ports:
       - target: 5432
         published: 5432
         mode: host
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M

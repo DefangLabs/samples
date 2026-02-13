@@ -1,3 +1,4 @@
+name: nextjs-documentation
 services:
   documentstarter:
     restart: unless-stopped

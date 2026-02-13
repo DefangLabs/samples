@@ -3,7 +3,7 @@ name: Check Samples
 on:
   pull_request:
     paths:
-      - 'samples/**'
+      - "samples/**"
 
 jobs:
   check_samples:
@@ -13,19 +13,20 @@ jobs:
       pull-requests: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           # Fetch two to see changes in current commit
           fetch-depth: 2
 
-      - name: Install Defang
+      - name: Install Defang (nightly)
         run: |
           eval "$(curl -fsSL s.defang.io/install)"
+        env:
+          DEFANG_INSTALL_VERSION: nightly
 
       - name: Run Checks
         id: checks
         run: |
-          eval "$(curl -fsSL s.defang.io/install)"
           ./scripts/check-sample-files.sh > checklist.txt
           ./scripts/check-modified-samples.sh > modified.txt
           echo "@@ MODIFIED @@"
@@ -41,7 +42,7 @@ jobs:
       #     cat modified.txt | xargs -n1 defang compose config -C > /dev/null
 
       - name: Add checklist to PR description
-        uses: actions/github-script@v5
+        uses: actions/github-script@v7
         with:
           script: |
             const script = require('./scripts/add-checklist-to-pr.js');
@@ -52,6 +53,10 @@ jobs:
               core.setFailed(`Script execution failed: ${error.message}`);
             }
 
+      - name: Install script dependencies
+        run: npm install
+        working-directory: scripts
+
       - name: Create / Update Template Repo
         uses: actions/github-script@v7
         env:
@@ -60,5 +65,5 @@ jobs:
           github-token: ${{ secrets.TEMPLATES_MANAGER_TOKEN }}
           script: |
             const script = require('./scripts/template-manager.js')
-            const output = script({github, context, core});
+            const output = await script({github, context, core});
             console.log("@@ output", output)

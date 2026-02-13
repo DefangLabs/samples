@@ -1,3 +1,4 @@
+name: angular-express
 services:
   angular-frontend:
     build:
@@ -13,7 +14,6 @@ services:
           memory: 64M
     depends_on:
       - backend
-
   backend:
     build:
       context: ./backend

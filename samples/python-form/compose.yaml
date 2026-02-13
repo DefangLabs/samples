@@ -1,3 +1,4 @@
+name: python-form
 services:
   app:
     restart: unless-stopped
@@ -12,4 +13,8 @@ services:
         reservations:
           memory: 256M
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      test:
+        - CMD
+        - curl
+        - -f
+        - http://localhost:5000/

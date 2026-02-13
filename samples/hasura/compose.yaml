@@ -1,11 +1,10 @@
+name: hasura
 services:
   hasura:
     restart: unless-stopped
     build:
       dockerfile: Dockerfile
       context: ./hasura
-    # If you want to add your own domain name in Defang BYOC, uncomment the following line and replace the domain name with your own
-    # domainname: hasura.mycoolapp.com
     ports:
       - target: 8080
         published: 8080
@@ -23,7 +22,12 @@ services:
       - HASURA_GRAPHQL_MIGRATIONS_DIR=/hasura/migrations
       - HASURA_GRAPHQL_METADATA_DIR=/hasura/metadata
       - SSL_MODE
-  
+      - POSTGRES_PASSWORD
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M
   database:
     image: postgres:16
     x-defang-postgres: true
@@ -32,3 +36,8 @@ services:
         mode: host
     environment:
       - POSTGRES_PASSWORD
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M

@@ -1,13 +1,18 @@
+name: metabase
 services:
   metabase:
     restart: unless-stopped
-    image: "metabase/metabase:latest"
+    image: metabase/metabase:latest
     ports:
       - mode: ingress
         target: 3000
         published: 3000
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health" ]
+      test:
+        - CMD
+        - curl
+        - -f
+        - http://localhost:3000/api/health
       interval: 1m30s
       timeout: 30s
       retries: 5

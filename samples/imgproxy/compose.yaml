@@ -1,3 +1,4 @@
+name: imgproxy
 services:
   imgproxy:
     restart: unless-stopped

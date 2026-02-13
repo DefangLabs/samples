@@ -1,3 +1,4 @@
+name: huginn
 services:
   huginn:
     image: ghcr.io/huginn/huginn
@@ -9,10 +10,14 @@ services:
     deploy:
       resources:
         reservations:
-          cpus: '1.0'
+          cpus: "1.0"
           memory: 1G
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      test:
+        - CMD
+        - curl
+        - -f
+        - http://localhost:3000/
       interval: 1m30s
       timeout: 30s
       retries: 10
@@ -34,3 +39,8 @@ services:
       - mode: host
         target: 5432
         published: 5432
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M

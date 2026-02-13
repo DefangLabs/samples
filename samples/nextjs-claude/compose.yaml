@@ -1,7 +1,6 @@
+name: nextjs-claude
 services:
   nextjs-claude:
-    # uncomment to add your own domain
-    # domainname: example.com
     build:
       context: ./ui
       dockerfile: Dockerfile
@@ -13,7 +12,11 @@ services:
       resources:
         reservations:
           memory: 256M
-    environment: 
+    environment:
       - ANTHROPIC_API_KEY
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      test:
+        - CMD
+        - curl
+        - -f
+        - http://localhost:3000/

@@ -1,3 +1,4 @@
+name: python-implicit-gpu
 services:
   app:
     restart: unless-stopped
@@ -10,9 +11,14 @@ services:
           cpus: "1.0"
           memory: 2048M
           devices:
-            - capabilities: ["gpu"]
+            - capabilities:
+                - gpu
     ports:
       - mode: ingress
         target: 5000
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      test:
+        - CMD
+        - curl
+        - -f
+        - http://localhost:5000/

@@ -1,19 +1,19 @@
 name: Publish Sample Template
 
 on:
-  push: 
+  push:
     branches:
       - main
 
 jobs:
   publish_samples:
     runs-on: ubuntu-latest
-    permissions: 
+    permissions:
       contents: write
       pull-requests: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           # Fetch two to see changes in current commit
           fetch-depth: 2
@@ -25,6 +25,10 @@ jobs:
           echo "@@ MODIFIED @@"
           cat modified.txt
 
+      - name: Install script dependencies
+        run: npm install
+        working-directory: scripts
+
       - name: Create / Update Template Repo Main
         uses: actions/github-script@v7
         env:
@@ -33,5 +37,5 @@ jobs:
           github-token: ${{ secrets.TEMPLATES_MANAGER_TOKEN }}
           script: |
             const script = require('./scripts/template-manager.js')
-            const output = script({github, context, core});
+            const output = await script({github, context, core});
             console.log("@@ output", output)

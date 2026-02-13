@@ -1,8 +1,7 @@
+name: react
 services:
   app:
-    restart: 'unless-stopped'
-    # uncomment to add your own domain
-    # domainname: example.com
+    restart: unless-stopped
     build:
       context: ./app
       dockerfile: Dockerfile
@@ -15,4 +14,8 @@ services:
         reservations:
           memory: 512M
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5173/"]
+      test:
+        - CMD
+        - curl
+        - -f
+        - http://localhost:5173/

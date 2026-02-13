@@ -1,3 +1,4 @@
+name: nodejs-react-postgres
 services:
   todo_list:
     restart: unless-stopped
@@ -5,7 +6,7 @@ services:
       context: ./client
       dockerfile: Dockerfile
       args:
-        - REACT_APP_API_URL=https://<YOUR_USERNAME>-server--3010.prod1.defang.dev #replace <YOUR_USERNAME> with your username
+        - REACT_APP_API_URL=https://<YOUR_USERNAME>-server--3010.prod1.defang.dev
     ports:
       - mode: ingress
         target: 3000
@@ -26,8 +27,9 @@ services:
         mode: ingress
         published: 3010
     environment:
-     - DATABASE_URL    # To use your production database connection string, use `defang config set DATABASE_URL`
-    #deploy:
-    #  resources:
-    #    reservations:
-    #      memory: 256M
+      - DATABASE_URL
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M

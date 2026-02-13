@@ -1,7 +1,7 @@
+name: sveltekit
 services:
   sveltekit:
     restart: unless-stopped
-    # domainname: mydomain.com # if you want to use your own domain
     build:
       context: ./sveltekit
       dockerfile: Dockerfile
@@ -12,5 +12,5 @@ services:
     deploy:
       resources:
         reservations:
-          cpus: '0.50'
+          cpus: "0.50"
           memory: 512M

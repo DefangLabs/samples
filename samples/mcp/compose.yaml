@@ -1,5 +1,6 @@
+name: mcp
 services:
-  service-1: # Web Server and UI
+  service-1:
     build:
       context: ./service-1
       dockerfile: Dockerfile
@@ -14,11 +15,14 @@ services:
     environment:
       - MCP_SERVICE_URL=http://service-2:8000
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      test:
+        - CMD
+        - curl
+        - -f
+        - http://localhost:3000/
     depends_on:
       - service-2
-
-  service-2: # MCP Service (MCP Client and Server)
+  service-2:
     build:
       context: ./service-2
       dockerfile: Dockerfile
@@ -28,3 +32,8 @@ services:
         mode: host
     environment:
       - ANTHROPIC_API_KEY
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M

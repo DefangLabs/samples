@@ -1,3 +1,4 @@
+name: django-postgres
 services:
   db:
     restart: unless-stopped
@@ -11,10 +12,12 @@ services:
       - mode: host
         target: 5432
         published: 5432
-
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M
   django:
-    # uncomment to add your own domain
-    # domainname: example.com
     restart: unless-stopped
     build: ./app
     ports:
@@ -31,3 +34,8 @@ services:
       - ALLOWED_HOSTS
     depends_on:
       - db
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M

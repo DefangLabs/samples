@@ -1,3 +1,4 @@
+name: fastapi-postgres-pubsub
 services:
   app_a:
     build:
@@ -8,16 +9,24 @@ services:
         condition: service_healthy
     environment:
       DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres?sslmode=${SSL_MODE}
-      SSL_MODE: # just here so it gets picked up by our tests
+      SSL_MODE: null
     ports:
-      - "8000:8000"
+      - 8000:8000
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/healthz"]
+      test:
+        - CMD
+        - curl
+        - -f
+        - http://localhost:8000/healthz
       interval: 30s
       timeout: 5s
       retries: 3
       start_period: 10s
-
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M
   app_b:
     build:
       context: ./app
@@ -28,14 +37,22 @@ services:
     environment:
       DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres?sslmode=${SSL_MODE}
     ports:
-      - "8001:8000"
+      - 8001:8000
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/healthz"]
+      test:
+        - CMD
+        - curl
+        - -f
+        - http://localhost:8000/healthz
       interval: 30s
       timeout: 5s
       retries: 3
       start_period: 10s
-
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M
   postgres:
     image: postgres:16
     restart: always
@@ -47,9 +64,15 @@ services:
         published: 5432
     x-defang-postgres: true
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      test:
+        - CMD-SHELL
+        - pg_isready -U postgres -d postgres
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 5s
-
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M
