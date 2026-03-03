@@ -85,7 +85,6 @@ async function onConfirm() {
   try {
     const params = getParams();
     const inviteId = params.get("inviteId");
-    const secret = params.get("secret");
     const apiUrl = getApiUrl();
     const accountId = document.getElementById("account-id").value;
     const region = document.getElementById("region").value;
