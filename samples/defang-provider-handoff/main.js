@@ -93,9 +93,7 @@ async function onConfirm() {
     const res = await fetch(`${apiUrl}/cloud-invites/${inviteId}/complete`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${secret}`,
-      },
+        "Content-Type": "application/json",      },
       body: JSON.stringify({
         awsAccountId: accountId,
         awsRegion: region,
