@@ -1,0 +1,217 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #f5f5f5;
+  color: #1a1a1a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.container {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 460px;
+}
+
+/* ── Progress indicator ── */
+
+.progress {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.progress-dot {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border: 2px solid #ccc;
+  color: #999;
+  background: #fff;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.progress-label {
+  font-size: 0.72rem;
+  color: #999;
+  transition: color 0.2s;
+}
+
+.progress-line {
+  flex: 1;
+  height: 2px;
+  background: #ccc;
+  margin: 0 0.5rem;
+  margin-bottom: 1.25rem;
+  transition: background 0.2s;
+}
+
+.progress-step.active .progress-dot {
+  border-color: #0066cc;
+  background: #0066cc;
+  color: #fff;
+}
+
+.progress-step.active .progress-label {
+  color: #0066cc;
+  font-weight: 600;
+}
+
+.progress-step.completed .progress-dot {
+  border-color: #0066cc;
+  background: #e8f0fb;
+  color: #0066cc;
+}
+
+.progress-step.completed .progress-label {
+  color: #0066cc;
+}
+
+.progress-step.completed + .progress-line {
+  background: #0066cc;
+}
+
+/* ── Error ── */
+
+.error {
+  margin: 0 0 1.5rem;
+  padding: 0.75rem 1rem;
+  background: #fff3f3;
+  border: 1px solid #f5c6c6;
+  border-radius: 4px;
+  color: #c0392b;
+  font-size: 0.9rem;
+}
+
+/* ── Step panels ── */
+
+.step-panel h1 {
+  margin: 0 0 1rem;
+  font-size: 1.3rem;
+}
+
+.step-panel p, .step-panel ul, .step-panel ol {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: #444;
+}
+
+.step-panel ul {
+  padding-left: 1.25rem;
+}
+
+.step-panel li {
+  margin-bottom: 0.3rem;
+}
+
+/* ── Form ── */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.25rem;
+}
+
+label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.375rem;
+}
+
+input, select {
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+input:focus, select:focus {
+  border-color: #0066cc;
+}
+
+/* ── Summary (step 3) ── */
+
+.summary {
+  margin: 0 0 1rem;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem 1rem;
+  font-size: 0.95rem;
+}
+
+.summary dt {
+  font-weight: 600;
+  color: #555;
+}
+
+.summary dd {
+  margin: 0;
+  color: #1a1a1a;
+}
+
+.hint {
+  font-size: 0.85rem;
+  color: #777;
+}
+
+/* ── Actions ── */
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+}
+
+button {
+  padding: 0.575rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+button:not(.btn-secondary) {
+  background: #0066cc;
+  color: #fff;
+}
+
+button:not(.btn-secondary):hover {
+  background: #0052a3;
+}
+
+.btn-secondary {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.btn-secondary:hover {
+  background: #e0e0e0;
+}
