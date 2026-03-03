@@ -168,12 +168,9 @@ function makeCFStackCreateURL(templateURL, args) {
 async function fetchInvite() {
   const params = getParams();
   const inviteId = params.get("inviteId");
-  const secret = params.get("secret");
   const apiUrl = getApiUrl();
 
-  const res = await fetch(`${apiUrl}/cloud-invites/${inviteId}`, {
-    headers: { Authorization: `Bearer ${secret}` },
-  });
+  const res = await fetch(`${apiUrl}/cloud-invites/${inviteId}`);
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
     throw new Error(
