@@ -4,7 +4,7 @@ const GITHUB_OIDC_ISSUER = "token.actions.githubusercontent.com";
 const AWS_CIROLE_NAME = "defang-cd-CIRole";
 
 const DEFAULT_API_URL = "https://api.defang.io";
-const REQUIRED_PARAMS = ["inviteId", "secret"];
+const REQUIRED_PARAMS = ["inviteId"];
 
 const TOTAL_STEPS = 5;
 let currentStep = 1;
