@@ -3,20 +3,21 @@ const AWS_TEMPLATE_URL =
 const GITHUB_OIDC_ISSUER = "token.actions.githubusercontent.com";
 const AWS_CIROLE_NAME = "defang-cd-CIRole";
 
-const REQUIRED_PARAMS = [
-  "session",
-  "org",
-  "provider",
-  "repoPattern",
-  "refType",
-  "refPattern",
-];
+const DEFAULT_API_URL = "https://api.defang.io";
+const REQUIRED_PARAMS = ["inviteId", "secret"];
 
 const TOTAL_STEPS = 5;
 let currentStep = 1;
 
+// Populated by fetchInvite() on page load.
+let inviteData = null;
+
 function getParams() {
   return new URLSearchParams(window.location.search);
+}
+
+function getApiUrl() {
+  return getParams().get("apiUrl") || DEFAULT_API_URL;
 }
 
 function showStep(n) {
@@ -58,11 +59,11 @@ function onNextClick() {
 }
 
 function onSubmit(properties) {
-  const params = getParams();
-  const org = params.get("org");
-  const repoPattern = params.get("repoPattern");
-  const refType = params.get("refType");
-  const refPattern = params.get("refPattern");
+  const gitDetails = inviteData.gitDetails;
+  const org = gitDetails.orgs?.[0] ?? "";
+  const repoPattern = gitDetails.repoPattern ?? "*";
+  const refType = gitDetails.refType ?? "all";
+  const refPattern = gitDetails.refPattern ?? "*";
   const { accountId, region } = properties;
   const cloudformationURL = makeQuickCreateURL({
     accountId,
@@ -82,15 +83,29 @@ async function onConfirm() {
   const confirmError = document.getElementById("confirm-error");
   confirmError.hidden = true;
   try {
-    const session = getParams().get("session");
-    // TODO: replace this endpoint
-    const res = await fetch("https://graphql.defang.io/completeCloudInvite", {
+    const params = getParams();
+    const inviteId = params.get("inviteId");
+    const secret = params.get("secret");
+    const apiUrl = getApiUrl();
+    const accountId = document.getElementById("account-id").value;
+    const region = document.getElementById("region").value;
+
+    const res = await fetch(`${apiUrl}/cloud-invites/${inviteId}/complete`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ session }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${secret}`,
+      },
+      body: JSON.stringify({
+        awsAccountId: accountId,
+        awsRegion: region,
+      }),
     });
     if (!res.ok) {
-      throw new Error("Request failed with status " + res.status);
+      const data = await res.json().catch(() => ({}));
+      throw new Error(
+        data.message || "Request failed with status " + res.status,
+      );
     }
     showStep(TOTAL_STEPS);
   } catch (err) {
@@ -152,8 +167,27 @@ function makeCFStackCreateURL(templateURL, args) {
   return `https://${baseUrl}?${query}#/stacks/create/review?${fragmentParams.toString()}`;
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+async function fetchInvite() {
+  const params = getParams();
+  const inviteId = params.get("inviteId");
+  const secret = params.get("secret");
+  const apiUrl = getApiUrl();
+
+  const res = await fetch(`${apiUrl}/cloud-invites/${inviteId}`, {
+    headers: { Authorization: `Bearer ${secret}` },
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(
+      data.message || "This invite link is invalid or has expired.",
+    );
+  }
+  return res.json();
+}
+
+document.addEventListener("DOMContentLoaded", async function () {
   const error = document.getElementById("error");
+  const loading = document.getElementById("loading");
   const params = getParams();
   const missing = REQUIRED_PARAMS.filter(function (key) {
     return !params.has(key);
@@ -163,18 +197,26 @@ document.addEventListener("DOMContentLoaded", function () {
     error.textContent =
       "Missing required query parameters: " + missing.join(", ");
     error.hidden = false;
+    loading.hidden = true;
     document.querySelector(".progress").hidden = true;
     document.querySelector(".actions").hidden = true;
-    for (let i = 1; i <= TOTAL_STEPS; i++) {
-      document.getElementById("step-" + i).hidden = true;
-    }
     return;
+  }
+
+  try {
+    inviteData = await fetchInvite();
+    loading.hidden = true;
+    showStep(1);
+  } catch (err) {
+    loading.hidden = true;
+    error.textContent = err.message;
+    error.hidden = false;
+    document.querySelector(".progress").hidden = true;
+    document.querySelector(".actions").hidden = true;
   }
 
   document.getElementById("btn-next").addEventListener("click", onNextClick);
   document.getElementById("btn-back").addEventListener("click", function () {
     if (currentStep > 1) showStep(currentStep - 1);
   });
-
-  showStep(1);
 });

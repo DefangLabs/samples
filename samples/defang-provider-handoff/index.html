@@ -32,8 +32,13 @@
 
       <p id="error" class="error" hidden></p>
 
+      <!-- Loading state while fetching invite details -->
+      <div id="loading" class="step-panel" style="text-align: center; color: #666">
+        Loading invite details...
+      </div>
+
       <!-- Step 1: Intro -->
-      <div id="step-1" class="step-panel">
+      <div id="step-1" class="step-panel" hidden>
         <h1>AWS Provider Setup</h1>
         <p>
           This wizard will connect your AWS account to Defang by creating a
