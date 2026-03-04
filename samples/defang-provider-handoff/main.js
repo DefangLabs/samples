@@ -4,7 +4,6 @@ const GITHUB_OIDC_ISSUER = "token.actions.githubusercontent.com";
 const AWS_CIROLE_NAME = "defang-cd-CIRole";
 
 const DEFAULT_API_URL = "https://api.defang.io";
-const REQUIRED_PARAMS = ["inviteId"];
 
 const TOTAL_STEPS = 5;
 let currentStep = 1;
@@ -12,13 +11,7 @@ let currentStep = 1;
 // Populated by fetchInvite() on page load.
 let inviteData = null;
 
-function getParams() {
-  return new URLSearchParams(window.location.search);
-}
-
-function getApiUrl() {
-  return getParams().get("apiUrl") || DEFAULT_API_URL;
-}
+const inviteId = document.location.pathname.split("/").pop().trim();
 
 function showStep(n) {
   for (let i = 1; i <= TOTAL_STEPS; i++) {
@@ -32,7 +25,7 @@ function showStep(n) {
     }
   }
   const isSuccess = n === TOTAL_STEPS;
-  document.getElementById("btn-back").hidden = n === 1;
+  document.getElementById("btn-back").hidden = n === 1 || isSuccess;
   document.getElementById("btn-next").hidden = isSuccess;
   document.getElementById("btn-next").textContent =
     n === 3 ? "Launch" : n === 4 ? "Confirm" : "Next";
@@ -83,9 +76,7 @@ async function onConfirm() {
   const confirmError = document.getElementById("confirm-error");
   confirmError.hidden = true;
   try {
-    const params = getParams();
-    const inviteId = params.get("inviteId");
-    const apiUrl = getApiUrl();
+    const apiUrl = DEFAULT_API_URL;
     const accountId = document.getElementById("account-id").value;
     const region = document.getElementById("region").value;
 
@@ -165,9 +156,7 @@ function makeCFStackCreateURL(templateURL, args) {
 }
 
 async function fetchInvite() {
-  const params = getParams();
-  const inviteId = params.get("inviteId");
-  const apiUrl = getApiUrl();
+  const apiUrl = DEFAULT_API_URL;
 
   const res = await fetch(`${apiUrl}/cloud-invites/${inviteId}`);
   if (!res.ok) {
@@ -182,12 +171,8 @@ async function fetchInvite() {
 document.addEventListener("DOMContentLoaded", async function () {
   const error = document.getElementById("error");
   const loading = document.getElementById("loading");
-  const params = getParams();
-  const missing = REQUIRED_PARAMS.filter(function (key) {
-    return !params.has(key);
-  });
 
-  if (missing.length > 0) {
+  if (inviteId === "") {
     error.textContent =
       "Missing required query parameters: " + missing.join(", ");
     error.hidden = false;
