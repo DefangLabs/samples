@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AWS Provider Setup</title>
+    <link rel="stylesheet" href="/main.css" />
+  </head>
+  <body>
+    <div class="container">
+      <nav class="progress">
+        <div class="progress-step" data-step="1">
+          <div class="progress-dot">1</div>
+          <span class="progress-label">Intro</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step" data-step="2">
+          <div class="progress-dot">2</div>
+          <span class="progress-label">Configure</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step" data-step="3">
+          <div class="progress-dot">3</div>
+          <span class="progress-label">Launch</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step" data-step="4">
+          <div class="progress-dot">4</div>
+          <span class="progress-label">Confirm</span>
+        </div>
+      </nav>
+
+      <p id="error" class="error" hidden></p>
+
+      <!-- Loading state while fetching invite details -->
+      <div id="loading" class="step-panel" style="text-align: center; color: #666">
+        Loading invite details...
+      </div>
+
+      <!-- Step 1: Intro -->
+      <div id="step-1" class="step-panel" hidden>
+        <h1>AWS Provider Setup</h1>
+        <p>
+          This wizard will connect your AWS account to Defang by creating a
+          CloudFormation stack that sets up the required IAM roles for CI/CD.
+        </p>
+        <p>Before you begin, make sure you have:</p>
+        <ul>
+          <li>Your 12-digit AWS Account ID</li>
+          <li>Access to the AWS region where you want to deploy</li>
+          <li>Permission to create CloudFormation stacks and IAM roles</li>
+        </ul>
+      </div>
+
+      <!-- Step 2: Configure -->
+      <div id="step-2" class="step-panel" hidden>
+        <h1>Configure AWS</h1>
+        <form id="provider-form" novalidate>
+          <div class="field">
+            <label for="account-id">AWS Account ID</label>
+            <input
+              type="text"
+              id="account-id"
+              name="accountId"
+              placeholder="123456789012"
+              required
+            />
+          </div>
+          <div class="field">
+            <label for="region">AWS Region</label>
+            <select id="region" name="region" required>
+              <option value="us-east-1">US East 1 (N. Virginia)</option>
+              <option value="us-east-2" selected>US East 2 (Ohio)</option>
+              <option value="us-west-1">US West 1 (N. California)</option>
+              <option value="us-west-2">US West 2 (Oregon)</option>
+              <option value="eu-west-1">EU West 1 (Ireland)</option>
+              <option value="eu-west-2">EU West 2 (London)</option>
+              <option value="eu-west-3">EU West 3 (Paris)</option>
+              <option value="eu-central-1">EU Central 1 (Frankfurt)</option>
+              <option value="ap-northeast-1">AP Northeast 1 (Tokyo)</option>
+              <option value="ap-northeast-2">AP Northeast 2 (Seoul)</option>
+              <option value="ap-southeast-1">AP Southeast 1 (Singapore)</option>
+              <option value="ap-southeast-2">AP Southeast 2 (Sydney)</option>
+              <option value="ap-south-1">AP South 1 (Mumbai)</option>
+              <option value="ca-central-1">CA Central 1 (Central)</option>
+              <option value="sa-east-1">SA East 1 (São Paulo)</option>
+            </select>
+          </div>
+        </form>
+      </div>
+
+      <!-- Step 3: Confirm -->
+      <div id="step-3" class="step-panel" hidden>
+        <h2>Create CloudFormation Stack</h2>
+
+        <p>
+          To allow GitHub Actions to securely deploy to your AWS account, you
+          need to create an OIDC provider and an IAM role in your AWS account.
+        </p>
+
+        <p>
+          The easiest way to set this up is to deploy a CloudFormation stack,
+          which will create the necessary resources for you.
+        </p>
+
+        <h3>Next Steps</h3>
+
+        <ol>
+          <li>
+            Clicking the "Launch" button below will open the the AWS console in
+            a new tab
+          </li>
+          <li>
+            Scroll to the bottom, check the "I acknowledge that AWS
+            CloudFormation might create IAM resources" checkbox
+          </li>
+          <li>Click "Create stack" to deploy the CloudFormation stack</li>
+          <li>Come back to this tab for the final step</li>
+        </ol>
+      </div>
+
+      <!-- Step 5: Success -->
+      <div id="step-5" class="step-panel" hidden>
+        <h2>You're all set!</h2>
+        <p>Your AWS account has been successfully connected to Defang. You can now close this window.</p>
+      </div>
+
+      <!-- Step 4: Launched -->
+      <div id="step-4" class="step-panel" hidden>
+        <h2>Complete Setup in AWS</h2>
+        <p>The AWS CloudFormation console has been opened in a new tab.</p>
+        <p>
+          If the tab didn't open, your browser may have blocked the popup.
+          <a id="cf-link" href="#" target="_blank">Click here to open it.</a>
+        </p>
+        <h3>Confirm</h3>
+        <ol>
+          <li>Opened the CloudFormation template in the AWS console</li>
+          <li>
+            Checked the "I acknowledge that AWS CloudFormation might create IAM
+            resources" checkbox
+          </li>
+          <li>Clicked "Create stack" to deploy the CloudFormation stack</li>
+        </ol>
+        <p>
+          After you've created the CloudFormation stack, click the "Confirm"
+          button below to complete the setup process.
+        </p>
+        <p id="confirm-error" class="error" hidden></p>
+      </div>
+
+      <div class="actions">
+        <button id="btn-back" type="button" class="btn-secondary" hidden>
+          Back
+        </button>
+        <button id="btn-next" type="button">Next</button>
+      </div>
+    </div>
+    <script src="/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Setup</title>
+    <link rel="stylesheet" href="/main.css">
+</head>
+<body>
+    <form id="invite-form">
+        <label for="invite-id">Invite ID</label>
+        <input type="text" id="invite-id" name="invite-id" required placeholder="Enter your invite ID">
+        <button type="submit">Continue</button>
+    </form>
+    <script>
+        document.getElementById('invite-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const inviteId = document.getElementById('invite-id').value.trim();
+            if (inviteId) {
+                window.location.href = '/cloud-setup/' + encodeURIComponent(inviteId);
+            }
+        });
+    </script>
+</body>
+</html>
