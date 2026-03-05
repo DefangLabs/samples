@@ -19,3 +19,6 @@ services:
         reservations:
           cpus: "0.5"
           memory: 512M
+    x-defang-llm: true
+    environment:
+      - GOOGLE_GENAI_USE_VERTEXAI=true
