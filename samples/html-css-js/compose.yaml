@@ -19,3 +19,5 @@ services:
         - curl
         - -f
         - http://localhost:8080/
+    x-defang-static-files:
+      folder: /usr/share/nginx/html
