@@ -11,4 +11,4 @@ Title: Defang Provider Handoff Sample
 Short Description: A sample application that demonstrates how to provide a white-labeled static site for customers to configure their cloud accounts for your deployment.
 
 Tags: Defang, Cloud, Deployment, Static Site
-Languages: Python
+Languages: HTML, CSS, JavaScript
