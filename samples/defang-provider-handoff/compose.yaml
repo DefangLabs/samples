@@ -1,3 +1,4 @@
+name: defang-provider-handoff
 services:
   app:
     restart: unless-stopped

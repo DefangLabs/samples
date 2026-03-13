@@ -14,6 +14,7 @@ import (
 	"regexp"
 	"strings"
 	"time"
+	"encoding/json"
 
 	"defang.io/tools/testing/detector"
 	"defang.io/tools/testing/logger"
@@ -191,7 +192,7 @@ func (d *CliDeployer) RunDeployTest(ctx context.Context, t test.TestInfo) (*test
 			return cmd.Process.Signal(os.Interrupt) // Use interrupt signal to stop the command when context is cancelled
 		}
 
-	}, "defang", "compose", "up", "--verbose", "--debug")
+	}, "defang", "compose", "up", "--verbose", "--debug", "--json")
 	if err != nil {
 		var exitErr *exec.ExitError
 		if errors.As(err, &exitErr) {
@@ -207,7 +208,43 @@ func (d *CliDeployer) RunDeployTest(ctx context.Context, t test.TestInfo) (*test
 		result.DeploySucceeded = cmd.ProcessState.Success()
 	}
 
-	urls := findUrlsInOutput(d.Stdout.String())
+	// run `defang ps --json` to get the service URLs instead of parsing the output of compose up, as the output may not be stable and may change in the future
+	cmd, err = d.RunCommand(ctx, nil, "defang", "ps", "--json")
+	if err != nil {
+		result.Message = fmt.Sprintf("Failed to run `defang ps --json` to get service URLs: %v", err)
+		log.Printf(result.Message)
+		return result, fmt.Errorf(result.Message)
+	}
+
+	// filter out lines that start with " *" (those are the info logs
+	// from defang), then parse the remaining output as json.
+	lines := bytes.Split(d.Stdout.Bytes(), []byte{'\n'})
+	var jsonOutput bytes.Buffer
+	for _, line := range lines {
+		if !bytes.HasPrefix(line, []byte(" *")) {
+			jsonOutput.Write(line)
+			jsonOutput.WriteByte('\n')
+		}
+	}
+
+	var psOutput []struct {
+		Service string `json:"service"`
+		Endpoint  string `json:"endpoint"`
+	}
+	if err := json.NewDecoder(bytes.NewReader(jsonOutput.Bytes())).Decode(&psOutput); err != nil {
+		result.Message = fmt.Sprintf("Failed to decode `defang ps --json` output: %v", err)
+		log.Printf(result.Message)
+		return result, fmt.Errorf(result.Message)
+	}
+
+	var urls []string
+	for _, svc := range psOutput {
+		if svc.Endpoint != "" {
+			urls = append(urls, svc.Endpoint)
+		}
+	}
+
+	// urls := findUrlsInOutput(d.Stdout.String())
 	if len(urls) == 0 {
 		result.Message = "No service URLs found in deployment output"
 		log.Printf(result.Message)
