@@ -14,6 +14,7 @@ import (
 	"regexp"
 	"strings"
 	"time"
+	"encoding/json"
 
 	"defang.io/tools/testing/detector"
 	"defang.io/tools/testing/logger"
