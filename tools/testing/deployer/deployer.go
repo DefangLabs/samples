@@ -192,7 +192,7 @@ func (d *CliDeployer) RunDeployTest(ctx context.Context, t test.TestInfo) (*test
 			return cmd.Process.Signal(os.Interrupt) // Use interrupt signal to stop the command when context is cancelled
 		}
 
-	}, "defang", "compose", "up", "--verbose", "--debug", "--json")
+	}, "defang", "compose", "up", "--verbose", "--debug")
 	if err != nil {
 		var exitErr *exec.ExitError
 		if errors.As(err, &exitErr) {
