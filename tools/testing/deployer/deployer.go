@@ -223,15 +223,12 @@ func (d *CliDeployer) RunDeployTest(ctx context.Context, t test.TestInfo) (*test
 		return result, fmt.Errorf(result.Message)
 	}
 
-	var urls []string
+	result.TotalServices = len(services)
 	for _, svc := range services {
-		if svc.Endpoint != "" {
-			urls = append(urls, svc.Endpoint)
+		if svc.Endpoint == "" {
+			continue
 		}
-	}
-
-	result.TotalServices = len(urls)
-	for _, url := range urls {
+		url := svc.Endpoint
 		log.Printf(" * Testing service URL %v", url)
 		code, err := testURL(context.Background(), log, url) // Still do a URL test if the test context is cancelledt
 		if err == nil {
