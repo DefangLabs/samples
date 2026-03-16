@@ -30,7 +30,7 @@ jobs:
           node-version: "20"
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
         working-directory: scripts
 
       - name: Run tests
@@ -52,7 +52,7 @@ jobs:
           node-version: "20"
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
         working-directory: scripts
 
       - name: Get changed samples
