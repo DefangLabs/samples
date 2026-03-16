@@ -14,6 +14,7 @@ import (
 	"regexp"
 	"strings"
 	"time"
+	"encoding/json"
 
 	"defang.io/tools/testing/detector"
 	"defang.io/tools/testing/logger"
@@ -207,15 +208,27 @@ func (d *CliDeployer) RunDeployTest(ctx context.Context, t test.TestInfo) (*test
 		result.DeploySucceeded = cmd.ProcessState.Success()
 	}
 
-	urls := findUrlsInOutput(d.Stdout.String())
-	if len(urls) == 0 {
-		result.Message = "No service URLs found in deployment output"
+	// run `defang ps --json` to get the service URLs instead of parsing the output of compose up, as the output may not be stable and may change in the future
+	cmd, err = d.RunCommand(ctx, nil, "defang", "ps", "--json")
+	if err != nil {
+		result.Message = fmt.Sprintf("Failed to run `defang ps --json` to get service URLs: %v", err)
 		log.Printf(result.Message)
 		return result, fmt.Errorf(result.Message)
 	}
 
-	result.TotalServices = len(urls)
-	for _, url := range urls {
+	services, err := parseTrailingServicesJSON(d.Stdout.Bytes(), log)
+	if err != nil {
+		result.Message = fmt.Sprintf("Failed to parse service URLs: %v", err)
+		log.Printf(result.Message)
+		return result, fmt.Errorf(result.Message)
+	}
+
+	result.TotalServices = len(services)
+	for _, svc := range services {
+		if svc.Endpoint == "" {
+			continue
+		}
+		url := svc.Endpoint
 		log.Printf(" * Testing service URL %v", url)
 		code, err := testURL(context.Background(), log, url) // Still do a URL test if the test context is cancelledt
 		if err == nil {
@@ -239,6 +252,25 @@ func (d *CliDeployer) RunDeployTest(ctx context.Context, t test.TestInfo) (*test
 	}
 
 	return result, nil
+}
+
+type ServiceEndpoint struct {
+	Service  string `json:"service"`
+	Endpoint string `json:"endpoint"`
+}
+
+func parseTrailingServicesJSON(data []byte, log logger.Logger) ([]ServiceEndpoint, error) {
+	idx := bytes.LastIndex(data, []byte("["))
+	if idx == -1 {
+		return nil, fmt.Errorf("no JSON array found in output")
+	}
+
+	var services []ServiceEndpoint
+	if err := json.NewDecoder(bytes.NewReader(data[idx:])).Decode(&services); err != nil {
+		return nil, fmt.Errorf("Failed to decode `defang ps --json` output: %v", err)
+	}
+
+	return services, nil
 }
 
 func testURL(ctx context.Context, logger logger.Logger, url string) (int, error) {

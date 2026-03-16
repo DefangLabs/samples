@@ -54,7 +54,7 @@ jobs:
             }
 
       - name: Install script dependencies
-        run: npm install
+        run: npm ci
         working-directory: scripts
 
       - name: Create / Update Template Repo
