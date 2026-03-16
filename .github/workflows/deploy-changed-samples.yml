@@ -59,8 +59,8 @@ jobs:
           eval "$(curl -fsSL s.defang.io/install)"
         if: env.should_continue == 'true'
 
-      - name: Run tests
-        id: run-tests
+      - name: Deploy changed samples to staging
+        id: deploy-samples
         shell: bash # implies set -o pipefail, so pipe below will keep the exit code from loadtest
         if: env.should_continue == 'true'
         env:
@@ -125,7 +125,7 @@ jobs:
           ./tools/testing/loadtest -c fabric-staging.defang.dev:443 --timeout=15m --concurrency=10 -s $SAMPLES -o output --markdown=true | tee output/summary.log | grep -v '^\s*[-*]' # removes load sample log lines
       - name: Upload Output as Artifact
         uses: actions/upload-artifact@v4
-        if: env.should_continue == 'true' && (success() || steps.run-tests.outcome == 'failure') # Always upload result unless cancelled
+        if: env.should_continue == 'true' && (success() || steps.deploy-samples.outcome == 'failure') # Always upload result unless cancelled
         with:
           name: program-output
           path: output/**
