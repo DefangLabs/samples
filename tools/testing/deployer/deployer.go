@@ -227,6 +227,7 @@ func (d *CliDeployer) RunDeployTest(ctx context.Context, t test.TestInfo) (*test
 		}
 	}
 
+	log.Printf("Output of `defang ps --json`:\n%v", jsonOutput.String())
 	var psOutput []struct {
 		Service string `json:"service"`
 		Endpoint  string `json:"endpoint"`
