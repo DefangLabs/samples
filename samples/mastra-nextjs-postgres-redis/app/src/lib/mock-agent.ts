@@ -1,4 +1,11 @@
-import { getDashboardSnapshot, getOpenTickets, getRecentActivities, searchDocuments } from "@/lib/domain";
+import {
+  getDashboardSnapshot,
+  getOpenTickets,
+  getRecentActivities,
+  searchDocuments,
+  searchTriageInsights,
+} from "@/lib/domain";
+import { companyContext } from "@/lib/demo";
 
 function formatTickets(tickets: Awaited<ReturnType<typeof getOpenTickets>>) {
   return tickets
@@ -21,15 +28,24 @@ function formatActivities(activities: Awaited<ReturnType<typeof getRecentActivit
     .join("\n");
 }
 
+function formatInsights(insights: Awaited<ReturnType<typeof searchTriageInsights>>) {
+  return insights
+    .map(
+      (insight) =>
+        `- ${insight.externalId} (${insight.entityType}, risk ${insight.riskScore}, ${insight.category}): ${insight.title}. Action: ${insight.recommendedAction}`,
+    )
+    .join("\n");
+}
+
 export async function getMockReply(message: string) {
   const snapshot = await getDashboardSnapshot();
   const normalizedMessage = message.toLowerCase();
 
   if (snapshot.documentCount === 0) {
     return [
-      "The workspace has not been synced yet.",
+      "The app has not been seeded yet.",
       "",
-      "Click `Sync sample workspace` first so the worker can load the sample runbooks, tickets, and activity feed.",
+      "Click `Generate sample activity` first so the worker can load reference docs, tasks, and event data.",
     ].join("\n");
   }
 
@@ -39,12 +55,24 @@ export async function getMockReply(message: string) {
     getRecentActivities(3),
   ]);
 
+  if (
+    normalizedMessage.includes("similar") ||
+    normalizedMessage.includes("pattern") ||
+    normalizedMessage.includes("related incident")
+  ) {
+    const insights = await searchTriageInsights(message);
+    return [
+      "Most similar triaged events:",
+      insights.length > 0 ? formatInsights(insights) : "- No semantically similar events found yet.",
+    ].join("\n");
+  }
+
   if (normalizedMessage.includes("release note") || normalizedMessage.includes("release notes")) {
     return [
       "Draft release notes:",
-      "- Improved checkout resilience with new retry logic around confirmation webhooks.",
-      "- Added dashboard latency instrumentation to make incident triage faster for the support team.",
-      "- Known issue: enterprise SSO callbacks are still unstable and should be monitored during rollout.",
+      "- Improved Jira and GitHub import resilience with new retry logic for large workspace migrations.",
+      "- Added roadmap snapshot instrumentation to make planning-week triage faster for the customer-ops team.",
+      "- Known issue: some enterprise workspaces may still show stale executive dashboards after heavy Jira re-syncs.",
       "",
       "Source activity:",
       formatActivities(activities),
@@ -57,15 +85,15 @@ export async function getMockReply(message: string) {
     normalizedMessage.includes("highest priority")
   ) {
     const topTicket = tickets[0];
-    const relatedDocs = await searchDocuments("incident support launch");
+    const relatedDocs = await searchDocuments("workspace import planning incident");
 
     return [
       "Recommended on-call focus:",
-      `- Start with ${topTicket.externalId}: ${topTicket.title}. It is the only critical ticket and it affects enterprise authentication loops.`,
-      "- Next, confirm whether delayed checkout confirmations are increasing support volume for EU customers.",
-      "- Hold feature-flag cleanup until the auth and checkout path are stable.",
+      `- Start with ${topTicket.externalId}: ${topTicket.title}. It is the highest-risk task in the queue.`,
+      "- Next, confirm whether stale portfolio summaries or import delays are spreading to additional accounts.",
+      "- Hold lower-priority cleanup unless it is directly tied to the active incident.",
       "",
-      "Runbooks to review:",
+      "Reference docs to review:",
       formatDocuments(relatedDocs.slice(0, 2)),
       "",
       "Ticket queue:",
@@ -74,18 +102,18 @@ export async function getMockReply(message: string) {
   }
 
   return [
-    "Support and ops snapshot:",
-    `- Open tickets: ${snapshot.openTicketCount}`,
-    `- Knowledge docs: ${snapshot.documentCount}`,
-    `- Recent activity items: ${snapshot.activityCount}`,
+    `${companyContext.commandCenterName} snapshot:`,
+    `- Open tasks: ${snapshot.openTicketCount}`,
+    `- Reference docs: ${snapshot.documentCount}`,
+    `- Recent events: ${snapshot.activityCount}`,
     "",
-    "Highest-priority tickets:",
+    "Highest-priority tasks:",
     formatTickets(tickets.slice(0, 3)),
     "",
     "Relevant documents:",
     docs.length > 0 ? formatDocuments(docs) : "- No matching documents found. Ask after syncing or use a broader query.",
     "",
-    "Latest activity:",
+    "Latest events:",
     formatActivities(activities),
   ].join("\n");
 }

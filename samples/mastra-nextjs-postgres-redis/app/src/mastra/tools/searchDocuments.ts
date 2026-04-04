@@ -4,7 +4,7 @@ import { z } from "zod";
 
 export const searchWorkspaceDocuments = createTool({
   id: "searchWorkspaceDocuments",
-  description: "Search the synced support docs and runbooks for relevant information.",
+  description: "Search the synced Sprintlane runbooks, rollout guides, and customer-ops playbooks for relevant information.",
   inputSchema: z.object({
     query: z.string().describe("The question or phrase to search for."),
   }),

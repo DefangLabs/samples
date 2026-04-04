@@ -16,7 +16,6 @@ function getPgStore() {
   if (!global.mastraPgStore) {
     global.mastraPgStore = new PostgresStore({
       connectionString: process.env.DATABASE_URL,
-      ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: false } : false,
     });
   }
 

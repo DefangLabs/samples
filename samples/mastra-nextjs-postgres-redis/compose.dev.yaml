@@ -7,10 +7,9 @@ services:
     ports:
       - 3000:3000
     environment:
-      DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres?sslmode=disable
       REDIS_URL: redis://redis:6379
       QUEUE_NAME: support-sync
-      DB_SSL: "false"
       MOCK_AGENT: "true"
       LLM_MODEL: mock
       OPENAI_API_KEY: defang
@@ -25,10 +24,9 @@ services:
       dockerfile: Dockerfile
     command: npm run worker
     environment:
-      DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres?sslmode=disable
       REDIS_URL: redis://redis:6379
       QUEUE_NAME: support-sync
-      DB_SSL: "false"
     depends_on:
       postgres:
         condition: service_healthy

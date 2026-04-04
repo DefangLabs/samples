@@ -9,13 +9,14 @@ services:
         target: 3000
         published: 3000
     environment:
-      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres
+      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres?uselibpqcompat=true&sslmode=require
       REDIS_URL: redis://redis:6379
       QUEUE_NAME: support-sync
-      DB_SSL:
       MOCK_AGENT: "false"
       LLM_BASE_URL: http://chat/api/v1
       LLM_MODEL:
+      EMBEDDING_BASE_URL: http://embedding/api/v1
+      EMBEDDING_MODEL:
       OPENAI_API_KEY: defang
     depends_on:
       postgres:
@@ -23,6 +24,8 @@ services:
       redis:
         condition: service_started
       chat:
+        condition: service_started
+      embedding:
         condition: service_started
     healthcheck:
       test:
@@ -45,14 +48,22 @@ services:
       dockerfile: Dockerfile
     command: npm run worker
     environment:
-      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres
+      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres?uselibpqcompat=true&sslmode=require
       REDIS_URL: redis://redis:6379
       QUEUE_NAME: support-sync
-      DB_SSL:
+      LLM_BASE_URL: http://chat/api/v1
+      LLM_MODEL:
+      EMBEDDING_BASE_URL: http://embedding/api/v1
+      EMBEDDING_MODEL:
+      OPENAI_API_KEY: defang
     depends_on:
       postgres:
         condition: service_healthy
       redis:
+        condition: service_started
+      chat:
+        condition: service_started
+      embedding:
         condition: service_started
     deploy:
       resources:
@@ -85,7 +96,7 @@ services:
           cpus: "0.5"
           memory: 512M
   redis:
-    image: redis:7
+    image: redis:6.2
     x-defang-redis: true
     restart: always
     ports:
@@ -102,6 +113,19 @@ services:
       type: model
       options:
         model: chat-default
+    x-defang-llm: true
+    environment:
+      OPENAI_API_KEY: defang
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+  embedding:
+    provider:
+      type: model
+      options:
+        model: embedding-default
     x-defang-llm: true
     environment:
       OPENAI_API_KEY: defang

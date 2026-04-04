@@ -1,77 +1,77 @@
 export const sampleDocuments = [
   {
-    slug: "launch-readiness",
-    title: "Launch readiness checklist",
+    slug: "enterprise-rollout",
+    title: "Enterprise rollout runbook",
     category: "runbook",
     content:
-      "Before launch, confirm billing webhooks, verify Postgres backups, and validate that support escalation routing sends Sev1 incidents to the on-call engineer within five minutes."
+      "Before onboarding a new Sprintlane customer workspace, confirm Jira, GitHub, and Slack imports finish within SLA, verify AI sprint-plan generation completes with linked PR data, and route Sev1 rollout blockers to the on-call engineer within five minutes."
   },
   {
-    slug: "incident-handling",
-    title: "Incident handling guide",
+    slug: "workspace-sync-incidents",
+    title: "Workspace sync incident guide",
     category: "runbook",
     content:
-      "Sev1 incidents require an incident commander, status updates every fifteen minutes, and a rollback decision within thirty minutes if customer checkout or authentication is degraded."
+      "Sev1 Sprintlane incidents require an incident commander, customer-safe updates every fifteen minutes, and a rollback decision within thirty minutes if workspace imports, AI planning, or executive dashboards are degraded."
   },
   {
-    slug: "support-playbook",
-    title: "Support triage playbook",
+    slug: "customer-ops-playbook",
+    title: "Customer ops triage playbook",
     category: "playbook",
     content:
-      "Prioritize tickets by customer impact first, then by revenue risk. Authentication, billing, and data integrity issues outrank cosmetic bugs or internal tooling requests."
+      "Prioritize Sprintlane tickets by launch risk first, then executive visibility. Workspace import failures, permissions leaks, and stale portfolio dashboards outrank cosmetic issues or internal-only tooling defects."
   }
 ];
 
 export const sampleTickets = [
   {
     externalId: "SUP-104",
-    title: "Checkout confirmation emails delayed for EU customers",
+    title: "GitHub import stalls for Northwind launch workspace",
     status: "open",
     priority: "high",
     owner: "Maya",
     summary:
-      "Webhook retries are backing up when the mail provider rate-limits burst traffic after release deploys."
+      "The customer cannot finish historical issue import, so Sprintlane's AI sprint-plan draft is missing linked PR context before rollout sign-off."
   },
   {
     externalId: "SUP-103",
-    title: "Admin dashboard intermittently fails after SSO login",
+    title: "Executive dashboard stays stale after Jira board re-sync",
     status: "investigating",
     priority: "critical",
     owner: "Jordan",
     summary:
-      "SSO callback sessions are expiring too early, causing account owners to retry login loops during incident reviews."
+      "Portfolio summaries are still based on yesterday's Jira snapshot, and leadership reviews are now diverging from the underlying workspace state."
   },
   {
     externalId: "SUP-098",
-    title: "Feature flag cleanup for archived tenants",
+    title: "Guest collaborators can still view restricted roadmap comments",
     status: "planned",
     priority: "medium",
     owner: "Alex",
     summary:
-      "Stale launch flags should be removed before the next release train to keep rollout rules understandable."
+      "Security wants guest-role visibility tightened before the next enterprise compliance review, but the patch has not been scheduled yet."
   }
 ];
 
 export const sampleActivities = [
   {
     kind: "deploy",
-    title: "API release 2026.04.1",
+    title: "Importer worker release 2026.04.1",
     body:
-      "Rolled out checkout retry logic and dashboard latency instrumentation to production.",
+      "Rolled out Jira/GitHub import retry logic and roadmap snapshot instrumentation to production.",
     occurredAt: "2026-04-01T08:15:00Z"
   },
   {
     kind: "incident",
-    title: "SSO callback degradation",
+    title: "Portfolio snapshot regeneration lag",
     body:
-      "Observed elevated authentication retries for enterprise tenants after the identity provider metadata refresh.",
+      "Observed elevated delays refreshing executive dashboards after large Jira syncs completed for enterprise workspaces.",
     occurredAt: "2026-04-01T09:30:00Z"
   },
   {
     kind: "customer",
-    title: "Top account escalation from Northwind",
+    title: "Design-partner escalation from Northwind Labs",
     body:
-      "Northwind reported delayed order confirmations impacting customer support throughput.",
+      "Northwind Labs reported rollout risk because the launch workspace still lacks imported GitHub history and AI-generated status summaries.",
     occurredAt: "2026-04-01T10:05:00Z"
   }
 ];
