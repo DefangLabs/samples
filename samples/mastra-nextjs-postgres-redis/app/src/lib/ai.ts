@@ -1,88 +1,10 @@
 import { createHash } from "node:crypto";
 
+import { generateText } from "ai";
 import { z } from "zod";
 
-import { companyContext, profileCatalog, simulationProfiles, type SimulationProfile } from "@/lib/demo";
-
-export type SimulationConfig = {
-  profile: SimulationProfile;
-  scaleFactor: number;
-  durationSeconds: number;
-  cadenceSeconds: number;
-};
-
-export type GeneratedTicketEvent = {
-  eventType: "ticket";
-  externalId: string;
-  source: string;
-  customer: string;
-  title: string;
-  body: string;
-  owner: string;
-  status: "open" | "investigating" | "planned";
-  priority: "critical" | "high" | "medium" | "low";
-  occurredAt: string;
-};
-
-export type GeneratedActivityEvent = {
-  eventType: "activity";
-  externalId: string;
-  source: string;
-  customer: string;
-  title: string;
-  body: string;
-  kind: "deploy" | "incident" | "customer" | "ops" | "security";
-  occurredAt: string;
-};
-
-export type GeneratedInboundEvent = GeneratedTicketEvent | GeneratedActivityEvent;
-
-export type TriageClassification = {
-  category: "incident" | "customer-risk" | "release" | "billing" | "auth" | "performance" | "compliance" | "general";
-  riskScore: number;
-  sentiment: "negative" | "neutral" | "positive";
-  priority: "critical" | "high" | "medium" | "low";
-  tags: string[];
-  recommendedAction: string;
-  rationale: string;
-  searchSummary: string;
-};
-
-const DEFAULT_SIMULATION_CONFIG: SimulationConfig = {
-  profile: "rollout",
-  scaleFactor: 1,
-  durationSeconds: 60,
-  cadenceSeconds: 4,
-};
-
-const ticketPayloadSchema = z.object({
-  title: z.string().min(10).max(140),
-  body: z.string().min(25).max(420),
-  source: z.string().min(3).max(40),
-  customer: z.string().min(2).max(80),
-  owner: z.string().min(2).max(40),
-  status: z.enum(["open", "investigating", "planned"]),
-  priority: z.enum(["critical", "high", "medium", "low"]),
-});
-
-const activityPayloadSchema = z.object({
-  title: z.string().min(8).max(140),
-  body: z.string().min(20).max(420),
-  source: z.string().min(3).max(40),
-  customer: z.string().min(2).max(80),
-  kind: z.enum(["deploy", "incident", "customer", "ops", "security"]),
-});
-
-const triageSchema = z.object({
-  category: z.enum(["incident", "customer-risk", "release", "billing", "auth", "performance", "compliance", "general"]),
-  riskScore: z.number().int().min(1).max(100),
-  sentiment: z.enum(["negative", "neutral", "positive"]),
-  priority: z.enum(["critical", "high", "medium", "low"]),
-  tags: z.array(z.string().min(2).max(24)).min(2).max(6),
-  recommendedAction: z.string().min(12).max(220),
-  rationale: z.string().min(16).max(260),
-  searchSummary: z.string().min(12).max(280),
-});
+import type { ItemClassification, ItemType, RawItemSeed } from "@/lib/items";
+import { getDirectBedrockModel, isAwsBedrockRuntime } from "@/lib/model";
 
 type ChatCompletionResponse = {
   choices?: Array<{
@@ -97,6 +19,180 @@ type EmbeddingResponse = {
     embedding?: number[];
   }>;
 };
+
+const taskSchema = z.object({
+  source: z.string().min(2).max(40),
+  title: z.string().min(8).max(120),
+  body: z.string().min(20).max(320),
+  status: z.enum(["open", "in progress", "blocked", "planned"]),
+  assignee: z.string().min(2).max(40),
+});
+
+const eventSchema = z.object({
+  source: z.string().min(2).max(40),
+  title: z.string().min(8).max(120),
+  body: z.string().min(20).max(320),
+});
+
+const taskBatchSchema = z.object({
+  tasks: z.array(taskSchema).length(10),
+});
+
+const eventBatchSchema = z.object({
+  events: z.array(eventSchema).length(10),
+});
+
+const classificationSchema = z.object({
+  category: z.string().min(2).max(40),
+  priority: z.enum(["low", "medium", "high", "critical"]),
+  tags: z.array(z.string().min(2).max(24)).min(2).max(4),
+});
+
+const fallbackTasks: RawItemSeed[] = [
+  {
+    itemType: "task",
+    source: "Jira",
+    title: "Billing page retry banner does not appear after a failed card check",
+    body: "Support reproduced a failed subscription checkout where the retry path works but the UI never confirms it. The product team wants this fixed before the next release cut.",
+    status: "open",
+    assignee: "Maya",
+  },
+  {
+    itemType: "task",
+    source: "Linear",
+    title: "Fix duplicate project creation when the import wizard retries",
+    body: "Two customers reported seeing duplicate projects after retrying the CSV import. Engineering already has traces, but the task still needs a proper fix and rollout note.",
+    status: "blocked",
+    assignee: "Jordan",
+  },
+  {
+    itemType: "task",
+    source: "GitHub",
+    title: "Finish the API pagination patch for the activity feed endpoint",
+    body: "The current activity feed stops at 50 records, which makes the timeline feel incomplete for active workspaces. The patch is half done and still needs tests.",
+    status: "in progress",
+    assignee: "Riley",
+  },
+  {
+    itemType: "task",
+    source: "Jira",
+    title: "Investigate why roadmap comments load slowly on large accounts",
+    body: "Performance traces show slow comment hydration on accounts with thousands of archived tasks. The team needs a clear root cause and a smaller reproduction case.",
+    status: "open",
+    assignee: "Sam",
+  },
+  {
+    itemType: "task",
+    source: "Linear",
+    title: "Add a customer-facing status note for delayed Slack syncs",
+    body: "Slack sync delays now take several minutes to clear, but the product gives no feedback. Product wants a lightweight status note until the backend issue is fixed.",
+    status: "planned",
+    assignee: "Alex",
+  },
+  {
+    itemType: "task",
+    source: "GitHub",
+    title: "Write the migration script for stale automation rules",
+    body: "A schema change left some automation rules in an older format. The migration needs to be safe to rerun and easy to validate in staging.",
+    status: "open",
+    assignee: "Maya",
+  },
+  {
+    itemType: "task",
+    source: "Jira",
+    title: "Review the failed deploy checklist for last night’s rollback",
+    body: "Operations wants a concise follow-up task list after the rollback. The checklist should point to the real gaps rather than repeating alert text.",
+    status: "in progress",
+    assignee: "Jordan",
+  },
+  {
+    itemType: "task",
+    source: "Linear",
+    title: "Update the onboarding flow copy for missing calendar permissions",
+    body: "Users who skip calendar permissions get stuck in setup with no useful explanation. Design already proposed simpler copy and wants it shipped quickly.",
+    status: "open",
+    assignee: "Riley",
+  },
+  {
+    itemType: "task",
+    source: "GitHub",
+    title: "Repair the flaky notification worker test before the next release",
+    body: "The notification worker integration test fails randomly in CI and blocks merges. Engineering wants a proper fix rather than another retry wrapper.",
+    status: "blocked",
+    assignee: "Sam",
+  },
+  {
+    itemType: "task",
+    source: "Jira",
+    title: "Verify the invoice export patch against a multi-currency account",
+    body: "Finance requested one last verification pass before they tell customers the invoice export issue is fixed. The edge case is a workspace with mixed USD and EUR invoices.",
+    status: "planned",
+    assignee: "Alex",
+  },
+];
+
+const fallbackEvents: RawItemSeed[] = [
+  {
+    itemType: "event",
+    source: "Datadog",
+    title: "API latency crossed the warning threshold for project reads",
+    body: "Read requests for the projects API stayed above the warning threshold for six minutes after traffic spiked in Europe.",
+  },
+  {
+    itemType: "event",
+    source: "Vercel",
+    title: "Frontend deploy rolled back after elevated client errors",
+    body: "The latest frontend release was automatically rolled back when client-side error rates doubled during the canary window.",
+  },
+  {
+    itemType: "event",
+    source: "Sentry",
+    title: "Task details page started throwing undefined owner errors",
+    body: "A new server-side exception appeared on the task details page and is affecting a small but growing percentage of sessions.",
+  },
+  {
+    itemType: "event",
+    source: "GitHub Actions",
+    title: "Release workflow failed on the database migration step",
+    body: "The nightly release workflow reached the migration stage and failed before the application images were promoted.",
+  },
+  {
+    itemType: "event",
+    source: "Slack",
+    title: "Customer support channel flagged another duplicate import report",
+    body: "A support lead posted a fresh duplicate import report with screenshots and linked it to the existing engineering investigation.",
+  },
+  {
+    itemType: "event",
+    source: "PagerDuty",
+    title: "On-call incident opened for delayed webhook delivery",
+    body: "The webhook delivery worker started falling behind and crossed the paging threshold for the first time this week.",
+  },
+  {
+    itemType: "event",
+    source: "Stripe",
+    title: "Subscription update webhooks arrived out of order for one tenant",
+    body: "Billing logs show a small batch of out-of-order subscription events, which may explain mismatched plan state in the app.",
+  },
+  {
+    itemType: "event",
+    source: "CloudWatch",
+    title: "Worker memory climbed steadily during the hourly sync job",
+    body: "The background worker used more memory than usual during the sync cycle, then recovered after the queue drained.",
+  },
+  {
+    itemType: "event",
+    source: "Statuspage",
+    title: "A short-lived degradation notice was posted for search responses",
+    body: "Search responses slowed down for a few minutes, enough for the team to post a degraded-performance notice before recovery.",
+  },
+  {
+    itemType: "event",
+    source: "Linear",
+    title: "Product team linked today’s rollout issue to an existing backend bug",
+    body: "A product manager connected the latest customer report to a backend issue that has been open since last week, giving engineering a likely root cause.",
+  },
+];
 
 function normalizeBaseUrl(value: string) {
   return value.replace(/\/$/, "");
@@ -133,62 +229,160 @@ function parseJsonObject(text: string): unknown {
   } catch {
     const firstBrace = candidate.indexOf("{");
     const lastBrace = candidate.lastIndexOf("}");
+    const firstBracket = candidate.indexOf("[");
+    const lastBracket = candidate.lastIndexOf("]");
+
     if (firstBrace >= 0 && lastBrace > firstBrace) {
       return JSON.parse(candidate.slice(firstBrace, lastBrace + 1));
     }
+
+    if (firstBracket >= 0 && lastBracket > firstBracket) {
+      return JSON.parse(candidate.slice(firstBracket, lastBracket + 1));
+    }
+
     throw new Error("Invalid JSON payload returned by model");
   }
 }
 
-async function runChatJson(systemPrompt: string, userPrompt: string, temperature = 0.2): Promise<unknown | null> {
+async function runChatJson(systemPrompt: string, userPrompt: string, temperature = 0.4) {
   const model = process.env.LLM_MODEL;
   const apiKey = process.env.OPENAI_API_KEY ?? "defang";
   const llmBaseUrl = process.env.LLM_BASE_URL;
 
-  if (!model || !llmBaseUrl || process.env.MOCK_AGENT === "true") {
+  if (!model || process.env.MOCK_AGENT === "true") {
     return null;
   }
 
-  const endpoint = `${normalizeBaseUrl(llmBaseUrl)}/chat/completions`;
-
-  try {
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model,
-        temperature,
-        max_tokens: 450,
-        messages: [
-          {
-            role: "system",
-            content: systemPrompt,
-          },
-          {
-            role: "user",
-            content: userPrompt,
-          },
-        ],
-      }),
+  if (isAwsBedrockRuntime()) {
+    const { text } = await generateText({
+      model: getDirectBedrockModel(model),
+      system: systemPrompt,
+      prompt: userPrompt,
+      temperature,
     });
 
-    if (!response.ok) {
-      return null;
-    }
+    return parseJsonObject(text);
+  }
 
-    const payload = (await response.json()) as ChatCompletionResponse;
-    const rawText = extractContentText(payload.choices?.[0]?.message?.content);
-    if (!rawText) {
-      return null;
-    }
-
-    return parseJsonObject(rawText);
-  } catch {
+  if (!llmBaseUrl) {
     return null;
   }
+
+  const response = await fetch(`${normalizeBaseUrl(llmBaseUrl)}/chat/completions`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model,
+      temperature,
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt },
+      ],
+    }),
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`LLM request failed: ${response.status} ${text}`);
+  }
+
+  const payload = (await response.json()) as ChatCompletionResponse;
+  const rawText = extractContentText(payload.choices?.[0]?.message?.content);
+  if (!rawText) {
+    throw new Error("LLM returned no content");
+  }
+
+  return parseJsonObject(rawText);
+}
+
+async function runChatText(systemPrompt: string, userPrompt: string, temperature = 0.2) {
+  const model = process.env.LLM_MODEL;
+  const apiKey = process.env.OPENAI_API_KEY ?? "defang";
+  const llmBaseUrl = process.env.LLM_BASE_URL;
+
+  if (!model || process.env.MOCK_AGENT === "true") {
+    return null;
+  }
+
+  if (isAwsBedrockRuntime()) {
+    const { text } = await generateText({
+      model: getDirectBedrockModel(model),
+      system: systemPrompt,
+      prompt: userPrompt,
+      temperature,
+    });
+
+    return text;
+  }
+
+  if (!llmBaseUrl) {
+    return null;
+  }
+
+  const response = await fetch(`${normalizeBaseUrl(llmBaseUrl)}/chat/completions`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model,
+      temperature,
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt },
+      ],
+    }),
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`LLM text request failed: ${response.status} ${text}`);
+  }
+
+  const payload = (await response.json()) as ChatCompletionResponse;
+  return extractContentText(payload.choices?.[0]?.message?.content);
+}
+
+function fallbackCategory(text: string) {
+  const normalized = text.toLowerCase();
+
+  if (/(deploy|release|workflow|rollback)/.test(normalized)) return "delivery";
+  if (/(payment|invoice|billing|subscription)/.test(normalized)) return "billing";
+  if (/(latency|timeout|slow|memory|performance)/.test(normalized)) return "performance";
+  if (/(import|sync|webhook|integration|duplicate)/.test(normalized)) return "integration";
+  if (/(error|exception|incident|alert)/.test(normalized)) return "incident";
+  return "operations";
+}
+
+function fallbackPriority(text: string) {
+  const normalized = text.toLowerCase();
+  if (/(critical|rollback|paged|blocked|failing|out of order)/.test(normalized)) return "critical";
+  if (/(error|duplicate|latency|failed|degraded)/.test(normalized)) return "high";
+  if (/(planned|review|verify|update)/.test(normalized)) return "medium";
+  return "low";
+}
+
+function fallbackTags(text: string) {
+  const normalized = text.toLowerCase();
+  const tags = new Set<string>();
+
+  if (/(api|latency|timeout|performance|memory)/.test(normalized)) tags.add("performance");
+  if (/(deploy|release|workflow|rollback)/.test(normalized)) tags.add("delivery");
+  if (/(payment|invoice|billing|subscription)/.test(normalized)) tags.add("billing");
+  if (/(import|sync|webhook|integration)/.test(normalized)) tags.add("integration");
+  if (/(customer|support|report)/.test(normalized)) tags.add("customer");
+  if (/(bug|error|exception|incident|alert)/.test(normalized)) tags.add("incident");
+
+  if (tags.size < 2) {
+    tags.add("ops");
+    tags.add("triage");
+  }
+
+  return Array.from(tags).slice(0, 4);
 }
 
 function hashEmbedding(text: string, dimensions = 192) {
@@ -245,17 +439,15 @@ export function parseEmbedding(input: unknown): number[] | null {
 
 export async function embedTextForSearch(text: string) {
   const apiKey = process.env.OPENAI_API_KEY ?? "defang";
-  const model = process.env.EMBEDDING_MODEL;
+  const model = process.env.EMBEDDING_MODEL ?? "default";
   const embeddingBaseUrl = process.env.EMBEDDING_BASE_URL;
 
-  if (!model || !embeddingBaseUrl || process.env.MOCK_AGENT === "true") {
+  if (!embeddingBaseUrl || process.env.MOCK_AGENT === "true") {
     return hashEmbedding(text);
   }
 
-  const endpoint = `${normalizeBaseUrl(embeddingBaseUrl)}/embeddings`;
-
   try {
-    const response = await fetch(endpoint, {
+    const response = await fetch(`${normalizeBaseUrl(embeddingBaseUrl)}/embeddings`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -283,348 +475,116 @@ export async function embedTextForSearch(text: string) {
   }
 }
 
-function toPriorityFromRisk(riskScore: number): TriageClassification["priority"] {
-  if (riskScore >= 85) return "critical";
-  if (riskScore >= 70) return "high";
-  if (riskScore >= 40) return "medium";
-  return "low";
+function toRawItems(type: ItemType, rows: Array<z.infer<typeof taskSchema> | z.infer<typeof eventSchema>>): RawItemSeed[] {
+  return rows.map((row) => ({
+    itemType: type,
+    source: row.source,
+    title: row.title,
+    body: row.body,
+    status: "status" in row ? row.status : null,
+    assignee: "assignee" in row ? row.assignee : null,
+  }));
 }
 
-function fallbackTags(text: string) {
-  const normalized = text.toLowerCase();
-  const tags = new Set<string>();
-
-  if (/(auth|sso|login|token|password)/.test(normalized)) tags.add("authentication");
-  if (/(checkout|payment|invoice|billing|refund)/.test(normalized)) tags.add("billing");
-  if (/(latency|timeout|slow|degrad)/.test(normalized)) tags.add("performance");
-  if (/(security|audit|policy|compliance|pci|soc2)/.test(normalized)) tags.add("compliance");
-  if (/(deploy|release|rollout|feature flag)/.test(normalized)) tags.add("release");
-  if (/(customer|account|tenant|escalation)/.test(normalized)) tags.add("customer-impact");
-  if (/(jira|github|slack|import|sync|migration|workspace)/.test(normalized)) tags.add("integration");
-  if (/(plan|planning|roadmap|portfolio|executive update)/.test(normalized)) tags.add("planning");
-  if (/(permission|guest|role|access)/.test(normalized)) tags.add("permissions");
-
-  if (tags.size === 0) {
-    tags.add("general");
-    tags.add("triage");
-  }
-
-  return Array.from(tags).slice(0, 5);
-}
-
-function fallbackCategory(tags: string[]): TriageClassification["category"] {
-  if (tags.includes("authentication")) return "auth";
-  if (tags.includes("billing")) return "billing";
-  if (tags.includes("performance")) return "performance";
-  if (tags.includes("compliance")) return "compliance";
-  if (tags.includes("release")) return "release";
-  if (tags.includes("customer-impact")) return "customer-risk";
-  return "general";
-}
-
-function heuristicRisk(text: string) {
-  const normalized = text.toLowerCase();
-  let score = 25;
-  if (/(outage|sev1|blocked|cannot|critical|down)/.test(normalized)) score += 45;
-  if (/(enterprise|payment|checkout|auth|security)/.test(normalized)) score += 20;
-  if (/(degrad|latency|retry|intermittent)/.test(normalized)) score += 10;
-  if (/(migration|workspace|jira|github|slack|roadmap|planning)/.test(normalized)) score += 8;
-  return Math.min(99, score);
-}
-
-function fallbackTriage(event: GeneratedInboundEvent): TriageClassification {
-  const fullText = `${event.title} ${event.body}`;
-  const tags = fallbackTags(fullText);
-  const riskScore = heuristicRisk(fullText);
-
-  return {
-    category: fallbackCategory(tags),
-    riskScore,
-    sentiment: riskScore >= 70 ? "negative" : "neutral",
-    priority: toPriorityFromRisk(riskScore),
-    tags,
-    recommendedAction: `Acknowledge ${event.externalId}, route to ${event.eventType === "ticket" ? event.owner : "on-call ops"}, and post a customer-safe update within 10 minutes.`,
-    rationale: "Impact keywords and customer-facing symptoms indicate elevated triage urgency.",
-    searchSummary: `${event.title} (${event.source}) affecting ${event.customer}. ${event.body}`,
-  };
-}
-
-function fallbackTicket(profile: SimulationProfile, externalId: string, occurredAt: string, sequence: number): GeneratedTicketEvent {
-  const owners = ["Maya", "Jordan", "Alex", "Riley", "Sam"];
-  const scenarios: Record<SimulationProfile, Array<{ title: string; body: string; source: string; customer: string }>> = {
-    rollout: [
-      {
-        title: "GitHub import stalls at 92% for enterprise workspace migration",
-        body: "A rollout customer cannot finish historical issue import into Sprintlane. The AI sprint-plan draft is missing linked PR activity, and onboarding is blocked until the import resumes.",
-        source: "Linear Escalations",
-        customer: "Northwind Labs",
-      },
-      {
-        title: "Slack command is creating duplicate action items in launch workspace",
-        body: "Customer-success flagged repeated /sprintlane create-task commands generating duplicates in the shared launch channel. Program managers are losing trust in the AI triage workflow.",
-        source: "Intercom",
-        customer: "Fabrikam Product",
-      },
-    ],
-    planning: [
-      {
-        title: "Quarterly plan generator timing out on large portfolio workspaces",
-        body: "Several product teams with 200+ active initiatives are waiting more than ten minutes for AI-generated roadmap drafts. Planning meetings are starting without updated materials.",
-        source: "Salesforce Service Cloud",
-        customer: "Astera Cloud",
-      },
-      {
-        title: "Executive dashboard remains stale after Jira board re-sync",
-        body: "The workspace appears healthy, but portfolio summaries are still based on yesterday's Jira snapshot. Leadership reports are now inconsistent across teams.",
-        source: "Zendesk",
-        customer: "Pioneer Health",
-      },
-    ],
-    compliance: [
-      {
-        title: "Audit export is missing private task-history events",
-        body: "A regulated customer cannot produce a complete activity trail for a compliance review. Missing edit history on roadmap items is blocking sign-off.",
-        source: "Freshdesk",
-        customer: "Atlas Capital",
-      },
-      {
-        title: "Guest role can still view restricted roadmap comments",
-        body: "An enterprise admin reports that external collaborators can see roadmap discussion threads they should not access. Security review is now in progress.",
-        source: "ServiceNow",
-        customer: "Pioneer Bank",
-      },
-    ],
-  };
-
-  const choice = scenarios[profile][sequence % scenarios[profile].length];
-  const priority = sequence % 4 === 0 ? "critical" : sequence % 3 === 0 ? "high" : "medium";
-
-  return {
-    eventType: "ticket",
-    externalId,
-    source: choice.source,
-    customer: choice.customer,
-    title: choice.title,
-    body: choice.body,
-    owner: owners[sequence % owners.length],
-    status: sequence % 5 === 0 ? "investigating" : "open",
-    priority,
-    occurredAt,
-  };
-}
-
-function fallbackActivity(profile: SimulationProfile, externalId: string, occurredAt: string, sequence: number): GeneratedActivityEvent {
-  const scenarios: Record<SimulationProfile, Array<{ title: string; body: string; source: string; customer: string; kind: GeneratedActivityEvent["kind"] }>> = {
-    rollout: [
-      {
-        title: "Importer worker release auto-rolled back after error spike",
-        body: "Canary monitors detected failed Jira and GitHub import steps in newly onboarded workspaces, so the rollout guardrail restored the previous worker build.",
-        source: "GitHub Deployments",
-        customer: "Internal",
-        kind: "deploy",
-      },
-      {
-        title: "Customer-success escalated onboarding blocker for design partner",
-        body: "The assigned CSM asked for an ETA and workaround after a launch workspace stayed in migration mode longer than expected.",
-        source: "Customer Success",
-        customer: "Northwind Labs",
-        kind: "customer",
-      },
-    ],
-    planning: [
-      {
-        title: "AI planning queue latency crossed the internal SLO",
-        body: "Roadmap generation and weekly summary jobs are backing up as more workspaces kick off quarterly planning at once.",
-        source: "Datadog",
-        customer: "Enterprise planning cohort",
-        kind: "ops",
-      },
-      {
-        title: "Portfolio snapshot regeneration fell behind Jira sync volume",
-        body: "The portfolio service is refreshing workspace health views more slowly than Jira imports finish, leaving stale executive dashboards in customer reviews.",
-        source: "Workflow Metrics",
-        customer: "Astera Cloud",
-        kind: "incident",
-      },
-    ],
-    compliance: [
-      {
-        title: "Access review monitor flagged unusual guest-role elevation",
-        body: "Permissions telemetry detected a guest account inheriting broader workspace access than policy allows. The security lead requested immediate scoping.",
-        source: "Security Hub",
-        customer: "Internal",
-        kind: "security",
-      },
-      {
-        title: "Data retention check failed for one regulated workspace",
-        body: "An automated control found archived task comments retained outside the customer's configured policy window, triggering a compliance escalation.",
-        source: "Policy Automation",
-        customer: "Atlas Capital",
-        kind: "incident",
-      },
-    ],
-  };
-
-  const choice = scenarios[profile][sequence % scenarios[profile].length];
-
-  return {
-    eventType: "activity",
-    externalId,
-    source: choice.source,
-    customer: choice.customer,
-    title: choice.title,
-    body: choice.body,
-    kind: choice.kind,
-    occurredAt,
-  };
-}
-
-export function normalizeSimulationConfig(config: Partial<SimulationConfig> | undefined): SimulationConfig {
-  const requestedProfile = config?.profile;
-  const profile = simulationProfiles.includes(requestedProfile as SimulationProfile)
-    ? (requestedProfile as SimulationProfile)
-    : DEFAULT_SIMULATION_CONFIG.profile;
-
-  const scaleFactor = Math.max(1, Math.min(5, Math.round(config?.scaleFactor ?? DEFAULT_SIMULATION_CONFIG.scaleFactor)));
-  const durationSeconds = Math.max(30, Math.min(300, Math.round(config?.durationSeconds ?? DEFAULT_SIMULATION_CONFIG.durationSeconds)));
-
-  // Higher scale means a faster ingest cadence.
-  const computedCadence = Math.max(2, Math.round(6 / Math.max(1, scaleFactor)));
-
-  return {
-    profile,
-    scaleFactor,
-    durationSeconds,
-    cadenceSeconds: computedCadence,
-  };
-}
-
-export function simulationPlan(config: SimulationConfig) {
-  const maxEvents = 36;
-  const expectedEvents = Math.max(4, Math.min(maxEvents, Math.floor(config.durationSeconds / config.cadenceSeconds)));
-
-  return {
-    expectedEvents,
-    cadenceSeconds: config.cadenceSeconds,
-  };
-}
-
-export async function generateInboundEvent(
-  config: SimulationConfig,
-  sequence: number,
-  runId: string,
-  occurredAt: string,
-): Promise<GeneratedInboundEvent> {
-  const eventType: GeneratedInboundEvent["eventType"] = sequence % 4 === 0 ? "activity" : "ticket";
-  const numericId = sequence.toString().padStart(4, "0");
-  const externalId = eventType === "ticket" ? `SUP-${numericId}-${runId.slice(0, 4)}` : `ACT-${numericId}-${runId.slice(0, 4)}`;
-
-  if (eventType === "ticket") {
-    const payload = await runChatJson(
-      `You generate realistic inbound escalation tickets for ${companyContext.name}, an AI project management startup. Return valid JSON only.`,
-      [
-        `Company: ${companyContext.productSummary}`,
-        `Profile: ${profileCatalog[config.profile].generationPrompt}`,
-        `Simulation sequence: ${sequence}`,
-        `Required external ID: ${externalId}`,
-        `Occurred at: ${occurredAt}`,
-        "Return JSON with exactly these keys:",
-        '{"title":"...","body":"...","source":"...","customer":"...","owner":"...","status":"open|investigating|planned","priority":"critical|high|medium|low"}',
-        "Make the issue clearly about customer-facing project-management workflows such as imports, planning, dashboards, permissions, or collaboration sync.",
-        "Use concrete operational details. No markdown.",
-      ].join("\n"),
-      0.45,
-    );
-
-    const parsed = ticketPayloadSchema.safeParse(payload);
-    if (parsed.success) {
-      return {
-        eventType: "ticket",
-        externalId,
-        ...parsed.data,
-        occurredAt,
-      };
-    }
-
-    return fallbackTicket(config.profile, externalId, occurredAt, sequence);
-  }
-
+async function generateTasksWithLlm() {
   const payload = await runChatJson(
-    `You generate realistic operational feed events for ${companyContext.name}, an AI project management startup. Return valid JSON only.`,
+    "You generate realistic project-team task records. Return valid JSON only.",
     [
-      `Company: ${companyContext.productSummary}`,
-      `Profile: ${profileCatalog[config.profile].generationPrompt}`,
-      `Simulation sequence: ${sequence}`,
-      `Required external ID: ${externalId}`,
-      `Occurred at: ${occurredAt}`,
-      "Return JSON with exactly these keys:",
-      '{"title":"...","body":"...","source":"...","customer":"...","kind":"deploy|incident|customer|ops|security"}',
-      "Make the event clearly about project-management infrastructure, workspace health, integrations, customer success, or security posture.",
-      "Use concrete operational details. No markdown.",
+      "Generate exactly 10 task records for a software product team.",
+      "These tasks should look like assigned work pulled from tools like Jira, Linear, and GitHub.",
+      "Avoid fake enterprise jargon. Keep them concrete and easy to understand.",
+      "Return this exact shape:",
+      '{"tasks":[{"source":"Jira","title":"...","body":"...","status":"open|in progress|blocked|planned","assignee":"..."}]}',
+      "Do not include markdown.",
     ].join("\n"),
-    0.45,
+    0.8,
   );
 
-  const parsed = activityPayloadSchema.safeParse(payload);
-  if (parsed.success) {
+  return taskBatchSchema.parse(payload).tasks;
+}
+
+async function generateEventsWithLlm() {
+  const payload = await runChatJson(
+    "You generate realistic system event records. Return valid JSON only.",
+    [
+      "Generate exactly 10 event records for a software product team.",
+      "These events should look like recent activity from tools like Datadog, Vercel, Sentry, Slack, GitHub Actions, Stripe, and PagerDuty.",
+      "Avoid fake enterprise jargon. Keep them concrete and easy to understand.",
+      "Return this exact shape:",
+      '{"events":[{"source":"Datadog","title":"...","body":"..."}]}',
+      "Do not include markdown.",
+    ].join("\n"),
+    0.8,
+  );
+
+  return eventBatchSchema.parse(payload).events;
+}
+
+export async function generateSeedItems(): Promise<RawItemSeed[]> {
+  const hasLlm = Boolean(process.env.LLM_MODEL && (isAwsBedrockRuntime() || process.env.LLM_BASE_URL));
+
+  if (!hasLlm || process.env.MOCK_AGENT === "true") {
+    return [...fallbackTasks, ...fallbackEvents];
+  }
+
+  const [tasks, events] = await Promise.all([generateTasksWithLlm(), generateEventsWithLlm()]);
+  return [...toRawItems("task", tasks), ...toRawItems("event", events)];
+}
+
+export async function classifyItem(item: Pick<RawItemSeed, "itemType" | "source" | "title" | "body">): Promise<ItemClassification> {
+  const hasLlm = Boolean(process.env.LLM_MODEL && (isAwsBedrockRuntime() || process.env.LLM_BASE_URL));
+
+  if (!hasLlm || process.env.MOCK_AGENT === "true") {
+    const text = `${item.source} ${item.title} ${item.body}`;
     return {
-      eventType: "activity",
-      externalId,
-      ...parsed.data,
-      occurredAt,
+      category: fallbackCategory(text),
+      priority: fallbackPriority(text),
+      tags: fallbackTags(text),
     };
   }
 
-  return fallbackActivity(config.profile, externalId, occurredAt, sequence);
-}
-
-export async function triageInboundEvent(event: GeneratedInboundEvent): Promise<TriageClassification> {
   const payload = await runChatJson(
-    `You are the customer-operations triage model for ${companyContext.name}. Classify inbound escalations for an AI project management product and produce structured outputs. Return valid JSON only.`,
+    "You classify incoming tasks and system events. Return valid JSON only.",
     [
-      "Analyze the inbound item and return this exact JSON schema:",
-      '{"category":"incident|customer-risk|release|billing|auth|performance|compliance|general","riskScore":1,"sentiment":"negative|neutral|positive","priority":"critical|high|medium|low","tags":["tag"],"recommendedAction":"...","rationale":"...","searchSummary":"..."}',
-      "Risk score should represent urgency and customer impact from 1-100.",
-      "Tags should be terse and searchable (2-6 tags).",
-      "No markdown, no extra keys.",
-      `Input type: ${event.eventType}`,
-      `Title: ${event.title}`,
-      `Body: ${event.body}`,
-      `Source: ${event.source}`,
-      `Customer: ${event.customer}`,
-      event.eventType === "ticket" ? `Status: ${event.status}; Priority: ${event.priority}; Owner: ${event.owner}` : `Kind: ${event.kind}`,
+      `Item type: ${item.itemType}`,
+      `Source: ${item.source}`,
+      `Title: ${item.title}`,
+      `Body: ${item.body}`,
+      "Return this exact shape:",
+      '{"category":"...","priority":"low|medium|high|critical","tags":["tag-one","tag-two"]}',
+      "Keep category short and practical, like incident, delivery, billing, performance, integration, or support.",
+      "Return 2 to 4 tags.",
+      "Do not include markdown.",
     ].join("\n"),
     0.2,
   );
 
-  const parsed = triageSchema.safeParse(payload);
-  if (parsed.success) {
-    const cleanedTags = Array.from(
-      new Set(
-        parsed.data.tags
-          .map((tag) => tag.trim().toLowerCase().replace(/[^a-z0-9-]/g, ""))
-          .filter((tag) => tag.length >= 2),
-      ),
-    ).slice(0, 6);
-
-    return {
-      ...parsed.data,
-      tags: cleanedTags.length > 0 ? cleanedTags : ["triage", "general"],
-    };
-  }
-
-  return fallbackTriage(event);
+  return classificationSchema.parse(payload);
 }
 
-export function triageTextForEmbedding(event: GeneratedInboundEvent, triage: TriageClassification) {
+export function textForEmbedding(item: Pick<RawItemSeed, "itemType" | "source" | "title" | "body">, classification: ItemClassification) {
   return [
-    `${event.externalId} (${event.eventType})`,
-    event.title,
-    event.body,
-    `category:${triage.category}`,
-    `priority:${triage.priority}`,
-    `risk:${triage.riskScore}`,
-    `tags:${triage.tags.join(",")}`,
-    triage.searchSummary,
+    item.itemType,
+    item.source,
+    item.title,
+    item.body,
+    classification.category,
+    classification.priority,
+    classification.tags.join(" "),
   ].join("\n");
+}
+
+export async function answerQuestionWithContext(question: string, context: string) {
+  return runChatText(
+    [
+      "You are the copilot for a demo app that tracks tasks and events.",
+      "Answer using the provided context only.",
+      "Be concise and concrete.",
+      "If the requested item is not present in the context, say that directly.",
+      "When relevant, mention status, owner, source, priority, category, and tags.",
+      "Use markdown bullet points only when they improve clarity.",
+    ].join("\n"),
+    [`Question: ${question}`, "", "Current context:", context].join("\n"),
+    0.2,
+  );
 }

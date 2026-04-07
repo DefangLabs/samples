@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 
 import { ensureSchema } from "@/lib/db";
-import { getDashboardSnapshot } from "@/lib/domain";
+import { getItemCounts, getLatestRun } from "@/lib/items";
 import { getQueueCounts } from "@/lib/queue";
 
 export const runtime = "nodejs";
 
 export async function GET() {
   await ensureSchema();
-  const [snapshot, queue] = await Promise.all([getDashboardSnapshot(), getQueueCounts()]);
-  return NextResponse.json({ snapshot, queue });
+  const [counts, latestRun, queue] = await Promise.all([getItemCounts(), getLatestRun(), getQueueCounts()]);
+  return NextResponse.json({ counts, latestRun, queue });
 }

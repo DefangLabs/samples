@@ -1,119 +1,38 @@
-import {
-  getDashboardSnapshot,
-  getOpenTickets,
-  getRecentActivities,
-  searchDocuments,
-  searchTriageInsights,
-} from "@/lib/domain";
-import { companyContext } from "@/lib/demo";
-
-function formatTickets(tickets: Awaited<ReturnType<typeof getOpenTickets>>) {
-  return tickets
-    .map(
-      (ticket) =>
-        `- ${ticket.externalId} (${ticket.priority}, ${ticket.status}) owned by ${ticket.owner}: ${ticket.title}. ${ticket.summary}`,
-    )
-    .join("\n");
-}
-
-function formatDocuments(docs: Awaited<ReturnType<typeof searchDocuments>>) {
-  return docs
-    .map((doc) => `- ${doc.title} [${doc.category}]: ${doc.content}`)
-    .join("\n");
-}
-
-function formatActivities(activities: Awaited<ReturnType<typeof getRecentActivities>>) {
-  return activities
-    .map((activity) => `- ${activity.title} (${activity.kind} at ${activity.occurredAt}): ${activity.body}`)
-    .join("\n");
-}
-
-function formatInsights(insights: Awaited<ReturnType<typeof searchTriageInsights>>) {
-  return insights
-    .map(
-      (insight) =>
-        `- ${insight.externalId} (${insight.entityType}, risk ${insight.riskScore}, ${insight.category}): ${insight.title}. Action: ${insight.recommendedAction}`,
-    )
-    .join("\n");
-}
+import { embedTextForSearch } from "@/lib/ai";
+import { getItemCounts, getItemsByType, searchItemsByEmbedding } from "@/lib/items";
 
 export async function getMockReply(message: string) {
-  const snapshot = await getDashboardSnapshot();
-  const normalizedMessage = message.toLowerCase();
+  const snapshot = await getItemCounts();
 
-  if (snapshot.documentCount === 0) {
+  if (snapshot.taskCount === 0 && snapshot.eventCount === 0) {
     return [
-      "The app has not been seeded yet.",
+      "No sample items are loaded yet.",
       "",
-      "Click `Generate sample activity` first so the worker can load reference docs, tasks, and event data.",
+      "Click `Generate sample items` to create 10 tasks and 10 events, then ask again.",
     ].join("\n");
   }
 
-  const [tickets, docs, activities] = await Promise.all([
-    getOpenTickets(),
-    searchDocuments(message),
-    getRecentActivities(3),
-  ]);
+  const normalized = message.toLowerCase();
 
-  if (
-    normalizedMessage.includes("similar") ||
-    normalizedMessage.includes("pattern") ||
-    normalizedMessage.includes("related incident")
-  ) {
-    const insights = await searchTriageInsights(message);
+  if (normalized.includes("similar") || normalized.includes("related") || normalized.includes("pattern")) {
+    const embedding = await embedTextForSearch(message);
+    const matches = await searchItemsByEmbedding(message, embedding, undefined, 3);
+
     return [
-      "Most similar triaged events:",
-      insights.length > 0 ? formatInsights(insights) : "- No semantically similar events found yet.",
+      "Most similar items:",
+      ...matches.map(({ item, score }) => `- ${item.title} (${item.itemType}, ${item.source}, score ${score})`),
     ].join("\n");
   }
 
-  if (normalizedMessage.includes("release note") || normalizedMessage.includes("release notes")) {
-    return [
-      "Draft release notes:",
-      "- Improved Jira and GitHub import resilience with new retry logic for large workspace migrations.",
-      "- Added roadmap snapshot instrumentation to make planning-week triage faster for the customer-ops team.",
-      "- Known issue: some enterprise workspaces may still show stale executive dashboards after heavy Jira re-syncs.",
-      "",
-      "Source activity:",
-      formatActivities(activities),
-    ].join("\n");
-  }
-
-  if (
-    normalizedMessage.includes("on-call") ||
-    normalizedMessage.includes("look at first") ||
-    normalizedMessage.includes("highest priority")
-  ) {
-    const topTicket = tickets[0];
-    const relatedDocs = await searchDocuments("workspace import planning incident");
-
-    return [
-      "Recommended on-call focus:",
-      `- Start with ${topTicket.externalId}: ${topTicket.title}. It is the highest-risk task in the queue.`,
-      "- Next, confirm whether stale portfolio summaries or import delays are spreading to additional accounts.",
-      "- Hold lower-priority cleanup unless it is directly tied to the active incident.",
-      "",
-      "Reference docs to review:",
-      formatDocuments(relatedDocs.slice(0, 2)),
-      "",
-      "Ticket queue:",
-      formatTickets(tickets.slice(0, 3)),
-    ].join("\n");
-  }
+  const [tasks, events] = await Promise.all([getItemsByType("task", 3), getItemsByType("event", 3)]);
 
   return [
-    `${companyContext.commandCenterName} snapshot:`,
-    `- Open tasks: ${snapshot.openTicketCount}`,
-    `- Reference docs: ${snapshot.documentCount}`,
-    `- Recent events: ${snapshot.activityCount}`,
+    `Current state: ${snapshot.taskCount} tasks, ${snapshot.eventCount} events, ${snapshot.classifiedCount} classified items.`,
     "",
-    "Highest-priority tasks:",
-    formatTickets(tickets.slice(0, 3)),
+    "Top tasks:",
+    ...tasks.map((task) => `- ${task.title} (${task.status ?? "open"}, ${task.priority ?? "pending"})`),
     "",
-    "Relevant documents:",
-    docs.length > 0 ? formatDocuments(docs) : "- No matching documents found. Ask after syncing or use a broader query.",
-    "",
-    "Latest events:",
-    formatActivities(activities),
+    "Recent events:",
+    ...events.map((event) => `- ${event.title} (${event.source})`),
   ].join("\n");
 }

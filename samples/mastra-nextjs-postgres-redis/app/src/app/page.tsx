@@ -1,99 +1,75 @@
 "use client";
 
-import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-import { companyContext, getProfileLabel, profileCatalog, simulationProfiles, type SimulationProfile } from "@/lib/demo";
-
-type Job = {
+type SeedRun = {
   id: string;
   status: string;
-  progress: number;
+  totalItems: number;
+  processedItems: number;
   summary: string | null;
   error: string | null;
-  profile: string | null;
-  scaleFactor: number | null;
-  durationSeconds: number | null;
   updatedAt: string;
 };
 
-type Dashboard = {
-  documentCount: number;
-  taskCount: number;
-  openTicketCount: number;
-  activityCount: number;
-  triagedCount: number;
-  embeddingCount: number;
-  latestJob: Job | null;
+type DashboardResponse = {
+  counts: {
+    taskCount: number;
+    eventCount: number;
+    classifiedCount: number;
+  };
+  latestRun: SeedRun | null;
+  queue: {
+    waiting: number;
+    active: number;
+  };
+};
+
+type Item = {
+  id: number;
+  itemType: "task" | "event";
+  source: string;
+  title: string;
+  body: string;
+  status: string | null;
+  assignee: string | null;
+  category: string | null;
+  priority: string | null;
+  tags: string[];
+  processedAt: string | null;
+  createdAt: string;
 };
 
 type ChatMessage = {
   id: string;
   role: "user" | "assistant";
   content: string;
+  trace?: ChatTraceEvent[];
   state?: "streaming" | "complete" | "error";
 };
 
-type Ticket = {
-  externalId: string;
-  title: string;
-  status: string;
-  priority: string;
-  owner: string;
-  summary: string;
-  source: string;
-  customer: string | null;
-  tags: string[];
-  category: string | null;
-  riskScore: number | null;
-  recommendedAction: string | null;
-};
-
-type Activity = {
-  externalId: string;
-  kind: string;
-  title: string;
-  body: string;
-  source: string;
-  customer: string | null;
-  tags: string[];
-  category: string | null;
-  riskScore: number | null;
-  occurredAt: string;
-};
+type ChatTraceEvent =
+  | { id: string; type: "thinking"; text: string }
+  | { id: string; type: "tool_call"; toolName: string; args: unknown }
+  | { id: string; type: "tool_result"; toolName: string; summary: string };
 
 type ChatStreamEvent =
   | { type: "meta"; threadId: string }
   | { type: "delta"; text: string }
+  | { type: "thinking"; text: string }
+  | { type: "tool_call"; toolName: string; args: unknown }
+  | { type: "tool_result"; toolName: string; summary: string }
   | { type: "done" }
   | { type: "error"; message: string };
 
 const starterPrompts = [
   "What should I look at first?",
-  "Summarize the latest issues in plain English.",
-  "Draft a customer-safe update for Northwind Labs.",
-  "Find similar incidents and suggest next actions.",
+  "Summarize the current tasks and events.",
+  "Which items seem related?",
+  "What patterns are you seeing?",
 ];
-
-function formatTimestamp(value: string | null | undefined) {
-  if (!value) return "Not synced yet";
-  return new Intl.DateTimeFormat(undefined, {
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  }).format(new Date(value));
-}
-
-function priorityClass(priority: string) {
-  const normalized = priority.toLowerCase();
-  if (normalized === "critical") return "status-critical";
-  if (normalized === "high") return "status-high";
-  if (normalized === "medium") return "status-medium";
-  return "status-low";
-}
 
 function createMessageId() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -103,47 +79,81 @@ function createMessageId() {
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
+function formatTimestamp(value: string | null | undefined) {
+  if (!value) return "Not started yet";
+  return new Intl.DateTimeFormat(undefined, {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(new Date(value));
+}
+
+function formatPriority(priority: string | null) {
+  if (!priority) return "pending";
+  return priority;
+}
+
+function priorityClass(priority: string | null) {
+  const normalized = priority?.toLowerCase() ?? "";
+  if (normalized === "critical") return "status-critical";
+  if (normalized === "high") return "status-high";
+  if (normalized === "medium") return "status-medium";
+  return "status-low";
+}
+
+function formatToolArgs(args: unknown) {
+  if (!args || typeof args !== "object") {
+    return "no filters";
+  }
+
+  const entries = Object.entries(args).filter(([, value]) => value !== undefined && value !== null && value !== "");
+  if (entries.length === 0) return "no filters";
+
+  return entries
+    .map(([key, value]) => `${key}: ${typeof value === "string" ? value : JSON.stringify(value)}`)
+    .join(", ");
+}
+
 export default function Page() {
-  const [syncProfile, setSyncProfile] = useState<SimulationProfile>("rollout");
-  const [scaleFactor, setScaleFactor] = useState(1);
-  const [durationSeconds, setDurationSeconds] = useState(60);
-  const [dashboard, setDashboard] = useState<Dashboard | null>(null);
-  const [tickets, setTickets] = useState<Ticket[]>([]);
-  const [activities, setActivities] = useState<Activity[]>([]);
+  const [dashboard, setDashboard] = useState<DashboardResponse | null>(null);
+  const [tasks, setTasks] = useState<Item[]>([]);
+  const [events, setEvents] = useState<Item[]>([]);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [threadId, setThreadId] = useState<string | undefined>();
   const [prompt, setPrompt] = useState("What should I look at first?");
-  const [syncing, setSyncing] = useState(false);
+  const [threadId, setThreadId] = useState<string | undefined>();
+  const [seeding, setSeeding] = useState(false);
   const [sending, setSending] = useState(false);
   const chatLogRef = useRef<HTMLDivElement | null>(null);
 
   async function loadAll() {
-    const [dashboardResponse, jobsResponse] = await Promise.all([
+    const [dashboardResponse, itemsResponse] = await Promise.all([
       fetch("/api/dashboard", { cache: "no-store" }),
-      fetch("/api/jobs", { cache: "no-store" }),
+      fetch("/api/items", { cache: "no-store" }),
     ]);
 
-    if (!dashboardResponse.ok || !jobsResponse.ok) {
-      throw new Error("Failed to load workspace data");
+    if (!dashboardResponse.ok || !itemsResponse.ok) {
+      throw new Error("Failed to load demo state");
     }
 
-    const dashboardJson = await dashboardResponse.json();
-    const jobsJson = await jobsResponse.json();
-    setDashboard(dashboardJson.snapshot);
-    setTickets(jobsJson.tickets);
-    setActivities(jobsJson.activities);
+    const dashboardJson = (await dashboardResponse.json()) as DashboardResponse;
+    const itemsJson = (await itemsResponse.json()) as { tasks: Item[]; events: Item[] };
+
+    setDashboard(dashboardJson);
+    setTasks(itemsJson.tasks);
+    setEvents(itemsJson.events);
   }
 
   useEffect(() => {
     void loadAll().catch(() => {
-      // Keep UI usable even if initial fetch fails.
+      // Keep the page usable even if an initial load fails.
     });
 
     const interval = window.setInterval(() => {
       void loadAll().catch(() => {
         // Ignore transient polling errors.
       });
-    }, 4000);
+    }, 3000);
 
     return () => window.clearInterval(interval);
   }, []);
@@ -153,27 +163,30 @@ export default function Page() {
     chatLogRef.current.scrollTop = chatLogRef.current.scrollHeight;
   }, [messages]);
 
-  const topTickets = useMemo(() => tickets.slice(0, 4), [tickets]);
-  const topActivities = useMemo(() => activities.slice(0, 4), [activities]);
+  const latestRun = dashboard?.latestRun ?? null;
+  const statusLabel = latestRun
+    ? latestRun.status === "running" || latestRun.status === "queued"
+      ? `Processing ${latestRun.processedItems}/${latestRun.totalItems}`
+      : latestRun.status === "completed"
+        ? `Ready · ${latestRun.totalItems} items`
+        : "Run failed"
+    : "No items yet";
   const hasConversation = messages.length > 0;
 
-  async function handleSync() {
-    setSyncing(true);
+  const taskSummary = useMemo(() => dashboard?.counts.taskCount ?? 0, [dashboard]);
+  const eventSummary = useMemo(() => dashboard?.counts.eventCount ?? 0, [dashboard]);
+  const classifiedSummary = useMemo(() => dashboard?.counts.classifiedCount ?? 0, [dashboard]);
+
+  async function handleSeed() {
+    setSeeding(true);
     try {
-      await fetch("/api/jobs/sync", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          profile: syncProfile,
-          scaleFactor,
-          durationSeconds,
-        }),
-      });
+      const response = await fetch("/api/items/seed", { method: "POST" });
+      if (!response.ok) {
+        throw new Error("Failed to enqueue sample item generation");
+      }
       await loadAll();
     } finally {
-      setSyncing(false);
+      setSeeding(false);
     }
   }
 
@@ -206,120 +219,126 @@ export default function Page() {
         throw new Error("Copilot response failed");
       }
 
-      const contentType = response.headers.get("content-type") ?? "";
-      const isStreamResponse = contentType.includes("application/x-ndjson");
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error("Streaming response unavailable");
+      }
 
-      if (response.body && isStreamResponse) {
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-        let buffer = "";
+      const decoder = new TextDecoder();
+      let buffer = "";
 
-        const applyEvent = (streamEvent: ChatStreamEvent) => {
-          if (streamEvent.type === "meta") {
-            setThreadId(streamEvent.threadId);
-            return;
-          }
+      const appendTrace = (traceEvent: ChatTraceEvent) => {
+        setMessages((prev) =>
+          prev.map((message) => {
+            if (message.id !== assistantMessageId) return message;
 
-          if (streamEvent.type === "delta") {
-            setMessages((prev) =>
-              prev.map((message) =>
-                message.id === assistantMessageId
-                  ? { ...message, state: "streaming", content: message.content + streamEvent.text }
-                  : message,
-              ),
-            );
-            return;
-          }
+            const trace = message.trace ?? [];
+            const lastTrace = trace[trace.length - 1];
 
-          if (streamEvent.type === "done") {
-            setMessages((prev) =>
-              prev.map((message) =>
-                message.id === assistantMessageId
-                  ? {
-                      ...message,
-                      state: "complete",
-                      content: message.content || "The copilot finished without returning text.",
-                    }
-                  : message,
-              ),
-            );
-            return;
-          }
-
-          if (streamEvent.type === "error") {
-            setMessages((prev) =>
-              prev.map((message) =>
-                message.id === assistantMessageId
-                  ? {
-                      ...message,
-                      state: "error",
-                      content: message.content || streamEvent.message,
-                    }
-                  : message,
-              ),
-            );
-          }
-        };
-
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-
-          buffer += decoder.decode(value, { stream: true });
-
-          let newlineIndex = buffer.indexOf("\n");
-          while (newlineIndex >= 0) {
-            const rawEvent = buffer.slice(0, newlineIndex).trim();
-            buffer = buffer.slice(newlineIndex + 1);
-
-            if (rawEvent) {
-              try {
-                applyEvent(JSON.parse(rawEvent) as ChatStreamEvent);
-              } catch {
-                // Ignore malformed stream chunks.
-              }
+            if (traceEvent.type === "thinking" && lastTrace?.type === "thinking") {
+              return {
+                ...message,
+                trace: [...trace.slice(0, -1), { ...lastTrace, text: lastTrace.text + traceEvent.text }],
+              };
             }
 
-            newlineIndex = buffer.indexOf("\n");
-          }
-        }
-
-        buffer += decoder.decode();
-        const trailingEvent = buffer.trim();
-        if (trailingEvent) {
-          try {
-            applyEvent(JSON.parse(trailingEvent) as ChatStreamEvent);
-          } catch {
-            // Ignore malformed trailing chunk.
-          }
-        }
-      } else {
-        const json = await response.json();
-        if (json.threadId) {
-          setThreadId(json.threadId);
-        }
-
-        setMessages((prev) =>
-          prev.map((message) =>
-            message.id === assistantMessageId
-              ? {
-                  ...message,
-                  state: "complete",
-                  content: typeof json.reply === "string" ? json.reply : "The copilot finished without returning text.",
-                }
-              : message,
-          ),
+            return { ...message, trace: [...trace, traceEvent] };
+          }),
         );
+      };
+
+      const applyEvent = (streamEvent: ChatStreamEvent) => {
+        if (streamEvent.type === "meta") {
+          setThreadId(streamEvent.threadId);
+          return;
+        }
+
+        if (streamEvent.type === "delta") {
+          setMessages((prev) =>
+            prev.map((message) =>
+              message.id === assistantMessageId
+                ? { ...message, state: "streaming", content: message.content + streamEvent.text }
+                : message,
+            ),
+          );
+          return;
+        }
+
+        if (streamEvent.type === "thinking") {
+          appendTrace({ id: createMessageId(), type: "thinking", text: streamEvent.text });
+          return;
+        }
+
+        if (streamEvent.type === "tool_call") {
+          appendTrace({
+            id: createMessageId(),
+            type: "tool_call",
+            toolName: streamEvent.toolName,
+            args: streamEvent.args,
+          });
+          return;
+        }
+
+        if (streamEvent.type === "tool_result") {
+          appendTrace({
+            id: createMessageId(),
+            type: "tool_result",
+            toolName: streamEvent.toolName,
+            summary: streamEvent.summary,
+          });
+          return;
+        }
+
+        if (streamEvent.type === "done") {
+          setMessages((prev) =>
+            prev.map((message) =>
+              message.id === assistantMessageId
+                ? { ...message, state: "complete", content: message.content || "No response text returned." }
+                : message,
+            ),
+          );
+          return;
+        }
+
+        if (streamEvent.type === "error") {
+          setMessages((prev) =>
+            prev.map((message) =>
+              message.id === assistantMessageId
+                ? { ...message, state: "error", content: message.content || streamEvent.message }
+                : message,
+            ),
+          );
+        }
+      };
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        let newlineIndex = buffer.indexOf("\n");
+
+        while (newlineIndex >= 0) {
+          const rawEvent = buffer.slice(0, newlineIndex).trim();
+          buffer = buffer.slice(newlineIndex + 1);
+
+          if (rawEvent) {
+            applyEvent(JSON.parse(rawEvent) as ChatStreamEvent);
+          }
+
+          newlineIndex = buffer.indexOf("\n");
+        }
+      }
+
+      const trailing = buffer.trim();
+      if (trailing) {
+        applyEvent(JSON.parse(trailing) as ChatStreamEvent);
       }
     } catch {
       setMessages((prev) =>
         prev.map((message) =>
           message.id === assistantMessageId
-            ? {
-                ...message,
-                state: "error",
-                content: "I couldn't generate a response right now. Refresh context and try again.",
-              }
+            ? { ...message, state: "error", content: "The copilot could not answer that right now." }
             : message,
         ),
       );
@@ -329,54 +348,25 @@ export default function Page() {
   }
 
   return (
-    <main className="experience-layout">
-      <aside className="chat-rail reveal">
+    <div className="app-shell">
+      <aside className="chat-rail">
         <div className="card chat-card">
-          <span className="section-kicker">Copilot</span>
-          <h2>Ask the copilot</h2>
-          <p className="muted-text chat-intro">Use the latest classified tasks and events to get a quick answer.</p>
-
-          <div className="chat-log" ref={chatLogRef}>
-            {messages.length === 0 ? (
-              <div className="chat-empty-state">
-                No conversation yet. Ask what changed, what needs attention, or what you should tell a customer.
-              </div>
-            ) : (
-              messages.map((message) => (
-                <div className={`chat-message ${message.role} ${message.state ?? "complete"}`} key={message.id}>
-                  {message.content ? (
-                    message.role === "assistant" ? (
-                      <div className="chat-markdown">
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>
-                      </div>
-                    ) : (
-                      <span>{message.content}</span>
-                    )
-                  ) : null}
-                  {message.state === "streaming" && !message.content ? (
-                    <span className="typing-placeholder">
-                      Reviewing tasks and events
-                      <span className="typing-dots" aria-hidden="true">
-                        <span />
-                        <span />
-                        <span />
-                      </span>
-                    </span>
-                  ) : null}
-                  {message.state === "streaming" && message.content ? <span className="stream-cursor" aria-hidden="true" /> : null}
-                </div>
-              ))
-            )}
+          <div>
+            <span className="eyebrow">Copilot</span>
+            <h1 className="chat-title">Ask about the current state of the system</h1>
+            <p className="muted-text chat-intro">
+              The chat agent can inspect tasks, events, and semantic matches before it answers.
+            </p>
           </div>
 
           {!hasConversation ? (
             <div className="suggestion-row">
               {starterPrompts.map((suggestion) => (
                 <button
-                  className="suggestion-chip"
                   key={suggestion}
-                  onClick={() => setPrompt(suggestion)}
                   type="button"
+                  className="suggestion-chip"
+                  onClick={() => setPrompt(suggestion)}
                   disabled={sending}
                 >
                   {suggestion}
@@ -385,195 +375,189 @@ export default function Page() {
             </div>
           ) : null}
 
+          <div className="chat-log" ref={chatLogRef}>
+            {messages.length === 0 ? (
+              <div className="chat-empty-state">
+                Generate sample items, then ask what matters, what looks related, or what needs attention first.
+              </div>
+            ) : null}
+
+            {messages.map((message) => (
+              <div key={message.id} className={`chat-message ${message.role} ${message.state ?? "complete"}`}>
+                {message.role === "assistant" ? (
+                  <div className="chat-markdown">
+                    {message.trace && message.trace.length > 0 ? (
+                      <div className="trace-stack" aria-label="Agent tool trace">
+                        {message.trace.map((traceEvent) => {
+                          if (traceEvent.type === "thinking") {
+                            return (
+                              <details key={traceEvent.id} className="trace-item thinking-trace" open>
+                                <summary>Thinking</summary>
+                                <p>{traceEvent.text.trim()}</p>
+                              </details>
+                            );
+                          }
+
+                          if (traceEvent.type === "tool_call") {
+                            return (
+                              <div key={traceEvent.id} className="trace-item tool-trace">
+                                <span>Tool call</span>
+                                <strong>{traceEvent.toolName}</strong>
+                                <code>{formatToolArgs(traceEvent.args)}</code>
+                              </div>
+                            );
+                          }
+
+                          return (
+                            <div key={traceEvent.id} className="trace-item tool-trace result-trace">
+                              <span>Tool result</span>
+                              <strong>{traceEvent.toolName}</strong>
+                              <code>{traceEvent.summary}</code>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : null}
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content || "Working..."}</ReactMarkdown>
+                    {message.state === "streaming" ? <span className="stream-cursor" aria-hidden="true" /> : null}
+                  </div>
+                ) : (
+                  message.content
+                )}
+              </div>
+            ))}
+          </div>
+
           <form className="chat-form" onSubmit={handleSubmit}>
             <div className="chat-compose">
               <textarea
                 className="chat-input"
                 value={prompt}
                 onChange={(event) => setPrompt(event.target.value)}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" && !event.shiftKey) {
-                    event.preventDefault();
-                    event.currentTarget.form?.requestSubmit();
-                  }
-                }}
-                placeholder="Ask what needs attention, what changed, or what to tell a customer..."
+                placeholder="Ask about the tasks, the events, or similar items"
                 disabled={sending}
               />
-              <button className="primary-button chat-send-button" disabled={sending}>
-                {sending ? "..." : "Ask"}
+              <button className="primary-button chat-send-button" type="submit" disabled={sending || !prompt.trim()}>
+                Ask
               </button>
             </div>
           </form>
         </div>
       </aside>
 
-      <div className="experience-shell">
-        <header className="topbar reveal">
-          <div className="topbar-copy">
-            <span className="pill-label">{companyContext.commandCenterName}</span>
-            <h1 className="hero-title">See what needs attention across your tools</h1>
-            <p className="hero-subtitle">
-              Tasks come from work tools like Jira, GitHub, and Linear. Events come from systems like deploys, sync
-              jobs, alerts, and monitoring. New items are classified automatically and made available to the copilot.
+      <main className="content-shell">
+        <section className="card hero-card">
+          <div className="hero-copy">
+            <span className="eyebrow">Tasks and events</span>
+            <h2>Background jobs classify incoming work and system activity.</h2>
+            <p className="muted-text">
+              Click one button to generate 10 tasks and 10 events. The worker fans that out into per-item jobs, stores
+              the results in Postgres, and builds embeddings for semantic lookup.
             </p>
           </div>
 
-          <div className="topbar-actions">
-            <div className="sync-controls">
-              <label>
-                Scenario
-                <select
-                  className="sync-select"
-                  value={syncProfile}
-                  onChange={(event) => setSyncProfile(event.target.value as SimulationProfile)}
-                  disabled={syncing || sending}
-                >
-                  {simulationProfiles.map((profile) => (
-                    <option key={profile} value={profile}>
-                      {profileCatalog[profile].label}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <label>
-                Scale
-                <select
-                  className="sync-select"
-                  value={scaleFactor}
-                  onChange={(event) => setScaleFactor(Number(event.target.value))}
-                  disabled={syncing || sending}
-                >
-                  <option value={1}>1x</option>
-                  <option value={2}>2x</option>
-                  <option value={3}>3x</option>
-                  <option value={4}>4x</option>
-                  <option value={5}>5x</option>
-                </select>
-              </label>
-
-              <label>
-                Duration
-                <select
-                  className="sync-select"
-                  value={durationSeconds}
-                  onChange={(event) => setDurationSeconds(Number(event.target.value))}
-                  disabled={syncing || sending}
-                >
-                  <option value={60}>1 min</option>
-                  <option value={120}>2 min</option>
-                  <option value={180}>3 min</option>
-                </select>
-              </label>
-            </div>
-
-            <button className="primary-button" disabled={syncing || sending} onClick={handleSync}>
-              {syncing ? "Queueing simulation..." : "Generate sample activity"}
+          <div className="hero-actions">
+            <button className="primary-button" type="button" onClick={handleSeed} disabled={seeding}>
+              {seeding ? "Queueing..." : "Generate sample items"}
             </button>
-            <Link className="ghost-link" href="/ops">
-              View system internals
-            </Link>
+            <div className="status-panel">
+              <div>
+                <span className="status-label">Status</span>
+                <strong>{statusLabel}</strong>
+              </div>
+              <span className="muted-text">Updated {formatTimestamp(latestRun?.updatedAt)}</span>
+            </div>
           </div>
-        </header>
-
-        <section className="snapshot-card reveal delay-1">
-          <article className="card freshness-card">
-            <span className="section-kicker">Current Snapshot</span>
-            <p className="muted-text subtle-gap">{profileCatalog[syncProfile].shortSummary}</p>
-            <div className="kpi-grid">
-              <div className="kpi">
-                <label>Open tasks</label>
-                <strong>{dashboard?.openTicketCount ?? 0}</strong>
-              </div>
-              <div className="kpi">
-                <label>Recent events</label>
-                <strong>{dashboard?.activityCount ?? 0}</strong>
-              </div>
-              <div className="kpi">
-                <label>Reference docs</label>
-                <strong>{dashboard?.documentCount ?? 0}</strong>
-              </div>
-              <div className="kpi">
-                <label>Classified items</label>
-                <strong>{dashboard?.triagedCount ?? 0}</strong>
-              </div>
-            </div>
-            <p className="muted-text subtle-gap">
-              Latest refresh: {formatTimestamp(dashboard?.latestJob?.updatedAt)}
-              {dashboard?.latestJob
-                ? ` · ${dashboard.latestJob.status} · ${getProfileLabel(dashboard.latestJob.profile)} @ ${dashboard.latestJob.scaleFactor ?? 1}x`
-                : ""}
-            </p>
-          </article>
         </section>
 
-        <section className="workspace-grid reveal delay-2">
-          <article className="card">
-            <span className="section-kicker">Tasks</span>
-            <h2>Open tasks</h2>
-            <p className="muted-text section-blurb">Tasks assigned to people in tools like Jira, GitHub, and Linear.</p>
-            <div className="ticket-list">
-              {topTickets.length === 0 ? (
-                <p className="muted-text">No tasks loaded yet. Generate sample activity to populate the queue.</p>
-              ) : (
-                topTickets.map((ticket) => (
-                  <div className="ticket-card" key={ticket.externalId}>
-                    <div className="inline-row">
-                      <strong>{ticket.externalId}</strong>
-                      <span className={`status-pill ${priorityClass(ticket.priority)}`}>{ticket.priority}</span>
-                    </div>
-                    <p className="ticket-title">{ticket.title}</p>
-                    <p className="muted-text compact-meta">
-                      {ticket.status} · {ticket.owner} · {ticket.source}
-                    </p>
-                    <p className="muted-text item-summary">{ticket.summary}</p>
-                    <p className="muted-text compact-meta">
-                      {ticket.customer ? `${ticket.customer} · ` : ""}
-                      {ticket.category ? `${ticket.category} · ` : ""}
-                      {ticket.riskScore ? `Risk ${ticket.riskScore}` : "Pending classification"}
-                    </p>
+        <section className="stats-row">
+          <div className="stat-card">
+            <span className="stat-label">Tasks</span>
+            <strong>{taskSummary}</strong>
+          </div>
+          <div className="stat-card">
+            <span className="stat-label">Events</span>
+            <strong>{eventSummary}</strong>
+          </div>
+          <div className="stat-card">
+            <span className="stat-label">Classified</span>
+            <strong>{classifiedSummary}</strong>
+          </div>
+          <div className="stat-card">
+            <span className="stat-label">Queue</span>
+            <strong>{(dashboard?.queue.active ?? 0) + (dashboard?.queue.waiting ?? 0)}</strong>
+          </div>
+        </section>
+
+        <section className="columns">
+          <div className="card list-card">
+            <div className="list-header">
+              <span className="eyebrow">Open tasks</span>
+              <p className="muted-text">Tasks assigned to people in tools like Jira, GitHub, and Linear.</p>
+            </div>
+            <div className="item-list">
+              {tasks.length === 0 ? <div className="empty-list">No tasks yet.</div> : null}
+              {tasks.map((task) => (
+                <article key={task.id} className="item-card">
+                  <div className="item-topline">
+                    <span className="source-pill">{task.source}</span>
+                    <span className={`priority-pill ${priorityClass(task.priority)}`}>{formatPriority(task.priority)}</span>
                   </div>
-                ))
-              )}
-            </div>
-          </article>
-
-          <article className="card">
-            <span className="section-kicker">Events</span>
-            <h2>Recent events</h2>
-            <p className="muted-text section-blurb">Events from across our systems like deploys, sync jobs, alerts, and monitoring.</p>
-            <div className="activity-stream">
-              {topActivities.length === 0 ? (
-                <p className="muted-text">No activity loaded yet.</p>
-              ) : (
-                topActivities.map((activity) => (
-                  <div className="activity-card" key={activity.externalId}>
-                    <div className="inline-row">
-                      <strong>{activity.title}</strong>
-                      <span className="status-pill status-neutral">{activity.kind}</span>
-                    </div>
-                    <p className="muted-text compact-meta">{formatTimestamp(activity.occurredAt)}</p>
-                    <p className="muted-text item-summary">{activity.body}</p>
-                    <p className="muted-text compact-meta">
-                      {activity.source}
-                      {activity.customer ? ` · ${activity.customer}` : ""}
-                      {activity.category ? ` · ${activity.category}` : ""}
-                      {activity.riskScore ? ` · Risk ${activity.riskScore}` : ""}
-                    </p>
+                  <h3>{task.title}</h3>
+                  <p className="item-body">{task.body}</p>
+                  <div className="meta-row">
+                    <span>{task.assignee ? `Assigned to ${task.assignee}` : "Unassigned"}</span>
+                    <span>{task.status ?? "pending"}</span>
+                    <span>{task.category ?? "classifying"}</span>
                   </div>
-                ))
-              )}
+                  {task.tags.length > 0 ? (
+                    <div className="tag-row">
+                      {task.tags.map((tag) => (
+                        <span key={tag} className="tag-pill">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  ) : null}
+                </article>
+              ))}
             </div>
-          </article>
-        </section>
+          </div>
 
-        <section className="footer-note reveal delay-4">
-          <p>
-            Want the backend view? Open the <Link href="/ops">system internals page</Link> for queue history, storage, and service details.
-          </p>
+          <div className="card list-card">
+            <div className="list-header">
+              <span className="eyebrow">Recent events</span>
+              <p className="muted-text">Events from across our systems like deploys, alerts, sync jobs, and support channels.</p>
+            </div>
+            <div className="item-list">
+              {events.length === 0 ? <div className="empty-list">No events yet.</div> : null}
+              {events.map((event) => (
+                <article key={event.id} className="item-card">
+                  <div className="item-topline">
+                    <span className="source-pill">{event.source}</span>
+                    <span className={`priority-pill ${priorityClass(event.priority)}`}>{formatPriority(event.priority)}</span>
+                  </div>
+                  <h3>{event.title}</h3>
+                  <p className="item-body">{event.body}</p>
+                  <div className="meta-row">
+                    <span>{formatTimestamp(event.createdAt)}</span>
+                    <span>{event.category ?? "classifying"}</span>
+                  </div>
+                  {event.tags.length > 0 ? (
+                    <div className="tag-row">
+                      {event.tags.map((tag) => (
+                        <span key={tag} className="tag-pill">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  ) : null}
+                </article>
+              ))}
+            </div>
+          </div>
         </section>
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }

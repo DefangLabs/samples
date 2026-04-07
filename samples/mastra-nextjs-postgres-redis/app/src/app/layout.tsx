@@ -1,11 +1,11 @@
-import "./globals.css";
 import type { ReactNode } from "react";
 
-import { companyContext } from "@/lib/demo";
+import "./globals.css";
 
 export const metadata = {
-  title: companyContext.commandCenterName,
-  description: `${companyContext.productSummary} A realistic internal customer-operations sample built with Mastra, Next.js, PostgreSQL, Redis, and Defang.`,
+  title: "Tasks and Events Demo",
+  description:
+    "A small Defang sample where background jobs classify and embed tasks and events, and a copilot answers questions using tools.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
