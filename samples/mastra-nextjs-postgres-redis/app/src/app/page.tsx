@@ -1,7 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
-
 import { ChatMessageView } from "@/app/components/chat-message";
 import { ItemCard } from "@/app/components/item-card";
 import { formatTimestamp } from "@/app/formatting";
@@ -30,9 +28,9 @@ export default function Page() {
         : "Run failed"
     : "No items yet";
 
-  const taskCount = useMemo(() => dashboard?.counts.taskCount ?? 0, [dashboard]);
-  const eventCount = useMemo(() => dashboard?.counts.eventCount ?? 0, [dashboard]);
-  const classifiedCount = useMemo(() => dashboard?.counts.classifiedCount ?? 0, [dashboard]);
+  const taskCount = dashboard?.counts.taskCount ?? 0;
+  const eventCount = dashboard?.counts.eventCount ?? 0;
+  const classifiedCount = dashboard?.counts.classifiedCount ?? 0;
   const queueCount = (dashboard?.queue.active ?? 0) + (dashboard?.queue.waiting ?? 0);
 
   return (

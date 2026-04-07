@@ -92,10 +92,6 @@ async function runChatJson(systemPrompt: string, userPrompt: string, temperature
   return runChat(systemPrompt, userPrompt, temperature, parseJsonFromText);
 }
 
-async function runChatText(systemPrompt: string, userPrompt: string, temperature = 0.2) {
-  return runChat(systemPrompt, userPrompt, temperature, (text) => text);
-}
-
 // ---------------------------------------------------------------------------
 // Embeddings
 // ---------------------------------------------------------------------------
@@ -268,21 +264,3 @@ export function textForEmbedding(item: Pick<RawItemSeed, "itemType" | "source" |
   ].join("\n");
 }
 
-// ---------------------------------------------------------------------------
-// Context-aware Q&A
-// ---------------------------------------------------------------------------
-
-export async function answerQuestionWithContext(question: string, context: string) {
-  return runChatText(
-    [
-      "You are the copilot for a demo app that tracks tasks and events.",
-      "Answer using the provided context only.",
-      "Be concise and concrete.",
-      "If the requested item is not present in the context, say that directly.",
-      "When relevant, mention status, owner, source, priority, category, and tags.",
-      "Use markdown bullet points only when they improve clarity.",
-    ].join("\n"),
-    [`Question: ${question}`, "", "Current context:", context].join("\n"),
-    0.2,
-  );
-}

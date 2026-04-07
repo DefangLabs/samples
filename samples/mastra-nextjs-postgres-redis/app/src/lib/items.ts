@@ -340,7 +340,6 @@ export async function getAvailableTags(type?: ItemType) {
 }
 
 export async function searchItemsByEmbedding(
-  _query: string,
   embedding: number[],
   type?: ItemType,
   limit = 5,

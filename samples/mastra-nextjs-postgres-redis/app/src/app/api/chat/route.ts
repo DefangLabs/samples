@@ -3,20 +3,12 @@ import { setTimeout as sleep } from "node:timers/promises";
 
 import { NextRequest, NextResponse } from "next/server";
 
+import type { ChatStreamEvent } from "@/app/types";
 import { ensureSchema } from "@/lib/db";
 import { getMockReply } from "@/lib/mock-agent";
 import { mastra } from "@/mastra";
 
 export const runtime = "nodejs";
-
-type ChatStreamEvent =
-  | { type: "meta"; threadId: string }
-  | { type: "delta"; text: string }
-  | { type: "thinking"; text: string }
-  | { type: "tool_call"; toolName: string; args: unknown }
-  | { type: "tool_result"; toolName: string; summary: string }
-  | { type: "done" }
-  | { type: "error"; message: string };
 
 // ---------------------------------------------------------------------------
 // Request parsing

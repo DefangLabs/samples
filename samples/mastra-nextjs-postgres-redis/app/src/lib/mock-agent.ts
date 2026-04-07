@@ -16,7 +16,7 @@ export async function getMockReply(message: string) {
 
   if (normalized.includes("similar") || normalized.includes("related") || normalized.includes("pattern")) {
     const embedding = await embedTextForSearch(message);
-    const matches = await searchItemsByEmbedding(message, embedding, undefined, 3);
+    const matches = await searchItemsByEmbedding(embedding, undefined, 3);
 
     return [
       "Most similar items:",

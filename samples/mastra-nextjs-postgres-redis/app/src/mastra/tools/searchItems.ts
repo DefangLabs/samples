@@ -32,7 +32,7 @@ export const searchItems = createTool({
   execute: async (input) => {
     const embedding = await embedTextForSearch(input.query);
     const { query, itemType, limit, ...filters } = input;
-    const matches = await searchItemsByEmbedding(query, embedding, itemType, limit ?? 5, filters);
+    const matches = await searchItemsByEmbedding(embedding, itemType, limit ?? 5, filters);
     return matches.map(({ item, score }) => ({
       id: item.id,
       itemType: item.itemType,

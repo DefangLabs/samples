@@ -27,6 +27,8 @@ services:
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres?sslmode=disable
       REDIS_URL: redis://redis:6379
       QUEUE_NAME: support-sync
+      MOCK_AGENT: "true"
+      LLM_MODEL: mock
     depends_on:
       postgres:
         condition: service_healthy
@@ -49,6 +51,6 @@ services:
       retries: 10
       start_period: 10s
   redis:
-    image: redis:7
+    image: redis:6.2
     ports:
       - 6379:6379

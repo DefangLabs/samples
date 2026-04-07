@@ -47,6 +47,7 @@ services:
       DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres?uselibpqcompat=true&sslmode=require
       REDIS_URL: redis://redis:6379
       QUEUE_NAME: support-sync
+      MOCK_AGENT: "false"
       LLM_MODEL:
       EMBEDDING_MODEL:
       OPENAI_API_KEY: defang
