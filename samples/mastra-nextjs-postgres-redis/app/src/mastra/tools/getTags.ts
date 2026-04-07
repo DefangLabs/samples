@@ -15,5 +15,5 @@ export const getTags = createTool({
       count: z.number(),
     }),
   ),
-  execute: async ({ context }) => getAvailableTags(context.itemType),
+  execute: async (input) => getAvailableTags(input.itemType),
 });

@@ -1,59 +1,61 @@
 import { createAmazonBedrock } from "@ai-sdk/amazon-bedrock";
 import { fromNodeProviderChain } from "@aws-sdk/credential-providers";
 import type { OpenAICompatibleConfig } from "@mastra/core/llm";
-
-declare global {
-  // eslint-disable-next-line no-var
-  var bedrockProvider:
-    | ReturnType<typeof createAmazonBedrock>
-    | undefined;
-}
-
-function getConfiguredModelName() {
-  const modelName = process.env.LLM_MODEL;
-  if (!modelName) {
-    throw new Error("LLM_MODEL is not configured");
-  }
-
-  return modelName;
-}
-
-export function isAwsBedrockRuntime() {
-  return Boolean(
-    process.env.AWS_REGION ||
-      process.env.AWS_DEFAULT_REGION ||
-      process.env.AWS_BEARER_TOKEN_BEDROCK ||
-      process.env.AWS_EXECUTION_ENV ||
-      process.env.AWS_CONTAINER_CREDENTIALS_RELATIVE_URI ||
-      process.env.ECS_CONTAINER_METADATA_URI_V4,
-  );
-}
+import { ModelRouterEmbeddingModel } from "@mastra/core/llm";
 
 function getBedrockProvider() {
-  if (!global.bedrockProvider) {
-    global.bedrockProvider = createAmazonBedrock({
-      credentialProvider: fromNodeProviderChain(),
-    });
-  }
-
-  return global.bedrockProvider;
+  return createAmazonBedrock({ credentialProvider: fromNodeProviderChain() });
 }
 
-export function getDirectBedrockModel(modelName = getConfiguredModelName()) {
-  return getBedrockProvider()(modelName);
-}
+/**
+ * Parses a "provider/model" string into its parts.
+ */
+function parseModelId(envVar: string) {
+  const value = process.env[envVar];
+  if (!value) throw new Error(`${envVar} is not configured`);
 
-export function getMastraModel(): ReturnType<typeof getDirectBedrockModel> | OpenAICompatibleConfig {
-  const modelName = getConfiguredModelName();
-
-  if (isAwsBedrockRuntime()) {
-    return getDirectBedrockModel(modelName);
-  }
+  const slashIndex = value.indexOf("/");
+  if (slashIndex === -1) return { provider: "", modelName: value, raw: value };
 
   return {
-    providerId: "openai",
-    modelId: modelName,
-    apiKey: process.env.OPENAI_API_KEY ?? "defang",
-    url: process.env.LLM_BASE_URL ?? "https://api.openai.com/v1",
+    provider: value.slice(0, slashIndex),
+    modelName: value.slice(slashIndex + 1),
+    raw: value,
   };
+}
+
+/**
+ * Returns the configured LLM model.
+ *
+ * LLM_MODEL uses provider/model format:
+ *   - "bedrock/us.amazon.nova-pro-v1:0"  (AWS Bedrock)
+ *   - "openai/gpt-4o"                    (OpenAI)
+ *   - "anthropic/claude-sonnet-4-5-20250514" (Anthropic)
+ *   - "google/gemini-2.0-flash"          (Google)
+ */
+export function getMastraModel() {
+  const { provider, modelName, raw } = parseModelId("LLM_MODEL");
+
+  if (provider === "bedrock") {
+    return getBedrockProvider()(modelName);
+  }
+
+  return { id: raw as `${string}/${string}` } satisfies OpenAICompatibleConfig;
+}
+
+/**
+ * Returns the configured embedding model.
+ *
+ * EMBEDDING_MODEL uses the same provider/model format:
+ *   - "bedrock/amazon.titan-embed-text-v2:0"
+ *   - "openai/text-embedding-3-small"
+ */
+export function getMastraEmbeddingModel() {
+  const { provider, modelName, raw } = parseModelId("EMBEDDING_MODEL");
+
+  if (provider === "bedrock") {
+    return getBedrockProvider().embedding(modelName);
+  }
+
+  return new ModelRouterEmbeddingModel(raw as `${string}/${string}`);
 }

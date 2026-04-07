@@ -15,15 +15,12 @@ services:
       QUEUE_NAME: support-sync
       MOCK_AGENT: "false"
       LLM_MODEL:
-      EMBEDDING_BASE_URL: http://embedding/api/v1
       EMBEDDING_MODEL:
       OPENAI_API_KEY: defang
     depends_on:
       postgres:
         condition: service_healthy
       redis:
-        condition: service_started
-      embedding:
         condition: service_started
     healthcheck:
       test:
@@ -51,15 +48,12 @@ services:
       REDIS_URL: redis://redis:6379
       QUEUE_NAME: support-sync
       LLM_MODEL:
-      EMBEDDING_BASE_URL: http://embedding/api/v1
       EMBEDDING_MODEL:
       OPENAI_API_KEY: defang
     depends_on:
       postgres:
         condition: service_healthy
       redis:
-        condition: service_started
-      embedding:
         condition: service_started
     deploy:
       resources:
@@ -104,16 +98,3 @@ services:
         reservations:
           cpus: "0.25"
           memory: 256M
-  embedding:
-    provider:
-      type: model
-      options:
-        model: embedding-default
-    x-defang-llm: true
-    environment:
-      OPENAI_API_KEY: defang
-    deploy:
-      resources:
-        reservations:
-          cpus: "0.5"
-          memory: 512M

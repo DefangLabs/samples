@@ -18,26 +18,69 @@ type ChatStreamEvent =
   | { type: "done" }
   | { type: "error"; message: string };
 
-function extractText(result: unknown) {
-  if (typeof result === "string") return result;
-  if (typeof result === "object" && result && "text" in result && typeof result.text === "string") {
-    return result.text;
-  }
-  return "The copilot ran, but no text response was returned.";
+// ---------------------------------------------------------------------------
+// Request parsing
+// ---------------------------------------------------------------------------
+
+interface ChatRequest {
+  message: string;
+  threadId: string;
+  stream: boolean;
 }
 
-function extractErrorMessage(error: unknown) {
-  if (error instanceof Error) return error.message;
-  return "The copilot failed while streaming a response.";
+function parseChatRequest(payload: unknown): ChatRequest | null {
+  if (typeof payload !== "object" || !payload) return null;
+  const obj = payload as Record<string, unknown>;
+  const message = typeof obj.message === "string" ? obj.message : null;
+  if (!message) return null;
+
+  return {
+    message,
+    threadId: typeof obj.threadId === "string" ? obj.threadId : randomUUID(),
+    stream: obj.stream === true,
+  };
 }
 
-function chunkText(text: string) {
-  return text.match(/\S+\s*/g) ?? [text];
+// ---------------------------------------------------------------------------
+// Agent helpers
+// ---------------------------------------------------------------------------
+
+const agentOptions = (threadId: string) => ({
+  resourceId: "tasks-and-events" as const,
+  threadId,
+  maxSteps: 15,
+  toolChoice: (process.env.LLM_DISABLE_TOOLS === "true" ? "none" : "auto") as "none" | "auto",
+});
+
+async function callAgentStream(message: string, threadId: string) {
+  const agent = mastra.getAgent("opsAgent");
+  const model = await agent.getModel();
+  const options = agentOptions(threadId);
+
+  const isLegacy = model.specificationVersion === "v1";
+  const response = isLegacy
+    ? await agent.streamLegacy(message, options)
+    : await agent.stream(message, options);
+
+  return {
+    stream: isLegacy ? response.textStream : response.fullStream,
+    streamKind: isLegacy ? ("text" as const) : ("full" as const),
+  };
 }
 
-function stripThinkingText(text: string) {
-  return text.replace(/<thinking>[\s\S]*?<\/thinking>\s*/gi, "").trim();
+async function callAgentGenerate(message: string, threadId: string) {
+  const agent = mastra.getAgent("opsAgent");
+  const model = await agent.getModel();
+  const options = agentOptions(threadId);
+
+  return model.specificationVersion === "v1"
+    ? agent.generateLegacy(message, options)
+    : agent.generate(message, options);
 }
+
+// ---------------------------------------------------------------------------
+// Stream iteration helpers
+// ---------------------------------------------------------------------------
 
 function isReadableStream(value: unknown): value is ReadableStream<unknown> {
   return typeof value === "object" && value !== null && "getReader" in value;
@@ -47,45 +90,36 @@ function isAsyncIterable(value: unknown): value is AsyncIterable<unknown> {
   return typeof value === "object" && value !== null && Symbol.asyncIterator in value;
 }
 
-async function* iterateTextChunks(source: unknown): AsyncGenerator<string> {
+async function* iterateTextStream(source: unknown): AsyncGenerator<string> {
   if (!source) return;
 
   if (isReadableStream(source)) {
     const reader = source.getReader();
-
     try {
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-
-        if (typeof value === "string") {
-          yield value;
-        } else if (value instanceof Uint8Array) {
-          yield new TextDecoder().decode(value);
-        }
+        if (typeof value === "string") yield value;
+        else if (value instanceof Uint8Array) yield new TextDecoder().decode(value);
       }
     } finally {
       reader.releaseLock();
     }
-
     return;
   }
 
   if (isAsyncIterable(source)) {
     for await (const chunk of source) {
-      if (typeof chunk === "string") {
-        yield chunk;
-      }
+      if (typeof chunk === "string") yield chunk;
     }
   }
 }
 
-async function* iterateStreamChunks(source: unknown): AsyncGenerator<unknown> {
+async function* iterateStructuredStream(source: unknown): AsyncGenerator<unknown> {
   if (!source) return;
 
   if (isReadableStream(source)) {
     const reader = source.getReader();
-
     try {
       while (true) {
         const { done, value } = await reader.read();
@@ -95,7 +129,6 @@ async function* iterateStreamChunks(source: unknown): AsyncGenerator<unknown> {
     } finally {
       reader.releaseLock();
     }
-
     return;
   }
 
@@ -106,7 +139,11 @@ async function* iterateStreamChunks(source: unknown): AsyncGenerator<unknown> {
   }
 }
 
-function splitThinkingText() {
+// ---------------------------------------------------------------------------
+// Thinking-tag splitter (stateful across streamed chunks)
+// ---------------------------------------------------------------------------
+
+function createThinkingTextSplitter() {
   const openingTag = "<thinking>";
   const closingTag = "</thinking>";
   let pending = "";
@@ -118,19 +155,16 @@ function splitThinkingText() {
     while (pending.length > 0) {
       if (insideThinking) {
         const closingIndex = pending.indexOf(closingTag);
-
         if (closingIndex === -1) {
           pending = pending.slice(Math.max(0, pending.length - (closingTag.length - 1)));
           break;
         }
-
         pending = pending.slice(closingIndex + closingTag.length);
         insideThinking = false;
         continue;
       }
 
       const openingIndex = pending.indexOf(openingTag);
-
       if (openingIndex === -1) {
         const safeLength = Math.max(0, pending.length - (openingTag.length - 1));
         if (safeLength > 0) {
@@ -143,7 +177,6 @@ function splitThinkingText() {
       if (openingIndex > 0) {
         yield { type: "delta", text: pending.slice(0, openingIndex) };
       }
-
       pending = pending.slice(openingIndex + openingTag.length);
       insideThinking = true;
     }
@@ -151,7 +184,6 @@ function splitThinkingText() {
 
   function* flush(): Generator<{ type: "delta" | "thinking"; text: string }> {
     if (pending.length === 0) return;
-
     yield { type: insideThinking ? "thinking" : "delta", text: pending };
     pending = "";
     insideThinking = false;
@@ -160,25 +192,21 @@ function splitThinkingText() {
   return { feed, flush };
 }
 
+// ---------------------------------------------------------------------------
+// Chunk inspection helpers
+// ---------------------------------------------------------------------------
+
 function getChunkType(chunk: unknown) {
   if (typeof chunk === "object" && chunk && "type" in chunk && typeof chunk.type === "string") {
     return chunk.type;
   }
-
   return null;
 }
 
 function getPayload(chunk: unknown): Record<string, unknown> {
-  if (
-    typeof chunk === "object" &&
-    chunk &&
-    "payload" in chunk &&
-    typeof chunk.payload === "object" &&
-    chunk.payload
-  ) {
+  if (typeof chunk === "object" && chunk && "payload" in chunk && typeof chunk.payload === "object" && chunk.payload) {
     return chunk.payload as Record<string, unknown>;
   }
-
   return {};
 }
 
@@ -195,7 +223,6 @@ function summarizeToolResult(result: unknown) {
         : typeof first === "object" && first && "title" in first
           ? "item"
           : "row";
-
     return `${result.length} ${result.length === 1 ? noun : `${noun}s`} returned`;
   }
 
@@ -226,207 +253,209 @@ function getToolTraceNote(toolName: string) {
   }
 }
 
-async function streamReply(message: string, threadId: string) {
-  if (process.env.MOCK_AGENT === "true") {
-    const reply = await getMockReply(message);
-    const chunks = chunkText(reply);
+// ---------------------------------------------------------------------------
+// Text helpers
+// ---------------------------------------------------------------------------
 
-    async function* mockChunkStream() {
-      for (const chunk of chunks) {
-        yield chunk;
-        await sleep(12);
+function extractText(result: unknown) {
+  if (typeof result === "string") return result;
+  if (typeof result === "object" && result && "text" in result && typeof result.text === "string") {
+    return result.text;
+  }
+  return "The copilot ran, but no text response was returned.";
+}
+
+function extractErrorMessage(error: unknown) {
+  if (error instanceof Error) return error.message;
+  return "The copilot failed while streaming a response.";
+}
+
+function chunkText(text: string) {
+  return text.match(/\S+\s*/g) ?? [text];
+}
+
+function stripThinkingText(text: string) {
+  return text.replace(/<thinking>[\s\S]*?<\/thinking>\s*/gi, "").trim();
+}
+
+// ---------------------------------------------------------------------------
+// Mock stream helper
+// ---------------------------------------------------------------------------
+
+async function* createMockStream(message: string) {
+  const reply = await getMockReply(message);
+  for (const chunk of chunkText(reply)) {
+    yield chunk;
+    await sleep(12);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Streaming response
+// ---------------------------------------------------------------------------
+
+type EmitEvent = (event: ChatStreamEvent) => void;
+
+async function emitFallbackReply(message: string, emit: EmitEvent) {
+  const reply = await getMockReply(message);
+  for (const chunk of chunkText(reply)) {
+    emit({ type: "delta", text: chunk });
+  }
+}
+
+async function processTextStream(source: unknown, splitter: ReturnType<typeof createThinkingTextSplitter>, emit: EmitEvent) {
+  let emittedOutput = false;
+  for await (const chunk of iterateTextStream(source)) {
+    for (const part of splitter.feed(chunk)) {
+      if (!part.text) continue;
+      emittedOutput = true;
+      emit({ type: part.type, text: part.text });
+    }
+  }
+  return emittedOutput;
+}
+
+async function processStructuredStream(source: unknown, splitter: ReturnType<typeof createThinkingTextSplitter>, emit: EmitEvent) {
+  let emittedOutput = false;
+
+  for await (const chunk of iterateStructuredStream(source)) {
+    const type = getChunkType(chunk);
+    const payload = getPayload(chunk);
+
+    if (type === "text-delta" && typeof payload.text === "string") {
+      for (const part of splitter.feed(payload.text)) {
+        if (!part.text) continue;
+        emittedOutput = true;
+        emit({ type: part.type, text: part.text });
       }
     }
 
-    return { stream: mockChunkStream(), threadId };
+    if (type === "reasoning-delta" && typeof payload.text === "string") {
+      emittedOutput = true;
+      emit({ type: "thinking", text: payload.text });
+    }
+
+    if (type === "tool-call") {
+      emittedOutput = true;
+      const toolName = getToolName(payload);
+      emit({ type: "thinking", text: getToolTraceNote(toolName) });
+      emit({ type: "tool_call", toolName, args: "args" in payload ? payload.args : null });
+    }
+
+    if (type === "tool-result" || type === "tool-output") {
+      emittedOutput = true;
+      emit({
+        type: "tool_result",
+        toolName: getToolName(payload),
+        summary: summarizeToolResult("result" in payload ? payload.result : payload.output),
+      });
+    }
+
+    if (type === "error") {
+      emit({
+        type: "error",
+        message: extractErrorMessage("error" in payload ? payload.error : payload),
+      });
+    }
   }
 
-  const agent = mastra.getAgent("opsAgent");
-  const model = await agent.getModel();
-  const toolChoice = process.env.LLM_DISABLE_TOOLS === "true" ? "none" : "auto";
-
-  const response =
-    model.specificationVersion === "v2"
-      ? await agent.stream(message, {
-          resourceId: "tasks-and-events",
-          threadId,
-          maxSteps: 15,
-          toolChoice,
-        })
-      : await agent.streamLegacy(message, {
-          resourceId: "tasks-and-events",
-          threadId,
-          maxSteps: 15,
-          toolChoice,
-        });
-
-  return {
-    stream: model.specificationVersion === "v2" ? response.fullStream : response.textStream,
-    streamKind: model.specificationVersion === "v2" ? "full" : "text",
-    threadId,
-  };
+  return emittedOutput;
 }
 
-export async function POST(request: NextRequest) {
-  await ensureSchema();
-  const payload = await request.json();
-  const message = typeof payload?.message === "string" ? payload.message : null;
-  const incomingThreadId = typeof payload?.threadId === "string" ? payload.threadId : undefined;
-  const stream = payload?.stream === true;
-  const resolvedThreadId = incomingThreadId ?? randomUUID();
+function handleStreamingRequest(request: ChatRequest) {
+  const encoder = new TextEncoder();
 
-  if (!message) {
-    return NextResponse.json({ error: "A message is required." }, { status: 400 });
-  }
+  return new Response(
+    new ReadableStream<Uint8Array>({
+      async start(controller) {
+        const emit: EmitEvent = (event) => controller.enqueue(encoder.encode(`${JSON.stringify(event)}\n`));
+        emit({ type: "meta", threadId: request.threadId });
 
-  if (stream) {
-    const encoder = new TextEncoder();
-    const writeEvent = (
-      controller: ReadableStreamDefaultController<Uint8Array>,
-      event: ChatStreamEvent,
-    ) => {
-      controller.enqueue(encoder.encode(`${JSON.stringify(event)}\n`));
-    };
+        try {
+          const splitter = createThinkingTextSplitter();
+          let emittedOutput: boolean;
 
-    return new Response(
-      new ReadableStream<Uint8Array>({
-        async start(controller) {
-          writeEvent(controller, { type: "meta", threadId: resolvedThreadId });
-
-          try {
-            const reply = await streamReply(message, resolvedThreadId);
-            let emittedOutput = false;
-            const splitter = splitThinkingText();
-
-            if (reply.streamKind === "text") {
-              for await (const chunk of iterateTextChunks(reply.stream)) {
-                for (const part of splitter.feed(chunk)) {
-                  if (!part.text) continue;
-                  emittedOutput = true;
-                  writeEvent(controller, { type: part.type, text: part.text });
-                }
-              }
-            } else {
-              for await (const chunk of iterateStreamChunks(reply.stream)) {
-                const type = getChunkType(chunk);
-                const payload = getPayload(chunk);
-
-                if (type === "text-delta" && typeof payload.text === "string") {
-                  for (const part of splitter.feed(payload.text)) {
-                    if (!part.text) continue;
-                    emittedOutput = true;
-                    writeEvent(controller, { type: part.type, text: part.text });
-                  }
-                }
-
-                if (type === "reasoning-delta" && typeof payload.text === "string") {
-                  emittedOutput = true;
-                  writeEvent(controller, { type: "thinking", text: payload.text });
-                }
-
-                if (type === "tool-call") {
-                  emittedOutput = true;
-                  const toolName = getToolName(payload);
-                  writeEvent(controller, { type: "thinking", text: getToolTraceNote(toolName) });
-                  writeEvent(controller, {
-                    type: "tool_call",
-                    toolName,
-                    args: "args" in payload ? payload.args : null,
-                  });
-                }
-
-                if (type === "tool-result" || type === "tool-output") {
-                  emittedOutput = true;
-                  writeEvent(controller, {
-                    type: "tool_result",
-                    toolName: getToolName(payload),
-                    summary: summarizeToolResult("result" in payload ? payload.result : payload.output),
-                  });
-                }
-
-                if (type === "error") {
-                  writeEvent(controller, {
-                    type: "error",
-                    message: extractErrorMessage("error" in payload ? payload.error : payload),
-                  });
-                }
-              }
-            }
-
-            for (const part of splitter.flush()) {
-              if (!part.text) continue;
-              emittedOutput = true;
-              writeEvent(controller, { type: part.type, text: part.text });
-            }
-
-            if (!emittedOutput) {
-              const fallback = await getMockReply(message);
-              for (const chunk of chunkText(fallback)) {
-                writeEvent(controller, { type: "delta", text: chunk });
-              }
-            }
-
-            writeEvent(controller, { type: "done" });
-          } catch (error) {
-            try {
-              const fallback = await getMockReply(message);
-              for (const chunk of chunkText(fallback)) {
-                writeEvent(controller, { type: "delta", text: chunk });
-              }
-              writeEvent(controller, { type: "done" });
-            } catch {
-              writeEvent(controller, { type: "error", message: extractErrorMessage(error) });
-            }
-          } finally {
-            controller.close();
+          if (process.env.MOCK_AGENT === "true") {
+            emittedOutput = await processTextStream(createMockStream(request.message), splitter, emit);
+          } else {
+            const reply = await callAgentStream(request.message, request.threadId);
+            emittedOutput =
+              reply.streamKind === "text"
+                ? await processTextStream(reply.stream, splitter, emit)
+                : await processStructuredStream(reply.stream, splitter, emit);
           }
-        },
-      }),
-      {
-        headers: {
-          "Content-Type": "application/x-ndjson; charset=utf-8",
-          "Cache-Control": "no-cache, no-transform",
-          Connection: "keep-alive",
-        },
-      },
-    );
-  }
 
+          for (const part of splitter.flush()) {
+            if (!part.text) continue;
+            emittedOutput = true;
+            emit({ type: part.type, text: part.text });
+          }
+
+          if (!emittedOutput) {
+            await emitFallbackReply(request.message, emit);
+          }
+
+          emit({ type: "done" });
+        } catch (error) {
+          try {
+            await emitFallbackReply(request.message, emit);
+            emit({ type: "done" });
+          } catch {
+            emit({ type: "error", message: extractErrorMessage(error) });
+          }
+        } finally {
+          controller.close();
+        }
+      },
+    }),
+    {
+      headers: {
+        "Content-Type": "application/x-ndjson; charset=utf-8",
+        "Cache-Control": "no-cache, no-transform",
+        Connection: "keep-alive",
+      },
+    },
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Non-streaming response
+// ---------------------------------------------------------------------------
+
+async function handleNonStreamingRequest(request: ChatRequest) {
   if (process.env.MOCK_AGENT === "true") {
-    const reply = await getMockReply(message);
-    return NextResponse.json({ reply, threadId: resolvedThreadId });
+    const reply = await getMockReply(request.message);
+    return NextResponse.json({ reply, threadId: request.threadId });
   }
 
   try {
-    const agent = mastra.getAgent("opsAgent");
-    const model = await agent.getModel();
-    const toolChoice = process.env.LLM_DISABLE_TOOLS === "true" ? "none" : "auto";
-    const response =
-      model.specificationVersion === "v2"
-        ? await agent.generate(message, {
-            resourceId: "tasks-and-events",
-            threadId: resolvedThreadId,
-            maxSteps: 15,
-            toolChoice,
-          })
-        : await agent.generateLegacy(message, {
-            resourceId: "tasks-and-events",
-            threadId: resolvedThreadId,
-            maxSteps: 15,
-            toolChoice,
-          });
-
+    const response = await callAgentGenerate(request.message, request.threadId);
     const reply = stripThinkingText(extractText(response));
+
     if (!reply || reply === "The copilot ran, but no text response was returned.") {
       throw new Error("Agent returned no text");
     }
 
-    return NextResponse.json({
-      reply,
-      threadId: resolvedThreadId,
-    });
+    return NextResponse.json({ reply, threadId: request.threadId });
   } catch {
-    const reply = await getMockReply(message);
-    return NextResponse.json({ reply, threadId: resolvedThreadId });
+    const reply = await getMockReply(request.message);
+    return NextResponse.json({ reply, threadId: request.threadId });
   }
+}
+
+// ---------------------------------------------------------------------------
+// Route handler
+// ---------------------------------------------------------------------------
+
+export async function POST(httpRequest: NextRequest) {
+  await ensureSchema();
+
+  const request = parseChatRequest(await httpRequest.json());
+  if (!request) {
+    return NextResponse.json({ error: "A message is required." }, { status: 400 });
+  }
+
+  return request.stream
+    ? handleStreamingRequest(request)
+    : handleNonStreamingRequest(request);
 }

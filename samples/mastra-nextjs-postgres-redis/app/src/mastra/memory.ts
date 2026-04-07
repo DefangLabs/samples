@@ -15,6 +15,7 @@ function getPgStore() {
 
   if (!global.mastraPgStore) {
     global.mastraPgStore = new PostgresStore({
+      id: "mastra-pg",
       connectionString: process.env.DATABASE_URL,
     });
   }

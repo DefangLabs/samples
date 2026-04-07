@@ -8,6 +8,7 @@ import { getTasks } from "@/mastra/tools/getTasks";
 import { searchItems } from "@/mastra/tools/searchItems";
 
 export const opsAgent = new Agent({
+  id: "opsAgent",
   name: "opsAgent",
   instructions: `
     You are the copilot for a demo app that tracks tasks and events.

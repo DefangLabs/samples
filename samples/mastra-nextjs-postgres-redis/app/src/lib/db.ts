@@ -19,8 +19,23 @@ export function getPool() {
   return global.pgPool;
 }
 
-export async function ensureSchema() {
+let schemaReady: Promise<void> | null = null;
+
+export function ensureSchema() {
+  if (!schemaReady) {
+    schemaReady = migrateSchema();
+  }
+  return schemaReady;
+}
+
+async function migrateSchema() {
   const pool = getPool();
+
+  await pool.query(`CREATE EXTENSION IF NOT EXISTS vector`);
+
+  // TODO: remove DROP once the sample schema is stable
+  await pool.query(`DROP TABLE IF EXISTS items CASCADE`);
+  await pool.query(`DROP TABLE IF EXISTS seed_runs CASCADE`);
 
   await pool.query(`
     CREATE TABLE IF NOT EXISTS seed_runs (
@@ -46,7 +61,7 @@ export async function ensureSchema() {
       category TEXT,
       priority TEXT,
       tags TEXT[] NOT NULL DEFAULT ARRAY[]::TEXT[],
-      embedding JSONB,
+      embedding vector,
       processed_at TIMESTAMPTZ,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),

@@ -28,8 +28,8 @@ export const getEvents = createTool({
       createdAt: z.string(),
     }),
   ),
-  execute: async ({ context }) => {
-    const { limit, ...filters } = context;
+  execute: async (input) => {
+    const { limit, ...filters } = input;
     const items = await getItemsByType("event", limit ?? 10, filters);
     return items.map((item) => ({
       id: item.id,

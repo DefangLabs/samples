@@ -29,9 +29,9 @@ export const searchItems = createTool({
       score: z.number(),
     }),
   ),
-  execute: async ({ context }) => {
-    const embedding = await embedTextForSearch(context.query);
-    const { query, itemType, limit, ...filters } = context;
+  execute: async (input) => {
+    const embedding = await embedTextForSearch(input.query);
+    const { query, itemType, limit, ...filters } = input;
     const matches = await searchItemsByEmbedding(query, embedding, itemType, limit ?? 5, filters);
     return matches.map(({ item, score }) => ({
       id: item.id,

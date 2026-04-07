@@ -1,4 +1,3 @@
-import { cosineSimilarity, parseEmbedding } from "@/lib/ai";
 import { getPool } from "@/lib/db";
 
 export type ItemType = "task" | "event";
@@ -83,7 +82,7 @@ function mapItem(row: Record<string, unknown>): ItemRecord {
     category: typeof row.category === "string" ? row.category : null,
     priority: typeof row.priority === "string" ? row.priority : null,
     tags: Array.isArray(row.tags) ? row.tags.filter((value): value is string => typeof value === "string") : [],
-    embedding: parseEmbedding(row.embedding),
+    embedding: null,
     processedAt: typeof row.processed_at === "string" ? row.processed_at : null,
     createdAt: String(row.created_at),
     updatedAt: String(row.updated_at),
@@ -195,6 +194,7 @@ export async function getItemById(id: number) {
 
 export async function updateProcessedItem(id: number, classification: ItemClassification, embedding: number[]) {
   const pool = getPool();
+  const vectorLiteral = `[${embedding.join(",")}]`;
   const result = await pool.query(
     `
       UPDATE items
@@ -202,13 +202,13 @@ export async function updateProcessedItem(id: number, classification: ItemClassi
         category = $2,
         priority = $3,
         tags = $4,
-        embedding = $5::jsonb,
+        embedding = $5::vector,
         processed_at = NOW(),
         updated_at = NOW()
       WHERE id = $1
       RETURNING *
     `,
-    [id, classification.category, classification.priority, classification.tags, JSON.stringify(embedding)],
+    [id, classification.category, classification.priority, classification.tags, vectorLiteral],
   );
 
   return result.rows[0] ? mapItem(result.rows[0]) : null;
@@ -339,10 +339,17 @@ export async function getAvailableTags(type?: ItemType) {
   }));
 }
 
-export async function getProcessedItems(type?: ItemType, filters: ItemFilters = {}) {
+export async function searchItemsByEmbedding(
+  _query: string,
+  embedding: number[],
+  type?: ItemType,
+  limit = 5,
+  filters: ItemFilters = {},
+) {
   const pool = getPool();
+  const vectorLiteral = `[${embedding.join(",")}]`;
   const clauses = ["processed_at IS NOT NULL", "embedding IS NOT NULL"];
-  const values: unknown[] = [];
+  const values: unknown[] = [vectorLiteral, limit];
 
   if (type) {
     values.push(type);
@@ -372,45 +379,17 @@ export async function getProcessedItems(type?: ItemType, filters: ItemFilters = 
 
   const result = await pool.query(
     `
-      SELECT *
+      SELECT *, 1 - (embedding <=> $1::vector) AS score
       FROM items
       WHERE ${clauses.join(" AND ")}
-      ORDER BY processed_at DESC, id DESC
+      ORDER BY embedding <=> $1::vector
+      LIMIT $2
     `,
     values,
   );
 
-  return result.rows.map(mapItem);
-}
-
-function keywordScore(query: string, item: ItemRecord) {
-  const queryTerms = query
-    .toLowerCase()
-    .split(/\W+/)
-    .map((term) => term.trim())
-    .filter(Boolean);
-
-  if (queryTerms.length === 0) return 0;
-
-  const text = `${item.title} ${item.body} ${item.tags.join(" ")}`.toLowerCase();
-  return queryTerms.reduce((score, term) => score + (text.includes(term) ? 0.12 : 0), 0);
-}
-
-export async function searchItemsByEmbedding(
-  query: string,
-  embedding: number[],
-  type?: ItemType,
-  limit = 5,
-  filters: ItemFilters = {},
-) {
-  const items = await getProcessedItems(type, filters);
-
-  return items
-    .map((item) => ({
-      item,
-      score: item.embedding ? cosineSimilarity(embedding, item.embedding) + keywordScore(query, item) : keywordScore(query, item),
-    }))
-    .sort((left, right) => right.score - left.score)
-    .slice(0, limit)
-    .map(({ item, score }) => ({ item, score: Number(score.toFixed(4)) }));
+  return result.rows.map((row) => ({
+    item: mapItem(row),
+    score: Number(Number(row.score).toFixed(4)),
+  }));
 }

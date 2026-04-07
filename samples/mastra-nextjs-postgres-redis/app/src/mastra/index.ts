@@ -12,9 +12,6 @@ if (!global.mastra) {
     agents: {
       opsAgent,
     },
-    telemetry: {
-      enabled: false,
-    },
   });
 }
 
