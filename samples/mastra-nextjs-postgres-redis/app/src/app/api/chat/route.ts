@@ -1,3 +1,13 @@
+/**
+ * POST /api/chat — Copilot endpoint.
+ *
+ * Accepts a user message and returns either a streaming (NDJSON) or
+ * non-streaming JSON response from the Mastra agent. The agent uses tools
+ * (getTasks, getEvents, getTags, searchItems) to inspect app state before
+ * answering. When MOCK_AGENT is enabled or the agent fails, responses fall
+ * back to a lightweight mock that queries the database directly.
+ */
+
 import { randomUUID } from "node:crypto";
 import { setTimeout as sleep } from "node:timers/promises";
 
@@ -44,6 +54,7 @@ const agentOptions = (threadId: string) => ({
   toolChoice: (process.env.LLM_DISABLE_TOOLS === "true" ? "none" : "auto") as "none" | "auto",
 });
 
+/** Streams agent output. v1 models return plain text; v2+ return structured chunks with tool calls. */
 async function callAgentStream(message: string, threadId: string) {
   const agent = mastra.getAgent("opsAgent");
   const model = await agent.getModel();
@@ -133,6 +144,11 @@ async function* iterateStructuredStream(source: unknown): AsyncGenerator<unknown
 
 // ---------------------------------------------------------------------------
 // Thinking-tag splitter (stateful across streamed chunks)
+//
+// Some models emit internal reasoning inside <thinking>...</thinking> tags.
+// This stateful parser strips those tags from the text stream so only the
+// user-visible reply is forwarded to the client. The structured stream path
+// handles reasoning via dedicated "reasoning-delta" chunks instead.
 // ---------------------------------------------------------------------------
 
 function createThinkingTextSplitter() {

@@ -229,38 +229,23 @@ export async function markItemProcessed(runId: string) {
   return result.rows[0] ? mapRun(result.rows[0]) : null;
 }
 
-function buildItemFilterWhere(itemType: ItemType, filters: ItemFilters = {}) {
-  const clauses = ["item_type = $1"];
-  const values: unknown[] = [itemType];
-
+/** Builds WHERE clauses from item filters. Appends to any existing clauses/values. */
+function applyFilters(
+  clauses: string[],
+  values: unknown[],
+  filters: ItemFilters = {},
+) {
   const addValue = (value: unknown) => {
     values.push(value);
     return `$${values.length}`;
   };
 
-  if (filters.status) {
-    clauses.push(`LOWER(status) = LOWER(${addValue(filters.status)})`);
-  }
-
-  if (filters.assignee) {
-    clauses.push(`assignee ILIKE ${addValue(`%${filters.assignee}%`)}`);
-  }
-
-  if (filters.source) {
-    clauses.push(`source ILIKE ${addValue(`%${filters.source}%`)}`);
-  }
-
-  if (filters.category) {
-    clauses.push(`LOWER(category) = LOWER(${addValue(filters.category)})`);
-  }
-
-  if (filters.priority) {
-    clauses.push(`LOWER(priority) = LOWER(${addValue(filters.priority)})`);
-  }
-
-  if (filters.tag) {
-    clauses.push(`EXISTS (SELECT 1 FROM unnest(tags) AS tag WHERE LOWER(tag) = LOWER(${addValue(filters.tag)}))`);
-  }
+  if (filters.status) clauses.push(`LOWER(status) = LOWER(${addValue(filters.status)})`);
+  if (filters.assignee) clauses.push(`assignee ILIKE ${addValue(`%${filters.assignee}%`)}`);
+  if (filters.source) clauses.push(`source ILIKE ${addValue(`%${filters.source}%`)}`);
+  if (filters.category) clauses.push(`LOWER(category) = LOWER(${addValue(filters.category)})`);
+  if (filters.priority) clauses.push(`LOWER(priority) = LOWER(${addValue(filters.priority)})`);
+  if (filters.tag) clauses.push(`EXISTS (SELECT 1 FROM unnest(tags) AS tag WHERE LOWER(tag) = LOWER(${addValue(filters.tag)}))`);
 
   if (filters.query) {
     const query = addValue(`%${filters.query}%`);
@@ -272,13 +257,13 @@ function buildItemFilterWhere(itemType: ItemType, filters: ItemFilters = {}) {
       OR EXISTS (SELECT 1 FROM unnest(tags) AS tag WHERE tag ILIKE ${query})
     )`);
   }
-
-  return { clauses, values };
 }
 
 export async function getItemsByType(itemType: ItemType, limit = 10, filters: ItemFilters = {}) {
   const pool = getPool();
-  const { clauses, values } = buildItemFilterWhere(itemType, filters);
+  const clauses = ["item_type = $1"];
+  const values: unknown[] = [itemType];
+  applyFilters(clauses, values, filters);
   values.push(limit);
 
   const result = await pool.query(
@@ -339,6 +324,7 @@ export async function getAvailableTags(type?: ItemType) {
   }));
 }
 
+/** Finds the most similar items using pgvector cosine distance. */
 export async function searchItemsByEmbedding(
   embedding: number[],
   type?: ItemType,
@@ -355,26 +341,7 @@ export async function searchItemsByEmbedding(
     clauses.push(`item_type = $${values.length}`);
   }
 
-  const addValue = (value: unknown) => {
-    values.push(value);
-    return `$${values.length}`;
-  };
-
-  if (filters.tag) {
-    clauses.push(`EXISTS (SELECT 1 FROM unnest(tags) AS tag WHERE LOWER(tag) = LOWER(${addValue(filters.tag)}))`);
-  }
-
-  if (filters.category) {
-    clauses.push(`LOWER(category) = LOWER(${addValue(filters.category)})`);
-  }
-
-  if (filters.priority) {
-    clauses.push(`LOWER(priority) = LOWER(${addValue(filters.priority)})`);
-  }
-
-  if (filters.source) {
-    clauses.push(`source ILIKE ${addValue(`%${filters.source}%`)}`);
-  }
+  applyFilters(clauses, values, filters);
 
   const result = await pool.query(
     `

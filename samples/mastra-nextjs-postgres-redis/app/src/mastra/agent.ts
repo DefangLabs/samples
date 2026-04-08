@@ -1,3 +1,9 @@
+/**
+ * The copilot agent. Uses four tools to inspect tasks, events, tags, and
+ * semantic matches before answering. The `model` and `memory` fields are
+ * passed as factory functions (thunks) so Mastra can lazily initialize them.
+ */
+
 import { Agent } from "@mastra/core/agent";
 
 import { getMastraModel } from "@/lib/model";

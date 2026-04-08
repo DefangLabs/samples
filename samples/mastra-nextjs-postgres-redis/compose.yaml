@@ -14,9 +14,8 @@ services:
       REDIS_URL: redis://redis:6379
       QUEUE_NAME: support-sync
       MOCK_AGENT: "false"
-      LLM_MODEL:
-      EMBEDDING_MODEL:
-      OPENAI_API_KEY: defang
+      LLM_MODEL: ${LLM_MODEL}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL}
     depends_on:
       postgres:
         condition: service_healthy
@@ -48,9 +47,8 @@ services:
       REDIS_URL: redis://redis:6379
       QUEUE_NAME: support-sync
       MOCK_AGENT: "false"
-      LLM_MODEL:
-      EMBEDDING_MODEL:
-      OPENAI_API_KEY: defang
+      LLM_MODEL: ${LLM_MODEL}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL}
     depends_on:
       postgres:
         condition: service_healthy

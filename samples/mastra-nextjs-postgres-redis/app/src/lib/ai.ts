@@ -38,6 +38,7 @@ const classificationSchema = z.object({
 // LLM communication
 // ---------------------------------------------------------------------------
 
+/** Extracts JSON from LLM output, handling markdown fences and extra text. */
 function parseJsonFromText(text: string): unknown {
   const trimmed = text.trim();
   const fencedMatch = trimmed.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
@@ -96,6 +97,7 @@ async function runChatJson(systemPrompt: string, userPrompt: string, temperature
 // Embeddings
 // ---------------------------------------------------------------------------
 
+/** Generates a stable fake embedding from text using SHA-256. Used in mock mode to enable vector search without an API call. */
 function deterministicEmbedding(text: string, dimensions = 192) {
   const buckets = new Array<number>(dimensions).fill(0);
   const digest = createHash("sha256").update(text).digest();

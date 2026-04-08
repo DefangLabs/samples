@@ -1,3 +1,10 @@
+/**
+ * Dashboard state hook. Connects to the SSE stream at /api/dashboard/stream
+ * for real-time updates on item counts, seed-run progress, and queue depth.
+ * Falls back to polling if the SSE connection drops. Items (tasks/events)
+ * are refreshed whenever the seed-run status changes.
+ */
+
 "use client";
 
 import { useEffect, useRef, useState } from "react";

@@ -1,3 +1,9 @@
+/**
+ * Chat state hook. Sends user messages to POST /api/chat and reads the
+ * streamed NDJSON response, updating message state as text deltas, tool
+ * traces, and completion events arrive.
+ */
+
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";

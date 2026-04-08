@@ -12,7 +12,7 @@ services:
       QUEUE_NAME: support-sync
       MOCK_AGENT: "true"
       LLM_MODEL: mock
-      OPENAI_API_KEY: defang
+      EMBEDDING_MODEL: mock
     depends_on:
       postgres:
         condition: service_healthy
@@ -29,6 +29,7 @@ services:
       QUEUE_NAME: support-sync
       MOCK_AGENT: "true"
       LLM_MODEL: mock
+      EMBEDDING_MODEL: mock
     depends_on:
       postgres:
         condition: service_healthy

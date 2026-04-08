@@ -1,6 +1,8 @@
 import IORedis from "ioredis";
 import { Queue } from "bullmq";
 
+export const QUEUE_NAME = process.env.QUEUE_NAME ?? "support-sync";
+
 declare global {
   // eslint-disable-next-line no-var
   var redisConnection: IORedis | undefined;
@@ -25,7 +27,7 @@ export function getRedisConnection() {
 
 export function getSyncQueue() {
   if (!global.syncQueue) {
-    global.syncQueue = new Queue(process.env.QUEUE_NAME ?? "support-sync", {
+    global.syncQueue = new Queue(QUEUE_NAME, {
       connection: getRedisConnection(),
     });
   }

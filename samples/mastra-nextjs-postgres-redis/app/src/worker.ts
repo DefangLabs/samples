@@ -11,7 +11,7 @@ import {
   startSeedRun,
   updateProcessedItem,
 } from "@/lib/items";
-import { getRedisConnection, getSyncQueue } from "@/lib/queue";
+import { QUEUE_NAME, getRedisConnection, getSyncQueue } from "@/lib/queue";
 
 type SeedBatchJob = {
   runId: string;
@@ -85,7 +85,7 @@ async function main() {
   await ensureSchema();
 
   const worker = new Worker(
-    process.env.QUEUE_NAME ?? "support-sync",
+    QUEUE_NAME,
     async (job) => {
       if (job.name === "seed-batch") {
         return handleSeedBatch(job as Job<SeedBatchJob>);
