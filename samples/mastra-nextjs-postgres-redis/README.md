@@ -2,77 +2,60 @@
 
 [![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-mastra-nextjs-postgres-redis-template%26template_owner%3DDefangSamples)
 
-This sample shows a small multi-service Defang app built with Next.js, Mastra, PostgreSQL, Redis, and BullMQ.
+This sample shows a multi-service AI app built with [Mastra](https://mastra.ai/), Next.js, PostgreSQL (with pgvector), Redis, and BullMQ, deployed with Defang from a single Docker Compose file.
 
-The app keeps the story simple:
+A background worker generates sample tasks and events with an LLM, classifies each one, and stores vector embeddings in PostgreSQL for semantic search. A Mastra-powered chat agent uses tools to inspect the current state before answering questions.
 
-- there are tasks
-- there are events
-- a background worker classifies and embeds them
-- a chat agent uses tools to inspect the current state before it answers
+## Prerequisites
 
-## Features
-
-- **One-click sample data generation** that creates 10 tasks and 10 events
-- **Fan-out background processing** with BullMQ so each item is classified and embedded independently
-- **PostgreSQL state** for items plus Mastra memory
-- **Redis queue** for the batch job and per-item jobs
-- **Mastra tools** for tasks, events, and semantic search
-- **Managed LLM + embedding endpoints** for deployed environments
+1. Download [Defang CLI](https://github.com/DefangLabs/defang)
+2. (Optional) If you are using [Defang BYOC](https://docs.defang.io/docs/concepts/defang-byoc) authenticate with your cloud provider account
+3. (Optional for local development) [Docker CLI](https://docs.docker.com/engine/install/)
 
 ## Development
 
-Run the app locally with Docker Compose:
+To run the application locally for development, use the development compose file:
 
 ```bash
 docker compose -f compose.dev.yaml up --build
 ```
 
-This starts:
+This will:
 
-- the Next.js app on `http://localhost:3000`
-- PostgreSQL on `localhost:5432`
-- Redis on `localhost:6379`
-- a background worker
+- Start the Next.js app on `http://localhost:3000`
+- Start PostgreSQL on port 5432
+- Start Redis on port 6379
+- Start a background worker for item classification
 
-Local development defaults to `MOCK_AGENT=true`, so the UI still works without cloud model credentials.
+Local development defaults to `MOCK_AGENT=true`, so the UI works without cloud model credentials.
 
 ## Configuration
 
+For this sample, you will need to provide the following [configuration](https://docs.defang.io/docs/concepts/configuration). Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
+
 ### `POSTGRES_PASSWORD`
 
-The password for the PostgreSQL database.
+The password for your PostgreSQL database. You need to set this before deploying for the first time.
 
-```bash
-defang config set POSTGRES_PASSWORD --random
-```
+*You can easily set this to a random string using `defang config set POSTGRES_PASSWORD --random`*
 
 ### `LLM_MODEL`
 
-The model used for item generation, per-item classification, and the Mastra chat agent.
+The model used for item generation, per-item classification, and the Mastra chat agent. Uses `provider/model` format.
 
-```bash
-defang config set LLM_MODEL
-```
+*Example: `defang config set LLM_MODEL` then enter `bedrock/us.amazon.nova-pro-v1:0`*
 
 ### `EMBEDDING_MODEL`
 
-The embedding model used for semantic search.
+The embedding model used for semantic vector search. Uses the same `provider/model` format.
 
-```bash
-defang config set EMBEDDING_MODEL
-```
-
-PostgreSQL TLS is configured directly in `DATABASE_URL`:
-
-- `compose.yaml` uses `uselibpqcompat=true&sslmode=require`
-- `compose.dev.yaml` uses `sslmode=disable`
+*Example: `defang config set EMBEDDING_MODEL` then enter `bedrock/amazon.titan-embed-text-v2:0`*
 
 ## Usage
 
 1. Open the app.
-2. Click `Generate sample items`.
-3. Wait for the worker to create 10 tasks and 10 events, then fan out per-item classify/embed jobs.
+2. Click **Generate sample items**.
+3. Watch the worker create 10 tasks and 10 events, then fan out per-item classify/embed jobs (progress updates in real time via SSE).
 4. Ask questions like:
    - `What should I look at first?`
    - `Summarize the tasks and events.`
@@ -81,11 +64,23 @@ PostgreSQL TLS is configured directly in `DATABASE_URL`:
 
 ## Deployment
 
-Deploy with Defang:
+> [!NOTE]
+> Download [Defang CLI](https://github.com/DefangLabs/defang)
+
+### Defang Playground
+
+Deploy your application to the Defang Playground by opening up your terminal and typing:
 
 ```bash
 defang compose up
 ```
+
+### BYOC (Deploy to your own AWS or GCP cloud account)
+
+If you want to deploy to your own cloud account, you can [use Defang BYOC](https://docs.defang.io/docs/tutorials/deploy-to-your-cloud).
+
+> [!WARNING]
+> **Extended deployment time:** This sample creates a managed PostgreSQL database which may take upwards of 20 minutes to provision on first deployment. Subsequent deployments are much faster (2-5 minutes).
 
 ---
 
