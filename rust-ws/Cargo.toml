@@ -1,0 +1,16 @@
+[package]
+name = "chaos-ws"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+warp = "0.3"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+nats = "0.25"
+futures-util = "0.3"
+tracing = "0.1"
+tracing-subscriber = "0.3"
+uuid = { version = "1", features = ["v4"] }
+rdkafka = { version = "0.36", features = ["cmake-build"] }

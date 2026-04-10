@@ -1,0 +1,22 @@
+:2080 {
+    handle /api/* {
+        reverse_proxy elixir-api:4000
+    }
+
+    handle /ws {
+        reverse_proxy rust-ws:9090
+    }
+
+    handle /health {
+        respond "OK" 200
+    }
+
+    handle {
+        respond "ChaosMesh Gateway" 200
+    }
+
+    log {
+        output stdout
+        format json
+    }
+}

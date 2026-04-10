@@ -1,0 +1,19 @@
+# Build artifacts
+_build/
+deps/
+target/
+.stack-work/
+dist-newstyle/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Runtime
+*.log

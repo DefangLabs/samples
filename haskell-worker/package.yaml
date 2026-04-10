@@ -1,0 +1,32 @@
+name: chaos-worker
+version: 0.1.0
+synopsis: Periodic job processor with ScyllaDB backend
+
+dependencies:
+  - base >= 4.14 && < 5
+  - cql-io >= 1.1
+  - text >= 1.2
+  - bytestring >= 0.10
+  - aeson >= 2.0
+  - time >= 1.9
+  - uuid >= 1.3
+  - http-client >= 0.7
+  - http-types >= 0.12
+  - async >= 2.2
+  - stm >= 2.5
+
+executables:
+  chaos-worker:
+    main: Main.hs
+    source-dirs: app
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+
+library:
+  source-dirs: src
+  exposed-modules:
+    - Worker.ScyllaClient
+    - Worker.JobProcessor
+    - Worker.Config
