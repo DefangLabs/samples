@@ -4,7 +4,7 @@
 
 This sample shows a multi-service AI app built with [Mastra](https://mastra.ai/), Next.js, PostgreSQL (with pgvector), Redis, and BullMQ, deployed with Defang from a single Docker Compose file.
 
-A background worker generates sample tasks and events with an LLM, classifies each one, and stores vector embeddings in PostgreSQL for semantic search. A Mastra-powered chat agent uses tools to inspect the current state before answering questions.
+A background worker generates sample tasks and events with an LLM, pushes them to a queue, then they get classified and stored with vector embeddings in PostgreSQL for semantic search. A Mastra-powered chat agent uses tools to inspect the current state before answering questions.
 
 ## Prerequisites
 
