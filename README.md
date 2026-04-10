@@ -56,6 +56,7 @@ When you add a new sample, make sure to add any config vals to the `deploy-chang
 | [Managed LLM](./samples/managed-llm) | An app using Managed LLMs with Defang's OpenAI Access Gateway. | LLM, OpenAI, Python, Bedrock, Vertex | Python |
 | [Managed LLM with Docker Model Provider](./samples/managed-llm-provider) | An app using Managed LLMs with a Docker Model Provider, deployed with Defang. | LLM, Python, Bedrock, Vertex, Docker Model Provider | Python |
 | [Mastra & Next.js](./samples/mastra-nextjs) | An AI-powered tool for chatting with GitHub repositories using Mastra and Google Gemini. | AI, GitHub, Mastra, Next.js, PostgreSQL, TypeScript | TypeScript, JavaScript, Docker |
+| [Mastra & Next.js & PostgreSQL & Redis](./samples/mastra-nextjs-postgres-redis) | A multi-service Mastra support and ops copilot with background jobs, PostgreSQL, Redis, and managed LLM access. | Mastra, Next.js, PostgreSQL, Redis, BullMQ, AI, Agents, Support, Operations | TypeScript, JavaScript, Docker |
 | [Model Context Protocol (MCP) Chatbot](./samples/mcp) | An MCP (Model Context Protocol) chatbot assistant built with Next.js, Python, and Anthropic Claude. | MCP, Next.js, Python, Quart, Claude, AI, Anthropic, TypeScript, React, JavaScript | nodejs, python |
 | [Metabase & PostgreSQL](./samples/metabase) | A simple Metabase configuration with a PostgreSQL database. | Metabase, PostgreSQL, Analytics, Database | SQL |
 | [n8n](./samples/n8n) | A n8n app running on Defang. | n8n, PostgreSQL, Docker | Docker, Shell |
