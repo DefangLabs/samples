@@ -7,6 +7,7 @@
 import { Mastra } from "@mastra/core/mastra";
 
 import { opsAgent } from "@/mastra/agent";
+import { generatorAgent } from "@/mastra/generator-agent";
 
 declare global {
   // eslint-disable-next-line no-var
@@ -17,6 +18,7 @@ if (!global.mastra) {
   global.mastra = new Mastra({
     agents: {
       opsAgent,
+      generatorAgent,
     },
   });
 }

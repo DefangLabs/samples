@@ -1,11 +1,12 @@
 import { createHash } from "node:crypto";
 
-import { embed, generateText } from "ai";
+import { embed } from "ai";
 import { z } from "zod";
 
 import type { ItemClassification, ItemType, RawItemSeed } from "@/lib/items";
-import { getMastraEmbeddingModel, getMastraModel } from "@/lib/model";
+import { getMastraEmbeddingModel } from "@/lib/model";
 import { fallbackEvents, fallbackTasks } from "@/lib/seed-data";
+import { mastra } from "@/mastra";
 
 // ---------------------------------------------------------------------------
 // Schemas
@@ -71,22 +72,16 @@ function hasLlmAccess() {
 async function runChat(
   systemPrompt: string,
   userPrompt: string,
-  temperature: number,
+  _temperature: number,
   parseResponse: (text: string) => unknown,
 ) {
   if (!hasLlmAccess() || process.env.MOCK_AGENT === "true") return null;
 
-  const { text } = await generateText({
-    // getMastraModel() returns a native AI SDK model for bedrock,
-    // or an OpenAICompatibleConfig for other providers (resolved by Mastra agent).
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    model: getMastraModel() as any,
-    system: systemPrompt,
-    prompt: userPrompt,
-    temperature,
-  });
+  const agent = mastra.getAgent("generatorAgent");
+  const prompt = `${systemPrompt}\n\n${userPrompt}`;
+  const result = await agent.generate(prompt, { maxSteps: 1 });
 
-  return parseResponse(text);
+  return parseResponse(result.text ?? "");
 }
 
 async function runChatJson(systemPrompt: string, userPrompt: string, temperature = 0.4) {

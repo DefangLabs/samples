@@ -10,8 +10,8 @@
     "worker": "tsx src/worker.ts"
   },
   "dependencies": {
-    "@ai-sdk/amazon-bedrock": "^4.0.91",
-    "@aws-sdk/credential-providers": "^3.1025.0",
+    "@ai-sdk/amazon-bedrock": "^4.0.92",
+    "@aws-sdk/credential-providers": "^3.1028.0",
     "@mastra/core": "^1.23.0",
     "@mastra/memory": "^1.14.0",
     "@mastra/pg": "^1.9.0",
