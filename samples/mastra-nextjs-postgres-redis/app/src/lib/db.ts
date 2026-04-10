@@ -33,10 +33,6 @@ async function migrateSchema() {
 
   await pool.query(`CREATE EXTENSION IF NOT EXISTS vector`);
 
-  // TODO: remove DROP once the sample schema is stable
-  await pool.query(`DROP TABLE IF EXISTS items CASCADE`);
-  await pool.query(`DROP TABLE IF EXISTS seed_runs CASCADE`);
-
   await pool.query(`
     CREATE TABLE IF NOT EXISTS seed_runs (
       id TEXT PRIMARY KEY,
