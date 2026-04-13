@@ -21,7 +21,7 @@ on:
 jobs:
   defang:
     name: Defang ${{ github.event.inputs.action || 'up' }} ${{ github.event.inputs.stack || 'default stack' }}
-    environment: production
+    environment: defang-production
     runs-on: ubuntu-latest
     permissions:
       contents: read
