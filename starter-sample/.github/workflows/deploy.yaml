@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    environment: production
+    environment: defang-production
     runs-on: ubuntu-latest
     permissions:
       contents: read
