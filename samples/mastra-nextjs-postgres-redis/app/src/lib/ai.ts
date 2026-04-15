@@ -4,7 +4,7 @@ import { embed } from "ai";
 import { z } from "zod";
 
 import type { ItemClassification, ItemType, RawItemSeed } from "@/lib/items";
-import { getMastraEmbeddingModel } from "@/lib/model";
+import { getMastraEmbeddingModel, hasChatAccess, hasEmbeddingAccess } from "@/lib/model";
 import { fallbackEvents, fallbackTasks } from "@/lib/seed-data";
 import { mastra } from "@/mastra";
 
@@ -66,7 +66,11 @@ function parseJsonFromText(text: string): unknown {
 }
 
 function hasLlmAccess() {
-  return Boolean(process.env.LLM_MODEL);
+  return hasChatAccess();
+}
+
+function useFastLocalData() {
+  return process.env.LOCAL_FAST_DATA === "true";
 }
 
 async function runChat(
@@ -109,7 +113,7 @@ function deterministicEmbedding(text: string, dimensions = 192) {
 }
 
 export async function embedTextForSearch(text: string) {
-  if (process.env.MOCK_AGENT === "true") {
+  if (process.env.MOCK_AGENT === "true" || !hasEmbeddingAccess()) {
     return deterministicEmbedding(text);
   }
 
@@ -161,7 +165,7 @@ function fallbackTags(text: string) {
 }
 
 export async function classifyItem(item: Pick<RawItemSeed, "itemType" | "source" | "title" | "body">): Promise<ItemClassification> {
-  if (!hasLlmAccess() || process.env.MOCK_AGENT === "true") {
+  if (useFastLocalData() || !hasLlmAccess() || process.env.MOCK_AGENT === "true") {
     const text = `${item.source} ${item.title} ${item.body}`;
     return {
       category: fallbackCategory(text),
@@ -237,7 +241,7 @@ async function generateEventsWithLlm() {
 }
 
 export async function generateSeedItems(): Promise<RawItemSeed[]> {
-  if (!hasLlmAccess() || process.env.MOCK_AGENT === "true") {
+  if (useFastLocalData() || !hasLlmAccess() || process.env.MOCK_AGENT === "true") {
     return [...fallbackTasks, ...fallbackEvents];
   }
 
@@ -260,4 +264,3 @@ export function textForEmbedding(item: Pick<RawItemSeed, "itemType" | "source" |
     classification.tags.join(" "),
   ].join("\n");
 }
-
