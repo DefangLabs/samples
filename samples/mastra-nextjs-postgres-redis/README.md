@@ -26,8 +26,18 @@ This will:
 - Start PostgreSQL on port 5432
 - Start Redis on port 6379
 - Start a background worker for item classification
+- Start Docker model-provider services for chat + embeddings
 
-Local development defaults to `MOCK_AGENT=true`, so the UI works without cloud model credentials.
+Local development uses:
+
+- `ai/gemma3:1B-Q4_K_M` for chat/tool-calling
+- `mxbai-embed-large` for embeddings
+
+This matches the CrewAI sample's local model setup and relies on Docker Model Runner / model-provider support being available in your local Docker installation. The first run will download both models, so startup can take a few minutes.
+If `docker compose -f compose.dev.yaml up` fails with `exec: "model": executable file not found in $PATH`, your local Docker installation does not have Docker Model Runner enabled yet.
+To keep iteration practical on CPU-only setups, `compose.dev.yaml` enables `LOCAL_FAST_DATA=true`, which uses deterministic sample generation and classification locally while still exercising the real chat and embedding services.
+
+In deployed environments, the app uses dedicated `chat` and `embedding` model services defined in `compose.yaml`. Defang injects OpenAI-compatible `CHAT_URL` / `CHAT_MODEL` and `EMBEDDING_URL` / `EMBEDDING_MODEL` environment variables automatically, so the application code stays platform-independent.
 
 ## Configuration
 
@@ -38,18 +48,6 @@ For this sample, you will need to provide the following [configuration](https://
 The password for your PostgreSQL database. You need to set this before deploying for the first time.
 
 *You can easily set this to a random string using `defang config set POSTGRES_PASSWORD --random`*
-
-### `LLM_MODEL`
-
-The model used for item generation, per-item classification, and the Mastra chat agent. Uses `provider/model` format.
-
-*Example: `defang config set LLM_MODEL` then enter `bedrock/us.amazon.nova-pro-v1:0`*
-
-### `EMBEDDING_MODEL`
-
-The embedding model used for semantic vector search. Uses the same `provider/model` format.
-
-*Example: `defang config set EMBEDDING_MODEL` then enter `bedrock/amazon.titan-embed-text-v2:0`*
 
 ## Usage
 
@@ -78,6 +76,13 @@ defang compose up
 ### BYOC (Deploy to your own AWS or GCP cloud account)
 
 If you want to deploy to your own cloud account, you can [use Defang BYOC](https://docs.defang.io/docs/tutorials/deploy-to-your-cloud).
+
+The default sample uses Defang's managed model provider services:
+
+- `chat` uses `chat-default`
+- `embedding` uses `embedding-default`
+
+If you want to pin different models, edit the `provider.options.model` values in [compose.yaml](/workspaces/defang-global/projects/samples/samples/mastra-nextjs-postgres-redis/compose.yaml).
 
 > [!WARNING]
 > **Extended deployment time:** This sample creates a managed PostgreSQL database which may take upwards of 20 minutes to provision on first deployment. Subsequent deployments are much faster (2-5 minutes).

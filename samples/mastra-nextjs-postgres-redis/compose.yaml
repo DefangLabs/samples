@@ -1,7 +1,6 @@
 name: mastra-nextjs-postgres-redis
 services:
   app:
-    x-defang-llm: true
     build:
       context: ./app
       dockerfile: Dockerfile
@@ -14,9 +13,11 @@ services:
       REDIS_URL: redis://redis:6379
       QUEUE_NAME: support-sync
       MOCK_AGENT: "false"
-      LLM_MODEL: ${LLM_MODEL}
-      EMBEDDING_MODEL: ${EMBEDDING_MODEL}
     depends_on:
+      chat:
+        condition: service_started
+      embedding:
+        condition: service_started
       postgres:
         condition: service_healthy
       redis:
@@ -37,7 +38,6 @@ services:
           cpus: "0.5"
           memory: 512M
   worker:
-    x-defang-llm: true
     build:
       context: ./app
       dockerfile: Dockerfile
@@ -47,9 +47,11 @@ services:
       REDIS_URL: redis://redis:6379
       QUEUE_NAME: support-sync
       MOCK_AGENT: "false"
-      LLM_MODEL: ${LLM_MODEL}
-      EMBEDDING_MODEL: ${EMBEDDING_MODEL}
     depends_on:
+      chat:
+        condition: service_started
+      embedding:
+        condition: service_started
       postgres:
         condition: service_healthy
       redis:
@@ -97,3 +99,29 @@ services:
         reservations:
           cpus: "0.25"
           memory: 256M
+  chat:
+    provider:
+      type: model
+      options:
+        model: chat-default
+    x-defang-llm: true
+    environment:
+      OPENAI_API_KEY: defang
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+  embedding:
+    provider:
+      type: model
+      options:
+        model: embedding-default
+    x-defang-llm: true
+    environment:
+      OPENAI_API_KEY: defang
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M
