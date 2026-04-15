@@ -30,7 +30,7 @@ This will:
 
 Local development uses:
 
-- `ai/gemma3:1B-Q4_K_M` for chat/tool-calling
+- `ai/qwen2.5:3B-Q4_K_M` for chat/tool-calling
 - `mxbai-embed-large` for embeddings
 
 This matches the CrewAI sample's local model setup and relies on Docker Model Runner / model-provider support being available in your local Docker installation. The first run will download both models, so startup can take a few minutes.

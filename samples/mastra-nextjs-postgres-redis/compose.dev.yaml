@@ -74,7 +74,7 @@ services:
     provider:
       type: model
       options:
-        model: ai/gemma3:1B-Q4_K_M
+        model: ai/qwen2.5:3B-Q4_K_M
     x-defang-llm: true
 
   embedding:
