@@ -1,4 +1,4 @@
-name: mastra-nextjs-postgres-redis
+name: mastra-extended
 services:
   app:
     build:
