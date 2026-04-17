@@ -240,7 +240,6 @@ When running inside SAM (detected by `$SAM_WORKSPACE_ID` environment variable):
    - After completing the compose.yaml
    - After writing the README
    - After validating with `check-sample-files.sh`
-3. **Check CI** -- Use `get_ci_status` after pushing to verify the Check Samples and Deploy Changed Samples workflows pass
 4. **Capture ideas** -- Use `create_idea` for new sample ideas discovered during work (e.g., "sample for Framework X with Database Y")
 5. **Search context** -- Use `search_messages` to find prior conversations about sample conventions or specific frameworks
 
