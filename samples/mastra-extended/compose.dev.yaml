@@ -1,0 +1,88 @@
+name: mastra-extended-dev
+services:
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres?sslmode=disable
+      REDIS_URL: redis://redis:6379
+      QUEUE_NAME: support-sync
+      LOCAL_FAST_DATA: "true"
+      MOCK_AGENT: "false"
+      OPENAI_API_KEY: defang
+    depends_on:
+      chat:
+        condition: service_started
+      embedding:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  worker:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    command: npm run worker
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres?sslmode=disable
+      REDIS_URL: redis://redis:6379
+      QUEUE_NAME: support-sync
+      LOCAL_FAST_DATA: "true"
+      MOCK_AGENT: "false"
+      OPENAI_API_KEY: defang
+    depends_on:
+      chat:
+        condition: service_started
+      embedding:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+    ports:
+      - 5432:5432
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U postgres -d postgres
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:6.2
+    command: redis-server --save 60 1 --loglevel warning --maxmemory-policy noeviction
+    ports:
+      - 6379:6379
+
+  chat:
+    provider:
+      type: model
+      options:
+        model: ai/qwen2.5:3B-Q4_K_M
+    x-defang-llm: true
+
+  embedding:
+    provider:
+      type: model
+      options:
+        model: ai/mxbai-embed-large
+    x-defang-llm: true
+
+volumes:
+  pgdata:

@@ -1,0 +1,127 @@
+name: mastra-extended
+services:
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - mode: ingress
+        target: 3000
+        published: 3000
+    environment:
+      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres?uselibpqcompat=true&sslmode=require
+      REDIS_URL: redis://redis:6379
+      QUEUE_NAME: support-sync
+      MOCK_AGENT: "false"
+    depends_on:
+      chat:
+        condition: service_started
+      embedding:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - -f
+        - http://localhost:3000/api/health
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+  worker:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    command: npm run worker
+    environment:
+      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres?uselibpqcompat=true&sslmode=require
+      REDIS_URL: redis://redis:6379
+      QUEUE_NAME: support-sync
+      MOCK_AGENT: "false"
+    depends_on:
+      chat:
+        condition: service_started
+      embedding:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+  postgres:
+    image: postgres:16
+    x-defang-postgres: true
+    restart: always
+    environment:
+      POSTGRES_PASSWORD:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+    ports:
+      - mode: host
+        target: 5432
+        published: 5432
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U postgres -d postgres
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+  redis:
+    image: redis:6.2
+    x-defang-redis: true
+    restart: always
+    ports:
+      - mode: host
+        target: 6379
+        published: 6379
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+  chat:
+    provider:
+      type: model
+      options:
+        model: chat-default
+    x-defang-llm: true
+    environment:
+      OPENAI_API_KEY: defang
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+  embedding:
+    provider:
+      type: model
+      options:
+        model: embedding-default
+    x-defang-llm: true
+    environment:
+      OPENAI_API_KEY: defang
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M
