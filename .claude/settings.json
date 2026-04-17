@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(docker compose config:*)",
+      "Bash(docker compose up --build:*)",
+      "Bash(node scripts/generate-samples-list.js)",
+      "Bash(./scripts/check-sample-files.sh)",
+      "Bash(npm ci:*)",
+      "Bash(npm test:*)"
+    ]
+  }
+}
