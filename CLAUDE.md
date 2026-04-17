@@ -243,6 +243,20 @@ When running inside SAM (detected by `$SAM_WORKSPACE_ID` environment variable):
 4. **Capture ideas** -- Use `create_idea` for new sample ideas discovered during work (e.g., "sample for Framework X with Database Y")
 5. **Search context** -- Use `search_messages` to find prior conversations about sample conventions or specific frameworks
 
+### Knowledge Graph
+
+SAM maintains a persistent knowledge graph across sessions. Use it to preserve non-obvious context:
+
+- **`add_knowledge`** — Store observations about:
+  - User preferences and work style (entityType: `preference`)
+  - Sample conventions not captured in CLAUDE.md (entityType: `style`)
+  - Project context: feature launches, deprecations, new framework support (entityType: `context`)
+- **`search_knowledge`** — Query before key decisions (e.g., search "PlaygroundDeprecation" before referencing Playground, search "ContentStyle" before writing sample READMEs)
+- **`update_knowledge`** / **`remove_knowledge`** — Fix stale or incorrect observations
+- **`confirm_knowledge`** — When you verify an existing observation is still accurate
+
+Do NOT store: patterns derivable from existing samples, git history, ephemeral task details, or anything already in CLAUDE.md.
+
 ### Important Notes
 - Samples MUST use **current Defang CLI syntax and features** -- check the latest Defang docs if unsure about command syntax
 - Use `defang compose up` (not deprecated alternatives)
