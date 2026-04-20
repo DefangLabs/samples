@@ -1,6 +1,6 @@
-# Mastra & Next.js & PostgreSQL & Redis
+# Mastra Extended
 
-[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-mastra-nextjs-postgres-redis-template%26template_owner%3DDefangSamples)
+[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-mastra-extended-template%26template_owner%3DDefangSamples)
 
 This sample shows a multi-service AI app built with [Mastra](https://mastra.ai/), Next.js, PostgreSQL (with pgvector), Redis, and BullMQ, deployed with Defang from a single Docker Compose file.
 
@@ -82,14 +82,14 @@ The default sample uses Defang's managed model provider services:
 - `chat` uses `chat-default`
 - `embedding` uses `embedding-default`
 
-If you want to pin different models, edit the `provider.options.model` values in [compose.yaml](/workspaces/defang-global/projects/samples/samples/mastra-nextjs-postgres-redis/compose.yaml).
+If you want to pin different models, edit the `provider.options.model` values in [compose.yaml](/workspaces/defang-global/projects/samples/samples/mastra-extended/compose.yaml).
 
 > [!WARNING]
 > **Extended deployment time:** This sample creates a managed PostgreSQL database which may take upwards of 20 minutes to provision on first deployment. Subsequent deployments are much faster (2-5 minutes).
 
 ---
 
-Title: Mastra & Next.js & PostgreSQL & Redis
+Title: Mastra Extended
 
 Short Description: A small Defang sample where background jobs classify and embed tasks and events, and a Mastra copilot answers questions with tools.
 
