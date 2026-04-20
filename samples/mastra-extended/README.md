@@ -1,4 +1,4 @@
-# Mastra & Next.js & PostgreSQL & Redis
+# Mastra Extended
 
 [![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-mastra-nextjs-postgres-redis-template%26template_owner%3DDefangSamples)
 
@@ -89,7 +89,7 @@ If you want to pin different models, edit the `provider.options.model` values in
 
 ---
 
-Title: Mastra & Next.js & PostgreSQL & Redis
+Title: Mastra Extended
 
 Short Description: A small Defang sample where background jobs classify and embed tasks and events, and a Mastra copilot answers questions with tools.
 
