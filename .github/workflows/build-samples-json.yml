@@ -4,12 +4,13 @@ permissions:
   pull-requests: read
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+  push:
     branches:
-      - "**"
+      - "main"
     paths:
       - "samples/**"
+      - ".github/workflows/build-samples-json.yml"
+  workflow_dispatch: {}
 
 jobs:
   # python-lint:
