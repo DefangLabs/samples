@@ -155,26 +155,31 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REDIS_URL = os.environ.get("REDIS_URL")
 
-import urllib.parse
-
-parsed_url = urllib.parse.urlparse(REDIS_URL)
-
-REDIS_HOST = parsed_url.hostname
-REDIS_PORT = parsed_url.port
-
 # Channels/Redis
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [(REDIS_HOST, REDIS_PORT)],
+            "hosts": [REDIS_URL],
         },
     },
 }
 
-# Celery
-CELERY_BROKER_URL = REDIS_URL
-CELERY_RESULT_BACKEND = REDIS_URL
+# Celery requires CERT_NONE (uppercase); channels_redis requires none (lowercase).
+# Normalize the URL for Celery by uppercasing the ssl_cert_reqs value.
+_celery_url = REDIS_URL.replace('ssl_cert_reqs=none', 'ssl_cert_reqs=CERT_NONE') if REDIS_URL else REDIS_URL
+CELERY_BROKER_URL = _celery_url
+CELERY_RESULT_BACKEND = _celery_url
+
+# Azure Redis Enterprise (EnterpriseCluster mode) still enforces cross-slot
+# restrictions inside MULTI/EXEC. Kombu pipelines multiple keys (priority queue
+# variants, unacked/unacked_index) in MULTI/EXEC blocks. Setting global_keyprefix
+# to a Redis hash tag forces ALL Kombu keys to hash to the same slot, eliminating
+# all CROSSSLOT errors. priority_steps=[0] is kept to reduce key proliferation.
+CELERY_BROKER_TRANSPORT_OPTIONS = {
+    'global_keyprefix': '{celery}',
+    'priority_steps': [0],
+}
 
 # CrewAI (no special settings needed for hello world)
 
