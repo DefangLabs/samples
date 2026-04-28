@@ -149,7 +149,7 @@ function generateWorkflow(template, secrets) {
  */
 function loadWorkflowTemplate() {
     return fs.readFileSync(
-        path.join(__dirname, '..', 'templates', 'deploy.yaml'),
+        path.join(__dirname, '..', 'templates', 'defang.yaml'),
         'utf8'
     );
 }

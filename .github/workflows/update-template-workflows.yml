@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - "templates/deploy.yaml"
+      - "templates/defang.yaml"
   workflow_dispatch:
 
 jobs:

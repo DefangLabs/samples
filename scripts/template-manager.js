@@ -134,7 +134,7 @@ module.exports = async ({ github, context, core }) => {
                 const response = await github.rest.repos.getContent({
                     owner: templateOrg,
                     repo: templateRepoName,
-                    path: '.github/workflows/deploy.yaml'
+                    path: '.github/workflows/defang.yaml'
                 });
                 currentWorkflow = Buffer.from(response.data.content, 'base64').toString();
             } catch (err) {
@@ -234,7 +234,7 @@ module.exports = async ({ github, context, core }) => {
             console.log(`@@ Generating workflow from compose.yaml`);
             const workflowContent = updateWorkflowFromCompose();
             const workflowDir = '.github/workflows';
-            const workflowPath = `${workflowDir}/deploy.yaml`;
+            const workflowPath = `${workflowDir}/defang.yaml`;
 
             // Ensure directory exists
             if (!fs.existsSync(workflowDir)) {

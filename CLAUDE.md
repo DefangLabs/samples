@@ -25,9 +25,9 @@ samples/                     <- Root
 ### Key Directories
 
 - **`samples/`** -- Every sample lives in its own kebab-case subdirectory here. Never place samples at the repo root.
-- **`starter-sample/`** -- The scaffold copied by `. ./scripts/new-sample`. Contains `compose.yaml`, `compose.dev.yaml`, `README.md`, `.devcontainer/`, and `.github/workflows/deploy.yaml` with `#REMOVE_ME_AFTER_EDITING` markers.
+- **`starter-sample/`** -- The scaffold copied by `. ./scripts/new-sample`. Contains `compose.yaml`, `compose.dev.yaml`, `README.md`, `.devcontainer/`, and `.github/workflows/defang.yaml` with `#REMOVE_ME_AFTER_EDITING` markers.
 - **`scripts/`** -- Automation scripts (Node.js). Run `npm ci` in this directory before using.
-- **`templates/deploy.yaml`** -- The canonical deploy workflow. Each sample gets a copy managed by `template-manager.js` (do NOT manually create or edit `samples/*/.github/workflows/deploy.yaml`).
+- **`templates/defang.yaml`** -- The canonical deploy workflow. Each sample gets a copy managed by `template-manager.js` (do NOT manually create or edit `samples/*/.github/workflows/defang.yaml`).
 - **`tools/testing/`** -- Go load test tool used by CI to deploy changed samples to staging and verify they come up healthy.
 
 ---
@@ -138,9 +138,9 @@ For local development with hot-reload and local dependencies (like a local Mongo
 
 Devcontainer config for GitHub Codespaces / VS Code. The starter includes the Defang CLI feature, Docker-in-Docker, and AWS CLI.
 
-### 6. `.github/workflows/deploy.yaml` (auto-generated)
+### 6. `.github/workflows/defang.yaml` (auto-generated)
 
-Do NOT create this manually. It is generated from `templates/deploy.yaml` by `template-manager.js` during CI. Pulumi samples are an exception and may have custom workflows.
+Do NOT create this manually. It is generated from `templates/defang.yaml` by `template-manager.js` during CI. Pulumi samples are an exception and may have custom workflows.
 
 ---
 
@@ -221,7 +221,7 @@ The test tool automatically strips the `TEST_` prefix and passes the values as D
 - No `.env` files with real secrets
 - No `node_modules/`, `__pycache__/`, build artifacts
 - No `.defang/` directory (already in `.gitignore`)
-- No manually created `.github/workflows/deploy.yaml` (auto-generated from template)
+- No manually created `.github/workflows/defang.yaml` (auto-generated from template)
 
 ---
 
@@ -296,7 +296,7 @@ When submitting a new or modified sample:
 - [ ] `compose.yaml` passes `defang compose config` validation
 - [ ] README has all four metadata fields (`Title`, `Short Description`, `Tags`, `Languages`)
 - [ ] No `#REMOVE_ME_AFTER_EDITING` markers remain
-- [ ] No `.github/workflows/deploy.yaml` manually added (auto-generated)
+- [ ] No `.github/workflows/defang.yaml` manually added (auto-generated)
 - [ ] Sample builds and runs locally with `docker compose up --build`
 - [ ] Config values added to `deploy-changed-samples.yml` if secrets are needed
 - [ ] `node scripts/generate-samples-list.js` run if README metadata changed
