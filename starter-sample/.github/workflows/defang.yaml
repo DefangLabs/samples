@@ -9,6 +9,7 @@ jobs:
   deploy:
     environment: defang-production
     runs-on: ubuntu-latest
+    timeout-minutes: 70
     permissions:
       contents: read
       id-token: write
