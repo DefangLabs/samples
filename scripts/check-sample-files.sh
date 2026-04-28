@@ -34,7 +34,7 @@ for dir in ./samples/*/; do
 
   # Check that we NOT have a .github/workflows/defang.yaml file; it's generated from templates/defang.yaml
   if [[ -f "${dir}.github/workflows/defang.yaml" && "$pulumi" == "false" ]]; then
-      echo " - [ ] remove .github/workflows/defang.yaml to ${dir} (generated file)"
+      echo " - [ ] remove .github/workflows/defang.yaml from ${dir} (generated file)"
   fi
 
   if [[ ! -f "${dir}README.md" ]]; then
