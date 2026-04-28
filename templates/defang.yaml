@@ -23,6 +23,7 @@ jobs:
     name: Defang ${{ github.event.inputs.action || 'up' }} ${{ github.event.inputs.stack || 'default stack' }}
     environment: defang-production
     runs-on: ubuntu-latest
+    timeout-minutes: 70
     permissions:
       contents: read
       id-token: write
