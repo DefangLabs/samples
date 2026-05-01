@@ -17,7 +17,7 @@ def crewai_summary(text: str):
 
     embedding = embedding_client.embeddings.create(
         model=os.getenv("EMBEDDING_MODEL"),
-        input=text,
+        input=[text],
     )
 
     summaries = Summary.objects.annotate(
@@ -57,7 +57,7 @@ def crewai_summary(text: str):
 
     summary_embedding = embedding_client.embeddings.create(
         model=os.getenv("EMBEDDING_MODEL"),
-        input=summary,
+        input=[summary],
     ).data[0].embedding
 
     try:
