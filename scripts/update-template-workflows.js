@@ -85,44 +85,64 @@ module.exports = async ({ github, context, core }) => {
             // Generate workflow from template + secrets
             const updatedContent = generateWorkflow(TEMPLATE, secrets);
 
-            // Get current workflow file
-            let currentFile;
-            try {
-                const response = await github.rest.repos.getContent({
-                    owner: templateOrg,
-                    repo: repo.name,
-                    path: '.github/workflows/deploy.yaml'
-                });
-                currentFile = response.data;
-            } catch (err) {
-                if (err.status === 404) {
-                    console.log(`${repo.name}: no workflow file found, skipping`);
-                    skipped++;
-                    continue;
+            const getFile = async (path) => {
+                try {
+                    const response = await github.rest.repos.getContent({
+                        owner: templateOrg,
+                        repo: repo.name,
+                        path
+                    });
+                    return response.data;
+                } catch (err) {
+                    if (err.status === 404) return null;
+                    throw err;
                 }
-                throw err;
+            };
+
+            const currentFile = await getFile('.github/workflows/defang.yaml');
+            const legacyFile = await getFile('.github/workflows/deploy.yaml');
+
+            if (!currentFile && !legacyFile) {
+                console.log(`${repo.name}: no workflow file found, skipping`);
+                skipped++;
+                continue;
             }
 
-            const currentContent = Buffer.from(currentFile.content, 'base64').toString();
+            const currentContent = currentFile
+                ? Buffer.from(currentFile.content, 'base64').toString()
+                : null;
 
-            // Only update if changed
-            if (currentContent === updatedContent) {
+            const needsContentUpdate = currentContent !== updatedContent;
+            const needsLegacyDelete = !!legacyFile;
+
+            if (!needsContentUpdate && !needsLegacyDelete) {
                 console.log(`${repo.name}: already up to date`);
                 skipped++;
                 continue;
             }
 
-            // Update file
-            await github.rest.repos.createOrUpdateFileContents({
-                owner: templateOrg,
-                repo: repo.name,
-                path: '.github/workflows/deploy.yaml',
-                message: 'Update workflow from canonical template',
-                content: Buffer.from(updatedContent).toString('base64'),
-                sha: currentFile.sha
-            });
+            if (needsContentUpdate) {
+                await github.rest.repos.createOrUpdateFileContents({
+                    owner: templateOrg,
+                    repo: repo.name,
+                    path: '.github/workflows/defang.yaml',
+                    message: 'Update workflow from canonical template',
+                    content: Buffer.from(updatedContent).toString('base64'),
+                    ...(currentFile ? { sha: currentFile.sha } : {})
+                });
+            }
 
-            console.log(`${repo.name}: updated`);
+            if (needsLegacyDelete) {
+                await github.rest.repos.deleteFile({
+                    owner: templateOrg,
+                    repo: repo.name,
+                    path: '.github/workflows/deploy.yaml',
+                    message: 'Remove legacy deploy.yaml (renamed to defang.yaml)',
+                    sha: legacyFile.sha
+                });
+            }
+
+            console.log(`${repo.name}: updated${needsLegacyDelete ? ' (removed legacy deploy.yaml)' : ''}`);
             updated++;
         } catch (err) {
             console.error(`${repo.name}: failed - ${err.message}`);

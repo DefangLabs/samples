@@ -1,0 +1,37 @@
+{
+  "name": "mastra-nextjs-postgres-redis",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "worker": "tsx src/worker.ts"
+  },
+  "dependencies": {
+    "@ai-sdk/amazon-bedrock": "^4.0.92",
+    "@aws-sdk/credential-providers": "^3.1028.0",
+    "@mastra/core": "^1.23.0",
+    "@mastra/memory": "^1.14.0",
+    "@mastra/pg": "^1.9.0",
+    "ai": "^6.0.149",
+    "bullmq": "^5.73.0",
+    "ioredis": "^5.10.1",
+    "next": "^16.2.2",
+    "pg": "^8.20.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
+    "tsx": "^4.21.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.2",
+    "@types/pg": "^8.20.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "typescript": "^6.0.2"
+  }
+}
