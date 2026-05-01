@@ -2,6 +2,10 @@ import IORedis from "ioredis";
 import { Queue } from "bullmq";
 
 export const QUEUE_NAME = process.env.QUEUE_NAME ?? "support-sync";
+// Hash-tag wrapping forces every BullMQ key for this queue (wait/active/events/…)
+// onto the same Redis cluster slot, so multi-key Lua scripts don't trip CROSSSLOT
+// on sharded backends like Azure Managed Redis.
+export const QUEUE_PREFIX = `{${QUEUE_NAME}}`;
 
 declare global {
   // eslint-disable-next-line no-var
@@ -29,6 +33,7 @@ export function getSyncQueue() {
   if (!global.syncQueue) {
     global.syncQueue = new Queue(QUEUE_NAME, {
       connection: getRedisConnection(),
+      prefix: QUEUE_PREFIX,
     });
   }
 

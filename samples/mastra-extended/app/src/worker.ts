@@ -11,7 +11,7 @@ import {
   startSeedRun,
   updateProcessedItem,
 } from "@/lib/items";
-import { QUEUE_NAME, getRedisConnection, getSyncQueue } from "@/lib/queue";
+import { QUEUE_NAME, QUEUE_PREFIX, getRedisConnection, getSyncQueue } from "@/lib/queue";
 
 type SeedBatchJob = {
   runId: string;
@@ -100,6 +100,7 @@ async function main() {
     {
       connection: getRedisConnection(),
       concurrency: Number(process.env.WORKER_CONCURRENCY ?? 8),
+      prefix: QUEUE_PREFIX,
     },
   );
 
