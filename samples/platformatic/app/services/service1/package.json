@@ -5,7 +5,7 @@
     "test": "borp"
   },
   "devDependencies": {
-    "fastify": "^4.26.2",
+    "fastify": "^5.7.4",
     "borp": "^0.16.0"
   },
   "dependencies": {
