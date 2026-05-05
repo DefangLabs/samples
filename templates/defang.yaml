@@ -37,13 +37,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Defang ${{ github.event.inputs.action || 'up' }} ${{ github.event.inputs.stack || 'default stack' }}
-        uses: DefangLabs/defang-github-action@v1.4.0
+        uses: DefangLabs/defang-github-action@v2
         with:
           command: ${{ github.event.inputs.action || 'up' }}
           stack: ${{ github.event.inputs.stack || '' }}
 
       - name: Deployment Summary
-        uses: DefangLabs/defang-github-action@v1.4.0
+        uses: DefangLabs/defang-github-action@v2
         with:
           command: services
           stack: ${{ github.event.inputs.stack || '' }}
