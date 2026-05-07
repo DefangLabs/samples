@@ -99,8 +99,17 @@ async function main() {
     },
     {
       connection: getRedisConnection(),
-      concurrency: Number(process.env.WORKER_CONCURRENCY ?? 8),
+      concurrency: Number(process.env.WORKER_CONCURRENCY ?? 2),
       prefix: QUEUE_PREFIX,
+      // Azure quota for `chat-default` is 6 req / 10s, shared with the chat
+      // agent. We cap the worker at 4 jobs / 10s, leaving 2 req / 10s for
+      // interactive chat. Each job makes 1 chat call (classify) + 1 embed
+      // call (embedding has its own quota). Concurrent chat use that bursts
+      // past the remaining 2 will 429 and recover via the in-call retry.
+      limiter: {
+        max: Number(process.env.WORKER_RATE_LIMIT_MAX ?? 4),
+        duration: Number(process.env.WORKER_RATE_LIMIT_DURATION_MS ?? 10_000),
+      },
     },
   );
 
