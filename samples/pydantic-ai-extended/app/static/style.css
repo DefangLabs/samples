@@ -296,12 +296,12 @@ h1, h2, h3, p { margin: 0; }
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 10px;
-  align-items: stretch;
+  align-items: end;
 }
 
 .chat-input {
   width: 100%;
-  min-height: 88px;
+  height: 88px;
   border-radius: 16px;
   border: 1px solid var(--border);
   background: white;
@@ -310,7 +310,10 @@ h1, h2, h3, p { margin: 0; }
   resize: none;
 }
 
-.chat-send-button { min-width: 88px; }
+.chat-send-button {
+  min-width: 88px;
+  height: 88px;
+}
 
 @keyframes cursorBlink {
   0%, 49% { opacity: 1; }
