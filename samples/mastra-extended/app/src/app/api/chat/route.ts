@@ -14,9 +14,20 @@ import { setTimeout as sleep } from "node:timers/promises";
 import { NextRequest, NextResponse } from "next/server";
 
 import type { ChatStreamEvent } from "@/app/types";
+import { getRetryAfterMs, isRateLimitError } from "@/lib/ai";
 import { ensureSchema } from "@/lib/db";
 import { getMockReply } from "@/lib/mock-agent";
 import { mastra } from "@/mastra";
+
+const STREAM_RETRY_MAX_ATTEMPTS = Number(process.env.CHAT_STREAM_RETRY_MAX_ATTEMPTS ?? 4);
+const STREAM_RETRY_BASE_DELAY_MS = Number(process.env.CHAT_STREAM_RETRY_BASE_DELAY_MS ?? 2000);
+const STREAM_RETRY_MAX_DELAY_MS = Number(process.env.CHAT_STREAM_RETRY_MAX_DELAY_MS ?? 30_000);
+
+class RateLimitedBeforeOutputError extends Error {
+  constructor(public readonly cause: unknown) {
+    super("Rate limited before any output was emitted");
+  }
+}
 
 export const runtime = "nodejs";
 
@@ -360,14 +371,51 @@ async function processStructuredStream(source: unknown, splitter: ReturnType<typ
     }
 
     if (type === "error") {
-      emit({
-        type: "error",
-        message: extractErrorMessage("error" in payload ? payload.error : payload),
-      });
+      const errorPayload = "error" in payload ? payload.error : payload;
+      // If a 429 arrives before any output has been emitted, throw so the
+      // outer retry loop can re-try the whole stream call. Otherwise just
+      // log: the agent has already produced useful output and the error
+      // chunk would only confuse the client view.
+      if (!emittedOutput && isRateLimitError(errorPayload)) {
+        throw new RateLimitedBeforeOutputError(errorPayload);
+      }
+      console.warn("Agent stream error chunk:", extractErrorMessage(errorPayload));
     }
   }
 
   return emittedOutput;
+}
+
+async function runAgentStreamWithRetry(
+  request: ChatRequest,
+  splitter: ReturnType<typeof createThinkingTextSplitter>,
+  emit: EmitEvent,
+): Promise<boolean> {
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= STREAM_RETRY_MAX_ATTEMPTS; attempt += 1) {
+    try {
+      const reply = await callAgentStream(request.message, request.threadId);
+      return reply.streamKind === "text"
+        ? await processTextStream(reply.stream, splitter, emit)
+        : await processStructuredStream(reply.stream, splitter, emit);
+    } catch (error) {
+      lastError = error;
+
+      const isPreOutputRateLimit = error instanceof RateLimitedBeforeOutputError;
+      const isThrownRateLimit = !isPreOutputRateLimit && isRateLimitError(error);
+      if (!isPreOutputRateLimit && !isThrownRateLimit) throw error;
+      if (attempt === STREAM_RETRY_MAX_ATTEMPTS) throw error;
+
+      const causeForHeaders = isPreOutputRateLimit ? error.cause : error;
+      const retryAfterMs = getRetryAfterMs(causeForHeaders);
+      const backoffMs = Math.min(STREAM_RETRY_MAX_DELAY_MS, STREAM_RETRY_BASE_DELAY_MS * 2 ** (attempt - 1));
+      const jitter = Math.floor(Math.random() * Math.min(500, backoffMs / 2));
+      const delay = (retryAfterMs ?? backoffMs) + jitter;
+      console.warn(`[chat-stream] rate limited (attempt ${attempt}/${STREAM_RETRY_MAX_ATTEMPTS}), retrying in ${delay}ms`);
+      await sleep(delay);
+    }
+  }
+  throw lastError;
 }
 
 function handleStreamingRequest(request: ChatRequest) {
@@ -386,11 +434,7 @@ function handleStreamingRequest(request: ChatRequest) {
           if (process.env.MOCK_AGENT === "true") {
             emittedOutput = await processTextStream(createMockStream(request.message), splitter, emit);
           } else {
-            const reply = await callAgentStream(request.message, request.threadId);
-            emittedOutput =
-              reply.streamKind === "text"
-                ? await processTextStream(reply.stream, splitter, emit)
-                : await processStructuredStream(reply.stream, splitter, emit);
+            emittedOutput = await runAgentStreamWithRetry(request, splitter, emit);
           }
 
           for (const part of splitter.flush()) {

@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { setTimeout as sleep } from "node:timers/promises";
 
 import { embed } from "ai";
 import { z } from "zod";
@@ -7,6 +8,81 @@ import type { ItemClassification, ItemType, RawItemSeed } from "@/lib/items";
 import { getMastraEmbeddingModel, hasChatAccess, hasEmbeddingAccess } from "@/lib/model";
 import { fallbackEvents, fallbackTasks } from "@/lib/seed-data";
 import { mastra } from "@/mastra";
+
+// ---------------------------------------------------------------------------
+// 429-aware retry
+//
+// LLM/embedding endpoints (especially Azure OpenAI) frequently throttle.
+// We retry on 429 / "rate limit" / "Too Many Requests" with exponential
+// backoff + jitter. If the server provides a `Retry-After` header we honor
+// it; otherwise we double the delay each attempt.
+// ---------------------------------------------------------------------------
+
+const RETRY_MAX_ATTEMPTS = Number(process.env.LLM_RETRY_MAX_ATTEMPTS ?? 6);
+const RETRY_BASE_DELAY_MS = Number(process.env.LLM_RETRY_BASE_DELAY_MS ?? 1500);
+const RETRY_MAX_DELAY_MS = Number(process.env.LLM_RETRY_MAX_DELAY_MS ?? 30_000);
+
+function getErrorStatus(error: unknown): number | null {
+  if (typeof error !== "object" || error === null) return null;
+  const obj = error as Record<string, unknown>;
+  if (typeof obj.status === "number") return obj.status;
+  if (typeof obj.statusCode === "number") return obj.statusCode;
+  const response = obj.response as Record<string, unknown> | undefined;
+  if (response && typeof response.status === "number") return response.status;
+  return null;
+}
+
+export function getRetryAfterMs(error: unknown): number | null {
+  if (typeof error !== "object" || error === null) return null;
+  const obj = error as Record<string, unknown>;
+  const headers =
+    (obj.responseHeaders as Record<string, unknown> | undefined) ??
+    ((obj.response as Record<string, unknown> | undefined)?.headers as Record<string, unknown> | undefined);
+  if (!headers) return null;
+
+  // Azure sends retry-after-ms (precise, often <1s) alongside retry-after
+  // (RFC seconds, typically the next quota window). Prefer the precise one.
+  const rawMs = headers["retry-after-ms"] ?? headers["Retry-After-Ms"];
+  if (typeof rawMs === "string" || typeof rawMs === "number") {
+    const ms = Number(String(rawMs).trim());
+    if (Number.isFinite(ms)) return ms;
+  }
+
+  const raw = headers["retry-after"] ?? headers["Retry-After"];
+  if (typeof raw !== "string" && typeof raw !== "number") return null;
+  const value = String(raw).trim();
+  const seconds = Number(value);
+  if (Number.isFinite(seconds)) return seconds * 1000;
+  const dateMs = Date.parse(value);
+  if (Number.isFinite(dateMs)) return Math.max(0, dateMs - Date.now());
+  return null;
+}
+
+export function isRateLimitError(error: unknown) {
+  if (getErrorStatus(error) === 429) return true;
+  const message = error instanceof Error ? error.message : String(error ?? "");
+  return /rate.?limit|too many requests|429/i.test(message);
+}
+
+async function withRateLimitRetry<T>(label: string, run: () => Promise<T>): Promise<T> {
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= RETRY_MAX_ATTEMPTS; attempt += 1) {
+    try {
+      return await run();
+    } catch (error) {
+      lastError = error;
+      if (!isRateLimitError(error) || attempt === RETRY_MAX_ATTEMPTS) throw error;
+
+      const retryAfterMs = getRetryAfterMs(error);
+      const backoffMs = Math.min(RETRY_MAX_DELAY_MS, RETRY_BASE_DELAY_MS * 2 ** (attempt - 1));
+      const jitter = Math.floor(Math.random() * Math.min(500, backoffMs / 2));
+      const delay = (retryAfterMs ?? backoffMs) + jitter;
+      console.warn(`[${label}] rate limited (attempt ${attempt}/${RETRY_MAX_ATTEMPTS}), retrying in ${delay}ms`);
+      await sleep(delay);
+    }
+  }
+  throw lastError;
+}
 
 // ---------------------------------------------------------------------------
 // Schemas
@@ -26,8 +102,8 @@ const eventSchema = z.object({
   body: z.string().min(20).max(320),
 });
 
-const taskBatchSchema = z.object({ tasks: z.array(taskSchema).length(10) });
-const eventBatchSchema = z.object({ events: z.array(eventSchema).length(10) });
+const taskBatchSchema = z.object({ tasks: z.array(taskSchema).length(5) });
+const eventBatchSchema = z.object({ events: z.array(eventSchema).length(5) });
 
 const classificationSchema = z.object({
   category: z.string().min(2).max(40),
@@ -83,7 +159,7 @@ async function runChat(
 
   const agent = mastra.getAgent("generatorAgent");
   const prompt = `${systemPrompt}\n\n${userPrompt}`;
-  const result = await agent.generate(prompt, { maxSteps: 1 });
+  const result = await withRateLimitRetry("chat", () => agent.generate(prompt, { maxSteps: 1 }));
 
   return parseResponse(result.text ?? "");
 }
@@ -119,7 +195,7 @@ export async function embedTextForSearch(text: string) {
 
   try {
     const model = getMastraEmbeddingModel();
-    const result = await embed({ model, value: text });
+    const result = await withRateLimitRetry("embed", () => embed({ model, value: text }));
     return result.embedding;
   } catch {
     return deterministicEmbedding(text);
@@ -212,7 +288,7 @@ async function generateTasksWithLlm() {
   const payload = await runChatJson(
     "You generate realistic project-team task records. Return valid JSON only.",
     [
-      "Generate exactly 10 task records for a software product team.",
+      "Generate exactly 5 task records for a software product team.",
       "These tasks should look like assigned work pulled from tools like Jira, Linear, and GitHub.",
       "Avoid fake enterprise jargon. Keep them concrete and easy to understand.",
       "Return this exact shape:",
@@ -228,7 +304,7 @@ async function generateEventsWithLlm() {
   const payload = await runChatJson(
     "You generate realistic system event records. Return valid JSON only.",
     [
-      "Generate exactly 10 event records for a software product team.",
+      "Generate exactly 5 event records for a software product team.",
       "These events should look like recent activity from tools like Datadog, Vercel, Sentry, Slack, GitHub Actions, Stripe, and PagerDuty.",
       "Avoid fake enterprise jargon. Keep them concrete and easy to understand.",
       "Return this exact shape:",
@@ -242,10 +318,13 @@ async function generateEventsWithLlm() {
 
 export async function generateSeedItems(): Promise<RawItemSeed[]> {
   if (useFastLocalData() || !hasLlmAccess() || process.env.MOCK_AGENT === "true") {
-    return [...fallbackTasks, ...fallbackEvents];
+    return [...fallbackTasks.slice(0, 5), ...fallbackEvents.slice(0, 5)];
   }
 
-  const [tasks, events] = await Promise.all([generateTasksWithLlm(), generateEventsWithLlm()]);
+  // Serialized — running these in parallel bursts two requests at once and
+  // immediately competes with the per-item classify jobs for the same quota.
+  const tasks = await generateTasksWithLlm();
+  const events = await generateEventsWithLlm();
   return [...toRawItems("task", tasks), ...toRawItems("event", events)];
 }
 

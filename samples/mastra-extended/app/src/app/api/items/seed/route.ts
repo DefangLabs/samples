@@ -19,7 +19,7 @@ export async function POST() {
   await resetDemoState();
 
   const runId = randomUUID();
-  await createSeedRun(runId, 20);
+  await createSeedRun(runId, 10);
 
   const queue = getSyncQueue();
   await queue.add(
