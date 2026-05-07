@@ -106,6 +106,18 @@ export async function createSeedRun(id: string, totalItems = 20) {
   );
 }
 
+export async function setSeedRunTotal(id: string, totalItems: number) {
+  const pool = getPool();
+  await pool.query(
+    `
+      UPDATE seed_runs
+      SET total_items = $2, updated_at = NOW()
+      WHERE id = $1
+    `,
+    [id, totalItems],
+  );
+}
+
 export async function startSeedRun(id: string, summary: string) {
   const pool = getPool();
   await pool.query(
