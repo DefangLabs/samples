@@ -8,7 +8,7 @@ export async function getMockReply(message: string) {
     return [
       "No sample items are loaded yet.",
       "",
-      "Click `Generate sample items` to create 10 tasks and 10 events, then ask again.",
+      "Click `Generate sample items` to create 5 tasks and 5 events, then ask again.",
     ].join("\n");
   }
 

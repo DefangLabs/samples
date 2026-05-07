@@ -24,7 +24,7 @@ type ClassifyItemJob = {
 
 async function handleSeedBatch(job: Job<SeedBatchJob>) {
   const { runId } = job.data;
-  await startSeedRun(runId, "Generating 10 tasks and 10 events with the LLM");
+  await startSeedRun(runId, "Generating 5 tasks and 5 events with the LLM");
 
   const rawItems = await generateSeedItems();
   const insertedItems = await insertSeedItems(runId, rawItems);

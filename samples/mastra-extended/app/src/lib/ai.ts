@@ -26,8 +26,8 @@ const eventSchema = z.object({
   body: z.string().min(20).max(320),
 });
 
-const taskBatchSchema = z.object({ tasks: z.array(taskSchema).length(10) });
-const eventBatchSchema = z.object({ events: z.array(eventSchema).length(10) });
+const taskBatchSchema = z.object({ tasks: z.array(taskSchema).length(5) });
+const eventBatchSchema = z.object({ events: z.array(eventSchema).length(5) });
 
 const classificationSchema = z.object({
   category: z.string().min(2).max(40),
@@ -212,7 +212,7 @@ async function generateTasksWithLlm() {
   const payload = await runChatJson(
     "You generate realistic project-team task records. Return valid JSON only.",
     [
-      "Generate exactly 10 task records for a software product team.",
+      "Generate exactly 5 task records for a software product team.",
       "These tasks should look like assigned work pulled from tools like Jira, Linear, and GitHub.",
       "Avoid fake enterprise jargon. Keep them concrete and easy to understand.",
       "Return this exact shape:",
@@ -228,7 +228,7 @@ async function generateEventsWithLlm() {
   const payload = await runChatJson(
     "You generate realistic system event records. Return valid JSON only.",
     [
-      "Generate exactly 10 event records for a software product team.",
+      "Generate exactly 5 event records for a software product team.",
       "These events should look like recent activity from tools like Datadog, Vercel, Sentry, Slack, GitHub Actions, Stripe, and PagerDuty.",
       "Avoid fake enterprise jargon. Keep them concrete and easy to understand.",
       "Return this exact shape:",
@@ -242,7 +242,7 @@ async function generateEventsWithLlm() {
 
 export async function generateSeedItems(): Promise<RawItemSeed[]> {
   if (useFastLocalData() || !hasLlmAccess() || process.env.MOCK_AGENT === "true") {
-    return [...fallbackTasks, ...fallbackEvents];
+    return [...fallbackTasks.slice(0, 5), ...fallbackEvents.slice(0, 5)];
   }
 
   const [tasks, events] = await Promise.all([generateTasksWithLlm(), generateEventsWithLlm()]);

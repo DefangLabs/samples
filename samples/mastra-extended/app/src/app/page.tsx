@@ -96,7 +96,7 @@ export default function Page() {
             <span className="eyebrow">Tasks and events</span>
             <h2>Background jobs classify incoming work and system activity.</h2>
             <p className="muted-text">
-              Click one button to generate 10 tasks and 10 events. The worker fans that out into per-item jobs, stores
+              Click one button to generate 5 tasks and 5 events. The worker fans that out into per-item jobs, stores
               the results in Postgres, and builds embeddings for semantic lookup.
             </p>
           </div>
