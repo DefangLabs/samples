@@ -8,6 +8,7 @@ import {
   getItemById,
   insertSeedItems,
   markItemProcessed,
+  setSeedRunTotal,
   startSeedRun,
   updateProcessedItem,
 } from "@/lib/items";
@@ -28,6 +29,9 @@ async function handleSeedBatch(job: Job<SeedBatchJob>) {
 
   const rawItems = await generateSeedItems();
   const insertedItems = await insertSeedItems(runId, rawItems);
+  // The seed route hardcodes a placeholder total before generation runs.
+  // Reconcile here so progress / completion checks reflect actual count.
+  await setSeedRunTotal(runId, insertedItems.length);
   const queue = getSyncQueue();
 
   for (const item of insertedItems) {
@@ -39,10 +43,10 @@ async function handleSeedBatch(job: Job<SeedBatchJob>) {
       } satisfies ClassifyItemJob,
       {
         jobId: `classify:${runId}:${item.id}`,
-        attempts: 2,
+        attempts: Number(process.env.CLASSIFY_JOB_ATTEMPTS ?? 6),
         backoff: {
           type: "exponential",
-          delay: 1000,
+          delay: Number(process.env.CLASSIFY_JOB_BACKOFF_MS ?? 5000),
         },
         removeOnComplete: 100,
         removeOnFail: 100,
