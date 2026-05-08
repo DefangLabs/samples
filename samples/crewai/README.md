@@ -18,26 +18,22 @@ docker compose -f ./compose.local.yaml up --build
 
 ## Configuration
 
-For this sample, you will need to provide the following [configuration](https://docs.defang.io/docs/concepts/configuration): 
+For this sample, you will need to provide the following [configuration](https://docs.defang.io/docs/concepts/configuration):
 
 > Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
 
-### `POSTGRES_PASSWORD`     
+### `POSTGRES_PASSWORD`
+
 The password for the Postgres database.
+
 ```bash
 defang config set POSTGRES_PASSWORD
-```
-
-### `SSL_MODE`
-
-The SSL mode for the Postgres database.
-```bash
-defang config set SSL_MODE
 ```
 
 ### `DJANGO_SECRET_KEY`
 
 The secret key for the Django application.
+
 ```bash
 defang config set DJANGO_SECRET_KEY
 ```
@@ -50,6 +46,7 @@ defang config set DJANGO_SECRET_KEY
 ### Defang Playground
 
 Deploy your application to the Defang Playground by opening up your terminal and typing:
+
 ```bash
 defang compose up
 ```
