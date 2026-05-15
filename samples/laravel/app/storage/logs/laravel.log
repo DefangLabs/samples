@@ -1,0 +1,13 @@
+[2025-11-13 17:47:06] production.ERROR: The /home/runner/work/samples/samples/samples/laravel/app/bootstrap/cache directory must be present and writable. {"exception":"[object] (Exception(code: 0): The /home/runner/work/samples/samples/samples/laravel/app/bootstrap/cache directory must be present and writable. at /home/runner/work/samples/samples/samples/laravel/app/vendor/laravel/framework/src/Illuminate/Foundation/PackageManifest.php:179)
+[stacktrace]
+#0 /home/runner/work/samples/samples/samples/laravel/app/vendor/laravel/framework/src/Illuminate/Foundation/PackageManifest.php(132): Illuminate\\Foundation\\PackageManifest->write()
+#1 /home/runner/work/samples/samples/samples/laravel/app/vendor/laravel/framework/src/Illuminate/Foundation/PackageManifest.php(108): Illuminate\\Foundation\\PackageManifest->build()
+#2 /home/runner/work/samples/samples/samples/laravel/app/vendor/laravel/framework/src/Illuminate/Foundation/PackageManifest.php(91): Illuminate\\Foundation\\PackageManifest->getManifest()
+#3 /home/runner/work/samples/samples/samples/laravel/app/vendor/laravel/framework/src/Illuminate/Foundation/PackageManifest.php(80): Illuminate\\Foundation\\PackageManifest->config()
+#4 /home/runner/work/samples/samples/samples/laravel/app/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/RegisterFacades.php(26): Illuminate\\Foundation\\PackageManifest->aliases()
+#5 /home/runner/work/samples/samples/samples/laravel/app/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(342): Illuminate\\Foundation\\Bootstrap\\RegisterFacades->bootstrap()
+#6 /home/runner/work/samples/samples/samples/laravel/app/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(474): Illuminate\\Foundation\\Application->bootstrapWith()
+#7 /home/runner/work/samples/samples/samples/laravel/app/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(196): Illuminate\\Foundation\\Console\\Kernel->bootstrap()
+#8 /home/runner/work/samples/samples/samples/laravel/app/artisan(24): Illuminate\\Foundation\\Console\\Kernel->handle()
+#9 {main}
+"} 
