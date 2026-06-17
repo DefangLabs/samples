@@ -1,6 +1,6 @@
 const { describe, it } = require('node:test');
 const assert = require('node:assert');
-const { isRandomSecret, extractSecretsFromCompose, generateWorkflow } = require('./workflow-utils');
+const { isRandomSecret, extractSecretsFromCompose, generateWorkflow, loadWorkflowTemplate } = require('./workflow-utils');
 
 describe('isRandomSecret', () => {
     it('should classify PASSWORD as random', () => {
@@ -246,5 +246,15 @@ jobs:
         assert.ok(!result.includes('config-vars-init-random'));
         assert.ok(!result.includes('config-env-vars'));
         assert.ok(!result.includes('env:'));
+    });
+
+    it('should keep project and production stack inputs in the canonical template', () => {
+        const secrets = { random: [], userProvided: [] };
+        const result = generateWorkflow(loadWorkflowTemplate(), secrets);
+
+        assert.ok(result.includes('project: ${{ github.event.repository.name }}'));
+        assert.ok(result.includes("stack: ${{ github.event.inputs.stack || 'production' }}"));
+        assert.ok(!result.includes("stack: ${{ github.event.inputs.stack || '' }}"));
+        assert.ok(!result.includes('default stack'));
     });
 });
