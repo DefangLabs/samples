@@ -1,4 +1,3 @@
-name: n8n
 services:
   postgres:
     image: postgres:16

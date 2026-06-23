@@ -1,4 +1,3 @@
-name: mastra-extended-dev
 services:
   app:
     build:
