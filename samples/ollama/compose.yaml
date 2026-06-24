@@ -1,3 +1,4 @@
+name: ollama
 services:
   ollama:
     build:

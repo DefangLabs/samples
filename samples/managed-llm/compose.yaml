@@ -1,3 +1,4 @@
+name: managed-llm
 services:
   app:
     build:

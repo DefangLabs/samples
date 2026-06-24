@@ -1,3 +1,4 @@
+name: golang-http
 services:
   app:
     restart: unless-stopped

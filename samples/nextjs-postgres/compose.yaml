@@ -1,3 +1,4 @@
+name: nextjs-postgres
 services:
   app:
     build:

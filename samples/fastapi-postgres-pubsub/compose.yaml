@@ -1,3 +1,4 @@
+name: fastapi-postgres-pubsub
 services:
   app_a:
     build:

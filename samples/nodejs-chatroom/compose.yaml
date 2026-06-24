@@ -1,3 +1,4 @@
+name: nodejs-chatroom
 services:
   chat:
     restart: unless-stopped

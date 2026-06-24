@@ -1,3 +1,4 @@
+name: nodejs-http
 services:
   app:
     restart: unless-stopped

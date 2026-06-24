@@ -1,3 +1,4 @@
+name: sailsjs-postgres
 services:
   app:
     restart: unless-stopped

@@ -1,3 +1,4 @@
+name: nodejs-form
 services:
   app:
     restart: unless-stopped

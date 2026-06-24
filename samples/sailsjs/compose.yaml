@@ -1,3 +1,4 @@
+name: sailsjs
 services:
   sails:
     restart: unless-stopped

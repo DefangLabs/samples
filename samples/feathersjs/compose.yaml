@@ -1,3 +1,4 @@
+name: feathersjs
 services:
   app:
     build:

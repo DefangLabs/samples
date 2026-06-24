@@ -1,3 +1,4 @@
+name: mastra-extended-dev
 services:
   app:
     build:
@@ -11,14 +12,12 @@ services:
       QUEUE_NAME: support-sync
       LOCAL_FAST_DATA: "true"
       MOCK_AGENT: "false"
-    models:
-      chat:
-        endpoint_var: CHAT_URL
-        model_var: CHAT_MODEL
-      embedding:
-        endpoint_var: EMBEDDING_URL
-        model_var: EMBEDDING_MODEL
+      OPENAI_API_KEY: defang
     depends_on:
+      chat:
+        condition: service_started
+      embedding:
+        condition: service_started
       postgres:
         condition: service_healthy
       redis:
@@ -35,14 +34,12 @@ services:
       QUEUE_NAME: support-sync
       LOCAL_FAST_DATA: "true"
       MOCK_AGENT: "false"
-    models:
-      chat:
-        endpoint_var: CHAT_URL
-        model_var: CHAT_MODEL
-      embedding:
-        endpoint_var: EMBEDDING_URL
-        model_var: EMBEDDING_MODEL
+      OPENAI_API_KEY: defang
     depends_on:
+      chat:
+        condition: service_started
+      embedding:
+        condition: service_started
       postgres:
         condition: service_healthy
       redis:
@@ -73,11 +70,19 @@ services:
     ports:
       - 6379:6379
 
-models:
   chat:
-    model: ai/gemma3:1B-Q4_K_M
+    provider:
+      type: model
+      options:
+        model: ai/qwen2.5:3B-Q4_K_M
+    x-defang-llm: true
+
   embedding:
-    model: ai/mxbai-embed-large
+    provider:
+      type: model
+      options:
+        model: ai/mxbai-embed-large
+    x-defang-llm: true
 
 volumes:
   pgdata:

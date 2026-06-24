@@ -1,3 +1,4 @@
+name: nodejs-express
 services:
   app:
     restart: unless-stopped

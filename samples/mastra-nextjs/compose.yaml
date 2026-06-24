@@ -1,3 +1,4 @@
+name: mastra-nextjs
 services:
   app:
     x-defang-llm: true

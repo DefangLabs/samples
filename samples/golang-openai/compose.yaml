@@ -1,3 +1,4 @@
+name: golang-openai
 services:
   app:
     restart: unless-stopped

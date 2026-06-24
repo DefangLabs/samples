@@ -1,3 +1,4 @@
+name: arduino-wifi
 services:
   flask:
     restart: unless-stopped

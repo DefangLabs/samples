@@ -1,3 +1,4 @@
+name: django-railpack
 services:
   django:
     restart: unless-stopped

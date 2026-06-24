@@ -1,3 +1,4 @@
+name: nextjs-railpack
 services:
   app:
     restart: unless-stopped

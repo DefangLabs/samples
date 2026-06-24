@@ -1,3 +1,4 @@
+name: django
 services:
   django:
     restart: unless-stopped

@@ -1,3 +1,4 @@
+name: sveltekit
 services:
   sveltekit:
     restart: unless-stopped

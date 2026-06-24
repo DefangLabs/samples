@@ -1,3 +1,4 @@
+name: react-vite-railpack
 services:
   app:
     restart: unless-stopped

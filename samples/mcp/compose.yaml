@@ -1,3 +1,4 @@
+name: mcp
 services:
   service-1:
     build:
