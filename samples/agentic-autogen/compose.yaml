@@ -1,4 +1,3 @@
-name: agentic-autogen
 services:
   autogen:
     build:

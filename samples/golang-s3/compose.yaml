@@ -1,4 +1,3 @@
-name: golang-s3
 services:
   app:
     restart: unless-stopped

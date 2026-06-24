@@ -1,4 +1,3 @@
-name: javalin
 services:
   javalin-app:
     build:

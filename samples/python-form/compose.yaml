@@ -1,4 +1,3 @@
-name: python-form
 services:
   app:
     restart: unless-stopped

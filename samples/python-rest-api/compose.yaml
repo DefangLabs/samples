@@ -1,4 +1,3 @@
-name: python-rest-api
 services:
   app:
     restart: unless-stopped

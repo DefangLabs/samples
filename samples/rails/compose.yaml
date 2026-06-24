@@ -1,4 +1,3 @@
-name: rails
 services:
   rails:
     restart: unless-stopped
