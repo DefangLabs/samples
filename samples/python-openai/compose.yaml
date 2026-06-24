@@ -1,3 +1,4 @@
+name: python-openai
 services:
   app:
     restart: unless-stopped

@@ -1,3 +1,4 @@
+name: bullmq-bullboard-redis
 services:
   board:
     restart: unless-stopped

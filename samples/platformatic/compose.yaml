@@ -1,3 +1,4 @@
+name: platformatic
 services:
   app:
     build:

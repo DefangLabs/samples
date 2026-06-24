@@ -1,3 +1,4 @@
+name: golang-http-form
 services:
   app:
     restart: unless-stopped

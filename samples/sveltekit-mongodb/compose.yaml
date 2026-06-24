@@ -1,3 +1,4 @@
+name: sveltekit-mongodb
 services:
   sveltekit:
     restart: unless-stopped

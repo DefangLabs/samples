@@ -1,3 +1,4 @@
+name: nocodb
 services:
   nocodb:
     image: nocodb/nocodb:0.252.0

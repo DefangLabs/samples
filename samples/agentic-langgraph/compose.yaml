@@ -1,3 +1,4 @@
+name: agentic-langgraph
 services:
   app:
     build:

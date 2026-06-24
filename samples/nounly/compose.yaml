@@ -1,3 +1,4 @@
+name: nounly
 services:
   nounly:
     restart: always

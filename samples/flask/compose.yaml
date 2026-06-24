@@ -1,3 +1,4 @@
+name: flask
 services:
   flask:
     restart: unless-stopped

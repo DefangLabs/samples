@@ -1,3 +1,4 @@
+name: html-css-js
 services:
   app:
     restart: unless-stopped

@@ -1,3 +1,4 @@
+name: nextjs
 services:
   app:
     restart: unless-stopped

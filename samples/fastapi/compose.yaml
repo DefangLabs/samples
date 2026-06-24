@@ -1,3 +1,4 @@
+name: fastapi
 services:
   fastapi:
     restart: always

@@ -1,3 +1,4 @@
+name: elysia
 services:
   elysia:
     restart: unless-stopped

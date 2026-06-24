@@ -1,3 +1,4 @@
+name: hasura
 services:
   hasura:
     restart: unless-stopped

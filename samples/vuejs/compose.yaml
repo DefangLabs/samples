@@ -1,3 +1,4 @@
+name: vuejs
 services:
   app:
     restart: unless-stopped

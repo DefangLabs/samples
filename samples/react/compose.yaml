@@ -1,3 +1,4 @@
+name: react
 services:
   app:
     restart: unless-stopped

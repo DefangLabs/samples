@@ -1,3 +1,4 @@
+name: vllm
 services:
   mistral:
     restart: unless-stopped

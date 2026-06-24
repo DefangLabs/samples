@@ -1,3 +1,4 @@
+name: jupyter-postgres
 services:
   jupyter:
     build:

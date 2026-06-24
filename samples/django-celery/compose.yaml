@@ -1,3 +1,4 @@
+name: django-celery
 services:
   web:
     restart: unless-stopped

@@ -1,3 +1,4 @@
+name: golang-slackbot
 services:
   bot:
     restart: unless-stopped

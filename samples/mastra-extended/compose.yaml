@@ -1,3 +1,4 @@
+name: mastra-extended
 services:
   app:
     build:
@@ -12,14 +13,11 @@ services:
       REDIS_URL: redis://redis:6379
       QUEUE_NAME: support-sync
       MOCK_AGENT: "false"
-    models:
-      chat:
-        endpoint_var: CHAT_URL
-        model_var: CHAT_MODEL
-      embedding:
-        endpoint_var: EMBEDDING_URL
-        model_var: EMBEDDING_MODEL
     depends_on:
+      chat:
+        condition: service_started
+      embedding:
+        condition: service_started
       postgres:
         condition: service_healthy
       redis:
@@ -49,14 +47,11 @@ services:
       REDIS_URL: redis://redis:6379
       QUEUE_NAME: support-sync
       MOCK_AGENT: "false"
-    models:
-      chat:
-        endpoint_var: CHAT_URL
-        model_var: CHAT_MODEL
-      embedding:
-        endpoint_var: EMBEDDING_URL
-        model_var: EMBEDDING_MODEL
     depends_on:
+      chat:
+        condition: service_started
+      embedding:
+        condition: service_started
       postgres:
         condition: service_healthy
       redis:
@@ -104,9 +99,29 @@ services:
         reservations:
           cpus: "0.25"
           memory: 256M
-
-models:
   chat:
-    model: ai/chat-default
+    provider:
+      type: model
+      options:
+        model: chat-default
+    x-defang-llm: true
+    environment:
+      OPENAI_API_KEY: defang
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M
   embedding:
-    model: ai/embedding-default
+    provider:
+      type: model
+      options:
+        model: embedding-default
+    x-defang-llm: true
+    environment:
+      OPENAI_API_KEY: defang
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M

@@ -1,3 +1,4 @@
+name: svelte-mysql
 services:
   db:
     restart: unless-stopped

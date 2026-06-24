@@ -1,3 +1,4 @@
+name: golang-mongodb
 services:
   app:
     restart: unless-stopped

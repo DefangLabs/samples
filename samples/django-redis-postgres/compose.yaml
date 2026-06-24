@@ -1,3 +1,4 @@
+name: django-redis-postgres
 services:
   app:
     build:

@@ -1,3 +1,4 @@
+name: flask-railpack
 services:
   flask:
     restart: unless-stopped
