@@ -1,4 +1,3 @@
-name: agentic-strands
 services:
   app:
     build:

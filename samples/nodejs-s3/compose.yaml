@@ -1,4 +1,3 @@
-name: nodejs-s3
 services:
   app:
     restart: unless-stopped

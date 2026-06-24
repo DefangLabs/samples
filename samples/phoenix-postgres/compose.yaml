@@ -1,4 +1,3 @@
-name: phoenix-postgres
 services:
   phoenix:
     restart: unless-stopped

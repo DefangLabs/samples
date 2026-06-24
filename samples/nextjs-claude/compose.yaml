@@ -1,4 +1,3 @@
-name: nextjs-claude
 services:
   nextjs-claude:
     build:
