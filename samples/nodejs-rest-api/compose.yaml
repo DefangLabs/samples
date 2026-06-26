@@ -1,4 +1,3 @@
-name: nodejs-rest-api
 services:
   app:
     restart: unless-stopped

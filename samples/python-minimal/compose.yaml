@@ -1,4 +1,3 @@
-name: python-minimal
 services:
   app:
     restart: unless-stopped

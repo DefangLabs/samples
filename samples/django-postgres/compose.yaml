@@ -1,4 +1,3 @@
-name: django-postgres
 services:
   db:
     restart: unless-stopped

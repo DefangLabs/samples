@@ -1,4 +1,3 @@
-name: angular-express
 services:
   angular-frontend:
     build:
