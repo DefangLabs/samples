@@ -28,6 +28,6 @@ Title: Sails.js
 
 Short Description: A short hello world application demonstrating how to deploy Sails.js onto Defang.
 
-Tags: Sails.js, Node.js
+Tags: Sails.js, Node.js, sample
 
 Languages: nodejs

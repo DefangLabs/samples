@@ -56,6 +56,6 @@ Title: Go HTTP Server
 
 Short Description: A simple Go application that echoes back the request.
 
-Tags: Go, HTTP
+Tags: Go, HTTP, sample
 
 Languages: golang

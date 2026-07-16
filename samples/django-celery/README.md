@@ -58,6 +58,6 @@ Title: Django Celery
 
 Short Description: A Django application that uses Celery for background tasks, Postgres as the database, and Redis as the message broker.
 
-Tags: Django, Celery, Postgres, Redis
+Tags: Django, Celery, Postgres, Redis, sample
 
 Languages: python, sql

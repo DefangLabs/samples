@@ -31,6 +31,6 @@ Title: Python & Flask & HTTP
 
 Short Description: A Flask application that inspects and returns detailed information about HTTP requests.
 
-Tags: Flask, HTTP, Python
+Tags: Flask, HTTP, Python, sample
 
 Languages: python

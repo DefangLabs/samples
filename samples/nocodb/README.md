@@ -59,6 +59,6 @@ Title: NocoDB
 
 Short Description: An open source alternative to AirTable.
 
-Tags: NocoDB
+Tags: NocoDB, sample
 
 Languages: Dockerfile

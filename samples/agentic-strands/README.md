@@ -48,6 +48,6 @@ Title: Agentic Strands
 
 Short Description: A Strands Agent application, deployed with Defang.
 
-Tags: Python, Flask, Strands, AI, Agent
+Tags: Python, Flask, Strands, AI, Agent, sample
 
 Languages: Python

@@ -53,6 +53,6 @@ Title: Django
 
 Short Description: A simple Django app that uses SQLite as the database.
 
-Tags: Django, SQLite, Python, Railpack
+Tags: Django, SQLite, Python, Railpack, sample
 
 Languages: python

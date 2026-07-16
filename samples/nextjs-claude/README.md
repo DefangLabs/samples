@@ -51,6 +51,6 @@ Title: Next.js & Claude
 
 Short Description: A fun chatbot created with Next.js and Claude. 
 
-Tags: Next.js, TypeScript, React, JavaScript, Chatbot, Claude, AI, Anthropic
+Tags: Next.js, TypeScript, React, JavaScript, Chatbot, Claude, AI, Anthropic, sample
 
 Languages: TypeScript

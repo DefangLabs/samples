@@ -52,6 +52,6 @@ Title: Agentic LangGraph
 
 Short Description: A LangGraph Agent application that can use tools, deployed with Defang. 
 
-Tags: Agent, LangGraph, LangChain, AI, OpenAI, Tavily
+Tags: Agent, LangGraph, LangChain, AI, OpenAI, Tavily, sample
 
 Languages: TypeScript

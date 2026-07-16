@@ -64,6 +64,6 @@ Title: Arduino Flask Wifi Server
 
 Short Description: An Arduino wifi server built with Flask. 
 
-Tags: Arduino, Flask, Python, IoT, Wifi, Serial
+Tags: Arduino, Flask, Python, IoT, Wifi, Serial, sample
 
 Languages: python

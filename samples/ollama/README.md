@@ -42,6 +42,6 @@ Title: Ollama
 
 Short Description: Ollama is a tool that lets you easily run large language models.
 
-Tags: AI, LLM, ML, Llama, Mistral, Next.js, AI SDK, 
+Tags: AI, LLM, ML, Llama, Mistral, Next.js, AI SDK, sample
 
 Languages: Typescript

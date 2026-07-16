@@ -61,6 +61,6 @@ Title: Crew.ai Django Sample
 
 Short Description: A sample application that uses Crew.ai to summarize text in a background task, streamed to the user in real-time.
 
-Tags: Django, Celery, Redis, Postgres, AI, ML
+Tags: Django, Celery, Redis, Postgres, AI, ML, sample
 
 Languages: Python

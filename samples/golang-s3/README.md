@@ -71,6 +71,6 @@ Title: Go & S3
 
 Short Description: A simple Go application that uploads and downloads files from AWS S3.
 
-Tags: Go, S3, AWS
+Tags: Go, S3, AWS, sample
 
 Languages: golang

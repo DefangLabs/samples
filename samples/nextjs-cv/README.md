@@ -52,6 +52,6 @@ Title: Next.js CV
 
 Short Description: A Next.js web app that displays a minimalist CV.
 
-Tags: Next.js, React, TypeScript, JavaScript
+Tags: Next.js, React, TypeScript, JavaScript, sample
 
 Languages: nodejs

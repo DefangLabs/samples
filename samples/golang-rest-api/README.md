@@ -58,6 +58,6 @@ Title: Go & REST API
 
 Short Description: A simple Go application that fetches fiscal data from an API.
 
-Tags: Go, HTTP, Fiscal Data, REST API
+Tags: Go, HTTP, Fiscal Data, REST API, sample
 
 Languages: golang

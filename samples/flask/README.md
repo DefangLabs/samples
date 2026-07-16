@@ -58,6 +58,6 @@ Title: Flask
 
 Short Description: A basic Flask to-do app.
 
-Tags: Flask, Python
+Tags: Flask, Python, sample
 
 Languages: python

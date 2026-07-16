@@ -31,6 +31,6 @@ Title: Python & REST API
 
 Short Description: A Flask application that fetches average interest rates from the Fiscal Data Treasury API.
 
-Tags: Flask, REST API, Python
+Tags: Flask, REST API, Python, sample
 
 Languages: python

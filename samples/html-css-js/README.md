@@ -55,6 +55,6 @@ Title: HTML & CSS & JavaScript
 
 Short Description: A simple HTML, CSS and JavaScript website running on Defang. 
 
-Tags: HTML, CSS, JavaScript, Frontend
+Tags: HTML, CSS, JavaScript, Frontend, sample
 
 Languages: nodejs

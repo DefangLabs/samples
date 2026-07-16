@@ -51,7 +51,7 @@ Title: Vue.js
 
 Short Description: A minimal Vue.js app running on Defang.
 
-Tags: Vue.js, Vite, Node.js, Frontend, JavaScript
+Tags: Vue.js, Vite, Node.js, Frontend, JavaScript, sample
 
 Languages: nodejs
 

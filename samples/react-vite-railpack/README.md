@@ -48,6 +48,6 @@ Title: React
 
 Short Description: A minimal React app running on Defang.
 
-Tags: React, Vite, JavaScript, Frontend, Railpack
+Tags: React, Vite, JavaScript, Frontend, Railpack, sample
 
 Languages: JavaScript

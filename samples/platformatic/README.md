@@ -27,6 +27,6 @@ Title: Platformatic
 
 Short Description: A sample project showcasing a simple Platformatic service with Docker deployment.
 
-Tags: Platformatic, Defang, Docker, Node.js, Service, JavaScript
+Tags: Platformatic, Defang, Docker, Node.js, Service, JavaScript, sample
 
 Languages: nodejs

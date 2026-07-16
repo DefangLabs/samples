@@ -56,6 +56,6 @@ Title: FastAPI
 
 Short Description: A sample project demonstrating how to deploy FastAPI with Defang.
 
-Tags: FastAPI, OpenAPI, Python
+Tags: FastAPI, OpenAPI, Python, sample
 
 Languages: python

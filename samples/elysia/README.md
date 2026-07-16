@@ -56,6 +56,6 @@ Title: Elysia & Bun
 
 Short Description: A basic Elysia app running on Bun with Defang.
 
-Tags: Bun, Elysia, TypeScript, JavaScript
+Tags: Bun, Elysia, TypeScript, JavaScript, sample
 
 Languages: nodejs

@@ -41,6 +41,6 @@ Title: Redis & JavaScript
 
 Short Description: A Redis and JavaScript application, deployed with Defang.
 
-Tags: Redis, JavaScript
+Tags: Redis, JavaScript, sample
 
 Languages: JavaScript
