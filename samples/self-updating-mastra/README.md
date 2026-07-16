@@ -1,59 +1,114 @@
-# Starter Sample #REMOVE_ME_AFTER_EDITING
+# Self-updating Mastra Todo
 
-[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-<YOUR_SAMPLE_DIR#REMOVE_ME_AFTER_EDITING>-template%26template_owner%3DDefangSamples)
+[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-self-updating-mastra-template%26template_owner%3DDefangSamples)
 
-This is a sample that shows the rough structure of an actual Defang sample. This top paragraph should give a bit of context about the project and what it does. The rest of the README should be a guide on how to use the sample. #REMOVE_ME_AFTER_EDITING
+This sample is a multi-user Next.js todo app that turns user feedback into live
+code changes. Better Auth and PostgreSQL provide accounts, private todo lists,
+and feedback storage. The first person to sign up becomes the administrator.
+From the admin page, that person can curate feedback, add instructions, and send
+the request to a Mastra coding agent that edits the app source while the Next.js
+development server hot-reloads it.
+
+The Compose project separates the public production app from the live-editing
+environment:
+
+- `app` is a standalone Next.js production build with no source, agent, or admin UI.
+- `dev` contains the source, Caddy, the Next.js dev server, and the Mastra agent.
+- `db` is shared PostgreSQL for auth, todos, and feedback.
+- `chat` is the managed Gemini model used by the coding agent on GCP.
+
+> [!WARNING]
+> This is a demo of agent-driven development, not a production software-update
+> design. The coding agent can change any file under `todo-app/`. The admin gate,
+> source boundary, and compile check reduce risk, but they are not a substitute
+> for code review, tests, signed artifacts, or a deployment approval process.
 
 ## Prerequisites
 
-1. Download [Defang CLI](https://github.com/DefangLabs/defang)
-2. (Optional) If you are using [Defang BYOC](https://docs.defang.io/docs/concepts/defang-byoc) authenticate with your cloud provider account
-3. (Optional for local development) [Docker CLI](https://docs.docker.com/engine/install/)
+1. Download the [Defang CLI](https://github.com/DefangLabs/defang).
+2. Authenticate with a GCP project that can use Vertex AI.
+3. For local development, install Docker Desktop with
+   [Docker Model Runner](https://docs.docker.com/ai/model-runner/) enabled.
 
 ## Development
 
-To run the application locally, you can use the following command:
+Start the live-editing environment, PostgreSQL, and the local model:
 
 ```bash
-# This might be `docker compose -f compose.dev.yaml up --build` depending on the project. #REMOVE_ME_AFTER_EDITING
-docker compose up --build
+docker compose -f compose.dev.yaml up --build
 ```
+
+Then open `http://localhost:3000` and:
+
+1. Sign up. The first account becomes the administrator.
+2. Add a few todos.
+3. Use the feedback button in the lower-right corner.
+4. Open **Admin**, select feedback, add instructions, and choose
+   **Send to coding agent**.
+5. Watch the run log. Successful edits appear in `todo-app/` and hot-reload in
+   the browser.
+
+The local model is `ai/qwen2.5-coder:7B-Q4_K_M`. It is intentionally small so
+the workflow can run on a laptop; use local development to test the loop, not to
+judge the quality of the generated changes. The first run downloads the model.
 
 ## Configuration
-#REMOVE_ME_AFTER_EDITING - this section should be removed if there are no configuration values needed. The intro text can probably stay, but the list of configuration values should be updated/removed if there are none.
 
-For this sample, you will need to provide the following [configuration](https://docs.defang.io/docs/concepts/configuration): 
+Set both secrets before deploying:
 
-> Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
-
-### `API_KEY` #REMOVE_ME_AFTER_EDITING
-An explanation of what the env var (`API_KEY`) is, etc.
 ```bash
-defang config set API_KEY
+defang config set POSTGRES_PASSWORD --random
+defang config set BETTER_AUTH_SECRET --random
 ```
 
-## Deployment
+- `POSTGRES_PASSWORD` protects the managed PostgreSQL database.
+- `BETTER_AUTH_SECRET` signs and encrypts authentication data. Keep it stable
+  across deployments or existing sessions will be invalidated.
 
-> [!NOTE]
-> Download [Defang CLI](https://github.com/DefangLabs/defang)
+## Deployment to GCP
 
-### Defang Playground
+The deployed model is `gemini-3.5-flash` through Vertex AI. Select a GCP project
+and a region where that model is available; `europe-west2` is the configuration
+used for this sample's London demo.
 
-Deploy your application to the Defang Playground by opening up your terminal and typing:
 ```bash
+export DEFANG_PROVIDER=gcp
+export GCP_PROJECT_ID=your-gcp-project
+export GCP_LOCATION=europe-west2
+
 defang compose up
 ```
 
-### BYOC
+The first deployment creates managed PostgreSQL and can take about 20 minutes.
+Defang reports separate URLs for `app` and `dev`:
 
-If you want to deploy to your own cloud account, you can [use Defang BYOC](https://docs.defang.io/docs/tutorials/deploy-to-your-cloud).
+- Share the `app` URL with normal users.
+- Use the `dev` URL for administration and live agent changes.
+
+The `dev` service deliberately runs as one always-on Compute Engine instance so
+its working tree survives idle periods. The `app` service remains a stateless
+production build. This version previews agent edits live on `dev`; promoting
+that mutated working tree into a new production build is intentionally left for
+the follow-up deployment milestone.
+
+## Safety boundaries
+
+- The Mastra Workspace filesystem is rooted at `todo-app/`; it cannot edit its
+  own agent server.
+- The agent listens only on `127.0.0.1` inside `dev`.
+- Next.js server routes validate the Better Auth session and admin role before
+  dispatching or reading agent runs.
+- Every run ends with `tsc --noEmit`. A failed check triggers one repair attempt
+  and is reported as failed if the app still does not compile.
+- The production `app` image contains neither the coding agent nor application
+  source files.
 
 ---
 
-Title: Sample Title #REMOVE_ME_AFTER_EDITING
+Title: Self-updating Mastra Todo
 
-Short Description: A short sentence or two describing the sample. #REMOVE_ME_AFTER_EDITING
+Short Description: A Next.js todo app where an admin can turn stored user feedback into live code changes with a Mastra coding agent.
 
-Tags: Tags, That, Are, Not, Programming, Languages #REMOVE_ME_AFTER_EDITING
+Tags: Mastra, Next.js, PostgreSQL, Better Auth, AI, Agents
 
-Languages: Programming, Languages, Used #REMOVE_ME_AFTER_EDITING
+Languages: TypeScript, JavaScript, Docker

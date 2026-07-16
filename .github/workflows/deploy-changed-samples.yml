@@ -69,6 +69,7 @@ jobs:
           TEST_ANTHROPIC_API_KEY: ${{ secrets.TEST_ANTHROPIC_API_KEY }}
           TEST_AWS_ACCESS_KEY: ${{ secrets.TEST_AWS_ACCESS_KEY }}
           TEST_AWS_SECRET_KEY: ${{ secrets.TEST_AWS_SECRET_KEY }}
+          TEST_BETTER_AUTH_SECRET: ${{ secrets.TEST_SESSION_SECRET }}
           TEST_BOARD_PASSWORD: ${{ secrets.TEST_BOARD_PASSWORD }}
           TEST_DATABASE_HOST: ${{ secrets.TEST_DATABASE_HOST }}
           TEST_DATABASE_NAME: ${{ secrets.TEST_DATABASE_NAME }}

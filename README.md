@@ -23,13 +23,14 @@ When you add a new sample, make sure to add any config vals to the `deploy-chang
 | [Angular & Node.js](./samples/angular-express) | A full-stack application using Angular for the frontend and Node.js with Socket.IO for the backend, containerized with Docker. | Angular, Node.js, Socket.IO, TypeScript, JavaScript | nodejs |
 | [Arduino Flask Wifi Server](./samples/arduino-wifi) | An Arduino wifi server built with Flask. | Arduino, Flask, Python, IoT, Wifi, Serial | python |
 | [BullMQ & BullBoard & Redis](./samples/bullmq-bullboard-redis) | A sample project with BullMQ, BullBoard, and Redis. | BullMQ, BullBoard, Redis, Express, Node.js, Message Queue, JavaScript | nodejs |
-| [Crew.ai Django Sample](./samples/crew-django-redis-postgres) | A sample application that uses Crew.ai to summarize text in a background task, streamed to the user in real-time. | Django, Celery, Redis, Postgres, AI, ML | Python |
+| [Crew.ai Django Sample](./samples/crewai) | A sample application that uses Crew.ai to summarize text in a background task, streamed to the user in real-time. | Django, Celery, Redis, Postgres, AI, ML | Python |
 | [C# & ASP.NET Core](./samples/csharp-dotnet) | A simple task manager application using C# and ASP.NET Core. | ASP.NET Core, JavaScript, C# | C# |
+| [Defang Provider Handoff Sample](./samples/defang-provider-handoff) | A sample application that demonstrates how to provide a white-labeled static site for customers to configure their cloud accounts for your deployment. | Defang, Cloud, Deployment, Static Site | HTML, CSS, JavaScript |
 | [Django](./samples/django) | A simple Django app that uses SQLite as the database. | Django, SQLite, Python | python |
 | [Django Celery](./samples/django-celery) | A Django application that uses Celery for background tasks, Postgres as the database, and Redis as the message broker. | Django, Celery, Postgres, Redis | python, sql |
-| [Django Channels & Redis & Postgres](./samples/django-channels-redis-postgres) | A basic configuration of Django Channels with Redis and Postgres demonstrating a simple chat application. | Django, Channels, Redis, Postgres, Chat, Application | Python |
 | [Django & PostgreSQL](./samples/django-postgres) | A customer relationship management list project developed using the Python Django framework, offering a starting point to help you quickly build your customer management system. | Django, PostgreSQL, Python, SQL | python |
 | [Django](./samples/django-railpack) | A simple Django app that uses SQLite as the database. | Django, SQLite, Python, Railpack | python |
+| [Django Channels & Redis & Postgres](./samples/django-redis-postgres) | A basic configuration of Django Channels with Redis and Postgres demonstrating a simple chat application. | Django, Channels, Redis, Postgres, Chat, Application | Python |
 | [Elysia & Bun](./samples/elysia) | A basic Elysia app running on Bun with Defang. | Bun, Elysia, TypeScript, JavaScript | nodejs |
 | [FastAPI](./samples/fastapi) | A sample project demonstrating how to deploy FastAPI with Defang. | FastAPI, OpenAPI, Python | python |
 | [FastAPI & PostgreSQL](./samples/fastapi-postgres) | A sample project with FastAPI and PostgreSQL. | FastAPI, PostgreSQL, Python, SQL | python |
@@ -39,9 +40,9 @@ When you add a new sample, make sure to add any config vals to the `deploy-chang
 | [Flask](./samples/flask-railpack) | A basic Flask to-do app. | Flask, Python, Railpack | python |
 | [Go HTTP Server](./samples/golang-http) | A simple Go application that echoes back the request. | Go, HTTP | golang |
 | [Go HTTP Form](./samples/golang-http-form) | A simple Go application that demonstrates form submission using the net/http library. | Go, HTTP | golang |
-| [Go HTTP Form](./samples/golang-http-form-railpack) | A simple Go application that demonstrates form submission using the net/http library. | Go, HTTP, Railpack | golang |
 | [Go & MongoDB](./samples/golang-mongodb) | A simple Go application that manages tasks with MongoDB. | Go, MongoDB, Atlas, Task Manager | golang |
 | [Go & OpenAI](./samples/golang-openai) | A simple Go application that interacts with the OpenAI API. | Go, OpenAI, ChatGPT | golang |
+| [Go HTTP Form](./samples/golang-railpack) | A simple Go application that demonstrates form submission using the net/http library. | Go, HTTP, Railpack | golang |
 | [Go & REST API](./samples/golang-rest-api) | A simple Go application that fetches fiscal data from an API. | Go, HTTP, Fiscal Data, REST API | golang |
 | [Go & S3](./samples/golang-s3) | A simple Go application that uploads and downloads files from AWS S3. | Go, S3, AWS | golang |
 | [Go & Slack API](./samples/golang-slackbot) | A simple Slackbot that posts messages to a Slack channel. | Go, Slack, Bot | golang |
@@ -55,8 +56,8 @@ When you add a new sample, make sure to add any config vals to the `deploy-chang
 | [LangChain & Flask](./samples/langchain) | A sample project demonstrating how to deploy LangChain with Flask on Defang. | LangChain, Flask, AI, Python | python |
 | [Managed LLM](./samples/managed-llm) | An app using Managed LLMs with Defang's OpenAI Access Gateway. | LLM, OpenAI, Python, Bedrock, Vertex | Python |
 | [Managed LLM with Docker Model Provider](./samples/managed-llm-provider) | An app using Managed LLMs with a Docker Model Provider, deployed with Defang. | LLM, Python, Bedrock, Vertex, Docker Model Provider | Python |
+| [Mastra Extended](./samples/mastra-extended) | A small Defang sample where background jobs classify and embed tasks and events, and a Mastra copilot answers questions with tools. | Mastra, Next.js, PostgreSQL, Redis, BullMQ, AI, Agents | TypeScript, JavaScript, Docker |
 | [Mastra & Next.js](./samples/mastra-nextjs) | An AI-powered tool for chatting with GitHub repositories using Mastra and Google Gemini. | AI, GitHub, Mastra, Next.js, PostgreSQL, TypeScript | TypeScript, JavaScript, Docker |
-| [Mastra & Next.js & PostgreSQL & Redis](./samples/mastra-nextjs-postgres-redis) | A multi-service Mastra support and ops copilot with background jobs, PostgreSQL, Redis, and managed LLM access. | Mastra, Next.js, PostgreSQL, Redis, BullMQ, AI, Agents, Support, Operations | TypeScript, JavaScript, Docker |
 | [Model Context Protocol (MCP) Chatbot](./samples/mcp) | An MCP (Model Context Protocol) chatbot assistant built with Next.js, Python, and Anthropic Claude. | MCP, Next.js, Python, Quart, Claude, AI, Anthropic, TypeScript, React, JavaScript | nodejs, python |
 | [Metabase & PostgreSQL](./samples/metabase) | A simple Metabase configuration with a PostgreSQL database. | Metabase, PostgreSQL, Analytics, Database | SQL |
 | [n8n](./samples/n8n) | A n8n app running on Defang. | n8n, PostgreSQL, Docker | Docker, Shell |
@@ -95,6 +96,7 @@ When you add a new sample, make sure to add any config vals to the `deploy-chang
 | [Rocket](./samples/rocket) | A simple Rocket app. | Rocket | Rust |
 | [Sails.js](./samples/sailsjs) | A short hello world application demonstrating how to deploy Sails.js onto Defang. | Sails.js, Node.js | nodejs |
 | [Sails.js & PostgreSQL](./samples/sailsjs-postgres) | A sample project demonstrating how to deploy a project with PostgreSQL and Sails.js. | PostgreSQL, Sails.js, SQL, JavaScript | nodejs |
+| [Self-updating Mastra Todo](./samples/self-updating-mastra) | A Next.js todo app where an admin can turn stored user feedback into live code changes with a Mastra coding agent. | Mastra, Next.js, PostgreSQL, Better Auth, AI, Agents | TypeScript, JavaScript, Docker |
 | [Svelte & Node.js & MySQL](./samples/svelte-mysql) | A full-stack application using Svelte for the frontend, Node.js for the backend, and MySQL for the database. | Svelte, Node.js, MySQL, Full-stack, JavaScript, TypeScript, SQL | nodejs |
 | [SvelteKit](./samples/sveltekit) | A minimal SvelteKit app running on Defang. | SvelteKit, TypeScript, JavaScript, Svelte, Node.js, Frontend, TypeScript, JavaScript | nodejs |
 | [SvelteKit & MongoDB](./samples/sveltekit-mongodb) | A full-stack application using SvelteKit for the frontend and MongoDB for the database. | SvelteKit, MongoDB, Full-stack, Node.js, JavaScript | nodejs |
