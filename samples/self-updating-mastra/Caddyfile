@@ -1,0 +1,22 @@
+# Public entrypoint for the dev service. Proxies to the Next.js dev server
+# and keeps retrying while it restarts (which happens when the coding agent
+# edits config files), so users see a brief delay instead of an error page.
+{
+	admin off
+	auto_https off
+}
+
+:3000 {
+	reverse_proxy localhost:3001 {
+		lb_try_duration 30s
+		lb_try_interval 250ms
+	}
+}
+
+# Listener for the second (host-mode) port. Its real job is to exist: a second
+# port forces this service onto a Compute Engine VM instead of Cloud Run, so
+# live edits survive idle periods (no scale-to-zero).
+:8081 {
+	respond /healthz "ok" 200
+	respond "ok" 200
+}

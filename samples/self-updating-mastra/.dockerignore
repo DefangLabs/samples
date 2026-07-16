@@ -1,0 +1,7 @@
+# Build context for Dockerfile.dev (and, later, for the self-redeploy: the
+# dev container's own filesystem becomes the build context, which must stay
+# under Defang's 100 MiB limit).
+**/node_modules
+**/.next
+.git
+README.md
