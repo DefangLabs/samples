@@ -36,6 +36,6 @@ Title: Sails.js & PostgreSQL
 
 Short Description: A sample project demonstrating how to deploy a project with PostgreSQL and Sails.js.
 
-Tags: PostgreSQL, Sails.js, SQL, JavaScript
+Tags: PostgreSQL, Sails.js, SQL, JavaScript, sample
 
 Languages: nodejs

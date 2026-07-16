@@ -68,6 +68,6 @@ Title: Model Context Protocol (MCP) Chatbot
 
 Short Description: An MCP (Model Context Protocol) chatbot assistant built with Next.js, Python, and Anthropic Claude. 
 
-Tags: MCP, Next.js, Python, Quart, Claude, AI, Anthropic, TypeScript, React, JavaScript
+Tags: MCP, Next.js, Python, Quart, Claude, AI, Anthropic, TypeScript, React, JavaScript, sample
 
 Languages: nodejs, python

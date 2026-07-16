@@ -47,6 +47,6 @@ Title: Next.js & Postgres
 
 Short Description: A sample Next.js application that uses Postgres as a database.
 
-Tags: Next.js, Postgres, Database, Node.js
+Tags: Next.js, Postgres, Database, Node.js, sample
 
 Languages: TypeScript, JavaScript

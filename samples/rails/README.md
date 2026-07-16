@@ -47,6 +47,6 @@ Title: Ruby on Rails
 
 Short Description: A basic member list project developed using Ruby on Rails.
 
-Tags: Ruby, Rails
+Tags: Ruby, Rails, sample
 
 Languages: Ruby

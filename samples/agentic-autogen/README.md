@@ -52,6 +52,6 @@ Title: Agentic Autogen
 
 Short Description: An Autogen agent application using Mistral and FastAPI, deployed with Defang.
 
-Tags: Agent, Autogen, Mistral, FastAPI, Vite, React, Python, JavaScript, AI
+Tags: Agent, Autogen, Mistral, FastAPI, Vite, React, Python, JavaScript, AI, sample
 
 Languages: Python, JavaScript

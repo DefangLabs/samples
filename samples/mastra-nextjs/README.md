@@ -121,6 +121,6 @@ Title: Mastra & Next.js
 
 Short Description: An AI-powered tool for chatting with GitHub repositories using Mastra and Google Gemini.
 
-Tags: AI, GitHub, Mastra, Next.js, PostgreSQL, TypeScript
+Tags: AI, GitHub, Mastra, Next.js, PostgreSQL, TypeScript, sample
 
 Languages: TypeScript, JavaScript, Docker

@@ -39,6 +39,6 @@ Title: Phoenix & PostgreSQL
 
 Short Description: A sample Phoenix application that uses a PostgreSQL database.
 
-Tags: Phoenix, PostgreSQL, Database, Elixir
+Tags: Phoenix, PostgreSQL, Database, Elixir, sample
 
 Languages: Elixir

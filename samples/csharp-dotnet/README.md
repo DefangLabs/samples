@@ -60,6 +60,6 @@ Title: C# & ASP.NET Core
 
 Short Description: A simple task manager application using C# and ASP.NET Core.
 
-Tags: ASP.NET Core, JavaScript, C#
+Tags: ASP.NET Core, JavaScript, C#, sample
 
 Languages: C#

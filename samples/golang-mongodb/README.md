@@ -88,6 +88,6 @@ Title: Go & MongoDB
 
 Short Description: A simple Go application that manages tasks with MongoDB.
 
-Tags: Go, MongoDB, Atlas, Task Manager
+Tags: Go, MongoDB, Atlas, Task Manager, sample
 
 Languages: golang

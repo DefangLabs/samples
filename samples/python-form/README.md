@@ -26,6 +26,6 @@ Title: Python & Form
 
 Short Description: A short Python example for form submission in Flask.
 
-Tags: Python, Flask, Form
+Tags: Python, Flask, Form, sample
 
 Languages: python

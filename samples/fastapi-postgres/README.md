@@ -62,6 +62,6 @@ Title: FastAPI & PostgreSQL
 
 Short Description: A sample project with FastAPI and PostgreSQL.
 
-Tags: FastAPI, PostgreSQL, Python, SQL
+Tags: FastAPI, PostgreSQL, Python, SQL, sample
 
 Languages: python

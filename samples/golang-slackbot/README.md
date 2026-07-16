@@ -87,6 +87,6 @@ Title: Go & Slack API
 
 Short Description: A simple Slackbot that posts messages to a Slack channel.
 
-Tags: Go, Slack, Bot
+Tags: Go, Slack, Bot, sample
 
 Languages: golang

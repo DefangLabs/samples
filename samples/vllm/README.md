@@ -47,6 +47,6 @@ Title: Mistral & vLLM
 
 Short Description: Deploy Mistral with a custom UI using vLLM.
 
-Tags: Mistral, vLLM, AI, Nextjs, GPU, Node.js, TypeScript, JavaScript
+Tags: Mistral, vLLM, AI, Nextjs, GPU, Node.js, TypeScript, JavaScript, sample
 
 Languages: nodejs

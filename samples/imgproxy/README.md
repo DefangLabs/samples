@@ -56,6 +56,6 @@ Title: ImgProxy
 
 Short Description: A fast and secure standalone server for resizing and converting remote images
 
-Tags: Imgproxy, Images, Server
+Tags: Imgproxy, Images, Server, sample
 
 Languages: N/A

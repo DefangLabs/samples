@@ -67,6 +67,6 @@ Title: Node.js & S3
 
 Short Description: A simple Node.js application that uploads and downloads files from AWS S3.
 
-Tags: Node.js, S3, AWS, JavaScript
+Tags: Node.js, S3, AWS, JavaScript, sample
 
 Languages: nodejs

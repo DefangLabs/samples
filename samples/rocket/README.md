@@ -40,6 +40,6 @@ Title: Rocket
 
 Short Description: A simple Rocket app.
 
-Tags: Rocket
+Tags: Rocket, sample
 
 Languages: Rust

@@ -93,6 +93,6 @@ Title: Mastra Extended
 
 Short Description: A small Defang sample where background jobs classify and embed tasks and events, and a Mastra copilot answers questions with tools.
 
-Tags: Mastra, Next.js, PostgreSQL, Redis, BullMQ, AI, Agents
+Tags: Mastra, Next.js, PostgreSQL, Redis, BullMQ, AI, Agents, sample
 
 Languages: TypeScript, JavaScript, Docker

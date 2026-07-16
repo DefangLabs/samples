@@ -42,6 +42,6 @@ Title: Django Channels & Redis & Postgres
 
 Short Description: A basic configuration of Django Channels with Redis and Postgres demonstrating a simple chat application.
 
-Tags: Django, Channels, Redis, Postgres, Chat, Application
+Tags: Django, Channels, Redis, Postgres, Chat, Application, sample
 
 Languages: Python

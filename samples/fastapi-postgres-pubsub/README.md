@@ -66,6 +66,6 @@ Title: FastAPI Postgres Pub/Sub
 
 Short Description: FastAPI sample that stores messages in Postgres and streams them to two app instances via LISTEN/NOTIFY.
 
-Tags: FastAPI, PostgreSQL, WebSockets, PubSub
+Tags: FastAPI, PostgreSQL, WebSockets, PubSub, sample
 
 Languages: Python, SQL

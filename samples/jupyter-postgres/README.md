@@ -64,6 +64,6 @@ Title: Jupyter & Postgres
 
 Short Description: This sample shows you how to spin up a postgres database and a Jupyter notebook server.
 
-Tags: Jupyter, Postgres, Database
+Tags: Jupyter, Postgres, Database, sample
 
 Languages: Python, SQL

@@ -50,6 +50,6 @@ Title: Flask
 
 Short Description: A basic Flask to-do app.
 
-Tags: Flask, Python, Railpack
+Tags: Flask, Python, Railpack, sample
 
 Languages: python

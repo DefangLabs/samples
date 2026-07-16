@@ -61,6 +61,6 @@ Title: Managed LLM with Docker Model Provider
 
 Short Description: An app using Managed LLMs with a Docker Model Provider, deployed with Defang.
 
-Tags: LLM, Python, Bedrock, Vertex, Docker Model Provider
+Tags: LLM, Python, Bedrock, Vertex, Docker Model Provider, sample
 
 Languages: Python

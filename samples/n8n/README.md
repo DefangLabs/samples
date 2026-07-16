@@ -80,6 +80,6 @@ Title: n8n
 
 Short Description: A n8n app running on Defang.
 
-Tags: n8n, PostgreSQL, Docker
+Tags: n8n, PostgreSQL, Docker, sample
 
 Languages: Docker, Shell

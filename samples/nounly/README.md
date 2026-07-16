@@ -67,6 +67,6 @@ Title: Nounly
 
 Short Description: A URL shortener website built with Go, JavaScript, and Redis.
 
-Tags: Go, JavaScript, Redis, URL shortener
+Tags: Go, JavaScript, Redis, URL shortener, sample
 
 Languages: golang, javascript

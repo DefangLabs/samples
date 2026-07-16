@@ -55,6 +55,6 @@ Title: Google ADK
 
 Short Description: A simple sample demonstrating how to deploy agents build with Google ADK to Defang.
 
-Tags: Google ADK, Python, Agents
+Tags: Google ADK, Python, Agents, sample
 
 Languages: python

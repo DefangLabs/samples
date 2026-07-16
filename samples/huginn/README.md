@@ -80,6 +80,6 @@ Title: Huginn
 
 Short Description: A system for building agents that perform automated tasks for you online.
 
-Tags: Huginn, Agents, Automation
+Tags: Huginn, Agents, Automation, sample
 
 Languages: Dockerfile

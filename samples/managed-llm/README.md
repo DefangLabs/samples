@@ -63,6 +63,6 @@ Title: Managed LLM
 
 Short Description: An app using Managed LLMs with Defang's OpenAI Access Gateway.
 
-Tags: LLM, OpenAI, Python, Bedrock, Vertex
+Tags: LLM, OpenAI, Python, Bedrock, Vertex, sample
 
 Languages: Python
