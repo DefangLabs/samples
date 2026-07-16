@@ -1,0 +1,126 @@
+name: self-updating-mastra
+services:
+  # The production to-do app. Runs a Next.js production build with no source
+  # code, no agent, and no admin UI. Exactly one ingress port keeps it on the
+  # serverless path (Cloud Run on GCP) — stateless and scale-friendly.
+  app:
+    restart: unless-stopped
+    build:
+      context: ./todo-app
+      dockerfile: Dockerfile
+    ports:
+      - target: 3000
+        published: 3000
+        mode: ingress
+    environment:
+      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@db:5432/postgres?sslmode=require
+      BETTER_AUTH_SECRET:
+      ADMIN_UI: "false"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - -f
+        - http://localhost:3000/api/health
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 1024M
+
+  # The live "dev environment" service: Caddy in front of a Next.js dev server
+  # plus a separate Hono server running the Mastra coding agent, which edits
+  # the to-do app's source in place (hot reload). This service carries the full
+  # sample source tree. The second (host-mode) port is deliberate: two ports
+  # force this service off Cloud Run onto an always-on Compute Engine VM, so
+  # live edits are not lost to scale-to-zero. replicas: 1 pins it to a single
+  # instance so everyone previews the same edited copy.
+  dev:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - target: 3000
+        published: 3000
+        mode: ingress
+      - target: 8081
+        mode: host
+    environment:
+      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@db:5432/postgres?sslmode=require
+      BETTER_AUTH_SECRET:
+      ADMIN_UI: "true"
+      # CHAT_URL and CHAT_MODEL are injected automatically because this
+      # service depends on the `chat` model service.
+    depends_on:
+      db:
+        condition: service_healthy
+      chat:
+        condition: service_started
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - -f
+        - http://localhost:3000/api/health
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+    deploy:
+      replicas: 1
+      resources:
+        reservations:
+          cpus: "1.0"
+          memory: 4096M
+
+  # Shared database: todos, users/sessions (Better Auth), feedback, and the
+  # Mastra agent's storage. Both app and dev point here.
+  db:
+    image: postgres:16
+    x-defang-postgres: true
+    restart: always
+    environment:
+      POSTGRES_PASSWORD:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+    ports:
+      - mode: host
+        target: 5432
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U postgres -d postgres
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+
+  # Managed LLM for the coding agent, using the cloud provider's native
+  # inference service (Vertex AI on GCP). Defang provisions an OpenAI-compatible
+  # proxy and injects CHAT_URL / CHAT_MODEL into services that depend on it.
+  chat:
+    provider:
+      type: model
+      options:
+        model: gemini-3.5-flash
+    x-defang-llm: true
+    environment:
+      OPENAI_API_KEY: defang
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M
