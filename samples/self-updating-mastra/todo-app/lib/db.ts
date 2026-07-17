@@ -7,16 +7,14 @@ declare global {
   var todoSchemaPromise: Promise<void> | undefined;
 }
 
+// sslmode in DATABASE_URL is the single source of TLS truth: `disable` local,
+// `no-verify` for managed DBs (Cloud SQL internal CA); pg derives ssl from it.
+// `sslmode=require` is avoided because pg 8.22+ treats it as verify-full and
+// rejects Cloud SQL's cert (UNABLE_TO_VERIFY_LEAF_SIGNATURE).
 const connectionString = process.env.DATABASE_URL;
 
 export const pool =
-  global.todoDatabasePool ??
-  new Pool({
-    connectionString,
-    ssl: connectionString?.includes("sslmode=require")
-      ? { rejectUnauthorized: false }
-      : undefined,
-  });
+  global.todoDatabasePool ?? new Pool({ connectionString });
 
 global.todoDatabasePool = pool;
 

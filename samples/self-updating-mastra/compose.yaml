@@ -13,7 +13,7 @@ services:
         published: 3000
         mode: ingress
     environment:
-      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@db:5432/postgres?sslmode=require
+      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@db:5432/postgres?sslmode=no-verify
       BETTER_AUTH_SECRET:
       ADMIN_UI: "false"
     depends_on:
@@ -54,7 +54,7 @@ services:
       - target: 8081
         mode: host
     environment:
-      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@db:5432/postgres?sslmode=require
+      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@db:5432/postgres?sslmode=no-verify
       BETTER_AUTH_SECRET:
       ADMIN_UI: "true"
       # CHAT_URL and CHAT_MODEL are injected automatically because this
