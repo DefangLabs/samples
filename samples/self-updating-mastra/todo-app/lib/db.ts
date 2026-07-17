@@ -29,7 +29,17 @@ export async function ensureSchema(): Promise<void> {
       "utf8",
     )
       .then(async (schema) => {
-        await pool.query(schema);
+        // Serialize schema init across services (app + dev share the DB):
+        // concurrent CREATE TABLE IF NOT EXISTS on a fresh database races on
+        // the implicit row-type insert (duplicate pg_type_typname_nsp_index).
+        const client = await pool.connect();
+        try {
+          await client.query("SELECT pg_advisory_lock(823001)");
+          await client.query(schema);
+          await client.query("SELECT pg_advisory_unlock(823001)");
+        } finally {
+          client.release();
+        }
       })
       .catch((error) => {
         global.todoSchemaPromise = undefined;

@@ -8,6 +8,15 @@ const secret = process.env.BETTER_AUTH_SECRET ?? "build-only-secret-not-valid-at
 export const auth = betterAuth({
   database: pool,
   secret,
+  advanced: {
+    // TODO(security): demo mode. The app runs behind Defang's TLS-terminating
+    // load balancer on per-deployment domains, so Better Auth's origin/CSRF
+    // check rejects logins ("Invalid origin"). Trust proxy headers and skip
+    // the origin check for now; replace with explicit trustedOrigins in the
+    // pre-release security pass.
+    trustedProxyHeaders: true,
+    disableOriginCheck: true,
+  },
   emailAndPassword: {
     enabled: true,
   },
