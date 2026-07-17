@@ -97,9 +97,41 @@ Defang reports separate URLs for `app` and `dev`:
 
 The `dev` service deliberately runs as one always-on Compute Engine instance so
 its working tree survives idle periods. The `app` service remains a stateless
-production build. This version previews agent edits live on `dev`; promoting
-that mutated working tree into a new production build is intentionally left for
-the follow-up deployment milestone.
+production build.
+
+## Publishing (self-redeploy)
+
+The admin console's **Publish** panel promotes the live, agent-edited workspace
+into a new production build — by having the dev container run
+`defang compose up` on its own Compose project, overwriting **both** the `dev`
+and `app` services. There is deliberately no GitOps pipeline: the deployed app
+mutates its own deployment.
+
+- **Authorization is per publish.** Clicking Publish starts an interactive
+  `defang login` inside the container; the console surfaces the login URL in a
+  new tab and the admin must complete it for every deployment. No Defang token
+  is stored anywhere. After login, the panel shows who you are signed in as —
+  make sure it is the tenant that owns this stack — before the final
+  "Deploy and overwrite" button.
+- **Cloud credentials are ambient, not baked.** The `dev` service's own
+  service account is granted the deploy roles in `compose.yaml` via
+  `x-defang-roles`, and the CLI picks it up from the metadata server.
+- **History survives.** The workspace's git history (one commit per agent run,
+  one per publish, each referencing the database rows it addressed) rides
+  along in the build context, so the next dev container continues the same
+  lineage.
+- `PUBLISH_STACK` in `compose.yaml` must match the stack the project was
+  deployed with; publishing is disabled in local development.
+
+## Run history and revert
+
+Every successful agent run is committed to the workspace's local git repo with
+trailers (`Run-Id`, `Feedback-Id`, `Model`) linking it to the run and feedback
+rows in Postgres; failed runs are rolled back to the last good commit. The
+admin console's **History** panel lists the lineage, links agent commits to
+their run logs, and offers an admin-only revert (a new commit authored as the
+admin). Runs can be graded on demand ("Grade this run") with a second model
+call.
 
 ## Safety boundaries
 

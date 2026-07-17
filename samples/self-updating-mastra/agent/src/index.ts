@@ -2,6 +2,7 @@ import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { registerAdminRoutes } from "./admin.js";
 import { ensureAgentSchema } from "./db.js";
+import { ensureDeploymentSchema, reconcileDeployments } from "./deployments.js";
 
 const PORT = Number(process.env.AGENT_PORT ?? 4111);
 
@@ -20,15 +21,19 @@ async function ensureSchemaWithRetry(attempts = 10): Promise<void> {
   for (let i = 0; i < attempts; i++) {
     try {
       await ensureAgentSchema();
+      await ensureDeploymentSchema();
       return;
     } catch (err) {
-      console.error(`ensureAgentSchema attempt ${i + 1} failed`, err);
+      console.error(`ensure schema attempt ${i + 1} failed`, err);
       await new Promise((r) => setTimeout(r, 3000));
     }
   }
 }
 
 await ensureSchemaWithRetry();
+// Close out publish rows the previous container generation left open — if our
+// HEAD is a row's publish commit, that deployment produced this container.
+await reconcileDeployments().catch((err) => console.error("reconcileDeployments failed", err));
 
 serve({ fetch: app.fetch, port: PORT, hostname: "127.0.0.1" }, (info) => {
   console.log(`Coding agent + admin console listening on 127.0.0.1:${info.port}`);

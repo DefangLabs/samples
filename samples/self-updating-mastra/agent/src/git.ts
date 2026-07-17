@@ -76,6 +76,21 @@ export async function commitRun(args: {
 }
 
 /**
+ * Publish marker commit, authored by the admin who triggered the deployment.
+ * Sweeps any stray uncommitted files first (belt and braces — runs commit or
+ * revert their own changes), then records the publish even when the tree is
+ * clean, so the uploaded build context's HEAD is the publish itself and the
+ * next container generation can recognize the deployment it came from.
+ */
+export async function commitPublish(deploymentId: string, adminEmail: string): Promise<string> {
+  const identity = ["-c", `user.name=${adminEmail}`, "-c", `user.email=${adminEmail}`];
+  await git(["add", "-A"], identity);
+  const message = `publish: deployment ${deploymentId.slice(0, 8)} by ${adminEmail}\n\nDeployment-Id: ${deploymentId}`;
+  await git(["commit", "-q", "--allow-empty", "-m", message], identity);
+  return (await git(["rev-parse", "HEAD"])).trim();
+}
+
+/**
  * Discard the working tree back to the last good commit after a failed run.
  * Deliberately scoped to todo-app/ — see the safety rule above.
  */

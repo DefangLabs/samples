@@ -5,9 +5,18 @@ import type { Hono } from "hono";
 import { setCookie } from "hono/cookie";
 import { adminTokenConfigured, getAdminIdentity } from "./auth.js";
 import { pool } from "./db.js";
+import { listDeployments } from "./deployments.js";
 import { executeRun, getActiveRun } from "./execute.js";
-import { history, isRevertable, REPO_DIR, revertCommit } from "./git.js";
+import { headSha, history, isRevertable, REPO_DIR, revertCommit } from "./git.js";
 import { getModel } from "./model.js";
+import {
+  cancelPublish,
+  confirmDeploy,
+  getPublishState,
+  isPublishActive,
+  publishEnabled,
+  startPublish,
+} from "./publish.js";
 import { createRun, getRunView, listRecentRuns, setVerdictById } from "./runs.js";
 
 const exec = promisify(execFile);
@@ -104,6 +113,23 @@ const PAGE_STYLE = `
   button.mini { border: 1px solid #e2e8f0; border-radius: 8px; background: #fff; color: #475569; font-size: 11px; font-weight: 600; padding: 4px 8px; cursor: pointer; flex-shrink: 0; }
   button.mini:hover { background: #f1f5f9; }
   button.mini:disabled { opacity: .5; cursor: default; }
+  .pub { border: 1px solid #e2e8f0; background: #fff; border-radius: 16px; padding: 18px; margin-top: 24px; }
+  .pub h2 { margin: 6px 0 0; font-size: 17px; }
+  .pub .meta { font-size: 12px; color: #64748b; margin-top: 6px; }
+  .pub .warn { margin-top: 12px; background: #fff7ed; border: 1px solid #fed7aa; color: #9a3412; border-radius: 10px; padding: 10px 12px; font-size: 13px; line-height: 1.5; }
+  .pub .err { margin-top: 12px; background: #ffe4e6; color: #be123c; border-radius: 10px; padding: 10px 12px; font-size: 13px; }
+  .pub .ok { margin-top: 12px; background: #d1fae5; color: #047857; border-radius: 10px; padding: 10px 12px; font-size: 13px; }
+  .pub button.go { margin-top: 12px; width: 100%; border: 0; border-radius: 12px; background: #0f172a; color: #fff; font-weight: 700; padding: 12px; cursor: pointer; }
+  .pub button.danger { background: #dc2626; }
+  .pub button.go:disabled { opacity: .6; cursor: default; }
+  .pub a.login { display: block; margin-top: 12px; text-align: center; border-radius: 12px; background: #7c3aed; color: #fff; font-weight: 700; padding: 12px; text-decoration: none; }
+  .pub .who { margin-top: 12px; font: 12px ui-monospace, monospace; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 12px; white-space: pre-wrap; }
+  .pub pre { margin: 12px 0 0; max-height: 12rem; overflow: auto; white-space: pre-wrap; background: #0f172a; color: #e2e8f0; padding: 12px; border-radius: 10px; font: 11px/1.5 ui-monospace, monospace; }
+  .pub .deprow { display: flex; gap: 8px; align-items: center; font-size: 12px; color: #64748b; padding: 6px 0; border-top: 1px solid #f1f5f9; }
+  .pub .deprow:first-of-type { border-top: 0; }
+  .pill.cd_launched, .pill.deploying, .pill.ready, .pill.awaiting_login { background: #ede9fe; color: #6d28d9; }
+  .pill.live { background: #d1fae5; color: #047857; }
+  .pill.cancelled, .pill.unknown { background: #f1f5f9; color: #64748b; }
   .gate { max-width: 460px; margin: 8vh auto; padding: 0 24px; }
   .gate input { width: 100%; margin-top: 10px; padding: 12px; border-radius: 10px; border: 1px solid #cbd5e1; font: inherit; }
   .gate button { margin-top: 12px; width: 100%; border: 0; border-radius: 10px; background: #0f172a; color: #fff; font-weight: 700; padding: 12px; cursor: pointer; }
@@ -156,6 +182,11 @@ function renderShell(who: string): string {
           <div class="meta" id="run-meta" style="padding:8px 18px 0"></div>
           <div style="padding:8px 18px 0"><button class="mini" id="grade" type="button" style="display:none">Grade this run</button></div>
           <pre id="run-log">Reading agent output…</pre>
+        </div>
+        <div class="pub" id="publish" style="display:none">
+          <p class="eyebrow">Production</p>
+          <h2>Publish</h2>
+          <div id="pub-body"></div>
         </div>
         <h3>Recent runs</h3>
         <div class="card" id="runs"><p class="empty">Loading…</p></div>
@@ -336,9 +367,92 @@ const CONSOLE_SCRIPT = `
     poll(data.runId);
   }
 
+  const PUB_WARNING = "This runs defang compose up from the live dev workspace and overwrites BOTH services: app (production — what all users see) and dev (this environment, including this console; the VM is replaced, so this page will drop and come back on the new build, ~10–15 min). The database is managed and keeps all data.";
+  let pubTimer = null;
+
+  function pubCancelBtn() {
+    const b = document.createElement("button"); b.className = "mini"; b.type = "button"; b.style.marginTop = "10px"; b.textContent = "Cancel publish";
+    b.addEventListener("click", async () => { await fetch("/admin/publish/cancel", { method: "POST" }); pollPublish(); });
+    return b;
+  }
+
+  function renderPublish(data) {
+    const card = $("publish");
+    if (!data.enabled) { card.style.display = "none"; return; }
+    card.style.display = "";
+    const s = data.state || {}; const phase = s.phase || "idle";
+    const body = $("pub-body"); body.innerHTML = "";
+    const meta = document.createElement("p"); meta.className = "meta";
+    meta.textContent = "HEAD " + (data.head || "?") + " · " + data.commitsSincePublish + " change(s) since last publish";
+    body.append(meta);
+    if (phase === "awaiting-login" || phase === "ready" || phase === "deploying") {
+      const warn = document.createElement("div"); warn.className = "warn"; warn.textContent = PUB_WARNING; body.append(warn);
+    }
+    if (phase === "awaiting-login") {
+      if (s.loginUrl) {
+        const a = document.createElement("a"); a.className = "login"; a.href = s.loginUrl; a.target = "_blank"; a.rel = "noopener";
+        a.textContent = "1 · Sign in to Defang to authorize this publish";
+        body.append(a);
+        const hint = document.createElement("p"); hint.className = "meta"; hint.textContent = "Complete the login in the new tab. This panel updates by itself — the deploy button appears once you're signed in."; body.append(hint);
+      } else {
+        const hint = document.createElement("p"); hint.className = "meta"; hint.textContent = "Starting defang login…"; body.append(hint);
+      }
+      body.append(pubCancelBtn());
+    } else if (phase === "ready") {
+      const who = document.createElement("div"); who.className = "who"; who.textContent = "Signed in as:\n" + (s.whoami || "?"); body.append(who);
+      const go = document.createElement("button"); go.className = "go danger"; go.type = "button"; go.textContent = "2 · Deploy and overwrite dev + app";
+      go.addEventListener("click", async () => { go.disabled = true; await fetch("/admin/publish/deploy", { method: "POST" }); pollPublish(); });
+      body.append(go, pubCancelBtn());
+    } else if (phase === "deploying" || phase === "cd-launched") {
+      const note = document.createElement("div"); note.className = phase === "cd-launched" ? "ok" : "warn";
+      note.textContent = phase === "cd-launched"
+        ? "Deployment launched in the cloud. This environment restarts on the new build — the console will drop and come back."
+        : "Publishing… uploading the workspace and starting the deployment.";
+      body.append(note);
+      const pre = document.createElement("pre"); pre.textContent = (s.logTail || []).slice(-30).join("\n") || "…"; body.append(pre);
+    } else {
+      if (phase === "failed" && s.error) { const err = document.createElement("div"); err.className = "err"; err.textContent = s.error; body.append(err); }
+      if (phase === "cancelled") { const note = document.createElement("p"); note.className = "meta"; note.textContent = "Publish cancelled."; body.append(note); }
+      const go = document.createElement("button"); go.className = "go"; go.type = "button"; go.textContent = "Publish to production…";
+      go.disabled = !!data.runActive;
+      if (data.runActive) go.title = "A run is in progress";
+      go.addEventListener("click", async () => {
+        go.disabled = true;
+        const res = await fetch("/admin/publish/start", { method: "POST" });
+        const d = await res.json().catch(() => null);
+        if (!res.ok) { alert((d && d.error) || "Could not start the publish."); go.disabled = false; return; }
+        pollPublish();
+      });
+      body.append(go);
+    }
+    if (data.deployments && data.deployments.length) {
+      const wrap = document.createElement("div"); wrap.style.marginTop = "12px";
+      for (const d of data.deployments) {
+        const row = document.createElement("div"); row.className = "deprow";
+        const pill = document.createElement("span"); pill.className = "pill " + d.status; pill.textContent = d.status.replace(/_/g, " ");
+        const id = document.createElement("span"); id.className = "mono"; id.textContent = d.id.slice(0, 8);
+        const by = document.createElement("span"); by.textContent = d.triggeredBy || ""; by.style.marginLeft = "auto";
+        row.append(pill, id, by); wrap.append(row);
+      }
+      body.append(wrap);
+    }
+    const activePhase = phase === "awaiting-login" || phase === "ready" || phase === "deploying";
+    if (activePhase && !pubTimer) pubTimer = setTimeout(pollPublish, 2000);
+  }
+
+  async function pollPublish() {
+    pubTimer = null;
+    try {
+      const res = await fetch("/admin/publish", { cache: "no-store" });
+      if (res.ok) { renderPublish(await res.json()); return; }
+    } catch {}
+    pubTimer = setTimeout(pollPublish, 4000);
+  }
+
   $("send").addEventListener("click", dispatch);
   $("grade").addEventListener("click", grade);
   loadData();
+  pollPublish();
   const activeRun = localStorage.getItem(KEY);
   if (activeRun) poll(activeRun);
 `;
@@ -396,6 +510,9 @@ export function registerAdminRoutes(app: Hono): void {
         { error: `A run is already in progress (${active.id.slice(0, 8)}). Wait for it to finish.` },
         409,
       );
+    }
+    if (isPublishActive()) {
+      return c.json({ error: "A publish is in progress; the workspace is locked until it finishes." }, 409);
     }
 
     const payload = (await c.req.json().catch(() => null)) as {
@@ -502,6 +619,54 @@ export function registerAdminRoutes(app: Hono): void {
       typecheckOutput = (e.stdout || e.stderr || e.message || "unknown error").slice(0, 4000);
     }
     return c.json({ revertSha, typecheckOk, typecheckOutput });
+  });
+
+  // ---- Publish (self-redeploy) -------------------------------------------
+  // The dev container redeploys its own Compose project. Admin-gated, and the
+  // Fabric side is authorized by an interactive login the admin completes in
+  // a new tab for EVERY publish — no stored deploy token.
+
+  app.get("/admin/publish", async (c) => {
+    if (!(await getAdminIdentity(c))) return c.json({ error: "Not found." }, 404);
+    const entries = await history(50);
+    const sincePublish = entries.findIndex((e) => e.deploymentId !== null);
+    const head = await headSha();
+    return c.json({
+      enabled: publishEnabled(),
+      state: getPublishState(),
+      runActive: getActiveRun() !== null,
+      head: head ? head.slice(0, 8) : null,
+      commitsSincePublish: sincePublish === -1 ? entries.length : sincePublish,
+      deployments: await listDeployments(5),
+    });
+  });
+
+  app.post("/admin/publish/start", async (c) => {
+    const identity = await getAdminIdentity(c);
+    if (!identity) return c.json({ error: "Not found." }, 404);
+    if (!publishEnabled()) return c.json({ error: "Publishing is not enabled in this environment." }, 400);
+    const active = getActiveRun();
+    if (active) {
+      return c.json({ error: `A run is in progress (${active.id.slice(0, 8)}); wait for it to finish.` }, 409);
+    }
+    try {
+      return c.json({ state: await startPublish(identity.email) });
+    } catch (err) {
+      return c.json({ error: err instanceof Error ? err.message : String(err) }, 400);
+    }
+  });
+
+  app.post("/admin/publish/deploy", async (c) => {
+    if (!(await getAdminIdentity(c))) return c.json({ error: "Not found." }, 404);
+    if (getPublishState().phase !== "ready") {
+      return c.json({ error: "Publish is not ready to deploy (complete the Defang login first)." }, 409);
+    }
+    return c.json({ state: await confirmDeploy() });
+  });
+
+  app.post("/admin/publish/cancel", async (c) => {
+    if (!(await getAdminIdentity(c))) return c.json({ error: "Not found." }, 404);
+    return c.json({ state: await cancelPublish() });
   });
 
   // On-demand verdict: grade a finished run with a second model call. Kept

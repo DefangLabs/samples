@@ -53,6 +53,24 @@ services:
         mode: ingress
       - target: 8081
         mode: host
+    # Deploy roles for the self-redeploy ("publish"): Defang creates a
+    # dedicated service account for this service and attaches it to the VM
+    # with the cloud-platform scope; these project-level roles let the
+    # bundled Defang CLI drive a full `defang compose up` via the metadata
+    # server — no key files. This set is what the CLI's GCP driver actually
+    # exercises (API enablement, CD bucket, service accounts + actAs on
+    # defang-cd, Cloud Build, IAM drift repair, log tailing). Note it is
+    # owner-equivalent in effect; that is inherent to what a deploy does.
+    # Any code running in this container can use these roles — which is why
+    # the public `app` service carries none of them.
+    x-defang-roles:
+      - roles/serviceusage.serviceUsageAdmin
+      - roles/storage.admin
+      - roles/iam.serviceAccountAdmin
+      - roles/iam.serviceAccountUser
+      - roles/cloudbuild.builds.editor
+      - roles/resourcemanager.projectIamAdmin
+      - roles/logging.viewer
     environment:
       DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@db:5432/postgres?sslmode=no-verify
       BETTER_AUTH_SECRET:
@@ -61,6 +79,12 @@ services:
       # outside the app the agent edits). Lets an admin reach the console even
       # if the main app is down and their login session has expired.
       ADMIN_TOKEN:
+      # Enable the admin-triggered self-redeploy. Fabric auth is a per-publish
+      # interactive `defang login` (no stored token); GCP project/region are
+      # discovered from the metadata server. PUBLISH_STACK must match the
+      # stack this project was deployed with.
+      PUBLISH_ENABLED: "true"
+      PUBLISH_STACK: beta
       # CHAT_URL and CHAT_MODEL are injected automatically because this
       # service depends on the `chat` model service.
     depends_on:
