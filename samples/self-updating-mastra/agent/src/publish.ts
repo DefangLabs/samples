@@ -259,14 +259,14 @@ export async function confirmDeploy(): Promise<PublishState> {
 
   proc.on("error", (err) => {
     deployProc = null;
-    if (state.deploymentId === deploymentId) {
+    if (state.deploymentId === deploymentId && state.phase === "deploying") {
       fail(`Could not start defang compose up: ${err.message}`);
     }
   });
 
   proc.on("exit", (code) => {
     deployProc = null;
-    if (state.deploymentId !== deploymentId) return;
+    if (state.deploymentId !== deploymentId || state.phase !== "deploying") return;
     if (code === 0) {
       state.phase = "cd-launched";
       void setDeploymentStatus(deploymentId, "cd_launched");
@@ -283,12 +283,15 @@ export async function confirmDeploy(): Promise<PublishState> {
 export async function cancelPublish(): Promise<PublishState> {
   if (!isPublishActive()) return state;
   if (loginTimer) clearTimeout(loginTimer);
+  // Flip the phase before killing anything: the child exit handlers guard on
+  // it, so this prevents a dying login/deploy process from racing the cancel
+  // and marking the deployment failed.
+  state = { ...state, phase: "cancelled", error: null };
   loginProc?.kill("SIGTERM");
   deployProc?.kill("SIGTERM");
   loginProc = null;
   deployProc = null;
   if (state.deploymentId) await setDeploymentStatus(state.deploymentId, "cancelled");
   await cleanupStateDir();
-  state = { ...state, phase: "cancelled", error: null };
   return state;
 }
