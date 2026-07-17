@@ -3,13 +3,14 @@ import { setCookie } from "hono/cookie";
 import { adminTokenConfigured, getAdminIdentity } from "./auth.js";
 import { pool } from "./db.js";
 import { executeRun } from "./execute.js";
-import { createRun, getRun } from "./runs.js";
+import { createRun, getRunView, listRecentRuns } from "./runs.js";
 
 interface FeedbackRow {
   id: string;
   body: string;
   status: string;
-  email: string;
+  email: string | null;
+  source: string;
   created_at: Date;
 }
 
@@ -48,13 +49,14 @@ const PAGE_STYLE = `
   .bar { border-bottom: 1px solid #e2e8f0; background: #fff; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
   .bar .title { font-weight: 700; }
   .bar .who { color: #64748b; font-size: 14px; }
-  .wrap { max-width: 1040px; margin: 0 auto; padding: 32px 24px; }
-  .grid { display: grid; gap: 28px; grid-template-columns: minmax(0,1fr) minmax(300px,0.8fr); }
-  @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 32px 24px; }
+  .grid { display: grid; gap: 28px; grid-template-columns: minmax(0,1fr) minmax(320px,0.85fr); }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
   .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: #7c3aed; }
   h1 { margin: 8px 0 0; font-size: 28px; }
+  h3 { margin: 28px 0 12px; font-size: 15px; text-transform: uppercase; letter-spacing: .12em; color: #64748b; }
   .card { border: 1px solid #e2e8f0; background: #fff; border-radius: 16px; overflow: hidden; }
-  .fb { padding: 18px; border-top: 1px solid #f1f5f9; display: flex; gap: 12px; }
+  .fb { padding: 16px 18px; border-top: 1px solid #f1f5f9; display: flex; gap: 12px; }
   .fb:first-child { border-top: 0; }
   .fb .meta { font-size: 12px; color: #94a3b8; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
   .fb .meta .email { color: #475569; font-weight: 600; }
@@ -62,21 +64,27 @@ const PAGE_STYLE = `
   .pill { border-radius: 999px; padding: 2px 8px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
   .pill.new { background: #fef3c7; color: #b45309; }
   .pill.sent { background: #d1fae5; color: #047857; }
-  .empty { padding: 56px 24px; text-align: center; color: #94a3b8; }
+  .pill.error { background: #ffe4e6; color: #be123c; }
+  .pill.running { background: #ede9fe; color: #6d28d9; }
+  .pill.done { background: #d1fae5; color: #047857; }
+  .pill.failed { background: #ffe4e6; color: #be123c; }
+  .empty { padding: 40px 24px; text-align: center; color: #94a3b8; }
   .panel { background: #0f172a; color: #fff; border-radius: 16px; padding: 24px; }
   .panel h2 { margin: 6px 0 0; }
   .panel p { color: #cbd5e1; font-size: 14px; line-height: 1.5; }
-  textarea { width: 100%; margin-top: 16px; resize: vertical; min-height: 150px; border-radius: 12px; border: 1px solid #334155; background: #1e293b; color: #fff; padding: 14px; font: inherit; font-size: 14px; }
+  textarea { width: 100%; margin-top: 16px; resize: vertical; min-height: 130px; border-radius: 12px; border: 1px solid #334155; background: #1e293b; color: #fff; padding: 14px; font: inherit; font-size: 14px; }
   button.send { margin-top: 14px; width: 100%; border: 0; border-radius: 12px; background: #8b5cf6; color: #fff; font-weight: 700; padding: 12px; cursor: pointer; }
   button.send:disabled { opacity: .6; cursor: default; }
   .err { margin-top: 12px; background: rgba(159,18,57,.4); color: #fecdd3; border-radius: 8px; padding: 8px 12px; font-size: 14px; }
   .run { margin-top: 24px; }
-  .run .head { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid #f1f5f9; }
-  .run pre { margin: 0; max-height: 28rem; min-height: 10rem; overflow: auto; white-space: pre-wrap; background: #0f172a; color: #e2e8f0; padding: 20px; font: 12px/1.5 ui-monospace, monospace; }
-  .status { border-radius: 999px; padding: 4px 12px; font-size: 12px; font-weight: 700; text-transform: uppercase; }
-  .status.running { background: #ede9fe; color: #6d28d9; }
-  .status.done { background: #d1fae5; color: #047857; }
-  .status.failed { background: #ffe4e6; color: #be123c; }
+  .run .head { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 1px solid #f1f5f9; gap: 8px; flex-wrap: wrap; }
+  .run .meta { font-size: 12px; color: #64748b; }
+  .run pre { margin: 0; max-height: 26rem; min-height: 8rem; overflow: auto; white-space: pre-wrap; background: #0f172a; color: #e2e8f0; padding: 18px; font: 12px/1.5 ui-monospace, monospace; }
+  .runrow { padding: 12px 16px; border-top: 1px solid #f1f5f9; display: flex; align-items: center; gap: 10px; cursor: pointer; }
+  .runrow:first-child { border-top: 0; }
+  .runrow:hover { background: #f8fafc; }
+  .runrow .mono { font: 12px ui-monospace, monospace; color: #475569; }
+  .runrow .model { font-size: 12px; color: #64748b; margin-left: auto; }
   .gate { max-width: 460px; margin: 8vh auto; padding: 0 24px; }
   .gate input { width: 100%; margin-top: 10px; padding: 12px; border-radius: 10px; border: 1px solid #cbd5e1; font: inherit; }
   .gate button { margin-top: 12px; width: 100%; border: 0; border-radius: 10px; background: #0f172a; color: #fff; font-weight: 700; padding: 12px; cursor: pointer; }
@@ -102,44 +110,35 @@ function renderGate(message?: string): string {
     </div></body></html>`;
 }
 
-function renderConsole(feedback: FeedbackRow[], who: string): string {
-  const items = feedback.length
-    ? feedback
-        .map((item) => {
-          const selectable = item.status === "new";
-          return `<div class="fb">
-            <input type="checkbox" class="fb-check" value="${escapeHtml(item.id)}" ${selectable ? "" : "disabled"} aria-label="Select feedback from ${escapeHtml(item.email)}" style="margin-top:4px" />
-            <div style="min-width:0;flex:1">
-              <div class="meta"><span class="email">${escapeHtml(item.email)}</span><span>•</span><time>${escapeHtml(item.created_at.toISOString())}</time><span class="pill ${item.status === "new" ? "new" : "sent"}">${escapeHtml(item.status)}</span></div>
-              <p class="body">${escapeHtml(item.body)}</p>
-            </div>
-          </div>`;
-        })
-        .join("")
-    : `<p class="empty">No feedback yet. Users can send some from the app.</p>`;
-
+function renderShell(who: string): string {
   return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Admin console</title><style>${PAGE_STYLE}</style></head>
   <body>
     <div class="bar"><span class="title">Admin console <span style="color:#64748b;font-weight:400">— coding agent</span></span><span class="who">${escapeHtml(who)}</span></div>
     <div class="wrap"><div class="grid">
       <section>
-        <p class="eyebrow">User feedback</p>
+        <p class="eyebrow">Backlog</p>
         <h1>Choose what to improve</h1>
-        <div class="card" style="margin-top:16px">${items}</div>
+        <div class="card" id="feedback" style="margin-top:16px"><p class="empty">Loading…</p></div>
       </section>
       <aside>
         <div class="panel">
           <p class="eyebrow" style="color:#c4b5fd">Coding agent</p>
           <h2>Shape the request</h2>
-          <p>Add context or a specific direction before the selected feedback reaches Mastra.</p>
+          <p>Add context or a specific direction before the selected items reach Mastra.</p>
           <textarea id="instructions" maxlength="5000" placeholder="Instructions for the coding agent"></textarea>
           <button class="send" id="send" type="button">Send to coding agent</button>
           <div id="error"></div>
         </div>
         <div class="card run" id="run" style="display:none">
-          <div class="head"><div><p class="eyebrow" style="color:#94a3b8">Run</p><p id="run-id" style="font:12px ui-monospace,monospace;color:#475569;margin:4px 0 0"></p></div><span class="status running" id="run-status">connecting</span></div>
+          <div class="head">
+            <div><p class="eyebrow" style="color:#94a3b8">Run</p><p class="mono" id="run-id" style="font:12px ui-monospace,monospace;color:#475569;margin:4px 0 0"></p></div>
+            <span class="pill running" id="run-status">connecting</span>
+          </div>
+          <div class="meta" id="run-meta" style="padding:8px 18px 0"></div>
           <pre id="run-log">Reading agent output…</pre>
         </div>
+        <h3>Recent runs</h3>
+        <div class="card" id="runs"><p class="empty">Loading…</p></div>
       </aside>
     </div></div>
     <script>${CONSOLE_SCRIPT}</script>
@@ -148,61 +147,116 @@ function renderConsole(feedback: FeedbackRow[], who: string): string {
 
 const CONSOLE_SCRIPT = `
   const KEY = "self-updating-mastra-active-run";
-  const sendBtn = document.getElementById("send");
-  const errorEl = document.getElementById("error");
-  const runEl = document.getElementById("run");
-  const runIdEl = document.getElementById("run-id");
-  const runStatusEl = document.getElementById("run-status");
-  const runLogEl = document.getElementById("run-log");
+  const selected = new Set();
   let pollTimer;
+  const $ = (id) => document.getElementById(id);
 
-  function selectedIds() {
-    return Array.from(document.querySelectorAll(".fb-check:checked")).map((el) => el.value);
-  }
-  function refreshSendLabel() {
-    const n = selectedIds().length;
-    sendBtn.textContent = "Send to coding agent" + (n ? " (" + n + ")" : "");
-  }
-  document.querySelectorAll(".fb-check").forEach((el) => el.addEventListener("change", refreshSendLabel));
-  refreshSendLabel();
+  function fmtTime(iso) { try { return new Date(iso).toLocaleString(); } catch { return iso; } }
+  function showError(msg) { $("error").innerHTML = msg ? '<p class="err">' + msg + '</p>' : ""; }
+  function refreshSendLabel() { $("send").textContent = "Send to coding agent" + (selected.size ? " (" + selected.size + ")" : ""); }
 
-  function showError(msg) { errorEl.innerHTML = msg ? '<p class="err">' + msg + '</p>' : ""; }
+  function renderFeedback(items) {
+    const box = $("feedback");
+    box.innerHTML = "";
+    if (!items.length) { box.innerHTML = '<p class="empty">Nothing in the backlog yet.</p>'; return; }
+    for (const item of items) {
+      const row = document.createElement("div"); row.className = "fb";
+      const cb = document.createElement("input"); cb.type = "checkbox";
+      cb.checked = selected.has(item.id); cb.disabled = item.status !== "new"; cb.style.marginTop = "4px";
+      cb.addEventListener("change", () => { cb.checked ? selected.add(item.id) : selected.delete(item.id); refreshSendLabel(); });
+      const main = document.createElement("div"); main.style.minWidth = "0"; main.style.flex = "1";
+      const meta = document.createElement("div"); meta.className = "meta";
+      const who = document.createElement("span"); who.className = "email";
+      who.textContent = item.source === "error" ? "system" : (item.email || "unknown");
+      const dot = document.createElement("span"); dot.textContent = "•";
+      const time = document.createElement("time"); time.textContent = fmtTime(item.createdAt);
+      const tag = document.createElement("span");
+      tag.className = "pill " + (item.source === "error" ? "error" : item.status === "new" ? "new" : "sent");
+      tag.textContent = item.source === "error" ? "error" : item.status;
+      meta.append(who, dot, time, tag);
+      const body = document.createElement("p"); body.className = "body"; body.textContent = item.body;
+      main.append(meta, body); row.append(cb, main); box.append(row);
+    }
+    refreshSendLabel();
+  }
+
+  function renderRuns(runs) {
+    const box = $("runs");
+    box.innerHTML = "";
+    if (!runs.length) { box.innerHTML = '<p class="empty">No runs yet.</p>'; return; }
+    for (const r of runs) {
+      const row = document.createElement("div"); row.className = "runrow"; row.title = "View this run's log";
+      const status = document.createElement("span"); status.className = "pill " + r.status; status.textContent = r.status;
+      const id = document.createElement("span"); id.className = "mono"; id.textContent = r.id.slice(0, 8);
+      const model = document.createElement("span"); model.className = "model"; model.textContent = r.model || "";
+      row.append(status, id, model);
+      row.addEventListener("click", () => viewRun(r.id));
+      box.append(row);
+    }
+  }
+
+  async function loadData() {
+    try {
+      const res = await fetch("/admin/data", { cache: "no-store" });
+      if (!res.ok) return;
+      const data = await res.json();
+      renderFeedback(data.feedback || []);
+      renderRuns(data.runs || []);
+    } catch {}
+  }
+
+  function showRun(data) {
+    $("run").style.display = "";
+    $("run-id").textContent = data.id ? data.id.slice(0, 8) : "";
+    $("run-status").textContent = data.status; $("run-status").className = "pill " + data.status;
+    const bits = [];
+    if (data.model) bits.push("model: " + data.model);
+    if (data.verdict) bits.push("verdict: " + data.verdict);
+    if (data.finishedAt) bits.push("finished: " + fmtTime(data.finishedAt));
+    $("run-meta").textContent = bits.join("   ·   ");
+    $("run-log").textContent = data.log || "Reading agent output…";
+  }
+
+  async function viewRun(id) {
+    try {
+      const res = await fetch("/admin/runs/" + encodeURIComponent(id), { cache: "no-store" });
+      const data = await res.json(); if (res.ok) showRun({ ...data, id });
+    } catch {}
+  }
 
   async function poll(id) {
     let res;
     try { res = await fetch("/admin/runs/" + encodeURIComponent(id), { cache: "no-store" }); }
     catch { pollTimer = setTimeout(() => poll(id), 4000); return; }
     const data = await res.json().catch(() => null);
-    if (!res.ok || !data) { showError((data && data.error) || "Could not read run status."); pollTimer = setTimeout(() => poll(id), 4000); return; }
-    runEl.style.display = "";
-    runIdEl.textContent = id.slice(0, 8);
-    runStatusEl.textContent = data.status;
-    runStatusEl.className = "status " + data.status;
-    runLogEl.textContent = data.log || "Reading agent output…";
+    if (!res.ok || !data) { pollTimer = setTimeout(() => poll(id), 4000); return; }
+    showRun({ ...data, id });
     if (data.status === "running") { pollTimer = setTimeout(() => poll(id), 2000); }
-    else { localStorage.removeItem(KEY); setTimeout(() => location.reload(), 1500); }
+    else { localStorage.removeItem(KEY); selected.clear(); loadData(); }
   }
 
   async function dispatch() {
-    sendBtn.disabled = true; showError("");
+    $("send").disabled = true; showError("");
     let res;
     try {
       res = await fetch("/admin/dispatch", {
         method: "POST", headers: { "content-type": "application/json" },
-        body: JSON.stringify({ feedbackIds: selectedIds(), instructions: document.getElementById("instructions").value.trim() }),
+        body: JSON.stringify({ feedbackIds: Array.from(selected), instructions: $("instructions").value.trim() }),
       });
-    } catch { sendBtn.disabled = false; showError("The coding agent is unavailable."); return; }
+    } catch { $("send").disabled = false; showError("The coding agent is unavailable."); return; }
     const data = await res.json().catch(() => null);
-    sendBtn.disabled = false;
+    $("send").disabled = false;
     if (!res.ok || !data || !data.runId) { showError((data && data.error) || "Could not start the coding agent."); return; }
+    $("instructions").value = "";
     localStorage.setItem(KEY, data.runId);
-    runEl.style.display = ""; runLogEl.textContent = "Change request accepted. Waiting for the agent…";
+    showRun({ id: data.runId, status: "running", log: "Change request accepted. Waiting for the agent…" });
     poll(data.runId);
   }
-  sendBtn.addEventListener("click", dispatch);
 
-  const active = localStorage.getItem(KEY);
-  if (active) poll(active);
+  $("send").addEventListener("click", dispatch);
+  loadData();
+  const activeRun = localStorage.getItem(KEY);
+  if (activeRun) poll(activeRun);
 `;
 
 export function registerAdminRoutes(app: Hono): void {
@@ -226,11 +280,26 @@ export function registerAdminRoutes(app: Hono): void {
   app.get("/admin", async (c) => {
     const identity = await getAdminIdentity(c);
     if (!identity) return c.html(renderGate(), 401);
+    return c.html(renderShell(identity.email));
+  });
 
-    const result = await pool.query<FeedbackRow>(
-      'SELECT f."id", f."body", f."status", f."created_at", u."email" FROM "feedback" f JOIN "user" u ON u."id" = f."user_id" ORDER BY f."created_at" DESC',
+  app.get("/admin/data", async (c) => {
+    if (!(await getAdminIdentity(c))) return c.json({ error: "Not found." }, 404);
+    const feedback = await pool.query<FeedbackRow>(
+      'SELECT f."id", f."body", f."status", f."created_at", f."source", u."email" FROM "feedback" f LEFT JOIN "user" u ON u."id" = f."user_id" ORDER BY f."created_at" DESC LIMIT 100',
     );
-    return c.html(renderConsole(result.rows, identity.email));
+    const runs = await listRecentRuns();
+    return c.json({
+      feedback: feedback.rows.map((r) => ({
+        id: r.id,
+        body: r.body,
+        status: r.status,
+        source: r.source,
+        email: r.email,
+        createdAt: new Date(r.created_at).toISOString(),
+      })),
+      runs,
+    });
   });
 
   app.post("/admin/dispatch", async (c) => {
@@ -256,7 +325,7 @@ export function registerAdminRoutes(app: Hono): void {
       typeof payload?.instructions === "string" ? payload.instructions.trim().slice(0, 5000) : "";
 
     if (!feedbackIds.length && !instructions) {
-      return c.json({ error: "Select feedback or add instructions for the coding agent." }, 400);
+      return c.json({ error: "Select an item or add instructions for the coding agent." }, 400);
     }
 
     const feedback = feedbackIds.length
@@ -271,7 +340,7 @@ export function registerAdminRoutes(app: Hono): void {
       instructions,
     );
 
-    const run = createRun(changeRequest);
+    const run = await createRun(changeRequest, process.env.CHAT_MODEL ?? "unknown");
     // Fire and forget: the run continues even if the admin closes the console.
     void executeRun(run);
 
@@ -287,8 +356,8 @@ export function registerAdminRoutes(app: Hono): void {
 
   app.get("/admin/runs/:id", async (c) => {
     if (!(await getAdminIdentity(c))) return c.json({ error: "Not found." }, 404);
-    const run = getRun(c.req.param("id"));
-    if (!run) return c.json({ error: "No such run." }, 404);
-    return c.json({ status: run.status, log: run.log.join("\n") });
+    const view = await getRunView(c.req.param("id"));
+    if (!view) return c.json({ error: "No such run." }, 404);
+    return c.json(view);
   });
 }

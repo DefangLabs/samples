@@ -24,15 +24,15 @@ export async function executeRun(run: Run): Promise<void> {
       check = await typecheck();
       if (!check.ok) {
         appendLog(run, `Typecheck still failing:\n${check.output}`);
-        finishRun(run, "failed");
+        await finishRun(run, "failed");
         return;
       }
     }
     appendLog(run, "Typecheck passed. Changes are live.");
-    finishRun(run, "done");
+    await finishRun(run, "done");
   } catch (err) {
     appendLog(run, `Run failed: ${err instanceof Error ? err.message : String(err)}`);
-    finishRun(run, "failed");
+    await finishRun(run, "failed");
   }
 }
 

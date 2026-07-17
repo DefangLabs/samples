@@ -75,3 +75,8 @@ CREATE TABLE IF NOT EXISTS "feedback" (
 
 CREATE INDEX IF NOT EXISTS "feedback_created_idx"
   ON "feedback" ("created_at" DESC);
+
+-- Feedback also carries auto-captured errors (client + server), which have no
+-- submitting user. `source` distinguishes 'user' feedback from 'error' reports.
+ALTER TABLE "feedback" ADD COLUMN IF NOT EXISTS "source" text NOT NULL DEFAULT 'user';
+ALTER TABLE "feedback" ALTER COLUMN "user_id" DROP NOT NULL;
