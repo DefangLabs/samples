@@ -17,6 +17,11 @@ environment:
 - `db` is shared PostgreSQL for auth, todos, and feedback.
 - `chat` is the managed Gemini model used by the coding agent on GCP.
 
+The **admin console is served by the agent server, not the Next.js app** — it
+lives outside the source tree the coding agent edits. Caddy routes `/admin` to
+the agent server and everything else to Next.js, so the console stays usable to
+recover the app even if a bad edit crashes the Next.js dev server.
+
 > [!WARNING]
 > This is a demo of agent-driven development, not a production software-update
 > design. The coding agent can change any file under `todo-app/`. The admin gate,
@@ -54,16 +59,21 @@ judge the quality of the generated changes. The first run downloads the model.
 
 ## Configuration
 
-Set both secrets before deploying:
+Set these secrets before deploying:
 
 ```bash
 defang config set POSTGRES_PASSWORD --random
 defang config set BETTER_AUTH_SECRET --random
+defang config set ADMIN_TOKEN --random
 ```
 
 - `POSTGRES_PASSWORD` protects the managed PostgreSQL database.
 - `BETTER_AUTH_SECRET` signs and encrypts authentication data. Keep it stable
   across deployments or existing sessions will be invalidated.
+- `ADMIN_TOKEN` is a break-glass password for the admin console. The console
+  normally accepts your regular admin login (its session is validated directly
+  against PostgreSQL, so it works even while the app is down); the token is the
+  fallback for when no valid session is available.
 
 ## Deployment to GCP
 

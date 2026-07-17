@@ -1,15 +1,27 @@
-# Public entrypoint for the dev service. Proxies to the Next.js dev server
-# and keeps retrying while it restarts (which happens when the coding agent
-# edits config files), so users see a brief delay instead of an error page.
+# Public entrypoint for the dev service. Routes the admin console to the coding
+# agent server (:4111) and everything else to the Next.js dev server (:3001).
+# The two run as independent processes, so the admin console — hosted by the
+# agent server, outside the app the agent edits — stays reachable even when a
+# bad edit crashes Next.js. Caddy keeps retrying while a backend restarts, so
+# users see a brief delay instead of an error page.
 {
 	admin off
 	auto_https off
 }
 
 :3000 {
-	reverse_proxy localhost:3001 {
-		lb_try_duration 30s
-		lb_try_interval 250ms
+	@admin path /admin /admin/*
+	handle @admin {
+		reverse_proxy localhost:4111 {
+			lb_try_duration 30s
+			lb_try_interval 250ms
+		}
+	}
+	handle {
+		reverse_proxy localhost:3001 {
+			lb_try_duration 30s
+			lb_try_interval 250ms
+		}
 	}
 }
 

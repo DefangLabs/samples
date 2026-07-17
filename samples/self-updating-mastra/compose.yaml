@@ -57,6 +57,10 @@ services:
       DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@db:5432/postgres?sslmode=no-verify
       BETTER_AUTH_SECRET:
       ADMIN_UI: "true"
+      # Break-glass token for the admin console (served by the agent server,
+      # outside the app the agent edits). Lets an admin reach the console even
+      # if the main app is down and their login session has expired.
+      ADMIN_TOKEN:
       # CHAT_URL and CHAT_MODEL are injected automatically because this
       # service depends on the `chat` model service.
     depends_on:
