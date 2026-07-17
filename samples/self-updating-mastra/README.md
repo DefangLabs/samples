@@ -67,7 +67,7 @@ defang config set BETTER_AUTH_SECRET --random
 
 ## Deployment to GCP
 
-The deployed model is `gemini-3.5-flash` through Vertex AI. Select a GCP project
+The deployed model is `gemini-3-flash` through Vertex AI. Select a GCP project
 and a region where that model is available; `europe-west2` is the configuration
 used for this sample's London demo.
 

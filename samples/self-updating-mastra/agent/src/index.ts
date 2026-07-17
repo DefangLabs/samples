@@ -74,6 +74,7 @@ async function promptAgent(run: Run, prompt: string): Promise<string> {
   const stream = await coder.stream(prompt, { maxSteps: 50 });
 
   let text = "";
+  let streamError: unknown;
   for await (const chunk of stream.fullStream) {
     switch (chunk.type) {
       case "text-delta": {
@@ -88,11 +89,18 @@ async function promptAgent(run: Run, prompt: string): Promise<string> {
       }
       case "error": {
         appendLog(run, `⚠ model error: ${JSON.stringify(chunk.payload)}`);
+        streamError = chunk.payload;
         break;
       }
       default:
         break;
     }
+  }
+  // A model/stream error means the turn did not actually apply any edits.
+  // Surface it so the run is marked failed instead of falsely proceeding to
+  // typecheck and reporting "Changes are live".
+  if (streamError !== undefined) {
+    throw new Error("the coding model call failed; see the model error above");
   }
   return text.trim();
 }
