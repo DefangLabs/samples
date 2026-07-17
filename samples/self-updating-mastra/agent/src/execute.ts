@@ -1,11 +1,21 @@
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { createCoder, TARGET_DIR } from "./coder.js";
-import { appendLog, finishRun, type Run } from "./runs.js";
+import { commitRun, revertWorkingTree } from "./git.js";
+import { appendLog, finishRun, setCommitSha, type Run } from "./runs.js";
 
 const exec = promisify(execFile);
 
+// Runs are serialized: agent edits + the git snapshot around them assume a
+// single writer. The admin console rejects a dispatch while one is active.
+let activeRun: Run | null = null;
+
+export function getActiveRun(): Run | null {
+  return activeRun;
+}
+
 export async function executeRun(run: Run): Promise<void> {
+  activeRun = run;
   try {
     appendLog(run, `Change request:\n${run.request}\n`);
     const summary = await promptAgent(run, run.request);
@@ -24,16 +34,51 @@ export async function executeRun(run: Run): Promise<void> {
       check = await typecheck();
       if (!check.ok) {
         appendLog(run, `Typecheck still failing:\n${check.output}`);
-        await finishRun(run, "failed");
+        await failAndRevert(run);
         return;
       }
     }
     appendLog(run, "Typecheck passed. Changes are live.");
+    await snapshot(run, summary);
     await finishRun(run, "done");
   } catch (err) {
     appendLog(run, `Run failed: ${err instanceof Error ? err.message : String(err)}`);
-    await finishRun(run, "failed");
+    await failAndRevert(run);
+  } finally {
+    activeRun = null;
   }
+}
+
+/** Commit a successful run's edits, linking the commit to the run's DB rows. */
+async function snapshot(run: Run, summary: string): Promise<void> {
+  try {
+    const sha = await commitRun({
+      runId: run.id,
+      feedbackIds: run.feedbackIds,
+      model: run.model,
+      summary: summary || run.request,
+    });
+    if (sha) {
+      await setCommitSha(run, sha);
+      appendLog(run, `Committed as ${sha.slice(0, 8)}.`);
+    } else {
+      appendLog(run, "No file changes to commit.");
+    }
+  } catch (err) {
+    // A snapshot failure must not fail a run whose edits are already live.
+    appendLog(run, `Warning: git snapshot failed: ${err instanceof Error ? err.message : String(err)}`);
+  }
+}
+
+/** Mark the run failed and restore the working tree to the last good commit. */
+async function failAndRevert(run: Run): Promise<void> {
+  try {
+    await revertWorkingTree();
+    appendLog(run, "Working tree restored to the last good commit.");
+  } catch (err) {
+    appendLog(run, `Warning: failed to restore working tree: ${err instanceof Error ? err.message : String(err)}`);
+  }
+  await finishRun(run, "failed");
 }
 
 /** Stream one agent turn, mirroring tool activity into the run log. */

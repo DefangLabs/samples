@@ -25,4 +25,5 @@ export async function ensureAgentSchema(): Promise<void> {
   await pool.query(
     'CREATE INDEX IF NOT EXISTS "agent_runs_created_idx" ON "agent_runs" ("created_at" DESC)',
   );
+  await pool.query('ALTER TABLE "agent_runs" ADD COLUMN IF NOT EXISTS "commit_sha" text');
 }

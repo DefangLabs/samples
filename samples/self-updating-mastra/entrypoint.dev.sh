@@ -5,7 +5,11 @@
 set -u
 cd /workspace
 
-# Baseline git repo so the agent's edits have inspectable history. Done at
+# Git repo backing the run/publish history shown in the admin console. On the
+# very first deploy there is no .git in the build context, so a baseline repo
+# is created here. On every publish after that, the workspace (including
+# .git) IS the build context, so the accumulated history — one commit per
+# successful agent run, one per publish — survives self-redeploys. Done at
 # runtime (not build time) so it also works when the source is bind-mounted
 # for local development.
 if [ ! -d .git ]; then
@@ -13,6 +17,8 @@ if [ ! -d .git ]; then
   git add -A
   git -c user.name="coding-agent" -c user.email="agent@self-updating-mastra.local" \
     commit -qm "baseline: as deployed"
+else
+  echo "existing git history: $(git rev-list --count HEAD 2>/dev/null || echo 0) commit(s) at $(git rev-parse --short HEAD 2>/dev/null || echo '?')"
 fi
 
 (

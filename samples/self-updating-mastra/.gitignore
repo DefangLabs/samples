@@ -1,0 +1,5 @@
+# Applies to the in-container repo created by entrypoint.dev.sh (and to this
+# directory when nested in a samples checkout). Keeps the runtime git history
+# small so it can ride along in the self-redeploy build context.
+.defang/
+*.log

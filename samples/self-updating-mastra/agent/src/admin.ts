@@ -1,9 +1,16 @@
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
+import { Agent } from "@mastra/core/agent";
 import type { Hono } from "hono";
 import { setCookie } from "hono/cookie";
 import { adminTokenConfigured, getAdminIdentity } from "./auth.js";
 import { pool } from "./db.js";
-import { executeRun } from "./execute.js";
-import { createRun, getRunView, listRecentRuns } from "./runs.js";
+import { executeRun, getActiveRun } from "./execute.js";
+import { history, isRevertable, REPO_DIR, revertCommit } from "./git.js";
+import { getModel } from "./model.js";
+import { createRun, getRunView, listRecentRuns, setVerdictById } from "./runs.js";
+
+const exec = promisify(execFile);
 
 interface FeedbackRow {
   id: string;
@@ -85,6 +92,18 @@ const PAGE_STYLE = `
   .runrow:hover { background: #f8fafc; }
   .runrow .mono { font: 12px ui-monospace, monospace; color: #475569; }
   .runrow .model { font-size: 12px; color: #64748b; margin-left: auto; }
+  .histrow { padding: 12px 16px; border-top: 1px solid #f1f5f9; display: flex; align-items: center; gap: 10px; }
+  .histrow:first-child { border-top: 0; }
+  .histrow .mono { font: 12px ui-monospace, monospace; color: #475569; flex-shrink: 0; }
+  .histrow .subject { font-size: 13px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+  .histrow .subject.link { cursor: pointer; }
+  .histrow .subject.link:hover { text-decoration: underline; }
+  .pill.publish { background: #dbeafe; color: #1d4ed8; }
+  .pill.agent { background: #ede9fe; color: #6d28d9; }
+  .pill.admin { background: #fef3c7; color: #b45309; }
+  button.mini { border: 1px solid #e2e8f0; border-radius: 8px; background: #fff; color: #475569; font-size: 11px; font-weight: 600; padding: 4px 8px; cursor: pointer; flex-shrink: 0; }
+  button.mini:hover { background: #f1f5f9; }
+  button.mini:disabled { opacity: .5; cursor: default; }
   .gate { max-width: 460px; margin: 8vh auto; padding: 0 24px; }
   .gate input { width: 100%; margin-top: 10px; padding: 12px; border-radius: 10px; border: 1px solid #cbd5e1; font: inherit; }
   .gate button { margin-top: 12px; width: 100%; border: 0; border-radius: 10px; background: #0f172a; color: #fff; font-weight: 700; padding: 12px; cursor: pointer; }
@@ -135,10 +154,13 @@ function renderShell(who: string): string {
             <span class="pill running" id="run-status">connecting</span>
           </div>
           <div class="meta" id="run-meta" style="padding:8px 18px 0"></div>
+          <div style="padding:8px 18px 0"><button class="mini" id="grade" type="button" style="display:none">Grade this run</button></div>
           <pre id="run-log">Reading agent output…</pre>
         </div>
         <h3>Recent runs</h3>
         <div class="card" id="runs"><p class="empty">Loading…</p></div>
+        <h3>History</h3>
+        <div class="card" id="history"><p class="empty">Loading…</p></div>
       </aside>
     </div></div>
     <script>${CONSOLE_SCRIPT}</script>
@@ -188,20 +210,65 @@ const CONSOLE_SCRIPT = `
       const row = document.createElement("div"); row.className = "runrow"; row.title = "View this run's log";
       const status = document.createElement("span"); status.className = "pill " + r.status; status.textContent = r.status;
       const id = document.createElement("span"); id.className = "mono"; id.textContent = r.id.slice(0, 8);
-      const model = document.createElement("span"); model.className = "model"; model.textContent = r.model || "";
+      const model = document.createElement("span"); model.className = "model";
+      model.textContent = (r.commitSha ? r.commitSha.slice(0, 8) + " · " : "") + (r.model || "");
       row.append(status, id, model);
       row.addEventListener("click", () => viewRun(r.id));
       box.append(row);
     }
   }
 
+  function renderHistory(entries) {
+    const box = $("history");
+    box.innerHTML = "";
+    if (!entries.length) { box.innerHTML = '<p class="empty">No history yet.</p>'; return; }
+    for (const e of entries) {
+      const row = document.createElement("div"); row.className = "histrow";
+      const kind = e.deploymentId ? "publish" : e.runId ? "agent" : "admin";
+      const badge = document.createElement("span"); badge.className = "pill " + kind; badge.textContent = kind;
+      const sha = document.createElement("span"); sha.className = "mono"; sha.textContent = e.sha.slice(0, 8);
+      const subject = document.createElement("span");
+      subject.className = "subject" + (e.runId ? " link" : "");
+      subject.textContent = e.subject;
+      subject.title = e.author + " · " + fmtTime(e.date) + (e.feedbackIds.length ? " · feedback: " + e.feedbackIds.join(", ") : "");
+      if (e.runId) subject.addEventListener("click", () => viewRun(e.runId));
+      row.append(badge, sha, subject);
+      if (e.revertable) {
+        const btn = document.createElement("button"); btn.className = "mini"; btn.type = "button"; btn.textContent = "Revert";
+        btn.addEventListener("click", () => revert(e.sha, btn));
+        row.append(btn);
+      }
+      box.append(row);
+    }
+  }
+
+  async function revert(sha, btn) {
+    if (!confirm("Revert commit " + sha.slice(0, 8) + "? This creates a new commit restoring the previous state, and the live dev app updates immediately.")) return;
+    btn.disabled = true;
+    try {
+      const res = await fetch("/admin/history/" + encodeURIComponent(sha) + "/revert", { method: "POST" });
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data || !data.revertSha) { alert((data && data.error) || "Revert failed."); return; }
+      if (!data.typecheckOk) alert("Reverted, but the app no longer typechecks — later changes may depend on this commit. Consider reverting the revert, or dispatch a repair run.\n\n" + (data.typecheckOutput || ""));
+      loadData();
+    } finally { btn.disabled = false; }
+  }
+
   async function loadData() {
     try {
-      const res = await fetch("/admin/data", { cache: "no-store" });
-      if (!res.ok) return;
-      const data = await res.json();
-      renderFeedback(data.feedback || []);
-      renderRuns(data.runs || []);
+      const [dataRes, histRes] = await Promise.all([
+        fetch("/admin/data", { cache: "no-store" }),
+        fetch("/admin/history", { cache: "no-store" }),
+      ]);
+      if (dataRes.ok) {
+        const data = await dataRes.json();
+        renderFeedback(data.feedback || []);
+        renderRuns(data.runs || []);
+      }
+      if (histRes.ok) {
+        const hist = await histRes.json();
+        renderHistory(hist.history || []);
+      }
     } catch {}
   }
 
@@ -211,10 +278,26 @@ const CONSOLE_SCRIPT = `
     $("run-status").textContent = data.status; $("run-status").className = "pill " + data.status;
     const bits = [];
     if (data.model) bits.push("model: " + data.model);
+    if (data.commitSha) bits.push("commit: " + data.commitSha.slice(0, 8));
     if (data.verdict) bits.push("verdict: " + data.verdict);
     if (data.finishedAt) bits.push("finished: " + fmtTime(data.finishedAt));
     $("run-meta").textContent = bits.join("   ·   ");
+    const gradeBtn = $("grade");
+    gradeBtn.style.display = data.id && data.status !== "running" && !data.verdict ? "" : "none";
+    gradeBtn.dataset.runId = data.id || "";
     $("run-log").textContent = data.log || "Reading agent output…";
+  }
+
+  async function grade() {
+    const id = $("grade").dataset.runId;
+    if (!id) return;
+    $("grade").disabled = true; $("grade").textContent = "Grading…";
+    try {
+      const res = await fetch("/admin/runs/" + encodeURIComponent(id) + "/verdict", { method: "POST" });
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data || !data.verdict) { alert((data && data.error) || "Grading failed."); return; }
+      viewRun(id);
+    } finally { $("grade").disabled = false; $("grade").textContent = "Grade this run"; }
   }
 
   async function viewRun(id) {
@@ -254,6 +337,7 @@ const CONSOLE_SCRIPT = `
   }
 
   $("send").addEventListener("click", dispatch);
+  $("grade").addEventListener("click", grade);
   loadData();
   const activeRun = localStorage.getItem(KEY);
   if (activeRun) poll(activeRun);
@@ -306,6 +390,14 @@ export function registerAdminRoutes(app: Hono): void {
     // Mirror the app's behavior: non-admins get a 404, not a hint the route exists.
     if (!(await getAdminIdentity(c))) return c.json({ error: "Not found." }, 404);
 
+    const active = getActiveRun();
+    if (active) {
+      return c.json(
+        { error: `A run is already in progress (${active.id.slice(0, 8)}). Wait for it to finish.` },
+        409,
+      );
+    }
+
     const payload = (await c.req.json().catch(() => null)) as {
       feedbackIds?: unknown;
       instructions?: unknown;
@@ -340,7 +432,11 @@ export function registerAdminRoutes(app: Hono): void {
       instructions,
     );
 
-    const run = await createRun(changeRequest, process.env.CHAT_MODEL ?? "unknown");
+    const run = await createRun(
+      changeRequest,
+      process.env.CHAT_MODEL ?? "unknown",
+      feedback.rows.map((item) => item.id),
+    );
     // Fire and forget: the run continues even if the admin closes the console.
     void executeRun(run);
 
@@ -359,5 +455,112 @@ export function registerAdminRoutes(app: Hono): void {
     const view = await getRunView(c.req.param("id"));
     if (!view) return c.json({ error: "No such run." }, 404);
     return c.json(view);
+  });
+
+  // Git history of the live workspace: every successful run and (later) every
+  // publish is a commit whose trailers point back at the Postgres rows it
+  // addressed, so the console can cross-link both ways.
+  app.get("/admin/history", async (c) => {
+    if (!(await getAdminIdentity(c))) return c.json({ error: "Not found." }, 404);
+    const entries = await history(50);
+    for (const entry of entries) {
+      if (entry.runId) entry.revertable = await isRevertable(entry.sha);
+    }
+    return c.json({ history: entries });
+  });
+
+  // Admin-only revert of an agent commit (as a new commit, authored by the
+  // admin). The dev server hot-reloads the restored files immediately.
+  app.post("/admin/history/:sha/revert", async (c) => {
+    const identity = await getAdminIdentity(c);
+    if (!identity) return c.json({ error: "Not found." }, 404);
+    if (getActiveRun()) return c.json({ error: "A run is in progress; wait for it to finish." }, 409);
+
+    const sha = c.req.param("sha");
+    if (!/^[0-9a-f]{7,40}$/i.test(sha)) return c.json({ error: "Invalid commit." }, 400);
+
+    let revertSha: string;
+    try {
+      revertSha = await revertCommit(sha, identity.email);
+    } catch (err) {
+      return c.json({ error: err instanceof Error ? err.message : String(err) }, 400);
+    }
+
+    // Report whether the app still compiles after the revert; a revert can
+    // break the build when later commits depend on the reverted one.
+    let typecheckOk = true;
+    let typecheckOutput = "";
+    try {
+      await exec("npx", ["tsc", "--noEmit"], {
+        cwd: `${REPO_DIR}/todo-app`,
+        timeout: 180_000,
+        maxBuffer: 10 * 1024 * 1024,
+      });
+    } catch (err) {
+      const e = err as { stdout?: string; stderr?: string; message?: string };
+      typecheckOk = false;
+      typecheckOutput = (e.stdout || e.stderr || e.message || "unknown error").slice(0, 4000);
+    }
+    return c.json({ revertSha, typecheckOk, typecheckOutput });
+  });
+
+  // On-demand verdict: grade a finished run with a second model call. Kept
+  // off the automatic run path deliberately — Vertex rate limits are real.
+  app.post("/admin/runs/:id/verdict", async (c) => {
+    if (!(await getAdminIdentity(c))) return c.json({ error: "Not found." }, 404);
+    const view = await getRunView(c.req.param("id"));
+    if (!view) return c.json({ error: "No such run." }, 404);
+    if (view.status === "running") return c.json({ error: "Run is still in progress." }, 409);
+
+    let diff = "(no commit was created for this run)";
+    if (view.commitSha) {
+      try {
+        const { stdout } = await exec("git", ["show", "--stat", "--patch", view.commitSha], {
+          cwd: REPO_DIR,
+          timeout: 30_000,
+          maxBuffer: 10 * 1024 * 1024,
+        });
+        diff = stdout.slice(0, 12_000);
+      } catch {
+        diff = "(commit not found in the current history)";
+      }
+    }
+
+    const grader = new Agent({
+      id: "grader",
+      name: "Grader",
+      instructions:
+        "You review changes a coding agent made to a to-do app. Judge only whether the change plausibly satisfies the request, compiles conceptually, and avoids collateral damage. Be terse and honest.",
+      model: getModel(),
+    });
+    const prompt = [
+      "Grade this coding-agent run.",
+      "",
+      "## Change request",
+      view.request.slice(0, 4000),
+      "",
+      "## Run status",
+      view.status,
+      "",
+      "## Run log (tail)",
+      view.log.slice(-4000),
+      "",
+      "## Commit diff",
+      diff,
+      "",
+      'Reply with exactly one line in the form "pass|partial|fail — <one-sentence reason>".',
+    ].join("\n");
+
+    try {
+      const result = await grader.generate(prompt);
+      const verdict = result.text.trim().slice(0, 500) || "no verdict returned";
+      await setVerdictById(view.id, verdict);
+      return c.json({ verdict });
+    } catch (err) {
+      return c.json(
+        { error: `Grading failed: ${err instanceof Error ? err.message : String(err)}` },
+        502,
+      );
+    }
   });
 }

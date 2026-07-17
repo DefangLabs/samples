@@ -1,7 +1,9 @@
-# Build context for Dockerfile.dev (and, later, for the self-redeploy: the
-# dev container's own filesystem becomes the build context, which must stay
-# under Defang's 100 MiB limit).
+# Build context for Dockerfile.dev (and, for the self-redeploy, the dev
+# container's own filesystem becomes the build context, which must stay
+# under Defang's 100 MiB limit). NOTE: .git is deliberately NOT ignored —
+# the in-container git history (runs, publishes) must travel into the next
+# dev image so the admin console's history survives self-redeploys. The
+# heavy directories are gitignored, so .git stays small.
 **/node_modules
 **/.next
-.git
 README.md
