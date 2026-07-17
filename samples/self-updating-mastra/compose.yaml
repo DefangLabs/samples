@@ -115,7 +115,7 @@ services:
     provider:
       type: model
       options:
-        model: gemini-3-flash
+        model: gemini-2.5-flash
     x-defang-llm: true
     environment:
       OPENAI_API_KEY: defang
