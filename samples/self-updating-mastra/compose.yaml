@@ -88,13 +88,16 @@ services:
       # stack this project was deployed with.
       PUBLISH_ENABLED: "true"
       PUBLISH_STACK: beta
-      # CHAT_URL and CHAT_MODEL are injected automatically because this
-      # service depends on the `chat` model service.
+    # Attach the managed LLM (declared under the top-level `models:` key).
+    # Defang injects the gateway endpoint into CHAT_URL and the resolved model
+    # id into CHAT_MODEL, which the coding agent reads (agent/src/model.ts).
+    models:
+      chat:
+        endpoint_var: CHAT_URL
+        model_var: CHAT_MODEL
     depends_on:
       db:
         condition: service_healthy
-      chat:
-        condition: service_started
     healthcheck:
       test:
         - CMD
@@ -134,24 +137,19 @@ services:
       retries: 10
       start_period: 10s
     deploy:
+      # A single instance: Postgres owns on-disk state, so a second replica
+      # would be a split-brain second database, not a scaled one.
+      replicas: 1
       resources:
         reservations:
           cpus: "0.5"
           memory: 512M
 
-  # Managed LLM for the coding agent, using the cloud provider's native
-  # inference service (Vertex AI on GCP). Defang provisions an OpenAI-compatible
-  # proxy and injects CHAT_URL / CHAT_MODEL into services that depend on it.
+# Managed LLM for the coding agent, declared with the Docker Compose model
+# runner syntax. Defang provisions the cloud provider's native inference
+# service (Vertex AI on GCP) behind an OpenAI-compatible proxy and injects the
+# endpoint/model into any service that references this model (see the dev
+# service's `models:` block).
+models:
   chat:
-    provider:
-      type: model
-      options:
-        model: gemini-2.5-flash
-    x-defang-llm: true
-    environment:
-      OPENAI_API_KEY: defang
-    deploy:
-      resources:
-        reservations:
-          cpus: "0.5"
-          memory: 512M
+    model: gemini-2.5-flash

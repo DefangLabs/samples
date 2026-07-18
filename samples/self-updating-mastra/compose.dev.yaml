@@ -24,11 +24,13 @@ services:
       DATABASE_URL: postgres://postgres:postgres@db:5432/postgres?sslmode=disable
       BETTER_AUTH_SECRET: local-dev-secret-do-not-use-in-prod
       ADMIN_UI: "true"
+    models:
+      chat:
+        endpoint_var: CHAT_URL
+        model_var: CHAT_MODEL
     depends_on:
       db:
         condition: service_healthy
-      chat:
-        condition: service_started
 
   db:
     image: postgres:16
@@ -49,12 +51,11 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+# A small local model served by Docker Model Runner. Expect much lower edit
+# quality than the deployed Vertex AI model — this is for testing the loop.
+models:
   chat:
-    provider:
-      type: model
-      options:
-        model: ai/qwen2.5-coder:7B-Q4_K_M
-    x-defang-llm: true
+    model: ai/qwen2.5-coder:7B-Q4_K_M
 
 volumes:
   pgdata:

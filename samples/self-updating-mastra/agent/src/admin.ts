@@ -188,6 +188,13 @@ function renderShell(who: string): string {
           <h2>Publish</h2>
           <div id="pub-body"></div>
         </div>
+        <div class="pub" id="reboot">
+          <p class="eyebrow">Recovery</p>
+          <h2>Reboot environment</h2>
+          <p class="meta">Restart this dev container when a change has wedged it beyond what reverting a commit can fix. It comes back from the last published image, so edits made since the last publish are discarded. This console drops for a moment and returns.</p>
+          <button class="go danger" id="reboot-btn" type="button">Reboot and discard unpublished edits</button>
+          <div id="reboot-msg"></div>
+        </div>
         <h3>Recent runs</h3>
         <div class="card" id="runs"><p class="empty">Loading…</p></div>
         <h3>History</h3>
@@ -487,8 +494,25 @@ const CONSOLE_SCRIPT = `
     pubTimer = setTimeout(pollPublish, 4000);
   }
 
+  async function reboot() {
+    if (!confirm("Reboot the environment? Edits made since the last publish are discarded, and this console drops for a moment while the container restarts.")) return;
+    const btn = $("reboot-btn"); btn.disabled = true; btn.textContent = "Rebooting…";
+    const ok = () => { $("reboot-msg").innerHTML = '<p class="ok">Rebooting — this console will drop and come back on the fresh container.</p>'; };
+    try {
+      const res = await fetch("/admin/reboot", { method: "POST" });
+      // The container may be killed before the response arrives; treat a
+      // dropped connection as success (that IS the reboot happening).
+      if (!res.ok) {
+        const d = await res.json().catch(() => null);
+        alert((d && d.error) || "Could not reboot."); btn.disabled = false; btn.textContent = "Reboot and discard unpublished edits"; return;
+      }
+      ok();
+    } catch { ok(); }
+  }
+
   $("send").addEventListener("click", dispatch);
   $("grade").addEventListener("click", grade);
+  $("reboot-btn").addEventListener("click", reboot);
   loadData();
   pollPublish();
   const activeRun = localStorage.getItem(KEY);
@@ -712,6 +736,32 @@ export function registerAdminRoutes(app: Hono): void {
   app.post("/admin/publish/cancel", async (c) => {
     if (!(await getAdminIdentity(c))) return c.json({ error: "Not found." }, 404);
     return c.json({ state: await cancelPublish() });
+  });
+
+  // Reboot ("die"): the escape hatch when a run has left the live environment
+  // wedged past what a git revert can fix (a corrupt dev-server process, a
+  // broken node_modules edit, a hung port). Killing PID 1 stops the container;
+  // its `restart: unless-stopped` policy brings it back from the last published
+  // image, so it returns to the last-published state and drops any edits made
+  // since. Refused mid-run/mid-publish so it can't tear down an in-flight write.
+  app.post("/admin/reboot", async (c) => {
+    const identity = await getAdminIdentity(c);
+    if (!identity) return c.json({ error: "Not found." }, 404);
+    if (getActiveRun()) return c.json({ error: "A run is in progress; wait for it to finish." }, 409);
+    if (isPublishActive()) {
+      return c.json({ error: "A publish is in progress; wait for it to finish." }, 409);
+    }
+    console.log(`[admin] reboot requested by ${identity.email}; terminating container`);
+    // Delay the kill so this response flushes first; the client expects the
+    // console to drop and reconnect on the fresh container.
+    setTimeout(() => {
+      try {
+        process.kill(1, "SIGKILL");
+      } catch (err) {
+        console.error("reboot: could not signal PID 1", err);
+      }
+    }, 250);
+    return c.json({ ok: true });
   });
 
   // Full persisted log for one deployment. The publish list is kept light (no
