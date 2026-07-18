@@ -74,6 +74,10 @@ services:
       # compose up validates the stack's config by listing its Secret Manager
       # secrets; metadata-only viewer — the values are read by the CD, not us.
       - roles/secretmanager.viewer
+      # compose up resolves the delegate-domain zone (Cloud DNS managedZones
+      # get) before launching the CD; the zone already exists from the first
+      # deploy, so read-only is enough — record writes are the CD's job.
+      - roles/dns.reader
     environment:
       DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@db:5432/postgres?sslmode=no-verify
       BETTER_AUTH_SECRET:
