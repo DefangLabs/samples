@@ -135,6 +135,7 @@ export interface HistoryEntry {
   feedbackIds: string[];
   deploymentId: string | null;
   revertable: boolean;
+  restorable: boolean;
 }
 
 const FIELD_SEP = "\x1f";
@@ -171,6 +172,7 @@ export async function history(limit = 50): Promise<HistoryEntry[]> {
       feedbackIds: feedbackIds?.trim() ? feedbackIds.split(",").map((s) => s.trim()) : [],
       deploymentId: deploymentId?.trim() ? deploymentId.trim() : null,
       revertable: false, // filled in by the caller for the entries it exposes
+      restorable: false, // likewise
     });
   }
   return entries;
@@ -201,7 +203,7 @@ export async function isRevertable(sha: string): Promise<boolean> {
  */
 export async function revertCommit(sha: string, adminEmail: string): Promise<string> {
   if (!(await isRevertable(sha))) {
-    throw new Error("only agent commits scoped to todo-app can be reverted");
+    throw new Error("only commits scoped to todo-app can be undone");
   }
   const identity = ["-c", `user.name=${adminEmail}`, "-c", `user.email=${adminEmail}`];
   try {
@@ -211,5 +213,43 @@ export async function revertCommit(sha: string, adminEmail: string): Promise<str
     const e = err as { stderr?: string; message?: string };
     throw new Error(`revert failed: ${(e.stderr || e.message || "unknown error").slice(0, 500)}`);
   }
+  return (await git(["rev-parse", "HEAD"])).trim();
+}
+
+/**
+ * Restore todo-app/ to its exact state at `sha`, as a new commit authored by
+ * the admin — "reset back to this point in time" without rewriting history.
+ * Unlike revertCommit (which unpicks one commit's diff and keeps everything
+ * after it), this removes the effect of every commit after `sha`. Scoped to
+ * todo-app/ (see the safety rule above), which is what makes any history entry
+ * a valid target, including baseline and publish markers. Returns the new
+ * commit sha, or null when the live tree already matches that state.
+ */
+export async function restoreToCommit(sha: string, adminEmail: string): Promise<string | null> {
+  const target = (await git(["rev-parse", "--verify", `${sha}^{commit}`])).trim();
+  const appTree = (await git(["ls-tree", "-d", target, "--", "todo-app"])).trim();
+  if (!appTree) throw new Error("that commit has no todo-app tree to restore");
+  const identity = ["-c", `user.name=${adminEmail}`, "-c", `user.email=${adminEmail}`];
+  try {
+    // rm + checkout (rather than checkout alone) so files added after `target`
+    // are deleted too; the checkout rematerializes index and worktree at it.
+    await git(["rm", "-rq", "--ignore-unmatch", "--", "todo-app"], { identity });
+    await git(["checkout", target, "--", "todo-app"], { identity });
+  } catch (err) {
+    // Put the live tree back to HEAD before surfacing the error.
+    await git(["reset", "-q", "HEAD", "--", "todo-app"]).catch(() => {});
+    await git(["checkout", "-q", "HEAD", "--", "todo-app"]).catch(() => {});
+    await git(["clean", "-qfd", "--", "todo-app"]).catch(() => {});
+    const e = err as { stderr?: string; message?: string };
+    throw new Error(`restore failed: ${(e.stderr || e.message || "unknown error").slice(0, 500)}`);
+  }
+  try {
+    await git(["diff", "--cached", "--quiet"]);
+    return null; // already in this state
+  } catch {
+    // non-zero exit: there are staged changes to commit
+  }
+  const message = `restore: todo-app back to ${target.slice(0, 8)}\n\nRestore-To: ${target}`;
+  await git(["commit", "-q", "-m", message], { identity });
   return (await git(["rev-parse", "HEAD"])).trim();
 }

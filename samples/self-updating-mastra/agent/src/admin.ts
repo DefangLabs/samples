@@ -7,7 +7,7 @@ import { adminTokenConfigured, getAdminIdentity } from "./auth.js";
 import { pool } from "./db.js";
 import { getDeployment, listDeployments } from "./deployments.js";
 import { executeRun, getActiveRun } from "./execute.js";
-import { headSha, history, isRevertable, REPO_DIR, revertCommit } from "./git.js";
+import { headSha, history, isRevertable, REPO_DIR, restoreToCommit, revertCommit } from "./git.js";
 import { getModel } from "./model.js";
 import {
   cancelPublish,
@@ -272,22 +272,41 @@ const CONSOLE_SCRIPT = `
       if (e.runId) subject.addEventListener("click", () => viewRun(e.runId));
       row.append(badge, sha, subject);
       if (e.revertable) {
-        const btn = document.createElement("button"); btn.className = "mini"; btn.type = "button"; btn.textContent = "Revert";
-        btn.addEventListener("click", () => revert(e.sha, btn));
+        const btn = document.createElement("button"); btn.className = "mini"; btn.type = "button"; btn.textContent = "Undo change";
+        btn.title = "Create a new commit that unpicks just this change. Everything after it stays.";
+        btn.addEventListener("click", () => undoCommit(e.sha, btn));
+        row.append(btn);
+      }
+      if (e.restorable) {
+        const btn = document.createElement("button"); btn.className = "mini"; btn.type = "button"; btn.textContent = "Reset to here";
+        btn.title = "Create a new commit that takes the app back to exactly how it was at this point. Changes made after it are removed (history is kept).";
+        btn.addEventListener("click", () => resetToCommit(e.sha, btn));
         row.append(btn);
       }
       box.append(row);
     }
   }
 
-  async function revert(sha, btn) {
-    if (!confirm("Revert commit " + sha.slice(0, 8) + "? This creates a new commit restoring the previous state, and the live dev app updates immediately.")) return;
+  async function undoCommit(sha, btn) {
+    if (!confirm("Undo the changes from commit " + sha.slice(0, 8) + "? Only this one change is unpicked — everything made after it stays. This adds a new commit, and the live dev app updates immediately.")) return;
     btn.disabled = true;
     try {
       const res = await fetch("/admin/history/" + encodeURIComponent(sha) + "/revert", { method: "POST" });
       const data = await res.json().catch(() => null);
-      if (!res.ok || !data || !data.revertSha) { alert((data && data.error) || "Revert failed."); return; }
-      if (!data.typecheckOk) alert("Reverted, but the app no longer typechecks — later changes may depend on this commit. Consider reverting the revert, or dispatch a repair run.\\n\\n" + (data.typecheckOutput || ""));
+      if (!res.ok || !data || !data.revertSha) { alert((data && data.error) || "Undo failed."); return; }
+      if (!data.typecheckOk) alert("Undone, but the app no longer typechecks — later changes may depend on this commit. Consider undoing the undo, or dispatch a repair run.\\n\\n" + (data.typecheckOutput || ""));
+      loadData();
+    } finally { btn.disabled = false; }
+  }
+
+  async function resetToCommit(sha, btn) {
+    if (!confirm("Reset the app back to how it was at commit " + sha.slice(0, 8) + "? Every change made after this point is removed from the app. History is kept, so the reset itself can be undone. This adds a new commit, and the live dev app updates immediately.")) return;
+    btn.disabled = true;
+    try {
+      const res = await fetch("/admin/history/" + encodeURIComponent(sha) + "/restore", { method: "POST" });
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data || !data.restoreSha) { alert((data && data.error) || "Reset failed."); return; }
+      if (!data.typecheckOk) alert("Reset done, but the app no longer typechecks.\\n\\n" + (data.typecheckOutput || ""));
       loadData();
     } finally { btn.disabled = false; }
   }
@@ -649,18 +668,45 @@ export function registerAdminRoutes(app: Hono): void {
   app.get("/admin/history", async (c) => {
     if (!(await getAdminIdentity(c))) return c.json({ error: "Not found." }, 404);
     const entries = await history(50);
-    for (const entry of entries) {
-      if (entry.runId) entry.revertable = await isRevertable(entry.sha);
-    }
+    await Promise.all(
+      entries.map(async (entry, i) => {
+        // Undoable: any commit whose diff stays inside todo-app/ — agent runs,
+        // but also admin undos and resets, so an undo can itself be undone.
+        entry.revertable = await isRevertable(entry.sha);
+        // Resettable: anywhere back in time; HEAD would be a no-op.
+        entry.restorable = i > 0;
+      }),
+    );
     return c.json({ history: entries });
   });
 
-  // Admin-only revert of an agent commit (as a new commit, authored by the
-  // admin). The dev server hot-reloads the restored files immediately.
+  // Report whether the app still compiles after a history operation; an undo
+  // can break the build when later commits depend on the undone one.
+  async function typecheckTodoApp(): Promise<{ typecheckOk: boolean; typecheckOutput: string }> {
+    try {
+      await exec("npx", ["tsc", "--noEmit"], {
+        cwd: `${REPO_DIR}/todo-app`,
+        timeout: 180_000,
+        maxBuffer: 10 * 1024 * 1024,
+      });
+      return { typecheckOk: true, typecheckOutput: "" };
+    } catch (err) {
+      const e = err as { stdout?: string; stderr?: string; message?: string };
+      return {
+        typecheckOk: false,
+        typecheckOutput: (e.stdout || e.stderr || e.message || "unknown error").slice(0, 4000),
+      };
+    }
+  }
+
+  // Admin-only undo of a single commit's changes (git revert, as a new commit
+  // authored by the admin). Everything after the undone commit stays. The dev
+  // server hot-reloads the restored files immediately.
   app.post("/admin/history/:sha/revert", async (c) => {
     const identity = await getAdminIdentity(c);
     if (!identity) return c.json({ error: "Not found." }, 404);
     if (getActiveRun()) return c.json({ error: "A run is in progress; wait for it to finish." }, 409);
+    if (isPublishActive()) return c.json({ error: "A publish is in progress; wait for it to finish." }, 409);
 
     const sha = c.req.param("sha");
     if (!/^[0-9a-f]{7,40}$/i.test(sha)) return c.json({ error: "Invalid commit." }, 400);
@@ -672,22 +718,30 @@ export function registerAdminRoutes(app: Hono): void {
       return c.json({ error: err instanceof Error ? err.message : String(err) }, 400);
     }
 
-    // Report whether the app still compiles after the revert; a revert can
-    // break the build when later commits depend on the reverted one.
-    let typecheckOk = true;
-    let typecheckOutput = "";
+    return c.json({ revertSha, ...(await typecheckTodoApp()) });
+  });
+
+  // Admin-only reset of the app back to its state at a commit (as a new commit,
+  // authored by the admin — history stays append-only). The "scroll back in
+  // time" companion to the per-commit undo above.
+  app.post("/admin/history/:sha/restore", async (c) => {
+    const identity = await getAdminIdentity(c);
+    if (!identity) return c.json({ error: "Not found." }, 404);
+    if (getActiveRun()) return c.json({ error: "A run is in progress; wait for it to finish." }, 409);
+    if (isPublishActive()) return c.json({ error: "A publish is in progress; wait for it to finish." }, 409);
+
+    const sha = c.req.param("sha");
+    if (!/^[0-9a-f]{7,40}$/i.test(sha)) return c.json({ error: "Invalid commit." }, 400);
+
+    let restoreSha: string | null;
     try {
-      await exec("npx", ["tsc", "--noEmit"], {
-        cwd: `${REPO_DIR}/todo-app`,
-        timeout: 180_000,
-        maxBuffer: 10 * 1024 * 1024,
-      });
+      restoreSha = await restoreToCommit(sha, identity.email);
     } catch (err) {
-      const e = err as { stdout?: string; stderr?: string; message?: string };
-      typecheckOk = false;
-      typecheckOutput = (e.stdout || e.stderr || e.message || "unknown error").slice(0, 4000);
+      return c.json({ error: err instanceof Error ? err.message : String(err) }, 400);
     }
-    return c.json({ revertSha, typecheckOk, typecheckOutput });
+    if (!restoreSha) return c.json({ error: "The app is already in this state." }, 400);
+
+    return c.json({ restoreSha, ...(await typecheckTodoApp()) });
   });
 
   // ---- Publish (self-redeploy) -------------------------------------------
