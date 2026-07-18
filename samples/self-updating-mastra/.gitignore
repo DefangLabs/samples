@@ -3,3 +3,8 @@
 # small so it can ride along in the self-redeploy build context.
 .defang/
 *.log
+
+# The coding agent's isolated worktree, if ever created inside this tree. It
+# normally lives outside /workspace (see paths.ts), but guard against it landing
+# in the served tree or the self-redeploy build context.
+agent-worktree/

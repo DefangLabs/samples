@@ -137,19 +137,16 @@ services:
       retries: 10
       start_period: 10s
     deploy:
-      # A single instance: Postgres owns on-disk state, so a second replica
-      # would be a split-brain second database, not a scaled one.
-      replicas: 1
       resources:
         reservations:
           cpus: "0.5"
           memory: 512M
 
 # Managed LLM for the coding agent, declared with the Docker Compose model
-# runner syntax. Defang provisions the cloud provider's native inference
-# service (Vertex AI on GCP) behind an OpenAI-compatible proxy and injects the
-# endpoint/model into any service that references this model (see the dev
-# service's `models:` block).
+# runner syntax. `ai/chat-default` keeps the sample provider-agnostic: Defang
+# maps it to the cloud's native inference (Gemini on GCP Vertex AI, Claude on
+# AWS Bedrock) behind an OpenAI-compatible proxy, and injects the endpoint/model
+# into any service that references it (see the dev service's `models:` block).
 models:
   chat:
-    model: gemini-2.5-flash
+    model: ai/chat-default

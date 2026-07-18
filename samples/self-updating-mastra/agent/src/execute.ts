@@ -1,7 +1,8 @@
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
-import { createCoder, TARGET_DIR } from "./coder.js";
-import { commitRun, revertWorkingTree } from "./git.js";
+import { createCoder } from "./coder.js";
+import { applyToLive, commitRun, syncAgentWorktree } from "./git.js";
+import { AGENT_TODO } from "./paths.js";
 import { appendLog, finishRun, setCommitSha, type Run } from "./runs.js";
 
 const exec = promisify(execFile);
@@ -17,6 +18,10 @@ export function getActiveRun(): Run | null {
 export async function executeRun(run: Run): Promise<void> {
   activeRun = run;
   try {
+    // Start from exactly what users see now — the agent edits its isolated
+    // worktree, and nothing reaches the live app until goLive() below.
+    await syncAgentWorktree();
+
     appendLog(run, `Change request:\n${run.request}\n`);
     const summary = await promptAgent(run, run.request);
     if (summary) appendLog(run, `\nAgent: ${summary}`);
@@ -34,49 +39,57 @@ export async function executeRun(run: Run): Promise<void> {
       check = await typecheck();
       if (!check.ok) {
         appendLog(run, `Typecheck still failing:\n${check.output}`);
-        await failAndRevert(run);
+        await failRun(run);
         return;
       }
     }
-    appendLog(run, "Typecheck passed. Changes are live.");
-    await snapshot(run, summary);
+    appendLog(run, "Typecheck passed.");
+    await goLive(run, summary);
     await finishRun(run, "done");
   } catch (err) {
     appendLog(run, `Run failed: ${err instanceof Error ? err.message : String(err)}`);
-    await failAndRevert(run);
+    await failRun(run);
   } finally {
     activeRun = null;
   }
 }
 
-/** Commit a successful run's edits, linking the commit to the run's DB rows. */
-async function snapshot(run: Run, summary: string): Promise<void> {
+/**
+ * Commit the run's edits in the agent worktree and fast-forward them into the
+ * live tree in one atomic step, linking the commit to the run's DB rows. Once
+ * applyToLive succeeds the change is live for users, so a later bookkeeping
+ * hiccup (recording the sha) must not fail the run.
+ */
+async function goLive(run: Run, summary: string): Promise<void> {
+  const sha = await commitRun({
+    runId: run.id,
+    feedbackIds: run.feedbackIds,
+    model: run.model,
+    summary: summary || run.request,
+  });
+  if (!sha) {
+    appendLog(run, "No file changes to commit.");
+    return;
+  }
+  await applyToLive(sha);
+  appendLog(run, `Committed ${sha.slice(0, 8)} and applied to the live app.`);
   try {
-    const sha = await commitRun({
-      runId: run.id,
-      feedbackIds: run.feedbackIds,
-      model: run.model,
-      summary: summary || run.request,
-    });
-    if (sha) {
-      await setCommitSha(run, sha);
-      appendLog(run, `Committed as ${sha.slice(0, 8)}.`);
-    } else {
-      appendLog(run, "No file changes to commit.");
-    }
+    await setCommitSha(run, sha);
   } catch (err) {
-    // A snapshot failure must not fail a run whose edits are already live.
-    appendLog(run, `Warning: git snapshot failed: ${err instanceof Error ? err.message : String(err)}`);
+    appendLog(run, `Warning: could not record commit sha: ${err instanceof Error ? err.message : String(err)}`);
   }
 }
 
-/** Mark the run failed and restore the working tree to the last good commit. */
-async function failAndRevert(run: Run): Promise<void> {
+/**
+ * Mark the run failed. The agent worktree is discarded (reset to live HEAD),
+ * and because nothing was ever applied to the live tree, users saw no change.
+ */
+async function failRun(run: Run): Promise<void> {
   try {
-    await revertWorkingTree();
-    appendLog(run, "Working tree restored to the last good commit.");
+    await syncAgentWorktree();
+    appendLog(run, "Discarded the failed edits; the live app is unchanged.");
   } catch (err) {
-    appendLog(run, `Warning: failed to restore working tree: ${err instanceof Error ? err.message : String(err)}`);
+    appendLog(run, `Warning: failed to reset the agent worktree: ${err instanceof Error ? err.message : String(err)}`);
   }
   await finishRun(run, "failed");
 }
@@ -121,7 +134,7 @@ async function promptAgent(run: Run, prompt: string): Promise<string> {
 async function typecheck(): Promise<{ ok: boolean; output: string }> {
   try {
     await exec("npx", ["tsc", "--noEmit"], {
-      cwd: TARGET_DIR,
+      cwd: AGENT_TODO,
       timeout: 180_000,
       maxBuffer: 10 * 1024 * 1024,
     });

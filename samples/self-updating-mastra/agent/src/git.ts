@@ -1,34 +1,46 @@
 import { execFile } from "node:child_process";
-import path from "node:path";
 import { promisify } from "node:util";
-import { TARGET_DIR } from "./coder.js";
+import { AGENT_REPO, LIVE_REPO } from "./paths.js";
 
 const exec = promisify(execFile);
 
 /**
- * Git operations for the sample's in-container repository. The repo root is
- * the sample directory (the parent of todo-app/), initialized by
- * entrypoint.dev.sh on first boot and carried across self-redeploys inside
- * the dev image. The coding agent has no access to any of this — these
- * helpers run only in this server, on behalf of the run lifecycle and the
- * admin console.
+ * Git operations for the sample's in-container repository. There are two working
+ * trees on the same repo (see paths.ts):
  *
- * Safety rule: every mutating operation is scoped to todo-app/ (the only
- * tree the agent edits). In local development the repo may be a bind mount
- * of a real working tree, so nothing here may ever reset or clean the whole
- * repository.
+ *  - LIVE_REPO  — the served tree (dev server + admin history), branch `main`.
+ *  - AGENT_REPO — the coding agent's isolated worktree, checked out detached.
+ *
+ * A run edits AGENT_REPO, typechecks it, then `applyToLive` fast-forwards the
+ * commit into LIVE_REPO, so the dev server only ever sees a single atomic,
+ * already-typechecked update. Both trees are initialized by entrypoint.dev.sh
+ * on first boot and carried across self-redeploys inside the dev image. The
+ * coding agent has no access to any of this — these helpers run only in this
+ * server, on behalf of the run lifecycle and the admin console.
+ *
+ * Safety rule: every mutating operation is scoped to todo-app/ (the only tree
+ * the agent edits). In local development the repo may be a bind mount of a real
+ * working tree, so nothing here may ever reset or clean the whole repository.
  */
-export const REPO_DIR = path.resolve(TARGET_DIR, "..");
+export const REPO_DIR = LIVE_REPO;
 
 const AGENT_IDENTITY = ["-c", "user.name=coding-agent", "-c", "user.email=agent@self-updating-mastra.local"];
 
-async function git(args: string[], identity: string[] = AGENT_IDENTITY): Promise<string> {
-  const { stdout } = await exec("git", [...identity, ...args], {
-    cwd: REPO_DIR,
+async function git(
+  args: string[],
+  opts: { identity?: string[]; cwd?: string } = {},
+): Promise<string> {
+  const { stdout } = await exec("git", [...(opts.identity ?? AGENT_IDENTITY), ...args], {
+    cwd: opts.cwd ?? LIVE_REPO,
     timeout: 30_000,
     maxBuffer: 10 * 1024 * 1024,
   });
   return stdout;
+}
+
+/** Same as git(), but scoped to the coding agent's isolated worktree. */
+function agentGit(args: string[]): Promise<string> {
+  return git(args, { cwd: AGENT_REPO });
 }
 
 export async function headSha(): Promise<string | null> {
@@ -47,10 +59,24 @@ function subjectFrom(summary: string): string {
 }
 
 /**
- * Commit the agent's edits for a successful run. The message carries git
- * trailers pointing at the Postgres rows this commit addressed, so history
- * and the database cross-reference each other. Returns the commit sha, or
- * null when the run produced no file changes.
+ * Reset the agent worktree to the live tree's current HEAD before a run, so the
+ * agent starts from exactly what users see now (including any admin reverts or
+ * publishes since the last run). Scoped clean of todo-app/ only — see the safety
+ * rule above; node_modules is gitignored so the symlinked install is preserved.
+ */
+export async function syncAgentWorktree(): Promise<void> {
+  const head = await headSha();
+  if (!head) return;
+  await agentGit(["reset", "-q", "--hard", head]);
+  await agentGit(["clean", "-qfd", "--", "todo-app"]);
+}
+
+/**
+ * Commit the agent's edits (in its worktree) for a successful run. The message
+ * carries git trailers pointing at the Postgres rows this commit addressed, so
+ * history and the database cross-reference each other. Returns the commit sha,
+ * or null when the run produced no file changes. Does NOT touch the live tree —
+ * call applyToLive(sha) to publish it to users.
  */
 export async function commitRun(args: {
   runId: string;
@@ -58,9 +84,9 @@ export async function commitRun(args: {
   model: string;
   summary: string;
 }): Promise<string | null> {
-  await git(["add", "-A", "--", "todo-app"]);
+  await agentGit(["add", "-A", "--", "todo-app"]);
   try {
-    await git(["diff", "--cached", "--quiet"]);
+    await agentGit(["diff", "--cached", "--quiet"]);
     return null; // nothing staged
   } catch {
     // non-zero exit: there are staged changes to commit
@@ -71,8 +97,18 @@ export async function commitRun(args: {
     `Model: ${args.model}`,
   ].join("\n");
   const message = `agent: ${subjectFrom(args.summary)}\n\n${trailers}`;
-  await git(["commit", "-q", "-m", message]);
-  return (await git(["rev-parse", "HEAD"])).trim();
+  await agentGit(["commit", "-q", "-m", message]);
+  return (await agentGit(["rev-parse", "HEAD"])).trim();
+}
+
+/**
+ * Publish a commit made in the agent worktree to the live, served tree. Because
+ * the worktree was synced to live HEAD before the run, the commit is a direct
+ * descendant, so this is a pure fast-forward: the dev server sees one atomic
+ * update to already-typechecked files instead of every intermediate edit.
+ */
+export async function applyToLive(sha: string): Promise<void> {
+  await git(["merge", "--ff-only", "-q", sha]);
 }
 
 /**
@@ -84,20 +120,10 @@ export async function commitRun(args: {
  */
 export async function commitPublish(deploymentId: string, adminEmail: string): Promise<string> {
   const identity = ["-c", `user.name=${adminEmail}`, "-c", `user.email=${adminEmail}`];
-  await git(["add", "-A"], identity);
+  await git(["add", "-A"], { identity });
   const message = `publish: deployment ${deploymentId.slice(0, 8)} by ${adminEmail}\n\nDeployment-Id: ${deploymentId}`;
-  await git(["commit", "-q", "--allow-empty", "-m", message], identity);
+  await git(["commit", "-q", "--allow-empty", "-m", message], { identity });
   return (await git(["rev-parse", "HEAD"])).trim();
-}
-
-/**
- * Discard the working tree back to the last good commit after a failed run.
- * Deliberately scoped to todo-app/ — see the safety rule above.
- */
-export async function revertWorkingTree(): Promise<void> {
-  await git(["reset", "-q", "--", "todo-app"]);
-  await git(["checkout", "-q", "--", "todo-app"]);
-  await git(["clean", "-qfd", "--", "todo-app"]);
 }
 
 export interface HistoryEntry {
@@ -167,9 +193,11 @@ export async function isRevertable(sha: string): Promise<boolean> {
 }
 
 /**
- * Revert a run commit as a new commit authored by the admin. Refuses commits
- * that touch anything outside todo-app/ (baseline and publish markers).
- * On conflict the revert is aborted and the tree left untouched.
+ * Revert a run commit as a new commit authored by the admin, directly on the
+ * live tree (an admin action, applied immediately — the dev server hot-reloads
+ * the restored files). Refuses commits that touch anything outside todo-app/
+ * (baseline and publish markers). On conflict the revert is aborted and the
+ * tree left untouched.
  */
 export async function revertCommit(sha: string, adminEmail: string): Promise<string> {
   if (!(await isRevertable(sha))) {
@@ -177,7 +205,7 @@ export async function revertCommit(sha: string, adminEmail: string): Promise<str
   }
   const identity = ["-c", `user.name=${adminEmail}`, "-c", `user.email=${adminEmail}`];
   try {
-    await git(["revert", "--no-edit", sha], identity);
+    await git(["revert", "--no-edit", sha], { identity });
   } catch (err) {
     await git(["revert", "--abort"]).catch(() => {});
     const e = err as { stderr?: string; message?: string };

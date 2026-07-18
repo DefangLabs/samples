@@ -1,12 +1,14 @@
-import path from "node:path";
 import { Agent } from "@mastra/core/agent";
 import { LocalFilesystem, Workspace } from "@mastra/core/workspace";
 import { getModel } from "./model.js";
+import { AGENT_TODO } from "./paths.js";
 
-/** Directory the agent is allowed to edit — the to-do app's source tree. */
-export const TARGET_DIR = path.resolve(
-  process.env.AGENT_TARGET_DIR ?? path.join(import.meta.dirname, "../../todo-app"),
-);
+/**
+ * Directory the agent is allowed to edit: the to-do app's source tree inside
+ * the isolated agent worktree — NOT the live tree the dev server serves. Edits
+ * reach users only after a run succeeds and typechecks (see git.ts:applyToLive).
+ */
+export const TARGET_DIR = AGENT_TODO;
 
 const INSTRUCTIONS = `
 You are the coding agent inside a self-updating to-do application. Admins send

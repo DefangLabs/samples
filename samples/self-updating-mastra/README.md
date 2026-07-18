@@ -6,8 +6,15 @@ This sample is a multi-user Next.js todo app that turns user feedback into live
 code changes. Better Auth and PostgreSQL provide accounts, private todo lists,
 and feedback storage. The first person to sign up becomes the administrator.
 From the admin page, that person can curate feedback, add instructions, and send
-the request to a Mastra coding agent that edits the app source while the Next.js
-development server hot-reloads it.
+the request to a Mastra coding agent that edits the app source, which the Next.js
+development server then hot-reloads.
+
+To keep those edits from being served half-applied, the coding agent works in an
+**isolated git worktree**, not the files the dev server is serving. It makes and
+typechecks all its edits there; only a successful, compiling run is
+fast-forwarded into the live tree in a single step, so users see one atomic
+update instead of every intermediate keystroke (a multi-file change would
+otherwise flash broken states and flood the backlog with transient errors).
 
 The Compose project separates the public production app from the live-editing
 environment:
@@ -15,7 +22,9 @@ environment:
 - `app` is a standalone Next.js production build with no source, agent, or admin UI.
 - `dev` contains the source, Caddy, the Next.js dev server, and the Mastra agent.
 - `db` is shared PostgreSQL for auth, todos, and feedback.
-- `chat` is the managed Gemini model used by the coding agent on GCP.
+- `chat` is the managed model used by the coding agent. It is declared with the
+  Docker Compose `models:` syntax as `ai/chat-default`, so Defang maps it to the
+  cloud's native inference — Gemini on GCP Vertex AI, Claude on AWS Bedrock.
 
 The **admin console is served by the agent server, not the Next.js app** — it
 lives outside the source tree the coding agent edits. Caddy routes `/admin` to
@@ -31,7 +40,8 @@ recover the app even if a bad edit crashes the Next.js dev server.
 ## Prerequisites
 
 1. Download the [Defang CLI](https://github.com/DefangLabs/defang).
-2. Authenticate with a GCP project that can use Vertex AI.
+2. Authenticate with a cloud account that has managed LLMs: a GCP project with
+   Vertex AI, or an AWS account with Bedrock model access.
 3. For local development, install Docker Desktop with
    [Docker Model Runner](https://docs.docker.com/ai/model-runner/) enabled.
 
@@ -75,10 +85,24 @@ defang config set ADMIN_TOKEN --random
   against PostgreSQL, so it works even while the app is down); the token is the
   fallback for when no valid session is available.
 
-## Deployment to GCP
+## Deployment
 
-The deployed model is `gemini-2.5-flash` through Vertex AI. Select a GCP project
-and a region where that model is available; `europe-west2` is the configuration
+The `chat` model is `ai/chat-default`, so the same Compose project deploys to
+either cloud — Defang resolves it to that provider's managed inference. The
+first deployment creates managed PostgreSQL and can take about 20 minutes.
+Defang reports separate URLs for `app` and `dev`:
+
+- Share the `app` URL with normal users.
+- Use the `dev` URL for administration and live agent changes.
+
+The `dev` service deliberately runs as one always-on instance (it declares two
+ports, which keeps it off the serverless path) so its working tree survives idle
+periods. The `app` service remains a stateless production build.
+
+### GCP (Vertex AI)
+
+`ai/chat-default` resolves to Gemini on Vertex AI. Select a GCP project and a
+region where managed LLMs are available; `europe-west2` is the configuration
 used for this sample's London demo.
 
 ```bash
@@ -89,15 +113,20 @@ export GCP_LOCATION=europe-west2
 defang compose up
 ```
 
-The first deployment creates managed PostgreSQL and can take about 20 minutes.
-Defang reports separate URLs for `app` and `dev`:
+### AWS (Bedrock)
 
-- Share the `app` URL with normal users.
-- Use the `dev` URL for administration and live agent changes.
+`ai/chat-default` resolves to a Claude model on Bedrock. Enable model access for
+it in the Bedrock console first. A committed stack file (`.defang/aws`, region
+`us-east-1`) makes AWS an explicit deploy target:
 
-The `dev` service deliberately runs as one always-on Compute Engine instance so
-its working tree survives idle periods. The `app` service remains a stateless
-production build.
+```bash
+defang compose up --stack aws
+```
+
+> [!NOTE]
+> `PUBLISH_STACK` in `compose.yaml` selects which stack the in-container
+> **Publish** button self-redeploys to (`beta` by default). To make AWS the
+> self-redeploy target, set `PUBLISH_STACK: aws`.
 
 ## Publishing (self-redeploy)
 
@@ -125,9 +154,10 @@ mutates its own deployment.
 
 ## Run history and revert
 
-Every successful agent run is committed to the workspace's local git repo with
-trailers (`Run-Id`, `Feedback-Id`, `Model`) linking it to the run and feedback
-rows in Postgres; failed runs are rolled back to the last good commit. The
+Every successful agent run is committed in the agent worktree and fast-forwarded
+into the live tree with trailers (`Run-Id`, `Feedback-Id`, `Model`) linking it to
+the run and feedback rows in Postgres; a failed run is discarded in the worktree
+and never reaches the live app. The
 admin console's **History** panel lists the lineage, links agent commits to
 their run logs, and offers an admin-only revert (a new commit authored as the
 admin). Runs can be graded on demand ("Grade this run") with a second model
