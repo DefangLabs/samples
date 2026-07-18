@@ -5,7 +5,7 @@ import type { Hono } from "hono";
 import { setCookie } from "hono/cookie";
 import { adminTokenConfigured, getAdminIdentity } from "./auth.js";
 import { pool } from "./db.js";
-import { listDeployments } from "./deployments.js";
+import { getDeployment, listDeployments } from "./deployments.js";
 import { executeRun, getActiveRun } from "./execute.js";
 import { headSha, history, isRevertable, REPO_DIR, revertCommit } from "./git.js";
 import { getModel } from "./model.js";
@@ -375,6 +375,8 @@ const CONSOLE_SCRIPT = `
 
   const PUB_WARNING = "This runs defang compose up from the live dev workspace and overwrites BOTH services: app (production — what all users see) and dev (this environment, including this console; the VM is replaced, so this page will drop and come back on the new build, ~10–15 min). The database is managed and keeps all data.";
   let pubTimer = null;
+  let pubLogId = null;   // deployment whose log the viewer is showing (or null)
+  let pubLogText = "";   // its fetched log text
 
   function pubCancelBtn() {
     const b = document.createElement("button"); b.className = "mini"; b.type = "button"; b.style.marginTop = "10px"; b.textContent = "Cancel publish";
@@ -419,6 +421,10 @@ const CONSOLE_SCRIPT = `
     } else {
       if (phase === "failed" && s.error) { const err = document.createElement("div"); err.className = "err"; err.textContent = s.error; body.append(err); }
       if (phase === "cancelled") { const note = document.createElement("p"); note.className = "meta"; note.textContent = "Publish cancelled."; body.append(note); }
+      // A failed publish keeps its full log in the deployments table. Open it
+      // automatically so the error is visible here instead of vanishing (the
+      // whole reason the panel dropped the streamed log used to be confusing).
+      if (phase === "failed" && s.deploymentId && pubLogId === null) viewDeployment(s.deploymentId);
       const go = document.createElement("button"); go.className = "go"; go.type = "button"; go.textContent = "Publish to production…";
       go.disabled = !!data.runActive;
       if (data.runActive) go.title = "A run is in progress";
@@ -434,16 +440,42 @@ const CONSOLE_SCRIPT = `
     if (data.deployments && data.deployments.length) {
       const wrap = document.createElement("div"); wrap.style.marginTop = "12px";
       for (const d of data.deployments) {
-        const row = document.createElement("div"); row.className = "deprow";
+        const row = document.createElement("div"); row.className = "deprow"; row.style.cursor = "pointer"; row.title = "View this deployment's log";
         const pill = document.createElement("span"); pill.className = "pill " + d.status; pill.textContent = d.status.replace(/_/g, " ");
         const id = document.createElement("span"); id.className = "mono"; id.textContent = d.id.slice(0, 8);
         const by = document.createElement("span"); by.textContent = d.triggeredBy || ""; by.style.marginLeft = "auto";
-        row.append(pill, id, by); wrap.append(row);
+        const size = document.createElement("span"); size.className = "meta"; size.style.marginLeft = "8px";
+        size.textContent = d.logChars ? "log ›" : "no log";
+        row.append(pill, id, by, size);
+        row.addEventListener("click", () => viewDeployment(d.id));
+        wrap.append(row);
       }
       body.append(wrap);
     }
+    // On-demand deployment log viewer (survives re-renders via pubLogId).
+    if (pubLogId) {
+      const view = document.createElement("div"); view.style.marginTop = "12px";
+      const head = document.createElement("div"); head.className = "meta"; head.style.display = "flex"; head.style.alignItems = "center"; head.style.gap = "8px";
+      const label = document.createElement("span"); label.textContent = "Deployment " + pubLogId.slice(0, 8) + " log";
+      const close = document.createElement("button"); close.className = "mini"; close.type = "button"; close.textContent = "Close"; close.style.marginLeft = "auto";
+      close.addEventListener("click", () => { pubLogId = null; pollPublish(); });
+      head.append(label, close);
+      const pre = document.createElement("pre"); pre.id = "pub-log"; pre.textContent = pubLogText || "Loading…";
+      view.append(head, pre); body.append(view);
+    }
     const activePhase = phase === "awaiting-login" || phase === "ready" || phase === "deploying";
     if (activePhase && !pubTimer) pubTimer = setTimeout(pollPublish, 2000);
+  }
+
+  async function viewDeployment(id) {
+    pubLogId = id; pubLogText = "Loading…";
+    const pre = $("pub-log"); if (pre) pre.textContent = pubLogText;
+    try {
+      const res = await fetch("/admin/deployments/" + encodeURIComponent(id), { cache: "no-store" });
+      const d = await res.json().catch(() => null);
+      pubLogText = res.ok && d ? (d.log && d.log.trim() ? d.log : "(no log was captured for this deployment)") : ((d && d.error) || "Failed to load the deployment log.");
+    } catch { pubLogText = "Failed to load the deployment log."; }
+    const pre2 = $("pub-log"); if (pre2) pre2.textContent = pubLogText; else pollPublish();
   }
 
   async function pollPublish() {
@@ -680,6 +712,17 @@ export function registerAdminRoutes(app: Hono): void {
   app.post("/admin/publish/cancel", async (c) => {
     if (!(await getAdminIdentity(c))) return c.json({ error: "Not found." }, 404);
     return c.json({ state: await cancelPublish() });
+  });
+
+  // Full persisted log for one deployment. The publish list is kept light (no
+  // log bodies) so the panel can poll it cheaply; the console fetches a
+  // deployment's log on demand — including for FAILED publishes, whose logs
+  // used to vanish from the UI the moment the panel left the deploying phase.
+  app.get("/admin/deployments/:id", async (c) => {
+    if (!(await getAdminIdentity(c))) return c.json({ error: "Not found." }, 404);
+    const view = await getDeployment(c.req.param("id"));
+    if (!view) return c.json({ error: "No such deployment." }, 404);
+    return c.json(view);
   });
 
   // On-demand verdict: grade a finished run with a second model call. Kept
