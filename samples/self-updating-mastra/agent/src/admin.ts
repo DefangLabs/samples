@@ -280,9 +280,13 @@ const CONSOLE_SCRIPT = `
       const res = await fetch("/admin/history/" + encodeURIComponent(sha) + "/revert", { method: "POST" });
       const data = await res.json().catch(() => null);
       if (!res.ok || !data || !data.revertSha) { alert((data && data.error) || "Revert failed."); return; }
-      if (!data.typecheckOk) alert("Reverted, but the app no longer typechecks — later changes may depend on this commit. Consider reverting the revert, or dispatch a repair run.\n\n" + (data.typecheckOutput || ""));
+      if (!data.typecheckOk) alert("Reverted, but the app no longer typechecks — later changes may depend on this commit. Consider reverting the revert, or dispatch a repair run.\\n\\n" + (data.typecheckOutput || ""));
       loadData();
     } finally { btn.disabled = false; }
+  }
+
+  function showLoadError(ids, status) {
+    for (const id of ids) $(id).innerHTML = '<p class="empty">Failed to load' + (status ? " (HTTP " + status + ")" : "") + ". Refresh to retry.</p>";
   }
 
   async function loadData() {
@@ -295,12 +299,14 @@ const CONSOLE_SCRIPT = `
         const data = await dataRes.json();
         renderFeedback(data.feedback || []);
         renderRuns(data.runs || []);
-      }
+      } else showLoadError(["feedback", "runs"], dataRes.status);
       if (histRes.ok) {
         const hist = await histRes.json();
         renderHistory(hist.history || []);
-      }
-    } catch {}
+      } else showLoadError(["history"], histRes.status);
+    } catch {
+      showLoadError(["feedback", "runs", "history"], 0);
+    }
   }
 
   function showRun(data) {
@@ -399,7 +405,7 @@ const CONSOLE_SCRIPT = `
       }
       body.append(pubCancelBtn());
     } else if (phase === "ready") {
-      const who = document.createElement("div"); who.className = "who"; who.textContent = "Signed in as:\n" + (s.whoami || "?"); body.append(who);
+      const who = document.createElement("div"); who.className = "who"; who.textContent = "Signed in as:\\n" + (s.whoami || "?"); body.append(who);
       const go = document.createElement("button"); go.className = "go danger"; go.type = "button"; go.textContent = "2 · Deploy and overwrite dev + app";
       go.addEventListener("click", async () => { go.disabled = true; await fetch("/admin/publish/deploy", { method: "POST" }); pollPublish(); });
       body.append(go, pubCancelBtn());
@@ -409,7 +415,7 @@ const CONSOLE_SCRIPT = `
         ? "Deployment launched in the cloud. This environment restarts on the new build — the console will drop and come back."
         : "Publishing… uploading the workspace and starting the deployment.";
       body.append(note);
-      const pre = document.createElement("pre"); pre.textContent = (s.logTail || []).slice(-30).join("\n") || "…"; body.append(pre);
+      const pre = document.createElement("pre"); pre.textContent = (s.logTail || []).slice(-30).join("\\n") || "…"; body.append(pre);
     } else {
       if (phase === "failed" && s.error) { const err = document.createElement("div"); err.className = "err"; err.textContent = s.error; body.append(err); }
       if (phase === "cancelled") { const note = document.createElement("p"); note.className = "meta"; note.textContent = "Publish cancelled."; body.append(note); }
@@ -456,6 +462,13 @@ const CONSOLE_SCRIPT = `
   const activeRun = localStorage.getItem(KEY);
   if (activeRun) poll(activeRun);
 `;
+
+// The console script above is authored in a TS template literal, where escapes
+// like \n are processed server-side — client-facing ones must be written \\n
+// or the browser receives a raw newline inside a string literal and the whole
+// script fails to parse (every panel then hangs at "Loading…"). Compiling it
+// here (without running it) makes that a boot failure instead.
+new Function(CONSOLE_SCRIPT);
 
 export function registerAdminRoutes(app: Hono): void {
   // Break-glass login: exchange the admin token for a scoped cookie.
