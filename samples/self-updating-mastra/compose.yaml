@@ -92,23 +92,14 @@ services:
       # stack this project was deployed with.
       PUBLISH_ENABLED: "true"
       PUBLISH_STACK: beta
-      # Key for the model gateway. With a `models:` binding Defang injects
-      # CHAT_URL/CHAT_MODEL but no key, and the generated LiteLLM proxy locks
-      # itself to this default master key — so the agent must present exactly
-      # this value (agent/src/model.ts sends OPENAI_API_KEY) or every model
-      # call is rejected with a 401. Not a secret: the gateway is only
-      # reachable on the project's private network.
-      OPENAI_API_KEY: networkisalreadyprivate
-    # Attach the managed LLM (declared under the top-level `models:` key).
-    # Defang injects the gateway endpoint into CHAT_URL and the resolved model
-    # id into CHAT_MODEL, which the coding agent reads (agent/src/model.ts).
-    models:
-      chat:
-        endpoint_var: CHAT_URL
-        model_var: CHAT_MODEL
+      # CHAT_URL, CHAT_MODEL, and OPENAI_API_KEY (the gateway's master key)
+      # are injected automatically because this service depends on the `chat`
+      # model service; the coding agent reads them in agent/src/model.ts.
     depends_on:
       db:
         condition: service_healthy
+      chat:
+        condition: service_started
     healthcheck:
       test:
         - CMD
@@ -125,6 +116,30 @@ services:
         reservations:
           cpus: "1.0"
           memory: 4096M
+
+  # Managed LLM the coding agent talks to. `chat-default` is Defang's
+  # provider-agnostic alias — Gemini on GCP Vertex AI, Amazon Nova on AWS
+  # Bedrock — served behind an OpenAI-compatible LiteLLM proxy. The alias must
+  # be the bare token: an `ai/`-prefixed name is treated as already
+  # provider-qualified and passed through unresolved. This deliberately uses
+  # the deprecated `provider:` service syntax rather than a top-level
+  # `models:` entry: only a declared service keeps its `deploy:` block, and
+  # without one the generated gateway lands on GCP's smallest VM (e2-micro),
+  # where LiteLLM cannot start — the 2026-07-19 redeploy failed exactly that
+  # way. Move back to `models:` once the Defang CLI sizes generated gateways.
+  chat:
+    provider:
+      type: model
+      options:
+        model: chat-default
+    x-defang-llm: true
+    environment:
+      OPENAI_API_KEY: defang
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M
 
   # Shared database: todos, users/sessions (Better Auth), feedback, and the
   # Mastra agent's storage. Both app and dev point here.
@@ -153,13 +168,3 @@ services:
           cpus: "0.5"
           memory: 512M
 
-# Managed LLM for the coding agent, declared with the Docker Compose model
-# runner syntax. `chat-default` keeps the sample provider-agnostic: Defang
-# maps it to the cloud's native inference (Gemini on GCP Vertex AI, Amazon
-# Nova on AWS Bedrock) behind an OpenAI-compatible proxy, and injects the
-# endpoint/model into any service that references it (see the dev service's
-# `models:` block). The alias must be the bare token: an `ai/`-prefixed name
-# is treated as already provider-qualified and passed through unresolved.
-models:
-  chat:
-    model: chat-default

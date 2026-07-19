@@ -22,8 +22,8 @@ environment:
 - `app` is a standalone Next.js production build with no source, agent, or admin UI.
 - `dev` contains the source, Caddy, the Next.js dev server, and the Mastra agent.
 - `db` is shared PostgreSQL for auth, todos, and feedback.
-- `chat` is the managed model used by the coding agent. It is declared with the
-  Docker Compose `models:` syntax as `chat-default`, so Defang maps it to the
+- `chat` is the managed model used by the coding agent, declared as a model
+  provider service with the `chat-default` alias, so Defang maps it to the
   cloud's native inference — Gemini on GCP Vertex AI, Amazon Nova on AWS Bedrock.
 
 The **admin console is served by the agent server, not the Next.js app** — it
