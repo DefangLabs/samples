@@ -64,19 +64,21 @@ const PAGE_STYLE = `
   a { color: #7c3aed; }
   .bar { border-bottom: 1px solid #e2e8f0; background: #fff; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
   .bar .title { font-weight: 700; }
-  .bar .who { color: #64748b; font-size: 14px; }
+  .bar .who { color: #64748b; font-size: 14px; min-width: 0; overflow-wrap: anywhere; }
   .wrap { max-width: 1120px; margin: 0 auto; padding: 32px 24px; }
   .grid { display: grid; gap: 28px; grid-template-columns: minmax(0,1fr) minmax(320px,0.85fr); }
+  .grid > *, .fb > *, .runrow > *, .histrow > *, .pub .deprow > * { min-width: 0; }
   @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
   .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: #7c3aed; }
   h1 { margin: 8px 0 0; font-size: 28px; }
   h3 { margin: 28px 0 12px; font-size: 15px; text-transform: uppercase; letter-spacing: .12em; color: #64748b; }
   .card { border: 1px solid #e2e8f0; background: #fff; border-radius: 16px; overflow: hidden; }
-  .fb { padding: 16px 18px; border-top: 1px solid #f1f5f9; display: flex; gap: 12px; }
+  .fb { padding: 16px 18px; border-top: 1px solid #f1f5f9; display: flex; align-items: flex-start; gap: 12px; }
   .fb:first-child { border-top: 0; }
   .fb .meta { font-size: 12px; color: #94a3b8; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
   .fb .meta .email { color: #475569; font-weight: 600; }
-  .fb .body { margin: 8px 0 0; font-size: 14px; line-height: 1.5; white-space: pre-wrap; }
+  .fb .meta > * { min-width: 0; overflow-wrap: anywhere; }
+  .fb .body { margin: 8px 0 0; font-size: 14px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; }
   .pill { border-radius: 999px; padding: 2px 8px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
   .pill.new { background: #fef3c7; color: #b45309; }
   .pill.sent { background: #d1fae5; color: #047857; }
@@ -91,11 +93,11 @@ const PAGE_STYLE = `
   textarea { width: 100%; margin-top: 16px; resize: vertical; min-height: 130px; border-radius: 12px; border: 1px solid #334155; background: #1e293b; color: #fff; padding: 14px; font: inherit; font-size: 14px; }
   button.send { margin-top: 14px; width: 100%; border: 0; border-radius: 12px; background: #8b5cf6; color: #fff; font-weight: 700; padding: 12px; cursor: pointer; }
   button.send:disabled { opacity: .6; cursor: default; }
-  .err { margin-top: 12px; background: rgba(159,18,57,.4); color: #fecdd3; border-radius: 8px; padding: 8px 12px; font-size: 14px; }
+  .err { margin-top: 12px; background: rgba(159,18,57,.4); color: #fecdd3; border-radius: 8px; padding: 8px 12px; font-size: 14px; overflow-wrap: anywhere; word-break: break-word; }
   .run { margin-top: 24px; }
   .run .head { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 1px solid #f1f5f9; gap: 8px; flex-wrap: wrap; }
   .run .meta { font-size: 12px; color: #64748b; }
-  .run pre { margin: 0; max-height: 26rem; min-height: 8rem; overflow: auto; white-space: pre-wrap; background: #0f172a; color: #e2e8f0; padding: 18px; font: 12px/1.5 ui-monospace, monospace; }
+  .run pre { margin: 0; max-width: 100%; max-height: 26rem; min-height: 8rem; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; background: #0f172a; color: #e2e8f0; padding: 18px; font: 12px/1.5 ui-monospace, monospace; }
   .runrow { padding: 12px 16px; border-top: 1px solid #f1f5f9; display: flex; align-items: center; gap: 10px; cursor: pointer; }
   .runrow:first-child { border-top: 0; }
   .runrow:hover { background: #f8fafc; }
@@ -123,9 +125,10 @@ const PAGE_STYLE = `
   .pub button.danger { background: #dc2626; }
   .pub button.go:disabled { opacity: .6; cursor: default; }
   .pub a.login { display: block; margin-top: 12px; text-align: center; border-radius: 12px; background: #7c3aed; color: #fff; font-weight: 700; padding: 12px; text-decoration: none; }
-  .pub .who { margin-top: 12px; font: 12px ui-monospace, monospace; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 12px; white-space: pre-wrap; }
-  .pub pre { margin: 12px 0 0; max-height: 12rem; overflow: auto; white-space: pre-wrap; background: #0f172a; color: #e2e8f0; padding: 12px; border-radius: 10px; font: 11px/1.5 ui-monospace, monospace; }
+  .pub .who { margin-top: 12px; font: 12px ui-monospace, monospace; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 12px; white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; }
+  .pub pre { margin: 12px 0 0; max-width: 100%; max-height: 12rem; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; background: #0f172a; color: #e2e8f0; padding: 12px; border-radius: 10px; font: 11px/1.5 ui-monospace, monospace; }
   .pub .deprow { display: flex; gap: 8px; align-items: center; font-size: 12px; color: #64748b; padding: 6px 0; border-top: 1px solid #f1f5f9; }
+  .pub .deprow .by { margin-left: auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .pub .deprow:first-of-type { border-top: 0; }
   .pill.cd_launched, .pill.deploying, .pill.ready, .pill.awaiting_login { background: #ede9fe; color: #6d28d9; }
   .pill.live { background: #d1fae5; color: #047857; }
@@ -133,6 +136,17 @@ const PAGE_STYLE = `
   .gate { max-width: 460px; margin: 8vh auto; padding: 0 24px; }
   .gate input { width: 100%; margin-top: 10px; padding: 12px; border-radius: 10px; border: 1px solid #cbd5e1; font: inherit; }
   .gate button { margin-top: 12px; width: 100%; border: 0; border-radius: 10px; background: #0f172a; color: #fff; font-weight: 700; padding: 12px; cursor: pointer; }
+  @media (max-width: 560px) {
+    .bar { padding: 14px 16px; align-items: flex-start; flex-direction: column; gap: 4px; }
+    .wrap { padding: 24px 12px; }
+    .panel { padding: 18px; }
+    .fb { padding: 14px 12px; }
+    .runrow, .histrow, .pub .deprow { align-items: flex-start; flex-wrap: wrap; }
+    .runrow .model { flex-basis: 100%; margin-left: 0; overflow-wrap: anywhere; }
+    .histrow .subject { order: 2; flex-basis: 100%; white-space: normal; overflow-wrap: anywhere; }
+    .histrow button.mini { order: 3; }
+    .pub .deprow .by { order: 4; flex-basis: 100%; margin-left: 0; white-space: normal; overflow-wrap: anywhere; }
+  }
 `;
 
 function renderGate(message?: string): string {
@@ -403,6 +417,62 @@ const CONSOLE_SCRIPT = `
   let pubTimer = null;
   let pubLogId = null;   // deployment whose log the viewer is showing (or null)
   let pubLogText = "";   // its fetched log text
+  let versionTimer = null;
+  let versionWatch = null; // boot-time version of the container being replaced
+
+  function validVersion(value) { return typeof value === "string" && /^[0-9a-f]{40,64}$/i.test(value); }
+
+  function watchForReplacement(currentVersion) {
+    if (!validVersion(currentVersion) || versionWatch) return;
+    versionWatch = { currentVersion, unavailable: false };
+    pollVersion();
+  }
+
+  function stopVersionWatch() {
+    if (versionTimer) clearTimeout(versionTimer);
+    versionTimer = null;
+    versionWatch = null;
+  }
+
+  function updateReplacementStatus() {
+    const note = $("replacement-status");
+    if (!note || !versionWatch) return;
+    note.textContent = versionWatch.unavailable
+      ? "The environment is restarting and is temporarily unreachable. Retrying automatically…"
+      : "Waiting for the replacement environment. This page reloads automatically when the new Git version is online.";
+  }
+
+  // The version endpoint returns the Git HEAD captured when the agent server
+  // booted. Every network error, proxy response, auth failure, and malformed
+  // payload is retryable during VM replacement. Only a valid, different Git
+  // version proves that the new process is serving and makes a reload safe.
+  async function pollVersion() {
+    versionTimer = null;
+    if (!versionWatch) return;
+    try {
+      const res = await fetch("/admin/version", {
+        cache: "no-store",
+        signal: AbortSignal.timeout(10000),
+      });
+      const data = res.ok ? await res.json().catch(() => null) : null;
+      if (!data || !validVersion(data.version)) throw new Error("version unavailable");
+      versionWatch.unavailable = false;
+      if (data.version !== versionWatch.currentVersion) { window.location.reload(); return; }
+    } catch {
+      // Expected while the old VM goes away and the replacement starts. Keep
+      // the existing page alive and retry instead of surfacing a false failure.
+      if (versionWatch) versionWatch.unavailable = true;
+    }
+    updateReplacementStatus();
+    if (versionWatch) versionTimer = setTimeout(pollVersion, 4000);
+  }
+
+  function appendReplacementStatus(body) {
+    if (!versionWatch) return;
+    const note = document.createElement("div"); note.className = "ok"; note.id = "replacement-status";
+    body.append(note);
+    updateReplacementStatus();
+  }
 
   function pubCancelBtn() {
     const b = document.createElement("button"); b.className = "mini"; b.type = "button"; b.style.marginTop = "10px"; b.textContent = "Cancel publish";
@@ -435,7 +505,33 @@ const CONSOLE_SCRIPT = `
     } else if (phase === "ready") {
       const who = document.createElement("div"); who.className = "who"; who.textContent = "Signed in as:\\n" + (s.whoami || "?"); body.append(who);
       const go = document.createElement("button"); go.className = "go danger"; go.type = "button"; go.textContent = "2 · Deploy and overwrite dev + app";
-      go.addEventListener("click", async () => { go.disabled = true; await fetch("/admin/publish/deploy", { method: "POST" }); pollPublish(); });
+      go.addEventListener("click", async () => {
+        go.disabled = true;
+        if (!validVersion(data.version)) {
+          alert("This server does not have a valid Git version, so it cannot safely detect the replacement environment.");
+          go.disabled = false;
+          return;
+        }
+        try {
+          const res = await fetch("/admin/publish/deploy", { method: "POST" });
+          const d = await res.json().catch(() => null);
+          if (res.status >= 400 && res.status < 500) {
+            alert((d && d.error) || "Could not start the deployment."); go.disabled = false; return;
+          }
+          if (d && d.state && d.state.phase === "failed") {
+            alert(d.state.error || "Could not start the deployment."); pollPublish(); return;
+          }
+          // A 5xx or malformed proxy response is ambiguous: the request may
+          // already have started the replacement. The version handshake is the
+          // source of truth, so watch in all non-definitive cases.
+          watchForReplacement(data.version);
+        } catch {
+          // The old environment can disappear before this response arrives.
+          // Treat that as potentially successful and let the version probe decide.
+          watchForReplacement(data.version);
+        }
+        pollPublish();
+      });
       body.append(go, pubCancelBtn());
     } else if (phase === "deploying" || phase === "cd-launched") {
       const note = document.createElement("div"); note.className = phase === "cd-launched" ? "ok" : "warn";
@@ -463,13 +559,18 @@ const CONSOLE_SCRIPT = `
       });
       body.append(go);
     }
+    if ((phase === "deploying" || phase === "cd-launched") && validVersion(data.version)) {
+      watchForReplacement(data.version);
+    }
+    if (phase === "failed" || phase === "cancelled") stopVersionWatch();
+    appendReplacementStatus(body);
     if (data.deployments && data.deployments.length) {
       const wrap = document.createElement("div"); wrap.style.marginTop = "12px";
       for (const d of data.deployments) {
         const row = document.createElement("div"); row.className = "deprow"; row.style.cursor = "pointer"; row.title = "View this deployment's log";
         const pill = document.createElement("span"); pill.className = "pill " + d.status; pill.textContent = d.status.replace(/_/g, " ");
         const id = document.createElement("span"); id.className = "mono"; id.textContent = d.id.slice(0, 8);
-        const by = document.createElement("span"); by.textContent = d.triggeredBy || ""; by.style.marginLeft = "auto";
+        const by = document.createElement("span"); by.className = "by"; by.textContent = d.triggeredBy || "";
         const size = document.createElement("span"); size.className = "meta"; size.style.marginLeft = "8px";
         size.textContent = d.logChars ? "log ›" : "no log";
         row.append(pill, id, by, size);
@@ -545,7 +646,7 @@ const CONSOLE_SCRIPT = `
 // here (without running it) makes that a boot failure instead.
 new Function(CONSOLE_SCRIPT);
 
-export function registerAdminRoutes(app: Hono): void {
+export function registerAdminRoutes(app: Hono, serverVersion: string | null): void {
   // Break-glass login: exchange the admin token for a scoped cookie.
   app.post("/admin/login", async (c) => {
     const form = await c.req.parseBody();
@@ -567,6 +668,16 @@ export function registerAdminRoutes(app: Hono): void {
     const identity = await getAdminIdentity(c);
     if (!identity) return c.html(renderGate(), 401);
     return c.html(renderShell(identity.email));
+  });
+
+  // Used by the publish client to distinguish the old container from the
+  // replacement. This is the process-start HEAD passed by index.ts, not a live
+  // HEAD read: the old worktree advances to the publish commit before it dies.
+  app.get("/admin/version", async (c) => {
+    if (!(await getAdminIdentity(c))) return c.json({ error: "Not found." }, 404);
+    c.header("Cache-Control", "no-store");
+    if (!serverVersion) return c.json({ error: "Git version unavailable." }, 503);
+    return c.json({ version: serverVersion });
   });
 
   app.get("/admin/data", async (c) => {
@@ -756,6 +867,7 @@ export function registerAdminRoutes(app: Hono): void {
     const head = await headSha();
     return c.json({
       enabled: publishEnabled(),
+      version: serverVersion,
       state: getPublishState(),
       runActive: getActiveRun() !== null,
       head: head ? head.slice(0, 8) : null,
