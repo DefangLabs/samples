@@ -23,8 +23,8 @@ environment:
 - `dev` contains the source, Caddy, the Next.js dev server, and the Mastra agent.
 - `db` is shared PostgreSQL for auth, todos, and feedback.
 - `chat` is the managed model used by the coding agent. It is declared with the
-  Docker Compose `models:` syntax as `ai/chat-default`, so Defang maps it to the
-  cloud's native inference — Gemini on GCP Vertex AI, Claude on AWS Bedrock.
+  Docker Compose `models:` syntax as `chat-default`, so Defang maps it to the
+  cloud's native inference — Gemini on GCP Vertex AI, Amazon Nova on AWS Bedrock.
 
 The **admin console is served by the agent server, not the Next.js app** — it
 lives outside the source tree the coding agent edits. Caddy routes `/admin` to
@@ -87,7 +87,7 @@ defang config set ADMIN_TOKEN --random
 
 ## Deployment
 
-The `chat` model is `ai/chat-default`, so the same Compose project deploys to
+The `chat` model is `chat-default`, so the same Compose project deploys to
 either cloud — Defang resolves it to that provider's managed inference. The
 first deployment creates managed PostgreSQL and can take about 20 minutes.
 Defang reports separate URLs for `app` and `dev`:
@@ -101,7 +101,7 @@ periods. The `app` service remains a stateless production build.
 
 ### GCP (Vertex AI)
 
-`ai/chat-default` resolves to Gemini on Vertex AI. Select a GCP project and a
+`chat-default` resolves to Gemini on Vertex AI. Select a GCP project and a
 region where managed LLMs are available; `europe-west2` is the configuration
 used for this sample's London demo.
 
@@ -115,8 +115,8 @@ defang compose up
 
 ### AWS (Bedrock)
 
-`ai/chat-default` resolves to a Claude model on Bedrock. Enable model access for
-it in the Bedrock console first. A committed stack file (`.defang/aws`, region
+`chat-default` resolves to an Amazon Nova model on Bedrock. Enable model access
+for it in the Bedrock console first. A committed stack file (`.defang/aws`, region
 `us-east-1`) makes AWS an explicit deploy target:
 
 ```bash
