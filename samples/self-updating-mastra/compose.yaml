@@ -61,9 +61,9 @@ services:
       # Enable the admin-triggered self-redeploy. Fabric auth is a per-publish
       # interactive `defang login` (no stored token). The stack-specific env
       # file supplies the same stack/provider choice for self-redeploys.
-      PUBLISH_ENABLED: "true"
-      PUBLISH_PROVIDER: ${PUBLISH_PROVIDER}
-      PUBLISH_STACK: ${PUBLISH_STACK}
+      PUBLISH_ENABLED: "${PUBLISH_ENABLED:-false}"
+      PUBLISH_PROVIDER: "${PUBLISH_PROVIDER:-}"
+      PUBLISH_STACK: "${PUBLISH_STACK:-}"
       # CHAT_URL, CHAT_MODEL, and OPENAI_API_KEY (the gateway's master key)
       # are injected automatically because this service depends on the `chat`
       # model service; the coding agent reads them in agent/src/model.ts.
@@ -97,7 +97,7 @@ services:
     provider:
       type: model
       options:
-        model: ${CHAT_MODEL}
+        model: ${CHAT_MODEL:-chat-default}
     x-defang-llm: true
     environment:
       OPENAI_API_KEY: defang
@@ -105,7 +105,7 @@ services:
       resources:
         reservations:
           cpus: "0.5"
-          memory: ${CHAT_MEMORY}
+          memory: ${CHAT_MEMORY:-1024M}
 
   # Shared database: todos, users/sessions (Better Auth), feedback, and the
   # Mastra agent's storage. Both app and dev point here.
