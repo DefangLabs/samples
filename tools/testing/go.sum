@@ -4,8 +4,8 @@ github.com/aymanbagabas/go-osc52/v2 v2.0.1 h1:HwpRHbFMcZLEVr42D4p7XBqjyuxQH5SMiE
 github.com/aymanbagabas/go-osc52/v2 v2.0.1/go.mod h1:uYgXzlJ7ZpABp8OJ+exZzJJhRNQ2ASbcXHWsFqH8hp8=
 github.com/bufbuild/connect-go v1.10.0 h1:QAJ3G9A1OYQW2Jbk3DeoJbkCxuKArrvZgDt47mjdTbg=
 github.com/bufbuild/connect-go v1.10.0/go.mod h1:CAIePUgkDR5pAFaylSMtNK45ANQjp9JvpluG20rhpV8=
-github.com/compose-spec/compose-go/v2 v2.6.5 h1:H7xP5OMKdkN2p0brx01slxIU6dE/q6ybbG+jozPtIqk=
-github.com/compose-spec/compose-go/v2 v2.6.5/go.mod h1:TmjkIB9W73fwVxkYY+u2uhMbMUakjiif79DlYgXsyvU=
+github.com/compose-spec/compose-go/v2 v2.7.1 h1:EUIbuaD0R/J1KA+FbJMNbcS9+jt/CVudbp5iHqUllSs=
+github.com/compose-spec/compose-go/v2 v2.7.1/go.mod h1:TmjkIB9W73fwVxkYY+u2uhMbMUakjiif79DlYgXsyvU=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
