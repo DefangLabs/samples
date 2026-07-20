@@ -1,5 +1,3 @@
 COMPOSE_ENV_FILES=".env.gcp"
-COMPOSE_FILE="compose.yaml:compose.gcp.yaml"
-COMPOSE_PATH_SEPARATOR=":"
 DEFANG_PROVIDER="gcp"
 GCP_LOCATION="europe-west2"

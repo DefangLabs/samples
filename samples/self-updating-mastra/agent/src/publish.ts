@@ -24,9 +24,9 @@ const exec = promisify(execFile);
  * — the human login ceremony IS the deploy authorization.
  *
  * Cloud credentials are ambient: the AWS task role or GCP VM service account
- * receives the grants in the stack-selected Compose overlay. The selected
- * `.defang/<stack>` file supplies provider/region and chooses the matching
- * `.env.<provider>` file again when this container redeploys itself.
+ * receives the grant selected by the cloud-specific env file. The selected
+ * `.defang/<stack>` file supplies provider/region and chooses that same env
+ * file again when this container redeploys itself.
  */
 
 const STATE_DIR = "/run/defang-publish";

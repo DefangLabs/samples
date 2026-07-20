@@ -38,9 +38,9 @@ services:
   # The live "dev environment" service: Caddy in front of a Next.js dev server
   # plus a separate Hono server running the Mastra coding agent, which edits
   # the to-do app's source in place (hot reload). This service carries the full
-  # sample source tree. Provider-specific IAM and runtime details live in the
-  # small Compose overlay selected by `.defang/<stack>`. replicas: 1 pins it to
-  # a single always-on instance so everyone previews the same edited copy.
+  # sample source tree. replicas: 1 and the private host port pin it to a single
+  # always-on instance so everyone previews the same edited copy (and so GCP
+  # uses Compute Engine rather than a scale-to-zero Cloud Run service).
   dev:
     restart: unless-stopped
     build:
@@ -50,6 +50,8 @@ services:
       - target: 3000
         published: 3000
         mode: ingress
+      - target: 8081
+        mode: host
     environment:
       DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@db:5432/postgres?sslmode=no-verify
       BETTER_AUTH_SECRET:
@@ -62,6 +64,8 @@ services:
       # interactive `defang login` (no stored token). The stack-specific env
       # file supplies the same stack/provider choice for self-redeploys.
       PUBLISH_ENABLED: "${PUBLISH_ENABLED:-false}"
+      PUBLISH_PROVIDER: "${PUBLISH_PROVIDER:-disabled}"
+      PUBLISH_STACK: "${PUBLISH_STACK:-disabled}"
       # CHAT_URL, CHAT_MODEL, and OPENAI_API_KEY (the gateway's master key)
       # are injected automatically because this service depends on the `chat`
       # model service; the coding agent reads them in agent/src/model.ts.
@@ -86,6 +90,12 @@ services:
         reservations:
           cpus: "1.0"
           memory: 4096M
+    # Self-publish uses the workload's ambient identity. The selected cloud
+    # env file supplies either an AWS managed-policy ARN or a GCP project role.
+    # The empty default is only for repository validation; every cloud deploy
+    # must use a committed stack, which supplies the policy.
+    x-defang-policies:
+      - ${PUBLISH_POLICY:-}
 
   # Managed LLM the coding agent talks to. The selected `.env.<cloud>` supplies
   # a provider-portable alias and the cloud-specific memory reservation. An

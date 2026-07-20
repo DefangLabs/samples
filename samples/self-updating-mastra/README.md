@@ -99,17 +99,21 @@ The `dev` service deliberately runs as one always-on instance so its working
 tree survives idle periods. The `app` service remains a stateless production
 build.
 
-The committed `aws` and `gcp` stack files each select a small Compose overlay
-and a non-secret interpolation file:
+Cloud deployments share the one `compose.yaml`. The committed `aws` and `gcp`
+stack files select different non-secret interpolation files:
 
-| Stack | Compose overlay | Environment file | Model gateway memory |
+| Stack | Environment file | Publish permission | Model gateway memory |
 | --- | --- | --- | --- |
-| `aws` | `compose.aws.yaml` | `.env.aws` | 2 GiB |
-| `gcp` | `compose.gcp.yaml` | `.env.gcp` | 512 MiB |
+| `aws` | `.env.aws` | `AdministratorAccess` | 2 GiB |
+| `gcp` | `.env.gcp` | `roles/owner` | 512 MiB |
 
 The two env files are the place to customize the managed-model alias and other
 cloud-specific scalar settings. Secrets still belong in `defang config`, never
 in these committed files.
+
+Self-publishing a full stack is administrator-equivalent. That permission is
+attached only to `dev`, never the public `app`; scope it down before adapting
+this demo for production.
 
 ### GCP (Vertex AI)
 
@@ -132,8 +136,8 @@ defang compose up --stack aws
 
 > [!NOTE]
 > Each stack's env file sets `PUBLISH_STACK` to itself. The in-container
-> **Publish** button therefore reuses the original cloud, overlay, and env file
-> without copying or renaming configuration.
+> **Publish** button therefore reuses the original cloud and env file without
+> copying or renaming configuration.
 
 ## Publishing (self-redeploy)
 
@@ -149,9 +153,9 @@ mutates its own deployment.
   is stored anywhere. After login, the panel shows who you are signed in as —
   make sure it is the tenant that owns this stack — before the final
   "Deploy and overwrite" button.
-- **Cloud credentials are ambient, not baked.** The selected Compose overlay
-  grants the `dev` service's AWS task role or GCP VM service account the deploy
-  permissions it needs; the CLI reads those workload credentials directly.
+- **Cloud credentials are ambient, not baked.** The selected env file supplies
+  the `dev` service's AWS task-role policy or GCP VM service-account role; the
+  CLI reads those workload credentials directly.
 - **History survives.** The workspace's git history (one commit per agent run,
   one per publish, each referencing the database rows it addressed) rides
   along in the build context, so the next dev container continues the same
