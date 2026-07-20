@@ -22,9 +22,9 @@ environment:
 - `app` is a standalone Next.js production build with no source, agent, or admin UI.
 - `dev` contains the source, Caddy, the Next.js dev server, and the Mastra agent.
 - `db` is shared PostgreSQL for auth, todos, and feedback.
-- `chat` is the managed model used by the coding agent, declared as a model
-  provider service with the `chat-default` alias, so Defang maps it to the
-  cloud's native inference — Gemini on GCP Vertex AI, Amazon Nova on AWS Bedrock.
+- `chat` is the managed model used by the coding agent, declared with the
+  top-level `models:` key and the `chat-default` alias, so Defang maps it to
+  the cloud's native inference — a managed model on Amazon Bedrock.
 
 The **admin console is served by the agent server, not the Next.js app** — it
 lives outside the source tree the coding agent edits. Caddy routes `/admin` to
@@ -40,8 +40,7 @@ recover the app even if a bad edit crashes the Next.js dev server.
 ## Prerequisites
 
 1. Download the [Defang CLI](https://github.com/DefangLabs/defang).
-2. Authenticate with a cloud account that has managed LLMs: a GCP project with
-   Vertex AI, or an AWS account with Bedrock model access.
+2. Authenticate with an AWS account that has Bedrock model access enabled.
 3. For local development, install Docker Desktop with
    [Docker Model Runner](https://docs.docker.com/ai/model-runner/) enabled.
 
@@ -87,46 +86,29 @@ defang config set ADMIN_TOKEN --random
 
 ## Deployment
 
-The `chat` model is `chat-default`, so the same Compose project deploys to
-either cloud — Defang resolves it to that provider's managed inference. The
-first deployment creates managed PostgreSQL and can take about 20 minutes.
-Defang reports separate URLs for `app` and `dev`:
-
-- Share the `app` URL with normal users.
-- Use the `dev` URL for administration and live agent changes.
-
-The `dev` service deliberately runs as one always-on instance (it declares two
-ports, which keeps it off the serverless path) so its working tree survives idle
-periods. The `app` service remains a stateless production build.
-
-### GCP (Vertex AI)
-
-`chat-default` resolves to Gemini on Vertex AI. Select a GCP project and a
-region where managed LLMs are available; `europe-west2` is the configuration
-used for this sample's London demo.
-
-```bash
-export DEFANG_PROVIDER=gcp
-export GCP_PROJECT_ID=your-gcp-project
-export GCP_LOCATION=europe-west2
-
-defang compose up
-```
-
-### AWS (Bedrock)
-
-`chat-default` resolves to an Amazon Nova model on Bedrock. Enable model access
-for it in the Bedrock console first. A committed stack file (`.defang/aws`, region
-`us-east-1`) makes AWS an explicit deploy target:
+This sample deploys to **AWS**. `chat-default` resolves to a managed model on
+Amazon Bedrock — enable model access for it in the Bedrock console first. A
+committed stack file (`.defang/aws`) pins the provider and region (`us-east-1`),
+so deploying is one command:
 
 ```bash
 defang compose up --stack aws
 ```
 
+The first deployment creates managed PostgreSQL and can take about 20 minutes.
+Defang reports separate URLs for `app` and `dev`:
+
+- Share the `app` URL with normal users.
+- Use the `dev` URL for administration and live agent changes.
+
+The `dev` service runs as one always-on ECS Fargate task (`replicas: 1`), so its
+working tree survives idle periods and everyone previews the same edited copy.
+The `app` service remains a stateless production build.
+
 > [!NOTE]
-> `PUBLISH_STACK` in `compose.yaml` selects which stack the in-container
-> **Publish** button self-redeploys to (`beta` by default). To make AWS the
-> self-redeploy target, set `PUBLISH_STACK: aws`.
+> `PUBLISH_STACK` in `compose.yaml` (`aws`) selects which stack the in-container
+> **Publish** button self-redeploys to; it must match the stack you deployed
+> with.
 
 ## Publishing (self-redeploy)
 
@@ -142,9 +124,10 @@ mutates its own deployment.
   is stored anywhere. After login, the panel shows who you are signed in as —
   make sure it is the tenant that owns this stack — before the final
   "Deploy and overwrite" button.
-- **Cloud credentials are ambient, not baked.** The `dev` service's own
-  service account is granted the deploy roles in `compose.yaml` via
-  `x-defang-roles`, and the CLI picks it up from the metadata server.
+- **Cloud credentials are ambient, not baked.** The `dev` service's own ECS
+  task role is granted the deploy policies in `compose.yaml` via
+  `x-defang-policies`, and the AWS SDK resolves them from the task's
+  credential endpoint.
 - **History survives.** The workspace's git history (one commit per agent run,
   one per publish, each referencing the database rows it addressed) rides
   along in the build context, so the next dev container continues the same

@@ -23,8 +23,11 @@ const exec = promisify(execFile);
  * token lands in an ephemeral state dir that is deleted when the publish ends
  * — the human login ceremony IS the deploy authorization.
  *
- * GCP credentials are ambient: the dev service's own service account (granted
- * deploy roles via x-defang-roles in compose.yaml) via the metadata server.
+ * Cloud credentials are ambient: the dev service's own ECS task role (granted
+ * deploy policies via x-defang-policies in compose.yaml) resolved by the AWS
+ * SDK from the container credentials endpoint. The target cloud (provider and
+ * region) comes from the committed `.defang/<PUBLISH_STACK>` stack file, which
+ * `defang compose up --stack` reads — so this file stays provider-agnostic.
  */
 
 const STATE_DIR = "/run/defang-publish";
@@ -82,44 +85,17 @@ function tail(line: string): void {
   if (state.logTail.length > 200) state.logTail.shift();
 }
 
-async function publishEnv(): Promise<NodeJS.ProcessEnv> {
-  const projectId = process.env.GCP_PROJECT_ID || (await metadata("project/project-id"));
-  if (!projectId) {
-    throw new Error("GCP project ID unavailable: set GCP_PROJECT_ID or run on GCE");
-  }
-  let location = process.env.GCP_LOCATION;
-  if (!location) {
-    // zone looks like "projects/<n>/zones/europe-west2-a" — region is the zone
-    // minus its trailing "-<letter>" suffix.
-    const zone = await metadata("instance/zone");
-    location = zone?.split("/").pop()?.replace(/-[a-z]$/, "");
-  }
-  if (!location) {
-    throw new Error("GCP location unavailable: set GCP_LOCATION or run on GCE");
-  }
+function publishEnv(): NodeJS.ProcessEnv {
   return {
     ...process.env,
-    DEFANG_PROVIDER: "gcp",
-    GCP_PROJECT_ID: projectId,
-    GCP_LOCATION: location,
     // Keep ALL CLI state (including the login token) in an ephemeral dir that
-    // is wiped when the publish ends, and out of the build context.
+    // is wiped when the publish ends, and out of the build context. Provider
+    // and region are not set here — they come from the `.defang/<stack>` file
+    // that `defang compose up --stack` reads, and AWS credentials are resolved
+    // ambiently from the ECS task role.
     XDG_STATE_HOME: STATE_DIR,
     HOME: process.env.HOME || "/root",
   };
-}
-
-async function metadata(path: string): Promise<string | undefined> {
-  try {
-    const res = await fetch(`http://metadata.google.internal/computeMetadata/v1/${path}`, {
-      headers: { "Metadata-Flavor": "Google" },
-      signal: AbortSignal.timeout(2000),
-    });
-    if (!res.ok) return undefined;
-    return (await res.text()).trim();
-  } catch {
-    return undefined;
-  }
 }
 
 async function cleanupStateDir(): Promise<void> {
@@ -142,7 +118,7 @@ function fail(message: string): void {
 export async function startPublish(adminEmail: string): Promise<PublishState> {
   if (isPublishActive()) return state;
 
-  const env = await publishEnv(); // throws with an actionable message
+  const env = publishEnv();
   await cleanupStateDir();
   await mkdir(STATE_DIR, { recursive: true });
 
@@ -230,9 +206,8 @@ export async function confirmDeploy(): Promise<PublishState> {
   state.phase = "deploying";
   await setDeploymentStatus(deploymentId, "deploying");
 
-  let env: NodeJS.ProcessEnv;
+  const env = publishEnv();
   try {
-    env = await publishEnv();
     const sha = await commitPublish(deploymentId, state.startedBy);
     await setDeploymentCommit(deploymentId, sha);
     tail(`[publish] commit ${sha.slice(0, 8)}`);
@@ -241,7 +216,7 @@ export async function confirmDeploy(): Promise<PublishState> {
     return state;
   }
 
-  const stack = process.env.PUBLISH_STACK || "beta";
+  const stack = process.env.PUBLISH_STACK || "aws";
   deployProc = spawn("defang", ["compose", "up", "--detach", "--stack", stack], {
     cwd: REPO_DIR,
     env,

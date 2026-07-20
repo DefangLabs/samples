@@ -14,15 +14,14 @@ RUN apt-get update \
 WORKDIR /workspace
 
 # Defang CLI for the admin-triggered self-redeploy ("publish"). Installed from
-# the latest NIGHTLY, resolved at build time: the publish flow needs the GCE
-# metadata-server principal fallback (DefangLabs/defang#2174) which no stable
-# release carries yet, and nightly release assets are replaced daily, so a
-# pinned nightly asset URL would 404 on the next self-rebuild. TODO: re-pin to
-# the first stable release containing #2174 (restore ARG DEFANG_VERSION + the
-# v-tag URL). Builds happen remotely in the CD task, so no Docker daemon is
-# needed here. Fabric auth is a per-publish interactive login (no token baked
-# in); GCP auth is the instance service account via the metadata server (roles
-# granted in compose.yaml via x-defang-roles).
+# the latest NIGHTLY, resolved at build time: nightly release assets are
+# replaced daily, so a pinned nightly asset URL would 404 on the next
+# self-rebuild. TODO: re-pin to a stable release (restore ARG DEFANG_VERSION +
+# the v-tag URL) once one carrying the features this flow relies on ships.
+# Builds happen remotely in the CD task, so no Docker daemon is needed here.
+# Fabric auth is a per-publish interactive login (no token baked in); AWS auth
+# is the ECS task role's ambient credentials (policies granted in compose.yaml
+# via x-defang-policies).
 ARG TARGETARCH=amd64
 RUN url=$(curl -fsSL https://api.github.com/repos/DefangLabs/defang/releases/tags/nightly \
       | grep -o "https://[^\"]*linux_${TARGETARCH}\.tar\.gz" | head -1) \
@@ -40,6 +39,6 @@ RUN cd agent && npm ci
 # The rest of the source tree — this is what the agent edits at runtime.
 COPY . .
 
-EXPOSE 3000 8081
+EXPOSE 3000
 
 CMD ["./entrypoint.dev.sh"]

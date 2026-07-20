@@ -942,7 +942,7 @@ export function registerAdminRoutes(app: Hono, serverVersion: string | null): vo
   });
 
   // On-demand verdict: grade a finished run with a second model call. Kept
-  // off the automatic run path deliberately — Vertex rate limits are real.
+  // off the automatic run path deliberately — Bedrock rate limits are real.
   app.post("/admin/runs/:id/verdict", async (c) => {
     if (!(await getAdminIdentity(c))) return c.json({ error: "Not found." }, 404);
     const view = await getRunView(c.req.param("id"));

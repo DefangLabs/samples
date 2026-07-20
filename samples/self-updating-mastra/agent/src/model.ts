@@ -5,7 +5,7 @@ import type { OpenAICompatibleConfig } from "@mastra/core/llm";
  *
  * The `chat` model in compose.yaml is a Docker Compose model (top-level
  * `models:` key). Locally, Docker Model Runner serves it; deployed, Defang
- * provisions the cloud's managed inference (Vertex AI on GCP) behind an
+ * provisions the cloud's managed inference (Amazon Bedrock on AWS) behind an
  * OpenAI-compatible proxy. Either way the dev service's `models:` mapping
  * injects CHAT_URL and CHAT_MODEL and the code stays platform-independent.
  */

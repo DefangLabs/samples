@@ -24,11 +24,3 @@
 		}
 	}
 }
-
-# Listener for the second (host-mode) port. Its real job is to exist: a second
-# port forces this service onto a Compute Engine VM instead of Cloud Run, so
-# live edits survive idle periods (no scale-to-zero).
-:8081 {
-	respond /healthz "ok" 200
-	respond "ok" 200
-}
