@@ -1,2 +1,5 @@
 AWS_REGION="us-east-1"
+COMPOSE_ENV_FILES=".env.aws"
+COMPOSE_FILE="compose.yaml:compose.aws.yaml"
+COMPOSE_PATH_SEPARATOR=":"
 DEFANG_PROVIDER="aws"

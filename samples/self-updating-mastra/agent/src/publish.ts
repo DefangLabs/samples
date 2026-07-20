@@ -23,8 +23,10 @@ const exec = promisify(execFile);
  * token lands in an ephemeral state dir that is deleted when the publish ends
  * — the human login ceremony IS the deploy authorization.
  *
- * GCP credentials are ambient: the dev service's own service account (granted
- * deploy roles via x-defang-roles in compose.yaml) via the metadata server.
+ * Cloud credentials are ambient: the AWS task role or GCP VM service account
+ * receives the grants in the stack-selected Compose overlay. The selected
+ * `.defang/<stack>` file supplies provider/region and chooses the matching
+ * `.env.<provider>` file again when this container redeploys itself.
  */
 
 const STATE_DIR = "/run/defang-publish";
@@ -83,30 +85,29 @@ function tail(line: string): void {
 }
 
 async function publishEnv(): Promise<NodeJS.ProcessEnv> {
-  const projectId = process.env.GCP_PROJECT_ID || (await metadata("project/project-id"));
-  if (!projectId) {
-    throw new Error("GCP project ID unavailable: set GCP_PROJECT_ID or run on GCE");
+  const provider = process.env.PUBLISH_PROVIDER;
+  const stack = process.env.PUBLISH_STACK;
+  if (!provider || !stack) {
+    throw new Error("PUBLISH_PROVIDER and PUBLISH_STACK must be set by the selected stack env file");
   }
-  let location = process.env.GCP_LOCATION;
-  if (!location) {
-    // zone looks like "projects/<n>/zones/europe-west2-a" — region is the zone
-    // minus its trailing "-<letter>" suffix.
-    const zone = await metadata("instance/zone");
-    location = zone?.split("/").pop()?.replace(/-[a-z]$/, "");
-  }
-  if (!location) {
-    throw new Error("GCP location unavailable: set GCP_LOCATION or run on GCE");
-  }
-  return {
+
+  const env: NodeJS.ProcessEnv = {
     ...process.env,
-    DEFANG_PROVIDER: "gcp",
-    GCP_PROJECT_ID: projectId,
-    GCP_LOCATION: location,
     // Keep ALL CLI state (including the login token) in an ephemeral dir that
     // is wiped when the publish ends, and out of the build context.
     XDG_STATE_HOME: STATE_DIR,
     HOME: process.env.HOME || "/root",
   };
+
+  if (provider === "gcp") {
+    const projectId = process.env.GCP_PROJECT_ID || (await metadata("project/project-id"));
+    if (!projectId) {
+      throw new Error("GCP project ID unavailable: set GCP_PROJECT_ID or run on GCE");
+    }
+    env.GCP_PROJECT_ID = projectId;
+  }
+
+  return env;
 }
 
 async function metadata(path: string): Promise<string | undefined> {
@@ -241,7 +242,11 @@ export async function confirmDeploy(): Promise<PublishState> {
     return state;
   }
 
-  const stack = process.env.PUBLISH_STACK || "beta";
+  const stack = process.env.PUBLISH_STACK;
+  if (!stack) {
+    fail("PUBLISH_STACK is not set by the selected stack env file");
+    return state;
+  }
   deployProc = spawn("defang", ["compose", "up", "--detach", "--stack", stack], {
     cwd: REPO_DIR,
     env,

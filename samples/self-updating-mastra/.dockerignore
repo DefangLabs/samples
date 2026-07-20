@@ -4,6 +4,8 @@
 # the in-container git history (runs, publishes) must travel into the next
 # dev image so the admin console's history survives self-redeploys. The
 # heavy directories are gitignored, so .git stays small.
+# The committed `.defang/{aws,gcp}` and `.env.{aws,gcp}` files deliberately
+# remain in the image: the admin-triggered self-redeploy reads them again.
 **/node_modules
 **/.next
 README.md

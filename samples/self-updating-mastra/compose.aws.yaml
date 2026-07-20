@@ -1,0 +1,7 @@
+services:
+  dev:
+    # The self-publish process uses the task role's ambient credentials. A full
+    # deploy is administrator-equivalent; keep that authority off the public
+    # app service and scope it down further before adapting this demo for prod.
+    x-defang-policies:
+      - arn:aws:iam::aws:policy/AdministratorAccess

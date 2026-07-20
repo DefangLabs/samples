@@ -95,38 +95,45 @@ Defang reports separate URLs for `app` and `dev`:
 - Share the `app` URL with normal users.
 - Use the `dev` URL for administration and live agent changes.
 
-The `dev` service deliberately runs as one always-on instance (it declares two
-ports, which keeps it off the serverless path) so its working tree survives idle
-periods. The `app` service remains a stateless production build.
+The `dev` service deliberately runs as one always-on instance so its working
+tree survives idle periods. The `app` service remains a stateless production
+build.
+
+The committed `aws` and `gcp` stack files each select a small Compose overlay
+and a non-secret interpolation file:
+
+| Stack | Compose overlay | Environment file | Model gateway memory |
+| --- | --- | --- | --- |
+| `aws` | `compose.aws.yaml` | `.env.aws` | 2 GiB |
+| `gcp` | `compose.gcp.yaml` | `.env.gcp` | 512 MiB |
+
+The two env files are the place to customize the managed-model alias and other
+cloud-specific scalar settings. Secrets still belong in `defang config`, never
+in these committed files.
 
 ### GCP (Vertex AI)
 
-`chat-default` resolves to Gemini on Vertex AI. Select a GCP project and a
-region where managed LLMs are available; `europe-west2` is the configuration
-used for this sample's London demo.
+`chat-default` resolves to Gemini on Vertex AI. The `gcp` stack selects
+`europe-west2`; provide the target project when deploying:
 
 ```bash
-export DEFANG_PROVIDER=gcp
 export GCP_PROJECT_ID=your-gcp-project
-export GCP_LOCATION=europe-west2
-
-defang compose up
+defang compose up --stack gcp
 ```
 
 ### AWS (Bedrock)
 
 `chat-default` resolves to an Amazon Nova model on Bedrock. Enable model access
-for it in the Bedrock console first. A committed stack file (`.defang/aws`, region
-`us-east-1`) makes AWS an explicit deploy target:
+for it in the Bedrock console first. The `aws` stack selects `us-east-1`:
 
 ```bash
 defang compose up --stack aws
 ```
 
 > [!NOTE]
-> `PUBLISH_STACK` in `compose.yaml` selects which stack the in-container
-> **Publish** button self-redeploys to (`beta` by default). To make AWS the
-> self-redeploy target, set `PUBLISH_STACK: aws`.
+> Each stack's env file sets `PUBLISH_STACK` to itself. The in-container
+> **Publish** button therefore reuses the original cloud, overlay, and env file
+> without copying or renaming configuration.
 
 ## Publishing (self-redeploy)
 
@@ -142,15 +149,15 @@ mutates its own deployment.
   is stored anywhere. After login, the panel shows who you are signed in as —
   make sure it is the tenant that owns this stack — before the final
   "Deploy and overwrite" button.
-- **Cloud credentials are ambient, not baked.** The `dev` service's own
-  service account is granted the deploy roles in `compose.yaml` via
-  `x-defang-roles`, and the CLI picks it up from the metadata server.
+- **Cloud credentials are ambient, not baked.** The selected Compose overlay
+  grants the `dev` service's AWS task role or GCP VM service account the deploy
+  permissions it needs; the CLI reads those workload credentials directly.
 - **History survives.** The workspace's git history (one commit per agent run,
   one per publish, each referencing the database rows it addressed) rides
   along in the build context, so the next dev container continues the same
   lineage.
-- `PUBLISH_STACK` in `compose.yaml` must match the stack the project was
-  deployed with; publishing is disabled in local development.
+- `PUBLISH_STACK` comes from the selected `.env.<cloud>` file; publishing is
+  disabled in local development.
 
 ## Run history and revert
 

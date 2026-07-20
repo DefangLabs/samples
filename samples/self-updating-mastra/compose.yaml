@@ -1,8 +1,8 @@
 name: self-updating-mastra
 services:
   # The production to-do app. Runs a Next.js production build with no source
-  # code, no agent, and no admin UI. Exactly one ingress port keeps it on the
-  # serverless path (Cloud Run on GCP) — stateless and scale-friendly.
+  # code, no agent, and no admin UI. Exactly one ingress port keeps it
+  # stateless and scale-friendly (Cloud Run on GCP, Fargate on AWS).
   app:
     restart: unless-stopped
     build:
@@ -38,10 +38,9 @@ services:
   # The live "dev environment" service: Caddy in front of a Next.js dev server
   # plus a separate Hono server running the Mastra coding agent, which edits
   # the to-do app's source in place (hot reload). This service carries the full
-  # sample source tree. The second (host-mode) port is deliberate: two ports
-  # force this service off Cloud Run onto an always-on Compute Engine VM, so
-  # live edits are not lost to scale-to-zero. replicas: 1 pins it to a single
-  # instance so everyone previews the same edited copy.
+  # sample source tree. Provider-specific IAM and runtime details live in the
+  # small Compose overlay selected by `.defang/<stack>`. replicas: 1 pins it to
+  # a single always-on instance so everyone previews the same edited copy.
   dev:
     restart: unless-stopped
     build:
@@ -51,33 +50,6 @@ services:
       - target: 3000
         published: 3000
         mode: ingress
-      - target: 8081
-        mode: host
-    # Deploy roles for the self-redeploy ("publish"): Defang creates a
-    # dedicated service account for this service and attaches it to the VM
-    # with the cloud-platform scope; these project-level roles let the
-    # bundled Defang CLI drive a full `defang compose up` via the metadata
-    # server — no key files. This set is what the CLI's GCP driver actually
-    # exercises (API enablement, CD bucket, service accounts + actAs on
-    # defang-cd, Cloud Build, config listing, IAM drift repair, log tailing).
-    # Note it is owner-equivalent in effect; that is inherent to what a
-    # deploy does. Any code running in this container can use these roles —
-    # which is why the public `app` service carries none of them.
-    x-defang-roles:
-      - roles/serviceusage.serviceUsageAdmin
-      - roles/storage.admin
-      - roles/iam.serviceAccountAdmin
-      - roles/iam.serviceAccountUser
-      - roles/cloudbuild.builds.editor
-      - roles/resourcemanager.projectIamAdmin
-      - roles/logging.viewer
-      # compose up validates the stack's config by listing its Secret Manager
-      # secrets; metadata-only viewer — the values are read by the CD, not us.
-      - roles/secretmanager.viewer
-      # compose up resolves the delegate-domain zone (Cloud DNS managedZones
-      # get) before launching the CD; the zone already exists from the first
-      # deploy, so read-only is enough — record writes are the CD's job.
-      - roles/dns.reader
     environment:
       DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@db:5432/postgres?sslmode=no-verify
       BETTER_AUTH_SECRET:
@@ -87,11 +59,11 @@ services:
       # if the main app is down and their login session has expired.
       ADMIN_TOKEN:
       # Enable the admin-triggered self-redeploy. Fabric auth is a per-publish
-      # interactive `defang login` (no stored token); GCP project/region are
-      # discovered from the metadata server. PUBLISH_STACK must match the
-      # stack this project was deployed with.
+      # interactive `defang login` (no stored token). The stack-specific env
+      # file supplies the same stack/provider choice for self-redeploys.
       PUBLISH_ENABLED: "true"
-      PUBLISH_STACK: beta
+      PUBLISH_PROVIDER: ${PUBLISH_PROVIDER}
+      PUBLISH_STACK: ${PUBLISH_STACK}
       # CHAT_URL, CHAT_MODEL, and OPENAI_API_KEY (the gateway's master key)
       # are injected automatically because this service depends on the `chat`
       # model service; the coding agent reads them in agent/src/model.ts.
@@ -117,21 +89,15 @@ services:
           cpus: "1.0"
           memory: 4096M
 
-  # Managed LLM the coding agent talks to. `chat-default` is Defang's
-  # provider-agnostic alias — Gemini on GCP Vertex AI, Amazon Nova on AWS
-  # Bedrock — served behind an OpenAI-compatible LiteLLM proxy. The alias must
-  # be the bare token: an `ai/`-prefixed name is treated as already
-  # provider-qualified and passed through unresolved. This deliberately uses
-  # the deprecated `provider:` service syntax rather than a top-level
-  # `models:` entry: only a declared service keeps its `deploy:` block, and
-  # without one the generated gateway lands on GCP's smallest VM (e2-micro),
-  # where LiteLLM cannot start — the 2026-07-19 redeploy failed exactly that
-  # way. Move back to `models:` once the Defang CLI sizes generated gateways.
+  # Managed LLM the coding agent talks to. The selected `.env.<cloud>` supplies
+  # a provider-portable alias and the cloud-specific memory reservation. An
+  # explicit service is intentional: it lets AWS use more gateway memory while
+  # GCP keeps the smaller, field-tested shape.
   chat:
     provider:
       type: model
       options:
-        model: chat-default
+        model: ${CHAT_MODEL}
     x-defang-llm: true
     environment:
       OPENAI_API_KEY: defang
@@ -139,7 +105,7 @@ services:
       resources:
         reservations:
           cpus: "0.5"
-          memory: 512M
+          memory: ${CHAT_MEMORY}
 
   # Shared database: todos, users/sessions (Better Auth), feedback, and the
   # Mastra agent's storage. Both app and dev point here.
@@ -167,4 +133,3 @@ services:
         reservations:
           cpus: "0.5"
           memory: 512M
-
