@@ -1,5 +1,8 @@
 services:
   dev:
+    environment:
+      PUBLISH_PROVIDER: ${PUBLISH_PROVIDER}
+      PUBLISH_STACK: ${PUBLISH_STACK}
     # The second, private port keeps the editable workspace on one always-on
     # Compute Engine VM instead of Cloud Run, where scale-to-zero would discard
     # live edits.

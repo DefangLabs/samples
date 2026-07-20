@@ -62,8 +62,6 @@ services:
       # interactive `defang login` (no stored token). The stack-specific env
       # file supplies the same stack/provider choice for self-redeploys.
       PUBLISH_ENABLED: "${PUBLISH_ENABLED:-false}"
-      PUBLISH_PROVIDER: "${PUBLISH_PROVIDER:-}"
-      PUBLISH_STACK: "${PUBLISH_STACK:-}"
       # CHAT_URL, CHAT_MODEL, and OPENAI_API_KEY (the gateway's master key)
       # are injected automatically because this service depends on the `chat`
       # model service; the coding agent reads them in agent/src/model.ts.
