@@ -29,7 +29,7 @@ jobs:
           # This BYOC-only sample exceeds the retired Playground staging quota.
           git diff --name-only HEAD $LAST_ANCESTOR \
             | grep '^samples/' \
-            | awk -F'/' '$2 != "self-updating-mastra" {print $1"/"$2}' \
+            | awk -F'/' '$2 != "self-improving-mastra" {print $1"/"$2}' \
             | sort \
             | uniq > changed_samples.txt
           if [ -s changed_samples.txt ]; then
