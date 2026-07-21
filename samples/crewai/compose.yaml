@@ -65,14 +65,19 @@ services:
     depends_on:
       - postgres
       - redis
-      - chat
-      - embedding
     environment:
       DJANGO_SETTINGS_MODULE: config.settings
       DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres?sslmode=require # remove sslmode for Playground
       REDIS_URL: redis://redis:6379/0
       OPENAI_API_KEY: defang
       DJANGO_SECRET_KEY: null
+    models:
+      chat:
+        endpoint_var: CHAT_URL
+        model_var: CHAT_MODEL
+      embedding:
+        endpoint_var: EMBEDDING_URL
+        model_var: EMBEDDING_MODEL
     deploy:
       resources:
         reservations:
@@ -80,9 +85,7 @@ services:
           memory: 512M
 
 models:
-  llm:
+  chat:
     model: chat-default
-    x-defang-llm: true
   embedding:
     model: embedding-default
-    x-defang-llm: true
