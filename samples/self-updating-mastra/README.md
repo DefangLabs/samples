@@ -22,8 +22,8 @@ environment:
 - `app` is a standalone Next.js production build with no source, agent, or admin UI.
 - `dev` contains the source, Caddy, the Next.js dev server, and the Mastra agent.
 - `db` is shared PostgreSQL for auth, todos, and feedback.
-- `chat` is the managed model used by the coding agent, declared as a model
-  provider service with the `chat-default` alias, so Defang maps it to the
+- `chat` is the managed model used by the coding agent, declared as a top-level
+  `models:` entry with the `chat-default` alias, so Defang maps it to the
   cloud's native inference — Gemini on GCP Vertex AI, Amazon Nova on AWS Bedrock.
 
 The **admin console is served by the agent server, not the Next.js app** — it
@@ -102,10 +102,10 @@ build.
 Cloud deployments share the one `compose.yaml`. The committed `aws` and `gcp`
 stack files select different non-secret interpolation files:
 
-| Stack | Environment file | Publish permission | Model gateway memory |
-| --- | --- | --- | --- |
-| `aws` | `.env.aws` | `AdministratorAccess` | 2 GiB |
-| `gcp` | `.env.gcp` | `roles/owner` | 512 MiB |
+| Stack | Environment file | Publish permission |
+| --- | --- | --- |
+| `aws` | `.env.aws` | `AdministratorAccess` |
+| `gcp` | `.env.gcp` | `roles/owner` |
 
 The two env files are the place to customize the managed-model alias and other
 cloud-specific scalar settings. Secrets still belong in `defang config`, never
