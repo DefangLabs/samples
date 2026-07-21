@@ -23,8 +23,8 @@ environment:
 - `dev` contains the source, Caddy, the Next.js dev server, and the Mastra agent.
 - `db` is shared PostgreSQL for auth, todos, and feedback.
 - `chat` is the managed model used by the coding agent, declared as a top-level
-  `models:` entry with the `chat-default` alias, so Defang maps it to the
-  cloud's native inference — Gemini on GCP Vertex AI, Amazon Nova on AWS Bedrock.
+  `models:` entry; each cloud's env file selects an explicit model — z.ai GLM 5
+  on AWS Bedrock, Gemini 2.5 Flash on GCP Vertex AI.
 
 The **admin console is served by the agent server, not the Next.js app** — it
 lives outside the source tree the coding agent edits. Caddy routes `/admin` to
@@ -87,8 +87,8 @@ defang config set ADMIN_TOKEN --random
 
 ## Deployment
 
-The `chat` model is `chat-default`, so the same Compose project deploys to
-either cloud — Defang resolves it to that provider's managed inference. The
+The same Compose project deploys to either cloud; each cloud's env file selects
+an explicit managed model (z.ai GLM 5 on AWS, Gemini 2.5 Flash on GCP). The
 first deployment creates managed PostgreSQL and can take about 20 minutes.
 Defang reports separate URLs for `app` and `dev`:
 
@@ -107,7 +107,7 @@ stack files select different non-secret interpolation files:
 | `aws` | `.env.aws` | `AdministratorAccess` |
 | `gcp` | `.env.gcp` | `roles/owner` |
 
-The two env files are the place to customize the managed-model alias and other
+The two env files are the place to customize the managed model and other
 cloud-specific scalar settings. Secrets still belong in `defang config`, never
 in these committed files.
 
@@ -117,8 +117,9 @@ this demo for production.
 
 ### GCP (Vertex AI)
 
-`chat-default` resolves to Gemini on Vertex AI. The `gcp` stack selects
-`europe-west2`; provide the target project when deploying:
+The `gcp` env file selects `gemini-2.5-flash` on Vertex AI — a GA model that is
+broadly available on-demand across regions with no special configuration.
+Provide the target project when deploying:
 
 ```bash
 export GCP_PROJECT_ID=your-gcp-project
@@ -127,7 +128,7 @@ defang compose up --stack gcp
 
 ### AWS (Bedrock)
 
-`chat-default` resolves to an Amazon Nova model on Bedrock. Enable model access
+The `aws` env file selects z.ai GLM 5 (`zai.glm-5`) on Bedrock. Enable model access
 for it in the Bedrock console first. The `aws` stack selects `us-east-1`:
 
 ```bash
