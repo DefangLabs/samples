@@ -1,3 +1,0 @@
-AWS_REGION="us-east-1"
-COMPOSE_ENV_FILES=".env.aws"
-DEFANG_PROVIDER="aws"
