@@ -8,7 +8,7 @@
 # coding agent's edits land in your working tree. The local model is a small
 # one so it runs on a laptop; expect much lower edit quality than the
 # deployed Vertex AI model — local is for testing the loop, not the quality.
-name: self-updating-mastra-dev
+name: self-improving-mastra-dev
 services:
   dev:
     build:

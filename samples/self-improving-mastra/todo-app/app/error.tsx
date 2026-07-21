@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { reportClientError } from "@/lib/report-client-error";
 
 // Segment error boundary: shows a calm fallback and reports the error to the
-// backlog. Because this is a self-updating app, a broken page becomes a task
+// backlog. Because this is a self-improving app, a broken page becomes a task
 // the admin can hand to the coding agent.
 export default function Error({
   error,

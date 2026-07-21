@@ -11,7 +11,7 @@ import { AGENT_TODO } from "./paths.js";
 export const TARGET_DIR = AGENT_TODO;
 
 const INSTRUCTIONS = `
-You are the coding agent inside a self-updating to-do application. Admins send
+You are the coding agent inside a self-improving to-do application. Admins send
 you change requests composed from real user feedback, and you implement them by
 editing the source code of the running app.
 

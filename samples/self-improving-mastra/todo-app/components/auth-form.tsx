@@ -44,7 +44,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
     <main className="flex min-h-screen items-center justify-center bg-slate-50 px-5 py-12">
       <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-200/60">
         <p className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-violet-600">
-          Self-updating Todo
+          Self-Improving Todo
         </p>
         <h1 className="text-3xl font-bold tracking-tight text-slate-950">
           {signingUp ? "Create your account" : "Welcome back"}

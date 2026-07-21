@@ -3,7 +3,7 @@ import { ErrorReporter } from "@/components/error-reporter";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Self-updating Todo",
+  title: "Self-Improving Todo",
   description: "A todo app that turns user feedback into live code changes.",
 };
 
