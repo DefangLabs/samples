@@ -1,3 +1,0 @@
-COMPOSE_ENV_FILES=".env.gcp"
-DEFANG_PROVIDER="gcp"
-GCP_LOCATION="europe-west2"
