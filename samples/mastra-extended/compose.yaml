@@ -107,6 +107,6 @@ services:
 
 models:
   chat:
-    model: ai/chat-default
+    model: chat-default
   embedding:
-    model: ai/embedding-default
+    model: embedding-default
