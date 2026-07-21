@@ -26,9 +26,10 @@ jobs:
         run: |
           git fetch origin main
           LAST_ANCESTOR=$(git merge-base HEAD origin/main)
+          # This BYOC-only sample exceeds the retired Playground staging quota.
           git diff --name-only HEAD $LAST_ANCESTOR \
             | grep '^samples/' \
-            | awk -F'/' '{print $1"/"$2}' \
+            | awk -F'/' '$2 != "self-improving-mastra" {print $1"/"$2}' \
             | sort \
             | uniq > changed_samples.txt
           if [ -s changed_samples.txt ]; then
@@ -69,6 +70,7 @@ jobs:
           TEST_ANTHROPIC_API_KEY: ${{ secrets.TEST_ANTHROPIC_API_KEY }}
           TEST_AWS_ACCESS_KEY: ${{ secrets.TEST_AWS_ACCESS_KEY }}
           TEST_AWS_SECRET_KEY: ${{ secrets.TEST_AWS_SECRET_KEY }}
+          TEST_BETTER_AUTH_SECRET: ${{ secrets.TEST_SESSION_SECRET }}
           TEST_BOARD_PASSWORD: ${{ secrets.TEST_BOARD_PASSWORD }}
           TEST_DATABASE_HOST: ${{ secrets.TEST_DATABASE_HOST }}
           TEST_DATABASE_NAME: ${{ secrets.TEST_DATABASE_NAME }}

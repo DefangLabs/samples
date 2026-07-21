@@ -1,0 +1,61 @@
+# Local development: runs only the live-editable "dev" side of the sample —
+# the same container image as the deployed `dev` service, plus a local
+# Postgres and a small local model served by Docker Model Runner.
+#
+# Usage: docker compose -f compose.dev.yaml up --build
+#
+# The sample source is bind-mounted into the container so you can watch the
+# coding agent's edits land in your working tree. The local model is a small
+# one so it runs on a laptop; expect much lower edit quality than the
+# deployed Vertex AI model — local is for testing the loop, not the quality.
+name: self-improving-mastra-dev
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/workspace
+      - /workspace/todo-app/node_modules
+      - /workspace/agent/node_modules
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/postgres?sslmode=disable
+      BETTER_AUTH_SECRET: local-dev-secret-do-not-use-in-prod
+      ADMIN_UI: "true"
+    models:
+      chat:
+        endpoint_var: CHAT_URL
+        model_var: CHAT_MODEL
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+    ports:
+      - 5432:5432
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U postgres -d postgres
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+# A small local model served by Docker Model Runner. Expect much lower edit
+# quality than the deployed Vertex AI model — this is for testing the loop.
+models:
+  chat:
+    model: ai/qwen2.5-coder:7B-Q4_K_M
+
+volumes:
+  pgdata:

@@ -96,6 +96,7 @@ When you add a new sample, make sure to add any config vals to the `deploy-chang
 | [Rocket](./samples/rocket) | A simple Rocket app. | Rocket | Rust |
 | [Sails.js](./samples/sailsjs) | A short hello world application demonstrating how to deploy Sails.js onto Defang. | Sails.js, Node.js | nodejs |
 | [Sails.js & PostgreSQL](./samples/sailsjs-postgres) | A sample project demonstrating how to deploy a project with PostgreSQL and Sails.js. | PostgreSQL, Sails.js, SQL, JavaScript | nodejs |
+| [Self-Improving Mastra Todo](./samples/self-improving-mastra) | A Next.js todo app where an admin can turn stored user feedback into live code changes with a Mastra coding agent. | Mastra, Next.js, PostgreSQL, Better Auth, AI, Agents | TypeScript, JavaScript, Docker |
 | [Svelte & Node.js & MySQL](./samples/svelte-mysql) | A full-stack application using Svelte for the frontend, Node.js for the backend, and MySQL for the database. | Svelte, Node.js, MySQL, Full-stack, JavaScript, TypeScript, SQL | nodejs |
 | [SvelteKit](./samples/sveltekit) | A minimal SvelteKit app running on Defang. | SvelteKit, TypeScript, JavaScript, Svelte, Node.js, Frontend, TypeScript, JavaScript | nodejs |
 | [SvelteKit & MongoDB](./samples/sveltekit-mongodb) | A full-stack application using SvelteKit for the frontend and MongoDB for the database. | SvelteKit, MongoDB, Full-stack, Node.js, JavaScript | nodejs |
