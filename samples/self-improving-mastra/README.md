@@ -24,7 +24,7 @@ environment:
 - `db` is shared PostgreSQL for auth, todos, and feedback.
 - `chat` is the managed model used by the coding agent, declared as a top-level
   `models:` entry; each cloud's env file selects an explicit model — z.ai GLM 5
-  on AWS Bedrock, Gemini 3.5 Flash on GCP Vertex AI.
+  on AWS Bedrock, Gemini 2.5 Flash on GCP Vertex AI.
 
 The **admin console is served by the agent server, not the Next.js app** — it
 lives outside the source tree the coding agent edits. Caddy routes `/admin` to
@@ -88,7 +88,7 @@ defang config set ADMIN_TOKEN --random
 ## Deployment
 
 The same Compose project deploys to either cloud; each cloud's env file selects
-an explicit managed model (z.ai GLM 5 on AWS, Gemini 3.5 Flash on GCP). The
+an explicit managed model (z.ai GLM 5 on AWS, Gemini 2.5 Flash on GCP). The
 first deployment creates managed PostgreSQL and can take about 20 minutes.
 Defang reports separate URLs for `app` and `dev`:
 
@@ -117,10 +117,9 @@ this demo for production.
 
 ### GCP (Vertex AI)
 
-The `gcp` env file selects `gemini-3.5-flash` on Vertex AI. Gemini 3.x is
-reachable through Vertex's **global** endpoint and is not offered on-demand in
-every region, so deploy to a location that serves it. Provide the target project
-when deploying:
+The `gcp` env file selects `gemini-2.5-flash` on Vertex AI — a GA model that is
+broadly available on-demand across regions with no special configuration.
+Provide the target project when deploying:
 
 ```bash
 export GCP_PROJECT_ID=your-gcp-project
