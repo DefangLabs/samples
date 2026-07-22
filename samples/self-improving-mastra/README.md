@@ -39,7 +39,10 @@ recover the app even if a bad edit crashes the Next.js dev server.
 
 ## Prerequisites
 
-1. Download the [Defang CLI](https://github.com/DefangLabs/defang).
+1. Use a [Defang CLI](https://github.com/DefangLabs/defang) build that exposes
+   the resolved `DEFANG_PROVIDER` and `DEFANG_STACK` Compose variables (added by
+   [DefangLabs/defang#2189](https://github.com/DefangLabs/defang/pull/2189));
+   v3.12.0 does not include this support.
 2. Authenticate with a cloud account that has managed LLMs: a GCP project with
    Vertex AI, or an AWS account with Bedrock model access.
 3. For local development, install Docker Desktop with
@@ -99,10 +102,10 @@ The `dev` service deliberately runs as one always-on instance so its working
 tree survives idle periods. The `app` service remains a stateless production
 build.
 
-Cloud deployments share the one `compose.yaml`. The committed `aws` and `gcp`
-stack files select different non-secret interpolation files:
+Cloud deployments share the one `compose.yaml`. After resolving the provider,
+Defang automatically loads its non-secret interpolation file:
 
-| Stack | Environment file | Publish permission |
+| Provider | Environment file | Publish permission |
 | --- | --- | --- |
 | `aws` | `.env.aws` | `AdministratorAccess` |
 | `gcp` | `.env.gcp` | `roles/owner` |
@@ -136,9 +139,9 @@ defang compose up --stack aws
 ```
 
 > [!NOTE]
-> Each stack's env file sets `PUBLISH_STACK` to itself. The in-container
-> **Publish** button therefore reuses the original cloud and env file without
-> copying or renaming configuration.
+> Defang supplies the resolved provider and stack to the `dev` service. The
+> in-container **Publish** button therefore reuses the original deployment
+> context, including the matching provider env file.
 
 ## Publishing (self-redeploy)
 
@@ -161,8 +164,9 @@ mutates its own deployment.
   one per publish, each referencing the database rows it addressed) rides
   along in the build context, so the next dev container continues the same
   lineage.
-- `PUBLISH_STACK` comes from the selected `.env.<cloud>` file; publishing is
-  disabled in local development.
+- `PUBLISH_PROVIDER` and `PUBLISH_STACK` come from Defang's resolved deployment
+  context; the standalone local-development Compose file leaves publishing
+  disabled.
 
 ## Run history and revert
 

@@ -24,9 +24,9 @@ const exec = promisify(execFile);
  * — the human login ceremony IS the deploy authorization.
  *
  * Cloud credentials are ambient: the AWS task role or GCP VM service account
- * receives the grant selected by the cloud-specific env file. The selected
- * `.defang/<stack>` file supplies provider/region and chooses that same env
- * file again when this container redeploys itself.
+ * receives the grant loaded from the provider-specific env file. Defang's
+ * resolved deployment context supplies the provider and stack, so the CLI
+ * loads the matching env file again when this container redeploys itself.
  */
 
 const STATE_DIR = "/run/defang-publish";
@@ -88,7 +88,7 @@ async function publishEnv(): Promise<NodeJS.ProcessEnv> {
   const provider = process.env.PUBLISH_PROVIDER;
   const stack = process.env.PUBLISH_STACK;
   if (!provider || !stack) {
-    throw new Error("PUBLISH_PROVIDER and PUBLISH_STACK must be set by the selected stack env file");
+    throw new Error("PUBLISH_PROVIDER and PUBLISH_STACK must be set from Defang deployment context");
   }
 
   const env: NodeJS.ProcessEnv = {
@@ -244,7 +244,7 @@ export async function confirmDeploy(): Promise<PublishState> {
 
   const stack = process.env.PUBLISH_STACK;
   if (!stack) {
-    fail("PUBLISH_STACK is not set by the selected stack env file");
+    fail("PUBLISH_STACK is not set from Defang deployment context");
     return state;
   }
   deployProc = spawn("defang", ["compose", "up", "--detach", "--stack", stack], {

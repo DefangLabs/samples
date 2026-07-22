@@ -61,11 +61,11 @@ services:
       # if the main app is down and their login session has expired.
       ADMIN_TOKEN:
       # Enable the admin-triggered self-redeploy. Fabric auth is a per-publish
-      # interactive `defang login` (no stored token). The stack-specific env
-      # file supplies the same stack/provider choice for self-redeploys.
-      PUBLISH_ENABLED: "${PUBLISH_ENABLED:-false}"
-      PUBLISH_PROVIDER: "${PUBLISH_PROVIDER:-disabled}"
-      PUBLISH_STACK: "${PUBLISH_STACK:-disabled}"
+      # interactive `defang login` (no stored token). Defang supplies the
+      # resolved provider and stack so self-redeploys target the same place.
+      PUBLISH_ENABLED: "true"
+      PUBLISH_PROVIDER: "${DEFANG_PROVIDER}"
+      PUBLISH_STACK: "${DEFANG_STACK}"
       # CHAT_URL, CHAT_MODEL, and OPENAI_API_KEY (the gateway's master key) are
       # injected automatically by the `models:` binding below; the coding agent
       # reads them in agent/src/model.ts.
