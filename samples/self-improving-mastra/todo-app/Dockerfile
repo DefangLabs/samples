@@ -27,4 +27,8 @@ COPY --from=builder --chown=nextjs:nodejs /app/lib/schema.sql ./lib/schema.sql
 USER nextjs
 EXPOSE 3000
 
-CMD ["node", "server.js"]
+# Docker/Fargate inject HOSTNAME=<container hostname> at runtime, overriding the
+# ENV above. Next's standalone server binds to $HOSTNAME, so it would listen only
+# on the task's ENI IP and the `curl localhost` container health check would fail.
+# Re-force 0.0.0.0, then `exec` so node stays PID 1 and receives SIGTERM directly.
+CMD ["sh", "-c", "HOSTNAME=0.0.0.0 exec node server.js"]
