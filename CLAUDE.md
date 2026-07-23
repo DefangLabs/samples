@@ -80,7 +80,7 @@ Must follow the established template structure:
 ```markdown
 # Sample Title
 
-[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-<DIRNAME>-template%26template_owner%3DDefangSamples)
+[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.io/sample/<DIRNAME>)
 
 Description of what this sample does.
 
@@ -124,7 +124,7 @@ Languages: python, nodejs, golang, etc.
 - `Tags:` -- Comma-separated; frameworks, tools, categories (NOT programming languages)
 - `Languages:` -- Comma-separated programming languages/runtimes
 
-The 1-click deploy badge URL must use `sample-<DIRNAME>-template` as the `template_name` (this is auto-managed by `template-manager.js`).
+The 1-click deploy badge must link to `https://portal.defang.io/sample/<DIRNAME>` (where `<DIRNAME>` is the sample's directory name). This opens the Defang Portal deploy flow (create project + stack + clone) instead of jumping straight to GitHub's template-creation page.
 
 ### 3. Source code directory (required)
 

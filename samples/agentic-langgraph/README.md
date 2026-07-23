@@ -1,6 +1,6 @@
 # Agentic LangGraph
 
-[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-agentic-langgraph-template%26template_owner%3DDefangSamples)
+[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.io/sample/agentic-langgraph)
 
 This sample demonstrates a LangGraph Agent application deployed with Defang. You can customize the agent's tools as needed. For example, it includes a Tavily Search tool for performing search queries, which requires a `TAVILY_API_KEY` (see [Configuration](#configuration) for setup details).
 

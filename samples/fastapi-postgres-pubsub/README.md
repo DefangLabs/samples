@@ -1,6 +1,6 @@
 # FastAPI Postgres Pub/Sub Chat
 
-[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-fastapi-postgres-pubsub-template%26template_owner%3DDefangSamples)
+[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.io/sample/fastapi-postgres-pubsub)
 
 This sample pairs FastAPI with PostgreSQL `LISTEN/NOTIFY` to demonstrate real-time updates between two application containers. A minimal chat UI sends messages with a REST request, and both FastAPI instances broadcast the new message over WebSockets after Postgres notifies them.
 

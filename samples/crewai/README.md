@@ -1,5 +1,7 @@
 # Crew.ai Django Sample
 
+[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.io/sample/crewai)
+
 This sample shows how to use Crew.ai with a Django application. It provides a simple web interface that allows users to input text and receive a summary of the text in real-time using Django Channels with a Redis broker. It uses Celery to handle the Crew.ai tasks in the background with Redis as a broker. It uses Postgres as the database for Django.
 
 ## Prerequisites

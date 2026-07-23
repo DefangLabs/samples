@@ -1,5 +1,7 @@
 # Platformatic App
 
+[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.io/sample/platformatic)
+
 This sample project demonstrates how to deploy a simplist Platformatic service that returns "Platformatic x Defang" when accessed. The project includes a Dockerized setup with Docker Compose, making it easy to deploy and manage the service.
 
 Once your app is up and running, you can access it via the defined port (default is 3042). This service is designed to be simple, showcasing how to set up a basic Platformatic application and deploy it using Docker.
