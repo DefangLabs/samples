@@ -1,6 +1,6 @@
 # n8n
 
-[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.dev/redirect?url=https%3A%2F%2Fgithub.com%2Fnew%3Ftemplate_name%3Dsample-n8n-template%26template_owner%3DDefangSamples)
+[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.io/sample/n8n)
 
 This sample shows how to get a [n8n](https://n8n.io/) app up using PostgreSQL as a database and running with Defang. We based it in part on the [original sample](https://github.com/n8n-io/n8n-hosting/tree/main/docker-compose/withPostgres) from the n8n team, but we have adapted it to be consistent with the way our other samples are configured.
 
