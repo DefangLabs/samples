@@ -15,11 +15,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          # Fetch two to see changes in current commit
-          fetch-depth: 2
+          # Full history so the push's "before" SHA is reachable for the diff
+          # below (a push can add several commits at once).
+          fetch-depth: 0
 
       - name: Run Checks
         id: checks
+        env:
+          # Diff the whole push range, not just the tip commit, so every sample
+          # touched anywhere in the push republishes its template.
+          BEFORE_SHA: ${{ github.event.before }}
         run: |
           ./scripts/check-modified-samples.sh > modified.txt
           echo "@@ MODIFIED @@"
