@@ -15,7 +15,7 @@ cd /workspace
 if [ ! -d .git ]; then
   git init -q -b main
   git add -A
-  git -c user.name="coding-agent" -c user.email="agent@self-improving-mastra.local" \
+  git -c user.name="coding-agent" -c user.email="agent@self-improving.local" \
     commit -qm "baseline: as deployed"
 else
   echo "existing git history: $(git rev-list --count HEAD 2>/dev/null || echo 0) commit(s) at $(git rev-parse --short HEAD 2>/dev/null || echo '?')"

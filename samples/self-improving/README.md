@@ -1,6 +1,6 @@
 # Self-Improving Mastra Todo
 
-[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.io/sample/self-improving-mastra)
+[![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.io/sample/self-improving)
 
 This sample is a multi-user Next.js todo app that turns user feedback into live
 code changes. Better Auth and PostgreSQL provide accounts, private todo lists,

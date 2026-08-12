@@ -1,5 +1,5 @@
 {
-  "name": "self-improving-mastra-agent",
+  "name": "self-improving-agent",
   "private": true,
   "type": "module",
   "scripts": {

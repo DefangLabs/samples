@@ -1,4 +1,4 @@
-name: self-improving-mastra
+name: self-improving
 services:
   # The production to-do app. Runs a Next.js production build with no source
   # code, no agent, and no admin UI. Exactly one ingress port keeps it
