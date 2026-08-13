@@ -220,7 +220,7 @@ function renderShell(who: string): string {
 }
 
 const CONSOLE_SCRIPT = `
-  const KEY = "self-improving-mastra-active-run";
+  const KEY = "self-improving-active-run";
   const selected = new Set();
   let pollTimer;
   const $ = (id) => document.getElementById(id);

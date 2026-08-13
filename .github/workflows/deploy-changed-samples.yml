@@ -29,9 +29,15 @@ jobs:
           # This BYOC-only sample exceeds the retired Playground staging quota.
           git diff --name-only HEAD $LAST_ANCESTOR \
             | grep '^samples/' \
-            | awk -F'/' '$2 != "self-improving-mastra" {print $1"/"$2}' \
+            | awk -F'/' '$2 != "self-improving" {print $1"/"$2}' \
             | sort \
-            | uniq > changed_samples.txt
+            | uniq \
+            | while read -r sample; do
+                # A renamed or deleted sample still shows up in the diff, but
+                # there is nothing left to deploy. Without this the job fails
+                # with "no results found".
+                if [ -d "$sample" ]; then echo "$sample"; fi
+              done > changed_samples.txt
           if [ -s changed_samples.txt ]; then
             echo "should_continue=true" >> $GITHUB_ENV
             echo "The following samples have changed:"

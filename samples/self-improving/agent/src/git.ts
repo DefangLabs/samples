@@ -24,7 +24,7 @@ const exec = promisify(execFile);
  */
 export const REPO_DIR = LIVE_REPO;
 
-const AGENT_IDENTITY = ["-c", "user.name=coding-agent", "-c", "user.email=agent@self-improving-mastra.local"];
+const AGENT_IDENTITY = ["-c", "user.name=coding-agent", "-c", "user.email=agent@self-improving.local"];
 
 async function git(
   args: string[],
