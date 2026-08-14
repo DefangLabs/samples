@@ -15,12 +15,12 @@ on:
           - up
           - down
       stack:
-        description: "The stack to deploy up or down. (Leave blank for default)"
-        default: ""
+        description: "The stack to deploy up or down."
+        default: "production"
 
 jobs:
   defang:
-    name: Defang ${{ github.event.inputs.action || 'up' }} ${{ github.event.inputs.stack || 'default stack' }}
+    name: Defang ${{ github.event.inputs.action || 'up' }} ${{ github.event.inputs.stack || 'production' }}
     environment: defang-${{ github.event.inputs.stack || 'production' }}
     runs-on: ubuntu-latest
     timeout-minutes: 70
@@ -30,20 +30,22 @@ jobs:
 
     concurrency:
       cancel-in-progress: false
-      group: deploy-${{ github.event.inputs.stack || 'default' }}
+      group: deploy-${{ github.event.inputs.stack || 'production' }}
 
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Defang ${{ github.event.inputs.action || 'up' }} ${{ github.event.inputs.stack || 'default stack' }}
+      - name: Defang ${{ github.event.inputs.action || 'up' }} ${{ github.event.inputs.stack || 'production' }}
         uses: DefangLabs/defang-github-action@v2
         with:
           command: ${{ github.event.inputs.action || 'up' }}
-          stack: ${{ github.event.inputs.stack || '' }}
+          project: ${{ github.event.repository.name }}
+          stack: ${{ github.event.inputs.stack || 'production' }}
 
       - name: Deployment Summary
         uses: DefangLabs/defang-github-action@v2
         with:
           command: services
-          stack: ${{ github.event.inputs.stack || '' }}
+          project: ${{ github.event.repository.name }}
+          stack: ${{ github.event.inputs.stack || 'production' }}
