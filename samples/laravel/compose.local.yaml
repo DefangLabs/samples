@@ -1,0 +1,12 @@
+services:
+  app:
+    extends:
+      file: compose.yaml
+      service: app
+    volumes:
+      - ./app:/var/www/html
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_KEY: base64:9kaIxO6qAR1hBrPeJSZMYkt5EcPf19IclL7zkRWC4Vs=
+      APP_URL: http://localhost:8000
