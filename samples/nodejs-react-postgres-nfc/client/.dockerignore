@@ -1,0 +1,32 @@
+# Ignore node_modules
+node_modules
+node_modules/*
+npm-debug.log
+
+# Ignore build outputs
+build
+dist
+
+# Ignore logs
+*.log
+logs
+*.log.*
+
+# Ignore environment variables
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Ignore editor directories and files
+.idea
+.vscode
+*.sublime-project
+*.sublime-workspace
+
+# Ignore testing and coverage files
+coverage
+jest-test-results.json
+
+# Ignore miscellaneous
+*.swp

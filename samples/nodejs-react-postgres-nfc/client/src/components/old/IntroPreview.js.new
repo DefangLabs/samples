@@ -1,0 +1,364 @@
+import React from 'react';
+import { Box, Typography, Paper, IconButton, Stack, Button, Avatar } from '@mui/material';
+import ShareIcon from '@mui/icons-material/Share';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import LanguageIcon from '@mui/icons-material/Language';
+import EventIcon from '@mui/icons-material/Event';
+
+const IntroPreview = ({ formData }) => {
+  const {
+    title,
+    tagline,
+    bio,
+    companyName,
+    companyUrl,
+    twitterUrl,
+    linkedinUrl,
+    githubUrl,
+    instagramUrl,
+    facebookUrl,
+    personalWebsiteUrl,
+    meetingUrl,
+    websiteUrl,
+    backgroundColor,
+    avatar
+  } = formData;
+
+  // Check if any social media links are available
+  const hasSocialLinks = linkedinUrl || githubUrl || twitterUrl || instagramUrl || facebookUrl;
+  
+  // Helper function to sanitize URLs and remove localhost references
+  const sanitizeUrl = (url) => {
+    if (!url) return '';
+    
+    // Clean up URL
+    let cleanUrl = url.trim();
+    
+    // Remove localhost references
+    if (cleanUrl.includes('localhost') || cleanUrl.includes('127.0.0.1')) {
+      const domains = ['github.com', 'linkedin.com', 'twitter.com', 'x.com', 'instagram.com', 'facebook.com'];
+      for (const domain of domains) {
+        if (cleanUrl.includes(domain)) {
+          const parts = cleanUrl.split(domain);
+          if (parts.length > 1) {
+            cleanUrl = domain + parts[1];
+            break;
+          }
+        }
+      }
+    }
+    
+    // Add https:// if needed
+    if (!/^https?:\/\//i.test(cleanUrl)) {
+      return `https://${cleanUrl}`;
+    }
+    
+    return cleanUrl;
+  };
+
+  return (
+    <Paper
+      elevation={3}
+      sx={{
+        width: { xs: '100%', sm: 400 },
+        minWidth: { xs: 'auto', sm: 400 },
+        maxWidth: 400,
+        minHeight: bio ? 350 : 'auto',
+        p: 3,
+        textAlign: 'center',
+        border: '1px solid #eaeaea',
+        borderRadius: 2,
+        m: 'auto',
+        position: 'relative',
+        boxShadow: '0 6px 16px rgba(0,0,0,0.08)',
+        transition: 'all 0.3s ease',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        backgroundColor: backgroundColor || '#ffffff',
+        color: backgroundColor && 
+               (backgroundColor === '#212121' || backgroundColor === '#000000') 
+               ? '#ffffff' : 'inherit'
+      }}
+    >
+      {/* Share button in top right corner */}
+      <Box sx={{ position: 'absolute', top: 12, right: 12 }}>
+        <IconButton size="small">
+          <ShareIcon fontSize="small" />
+        </IconButton>
+      </Box>
+
+      {/* Centered avatar with colored background */}
+      {avatar && (
+        <Box sx={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          mb: 3, 
+          mt: 3
+        }}>
+          <Box sx={{
+            width: 100,
+            height: 100,
+            borderRadius: '50%',
+            backgroundColor: '#d2e961', // Lime green from the example
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <Avatar 
+              src={avatar}
+              alt={title || 'Profile'}
+              sx={{ 
+                width: 90, 
+                height: 90,
+                border: '2px solid #fff',
+              }}
+            />
+          </Box>
+        </Box>
+      )}
+      
+      {/* Name */}
+      <Box sx={{ textAlign: 'center', mt: avatar ? 1 : 4, mb: 1 }}>
+        {personalWebsiteUrl ? (
+          <Typography 
+            variant="h5" 
+            component="a"
+            href={sanitizeUrl(personalWebsiteUrl)}
+            target="_blank"
+            rel="noopener"
+            sx={{ 
+              overflow: 'hidden', 
+              textOverflow: 'ellipsis', 
+              whiteSpace: 'nowrap',
+              color: 'inherit',
+              textDecoration: 'none',
+              display: 'block',
+              mb: 0.5,
+              '&:hover': {
+                color: 'primary.main',
+                textDecoration: 'none'
+              }
+            }}
+          >
+            {title || 'Your Name'}
+          </Typography>
+        ) : (
+          <Typography 
+            variant="h5" 
+            sx={{ 
+              overflow: 'hidden', 
+              textOverflow: 'ellipsis', 
+              whiteSpace: 'nowrap',
+              mb: 0.5
+            }}
+          >
+            {title || 'Your Name'}
+          </Typography>
+        )}
+
+        {/* Tagline and Company */}
+        <Box sx={{ 
+          display: 'flex', 
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: 0.5
+        }}>
+          <Typography 
+            variant="subtitle1" 
+            color="text.secondary"
+            sx={{ 
+              overflow: 'hidden', 
+              textOverflow: 'ellipsis',
+              mb: 0,
+              mr: 0.01
+            }}
+          >
+            {tagline || 'Your Tagline'}
+          </Typography>
+          
+          {companyName && (
+            <Typography 
+              variant="body2" 
+              color="text.secondary"
+              sx={{ 
+                display: 'inline-flex',
+                alignItems: 'center',
+                ml: 0
+              }}
+            >
+              {companyUrl ? (
+                <Box 
+                  component="a" 
+                  href={sanitizeUrl(companyUrl)}
+                  target="_blank"
+                  rel="noopener"
+                  sx={{ 
+                    color: 'primary.main', 
+                    textDecoration: 'none',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    '&:hover': { textDecoration: 'underline' }
+                  }}
+                >
+                  {" "}@{companyName}
+                </Box>
+              ) : (
+                <>{" "}@{companyName}</>
+              )}
+            </Typography>
+          )}
+        </Box>
+      </Box>
+
+      {/* Bio */}
+      {bio && (
+        <Box sx={{ 
+          mt: 3, 
+          mb: 2, 
+          display: 'flex', 
+          flexDirection: 'column', 
+          justifyContent: 'center' 
+        }}>
+          <Typography 
+            variant="body1" 
+            align="center"
+            sx={{ 
+              wordWrap: 'break-word',
+              overflowWrap: 'break-word'
+            }}
+          >
+            {bio}
+          </Typography>
+        </Box>
+      )}
+
+      {/* Website and meeting buttons */}
+      {(personalWebsiteUrl || meetingUrl || websiteUrl) && (
+        <Box sx={{ mb: 2, mt: bio ? 2 : (companyName ? 2 : 3) }}>
+          <Stack direction="column" spacing={1.5} alignItems="center">
+            {personalWebsiteUrl && (
+              <Button 
+                variant="outlined" 
+                size="small"
+                component="a" 
+                href={sanitizeUrl(personalWebsiteUrl)} 
+                target="_blank" 
+                rel="noopener"
+                startIcon={<LanguageIcon fontSize="small" />}
+                sx={{ 
+                  borderRadius: 4,
+                  textTransform: 'none',
+                  px: 2,
+                  minWidth: 180,
+                  maxWidth: '90%',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap'
+                }}
+              >
+                Visit My Website
+              </Button>
+            )}
+            
+            {meetingUrl && (
+              <Button 
+                variant="outlined" 
+                size="small"
+                component="a" 
+                href={sanitizeUrl(meetingUrl)} 
+                target="_blank" 
+                rel="noopener"
+                startIcon={<EventIcon fontSize="small" />}
+                sx={{ 
+                  borderRadius: 4,
+                  textTransform: 'none',
+                  px: 2,
+                  minWidth: 180,
+                  maxWidth: '90%',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap'
+                }}
+              >
+                Schedule a Meeting
+              </Button>
+            )}
+            
+            {websiteUrl && (
+              <Button 
+                variant="outlined" 
+                size="small"
+                component="a" 
+                href={sanitizeUrl(websiteUrl)} 
+                target="_blank" 
+                rel="noopener"
+                startIcon={<LanguageIcon fontSize="small" />}
+                sx={{ 
+                  borderRadius: 4,
+                  textTransform: 'none',
+                  px: 2,
+                  minWidth: 180,
+                  maxWidth: '90%',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap'
+                }}
+              >
+                Visit Project Site
+              </Button>
+            )}
+          </Stack>
+        </Box>
+      )}
+
+      {/* Social media icons */}
+      {hasSocialLinks && (
+        <Box sx={{ mt: bio ? 'auto' : 2, pt: 2 }}>
+          <Stack 
+            direction="row" 
+            spacing={2} 
+            justifyContent="center" 
+          >
+            {linkedinUrl && (
+              <IconButton href={sanitizeUrl(linkedinUrl)} target="_blank" rel="noopener">
+                <LinkedInIcon />
+              </IconButton>
+            )}
+            
+            {githubUrl && (
+              <IconButton href={sanitizeUrl(githubUrl)} target="_blank" rel="noopener">
+                <GitHubIcon />
+              </IconButton>
+            )}
+            
+            {twitterUrl && (
+              <IconButton href={sanitizeUrl(twitterUrl)} target="_blank" rel="noopener">
+                <TwitterIcon />
+              </IconButton>
+            )}
+            
+            {instagramUrl && (
+              <IconButton href={sanitizeUrl(instagramUrl)} target="_blank" rel="noopener">
+                <InstagramIcon />
+              </IconButton>
+            )}
+
+            {facebookUrl && (
+              <IconButton href={sanitizeUrl(facebookUrl)} target="_blank" rel="noopener">
+                <FacebookIcon />
+              </IconButton>
+            )}
+          </Stack>
+        </Box>
+      )}
+    </Paper>
+  );
+};
+
+export default IntroPreview;

@@ -1,0 +1,44 @@
+services:
+  db:
+    image: postgres:15
+    restart: unless-stopped
+    x-defang-postgres: true
+    environment:
+      - POSTGRES_PASSWORD
+    ports:
+      - mode: host
+        target: 5432
+        published: 5432
+
+  cards:
+    restart: unless-stopped
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      args:
+        - REACT_APP_API_URL=https://kevyvo-server--3010.prod1.defang.dev #replace <YOUR_USERNAME> with your username
+    ports:
+      - mode: ingress
+        target: 3000
+        published: 3000
+    deploy:
+      resources:
+        reservations:
+          memory: 2GB
+    depends_on:
+      - server
+  server:
+    restart: unless-stopped
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - target: 3010
+        mode: ingress
+        published: 3010
+    environment:
+      - DATABASE_URL=postgres://postgres:${POSTGRES_PASSWORD}@db:5432/postgres
+    #deploy:
+    #  resources:
+    #    reservations:
+    #      memory: 256M
