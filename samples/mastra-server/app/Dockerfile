@@ -17,8 +17,8 @@ FROM node:22-bookworm-slim AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
-ENV PORT=4111
 # Tells the server where to find the Studio single-page app it should serve.
+# Mastra listens on 4111 by default; set PORT to change it.
 ENV MASTRA_STUDIO_PATH=/app/.mastra/output/studio
 
 # curl backs the container health check that Defang requires on ingress ports.

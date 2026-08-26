@@ -43,11 +43,12 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
-# A small local model, downloaded on first run. Docker Model Runner must be
-# enabled in your Docker installation.
+# Downloaded on first run. Docker Model Runner must be enabled in your Docker
+# installation. This model is bigger than the usual sample default because the
+# demo depends on tool calling, which the very small models do not support.
 models:
   chat:
-    model: ai/gemma3:1B-Q4_K_M
+    model: ai/qwen2.5:3B-Q4_K_M
 
 volumes:
   pgdata:

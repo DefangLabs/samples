@@ -1,11 +1,6 @@
-/**
- * A tool that reports facts about the container answering the request.
- *
- * This is deliberately self-contained: it needs no external API key and no
- * seed data, so the sample deploys and works immediately. It is also the
- * quickest way to see that a scaled deployment is really load balanced —
- * ask "which instance is this?" a few times and watch `instance` change.
- */
+// Reports facts about the container answering the request. Needs no API key and
+// no seed data, so the sample works the moment it deploys. Ask "which instance
+// is this?" a few times on a scaled deployment and watch `instance` change.
 
 import { createTool } from "@mastra/core/tools";
 import { hostname } from "node:os";

@@ -1,6 +1,5 @@
 node_modules
 .mastra
-dist
 .env
 .env.*
 *.log
