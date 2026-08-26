@@ -9,16 +9,20 @@
     "start": "node .mastra/output/index.mjs",
     "typecheck": "tsc --noEmit"
   },
+  "//": "Versions are pinned exactly, not with ^. `mastra build` writes a second package.json into .mastra/output and runs its own npm install there, which package-lock.json does not cover. With ranges, that install can pick a newer @mastra/* sub-package than the core it is built against, and the server fails to start. Bump these together.",
+  "//overrides": "@mastra/loggers 1.3.0 imports buildLogRecordData from @mastra/core, which only exists in 1.63 pre-releases, so it fails against the current stable core 1.62.0. The mastra CLI depends on ^1.2.0 and would otherwise resolve to 1.3.0. Remove this override once @mastra/core 1.63.0 is stable.",
+  "overrides": {
+    "@mastra/loggers": "1.2.0"
+  },
   "dependencies": {
-    "@mastra/core": "^1.62.0",
-    "@mastra/loggers": "^1.2.0",
-    "@mastra/memory": "^1.28.0",
-    "@mastra/pg": "^1.22.0",
-    "zod": "^4.4.3"
+    "@mastra/core": "1.62.0",
+    "@mastra/memory": "1.28.0",
+    "@mastra/pg": "1.22.0",
+    "zod": "4.4.3"
   },
   "devDependencies": {
-    "@types/node": "^24.10.1",
-    "mastra": "^1.26.1",
-    "typescript": "^5.9.3"
+    "@types/node": "24.10.1",
+    "mastra": "1.26.1",
+    "typescript": "5.9.3"
   }
 }
