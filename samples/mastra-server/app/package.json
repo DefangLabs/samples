@@ -1,0 +1,24 @@
+{
+  "name": "mastra-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "mastra dev",
+    "build": "mastra build --studio",
+    "start": "node .mastra/output/index.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mastra/core": "^1.62.0",
+    "@mastra/loggers": "^1.2.0",
+    "@mastra/memory": "^1.28.0",
+    "@mastra/pg": "^1.22.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "mastra": "^1.26.1",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,10 @@
+node_modules
+.mastra
+dist
+npm-debug.log*
+.env
+.env.*
+.git
+.gitignore
+Dockerfile
+.dockerignore
