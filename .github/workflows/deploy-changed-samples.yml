@@ -26,10 +26,15 @@ jobs:
         run: |
           git fetch origin main
           LAST_ANCESTOR=$(git merge-base HEAD origin/main)
-          # This BYOC-only sample exceeds the retired Playground staging quota.
+          # These BYOC-only samples exceed the retired Playground staging quota.
+          # mastra-server uses a top-level `models:` block, and the LiteLLM
+          # gateway the CLI synthesizes for it reserves 2048 MiB by default
+          # (1024 MiB OOMed during AWS E2E, see defang compose/fixup.go), which
+          # is above the staging tenant's 1024 MiB per-service limit. It also
+          # uses managed Postgres, which the Playground does not support.
           git diff --name-only HEAD $LAST_ANCESTOR \
             | grep '^samples/' \
-            | awk -F'/' '$2 != "self-improving" {print $1"/"$2}' \
+            | awk -F'/' '$2 != "self-improving" && $2 != "mastra-server" {print $1"/"$2}' \
             | sort \
             | uniq \
             | while read -r sample; do
