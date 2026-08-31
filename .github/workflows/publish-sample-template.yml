@@ -13,7 +13,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           # Full history so the push's "before" SHA is reachable for the diff
           # below (a push can add several commits at once).

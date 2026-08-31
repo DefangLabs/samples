@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Deploy
         uses: DefangLabs/defang-github-action@v1.3.2
