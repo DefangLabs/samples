@@ -25,4 +25,4 @@ sse-starlette==2.2.1
 starlette==0.45.3
 typing_extensions==4.12.2
 uvicorn==0.34.0
-Werkzeug==2.3.7
+Werkzeug==3.1.5
