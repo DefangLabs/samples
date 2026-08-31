@@ -69,7 +69,11 @@ jobs:
       - name: Deploy changed samples to staging
         id: deploy-samples
         shell: bash # implies set -o pipefail, so pipe below will keep the exit code from loadtest
-        if: env.should_continue == 'true'
+        # Dependabot-triggered pull_request runs get no access to Actions secrets
+        # (GitHub restricts this the same way it does for fork PRs), so this step
+        # would always fail here. Skip it so the required check reports "success"
+        # (skipped) instead of blocking dependabot-automerge on every bump.
+        if: env.should_continue == 'true' && github.actor != 'dependabot[bot]'
         env:
           FIXED_VERIFIER_PK: ${{ secrets.FIXED_VERIFIER_PK }}
           TEST_ALLOWED_HOSTS: ${{ secrets.TEST_ALLOWED_HOSTS }}
@@ -134,7 +138,7 @@ jobs:
           ./tools/testing/loadtest -c fabric-staging.defang.dev:443 --timeout=15m --concurrency=10 -s $SAMPLES -o output --markdown=true | tee output/summary.log | grep -v '^\s*[-*]' # removes load sample log lines
       - name: Upload Output as Artifact
         uses: actions/upload-artifact@v4
-        if: env.should_continue == 'true' && (success() || steps.deploy-samples.outcome == 'failure') # Always upload result unless cancelled
+        if: env.should_continue == 'true' && github.actor != 'dependabot[bot]' && (success() || steps.deploy-samples.outcome == 'failure') # Always upload result unless cancelled
         with:
           name: program-output
           path: output/**
