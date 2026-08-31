@@ -59,6 +59,12 @@ jobs:
 
       - name: Create / Update Template Repo
         uses: actions/github-script@v7
+        # Dependabot-triggered pull_request runs get no access to Actions secrets
+        # (GitHub restricts this the same way it does for fork PRs), so
+        # TEMPLATES_MANAGER_TOKEN is empty here and this step would always fail.
+        # Skip it so the required check_samples check reports "success" (skipped)
+        # instead of blocking dependabot-automerge on every dependency bump.
+        if: github.actor != 'dependabot[bot]'
         env:
           PUSH_TOKEN: ${{ secrets.TEMPLATES_MANAGER_TOKEN }}
         with:
