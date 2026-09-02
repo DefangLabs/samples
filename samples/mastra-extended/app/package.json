@@ -12,7 +12,7 @@
   "dependencies": {
     "@ai-sdk/amazon-bedrock": "^4.0.92",
     "@aws-sdk/credential-providers": "^3.1028.0",
-    "@mastra/core": "^1.23.0",
+    "@mastra/core": "^1.63.2",
     "@mastra/memory": "^1.14.0",
     "@mastra/pg": "^1.9.0",
     "ai": "^6.0.149",
