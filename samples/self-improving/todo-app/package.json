@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "better-auth": "^1.6.23",
-    "next": "15.5.20",
+    "next": "15.5.25",
     "pg": "^8.22.0",
     "react": "19.1.0",
     "react-dom": "19.1.0"
