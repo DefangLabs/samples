@@ -79,7 +79,7 @@ jsonschema==4.23.0
 jsonschema-specifications==2025.4.1
 kombu==5.5.3
 kubernetes==32.0.1
-litellm==1.68.0
+litellm==1.93.0
 markdown-it-py==3.0.0
 MarkupSafe==3.0.2
 matplotlib-inline==0.1.7
