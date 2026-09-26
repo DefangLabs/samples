@@ -25,6 +25,7 @@ When you add a new sample, make sure to add any config vals to the `deploy-chang
 | [BullMQ & BullBoard & Redis](./samples/bullmq-bullboard-redis) | A sample project with BullMQ, BullBoard, and Redis. | BullMQ, BullBoard, Redis, Express, Node.js, Message Queue, JavaScript | nodejs |
 | [Crew.ai Django Sample](./samples/crewai) | A sample application that uses Crew.ai to summarize text in a background task, streamed to the user in real-time. | Django, Celery, Redis, Postgres, AI, ML | Python |
 | [C# & ASP.NET Core](./samples/csharp-dotnet) | A simple task manager application using C# and ASP.NET Core. | ASP.NET Core, JavaScript, C# | C# |
+| [Customer Installation Handoff](./samples/customer-handoff) | A server-backed foundation for handing customer cloud setup and deployment to Defang. | Defang, Customer Onboarding, Cloud, GitHub, Sample | nodejs, html, css, javascript |
 | [Defang Provider Handoff Sample](./samples/defang-provider-handoff) | A sample application that demonstrates how to provide a white-labeled static site for customers to configure their cloud accounts for your deployment. | Defang, Cloud, Deployment, Static Site | HTML, CSS, JavaScript |
 | [Django](./samples/django) | A simple Django app that uses SQLite as the database. | Django, SQLite, Python | python |
 | [Django Celery](./samples/django-celery) | A Django application that uses Celery for background tasks, Postgres as the database, and Redis as the message broker. | Django, Celery, Postgres, Redis | python, sql |

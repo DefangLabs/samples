@@ -1,0 +1,36 @@
+name: customer-handoff
+
+services:
+  app:
+    restart: unless-stopped
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    environment:
+      PORT: 8080
+      PORTAL_GRAPHQL_URL: ${PORTAL_GRAPHQL_URL:-https://graphql.defang.io/v1/graphql}
+      PORTAL_HANDOFF_ORIGIN: ${PORTAL_HANDOFF_ORIGIN:-https://portal.defang.io}
+      PORTAL_ACCESS_TOKEN:
+      DEFANG_TENANT_ID:
+      DEFANG_PROJECT_ID:
+      DEFANG_RECIPE: ${DEFANG_RECIPE:-default}
+      DEFANG_STACK_NAME: ${DEFANG_STACK_NAME:-production}
+      DEFANG_CLOUD_PROVIDER: ${DEFANG_CLOUD_PROVIDER:-aws}
+      GITHUB_ORG:
+      GITHUB_REPOSITORY:
+      GITHUB_REF_TYPE: ${GITHUB_REF_TYPE:-environment}
+      GITHUB_REF_PATTERN: ${GITHUB_REF_PATTERN:-defang-production}
+      INSTALLATION_NAME_PREFIX: ${INSTALLATION_NAME_PREFIX:-customer}
+    ports:
+      - mode: ingress
+        target: 8080
+        published: 8080
+    deploy:
+      resources:
+        reservations:
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
