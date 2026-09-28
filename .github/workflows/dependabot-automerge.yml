@@ -41,8 +41,10 @@ jobs:
             if gh pr merge --auto --squash "$PR_URL"; then
               exit 0
             fi
-            echo "Attempt $attempt failed, retrying in $((attempt * 15))s..."
-            sleep $((attempt * 15))
+            if [ "$attempt" -lt 5 ]; then
+              echo "Attempt $attempt failed, retrying in $((attempt * 15))s..."
+              sleep $((attempt * 15))
+            fi
           done
           echo "::error::Failed to enable auto-merge after 5 attempts"
           exit 1
