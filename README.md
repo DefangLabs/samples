@@ -81,6 +81,7 @@ When you add a new sample, make sure to add any config vals to the `deploy-chang
 | [Ollama](./samples/ollama) | Ollama is a tool that lets you easily run large language models. | AI, LLM, ML, Llama, Mistral, Next.js, AI SDK, | Typescript |
 | [Phoenix & PostgreSQL](./samples/phoenix-postgres) | A sample Phoenix application that uses a PostgreSQL database. | Phoenix, PostgreSQL, Database, Elixir | Elixir |
 | [Platformatic](./samples/platformatic) | A sample project showcasing a simple Platformatic service with Docker deployment. | Platformatic, Defang, Docker, Node.js, Service, JavaScript | nodejs |
+| [Programmatic Customer Handoff](./samples/customer-handoff) | A server-backed demo for creating customer cloud-setup handoffs with Defang Deploy. | Defang, Customer Onboarding, Cloud, GitHub, sample | nodejs, html, css, javascript |
 | [Pulumi](./samples/pulumi) | A basic Pulumi example. | Pulumi, Node.js, HTTP, Server, TypeScript | nodejs |
 | [Pulumi & Remix & PostgreSQL](./samples/pulumi-remix-postgres) | A full-stack example using Remix, Prisma, and Aiven. | Full-stack, Remix, Prisma, Aiven, PostgreSQL, Pulumi, Node.js, TypeScript, SQL | nodejs |
 | [Python & Form](./samples/python-form) | A short Python example for form submission in Flask. | Python, Flask, Form | python |
