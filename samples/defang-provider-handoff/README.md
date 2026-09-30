@@ -1,5 +1,12 @@
 # Defang Provider Handoff Sample
 
+> [!WARNING]
+> This is the legacy AWS-only manual-invite prototype. It does not use the
+> current Installation handoff contract and should not be the basis of a new
+> integration. Use the maintained
+> [Customer Installation Handoff](https://github.com/DefangLabs/samples/tree/main/samples/customer-handoff)
+> sample instead.
+
 [![1-click-deploy](https://raw.githubusercontent.com/DefangLabs/defang-assets/main/Logos/Buttons/SVG/deploy-with-defang.svg)](https://portal.defang.io/sample/defang-provider-handoff)
 
 If you are using Defang to deploy your application into your customer's cloud accounts, you may want to provide a white-labeled static site that your customers can use to configure their cloud account for your deployment. This sample demonstrates how to do that.
