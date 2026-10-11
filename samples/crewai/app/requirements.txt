@@ -9,7 +9,7 @@ asgiref==3.8.1
 asttokens==3.0.0
 attrs==25.3.0
 auth0-python==4.9.0
-autobahn==24.4.2
+autobahn==26.7.1
 Automat==25.4.16
 backoff==2.2.1
 bcrypt==4.3.0
