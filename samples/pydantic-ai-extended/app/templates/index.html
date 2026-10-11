@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pydantic AI Extended</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="chat-rail">
+      <div class="card chat-card">
+        <div>
+          <span class="eyebrow">Copilot</span>
+          <h1 class="chat-title">Ask about tickets and alerts</h1>
+          <p class="muted-text chat-intro">
+            The Pydantic AI agent inspects tickets, alerts, and semantic matches before it answers.
+          </p>
+        </div>
+
+        <div id="suggestions" class="suggestion-row">
+          <button type="button" class="suggestion-chip" data-prompt="What should I look at first?">What should I look at first?</button>
+          <button type="button" class="suggestion-chip" data-prompt="Summarize the current tickets and alerts.">Summarize the current tickets and alerts.</button>
+          <button type="button" class="suggestion-chip" data-prompt="Which items seem related?">Which items seem related?</button>
+          <button type="button" class="suggestion-chip" data-prompt="What patterns are you seeing?">What patterns are you seeing?</button>
+        </div>
+
+        <div id="chat-log" class="chat-log">
+          <div class="chat-empty-state">
+            Generate sample items, then ask what matters, what looks related, or what needs attention first.
+          </div>
+        </div>
+
+        <form id="chat-form" class="chat-form">
+          <div class="chat-compose">
+            <textarea id="chat-input" class="chat-input" placeholder="Ask about the tickets, the alerts, or similar items"></textarea>
+            <button id="chat-send" class="primary-button chat-send-button" type="submit" disabled>Ask</button>
+          </div>
+        </form>
+      </div>
+    </aside>
+
+    <main class="content-shell">
+      <section class="card hero-card">
+        <div class="hero-copy">
+          <span class="eyebrow">Tickets and alerts</span>
+          <h2>Background jobs classify incoming tickets and system alerts.</h2>
+          <p class="muted-text">
+            Click one button to generate 10 tickets and 10 alerts. The worker fans that out into per-item jobs, stores the results in Postgres, and builds embeddings for semantic lookup.
+          </p>
+        </div>
+        <div class="hero-actions">
+          <button id="seed-btn" class="primary-button" type="button">Generate sample items</button>
+          <div class="status-panel">
+            <div>
+              <span class="status-label">Status</span>
+              <strong id="seed-status">No items yet</strong>
+            </div>
+            <span id="seed-updated" class="muted-text"></span>
+          </div>
+        </div>
+      </section>
+
+      <section class="stats-row">
+        <div class="stat-card"><span class="stat-label">Tickets</span><strong id="stat-tickets">0</strong></div>
+        <div class="stat-card"><span class="stat-label">Alerts</span><strong id="stat-alerts">0</strong></div>
+        <div class="stat-card"><span class="stat-label">Classified</span><strong id="stat-classified">0</strong></div>
+        <div class="stat-card"><span class="stat-label">Queue</span><strong id="stat-queue">0</strong></div>
+      </section>
+
+      <section class="columns">
+        <div class="card list-card">
+          <div class="list-header">
+            <span class="eyebrow">Open tickets</span>
+            <p class="muted-text">Support tickets from tools like Zendesk, Jira, and GitHub Issues.</p>
+          </div>
+          <div id="ticket-list" class="item-list">
+            <div class="empty-list">No tickets yet.</div>
+          </div>
+        </div>
+
+        <div class="card list-card">
+          <div class="list-header">
+            <span class="eyebrow">Recent alerts</span>
+            <p class="muted-text">System alerts from monitoring, deploys, CI, and payment services.</p>
+          </div>
+          <div id="alert-list" class="item-list">
+            <div class="empty-list">No alerts yet.</div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="/static/app.js"></script>
+</body>
+</html>
