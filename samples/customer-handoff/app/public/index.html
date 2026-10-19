@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Create a customer cloud setup handoff with Defang Deploy."
+    />
+    <title>Customer cloud handoff</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/app.js" type="module"></script>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="hero">
+        <a class="brand" href="https://defang.io" aria-label="Defang home">
+          <span class="brand-mark" aria-hidden="true">D</span>
+          <span>Defang Deploy</span>
+        </a>
+        <div class="eyebrow">Provider demo</div>
+        <h1>Hand cloud setup to your customer</h1>
+        <p class="lede">
+          Choose one of your projects, define its GitHub trust boundary, and
+          send the customer to a hosted setup flow in their own workspace.
+        </p>
+        <div class="flow" aria-label="Handoff flow">
+          <span class="flow-step current"><b>1</b> Configure</span>
+          <span class="flow-line" aria-hidden="true"></span>
+          <span class="flow-step"><b>2</b> Share link</span>
+          <span class="flow-line" aria-hidden="true"></span>
+          <span class="flow-step"><b>3</b> Customer connects cloud</span>
+        </div>
+      </header>
+
+      <section class="panel" aria-labelledby="handoff-heading">
+        <div class="panel-heading">
+          <div>
+            <p class="section-label">New handoff</p>
+            <h2 id="handoff-heading">Customer and deployment details</h2>
+          </div>
+          <p id="portal-host" class="environment" aria-live="polite"></p>
+        </div>
+
+        <form id="handoff-form">
+          <fieldset id="access-section" class="form-section">
+            <legend>Developer access</legend>
+            <p class="field-help">
+              The token is sent only to this demo server and is never saved.
+            </p>
+            <label class="field full-width" for="access-token">
+              <span>Developer access token</span>
+              <input
+                id="access-token"
+                name="accessToken"
+                type="password"
+                autocomplete="off"
+                placeholder="Paste a current Portal token"
+              />
+            </label>
+            <button class="button secondary" id="load-context" type="button">
+              Load workspaces
+            </button>
+          </fieldset>
+
+          <fieldset class="form-section" id="details-section" disabled>
+            <legend>Handoff details</legend>
+            <div class="form-grid">
+              <label class="field" for="tenant-id">
+                <span>Developer workspace</span>
+                <select id="tenant-id" name="tenantId" required>
+                  <option value="">Select a workspace</option>
+                </select>
+              </label>
+
+              <label class="field" for="project-id">
+                <span>Project</span>
+                <select id="project-id" name="projectId" required>
+                  <option value="">Select a project</option>
+                </select>
+              </label>
+
+              <label class="field full-width" for="customer-email">
+                <span>Customer email</span>
+                <input
+                  id="customer-email"
+                  name="customerEmail"
+                  type="email"
+                  autocomplete="email"
+                  placeholder="cloud-owner@example.com"
+                  required
+                />
+                <small>The customer will use this address to sign in.</small>
+              </label>
+
+              <label class="field" for="installation-name">
+                <span>Installation name</span>
+                <input
+                  id="installation-name"
+                  name="installationName"
+                  value="customer-production"
+                  required
+                />
+              </label>
+
+              <label class="field" for="stack-name">
+                <span>Stack name</span>
+                <input id="stack-name" name="stackName" value="production" required />
+              </label>
+
+              <label class="field" for="recipe">
+                <span>Recipe</span>
+                <input id="recipe" name="recipe" value="default" required />
+              </label>
+
+              <label class="field" for="cloud-provider">
+                <span>Customer cloud</span>
+                <select id="cloud-provider" name="cloudProvider" required>
+                  <option value="aws">AWS</option>
+                  <option value="gcp">Google Cloud</option>
+                  <option value="azure">Azure</option>
+                </select>
+              </label>
+
+              <label class="field" for="github-org">
+                <span>GitHub organization</span>
+                <input
+                  id="github-org"
+                  name="githubOrg"
+                  placeholder="your-org"
+                  required
+                />
+              </label>
+
+              <label class="field" for="repo-pattern">
+                <span>Repository pattern</span>
+                <input
+                  id="repo-pattern"
+                  name="repoPattern"
+                  placeholder="customer-*"
+                  required
+                />
+              </label>
+
+              <label class="field" for="ref-type">
+                <span>Allowed Git reference</span>
+                <select id="ref-type" name="refType" required>
+                  <option value="environment">Environment</option>
+                  <option value="branch">Branch</option>
+                  <option value="all">All references</option>
+                </select>
+              </label>
+
+              <label class="field" id="ref-pattern-field" for="ref-pattern">
+                <span>Reference pattern</span>
+                <input
+                  id="ref-pattern"
+                  name="refPattern"
+                  value="production"
+                  required
+                />
+              </label>
+            </div>
+
+            <div class="form-actions">
+              <p class="request-note">
+                Creating a handoff adds a pending installation to the customer’s
+                workspace. No workload is deployed yet.
+              </p>
+              <button class="button primary" id="create-handoff" type="submit">
+                Create customer handoff
+              </button>
+            </div>
+          </fieldset>
+        </form>
+
+        <div id="error-message" class="message error" role="alert" hidden></div>
+
+        <section id="result" class="result" aria-labelledby="result-heading" hidden>
+          <div class="success-icon" aria-hidden="true">✓</div>
+          <div>
+            <p class="section-label success">Handoff ready</p>
+            <h2 id="result-heading">Share the hosted setup link</h2>
+            <p>
+              The installation is pending until the customer signs in and
+              connects their cloud account.
+            </p>
+            <dl class="result-meta">
+              <div>
+                <dt>Installation</dt>
+                <dd id="result-installation"></dd>
+              </div>
+              <div>
+                <dt>Status</dt>
+                <dd id="result-status"></dd>
+              </div>
+            </dl>
+            <div class="link-box">
+              <code id="result-url"></code>
+              <button class="copy-button" id="copy-url" type="button">Copy</button>
+            </div>
+            <a
+              class="button primary result-link"
+              id="open-handoff"
+              href="#"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Open customer setup
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </section>
+      </section>
+    </main>
+  </body>
+</html>
