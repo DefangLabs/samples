@@ -5,6 +5,7 @@ const pool = require("./db")
 
 app.use(cors());
 app.use(express.json())
+app.use(express.static(__dirname + "/public"))
 
 const createData = `CREATE TABLE IF NOT EXISTS todo(
   todo_id SERIAL PRIMARY KEY,
