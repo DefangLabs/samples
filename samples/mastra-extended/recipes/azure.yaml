@@ -1,0 +1,15 @@
+# Merge these model entries into your stack's custom recipe.
+config:
+  defang-azure:models:
+    chat-default:
+      - model: gpt-5.1
+        format: OpenAI
+        role: chat
+      - model: gpt-4.1
+        format: OpenAI
+        role: chat
+    embedding-default:
+      - model: text-embedding-3-small
+        version: "1"
+        format: OpenAI
+        role: embedding

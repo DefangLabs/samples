@@ -1,0 +1,10 @@
+# Merge these model entries into your stack's custom recipe.
+config:
+  defang-gcp:models:
+    chat-default:
+      - model: gemini-3.5-flash
+        location: global
+        role: chat
+    embedding-default:
+      - model: gemini-embedding-001
+        role: embedding

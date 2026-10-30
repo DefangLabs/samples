@@ -49,6 +49,16 @@ The password for your PostgreSQL database. You need to set this before deploying
 
 *You can easily set this to a random string using `defang config set POSTGRES_PASSWORD --random`*
 
+### Scaleway inference key
+
+On Scaleway, Defang uses an `OPENAI_API_KEY` you have configured, or reuses your authenticated Scaleway API key when none is set. To supply a separate key:
+
+```bash
+defang config set OPENAI_API_KEY
+```
+
+Keep this key out of the recipe files.
+
 ## Usage
 
 1. Open the app.
@@ -65,24 +75,39 @@ The password for your PostgreSQL database. You need to set this before deploying
 > [!NOTE]
 > Download [Defang CLI](https://github.com/DefangLabs/defang)
 
-### Defang Playground
-
-Deploy your application to the Defang Playground by opening up your terminal and typing:
-
-```bash
-defang compose up
-```
-
-### BYOC (Deploy to your own AWS or GCP cloud account)
+### Deploy to your cloud account
 
 If you want to deploy to your own cloud account, you can [use Defang BYOC](https://docs.defang.io/docs/tutorials/deploy-to-your-cloud).
 
-The default sample uses Defang's managed model provider services:
+The sample uses portable Compose model aliases:
 
 - `chat` uses `chat-default`
 - `embedding` uses `embedding-default`
 
-If you want to pin different models, edit the `provider.options.model` values in [compose.yaml](/workspaces/defang-global/projects/samples/samples/mastra-extended/compose.yaml).
+### Choose models with a recipe
+
+Start from your stack's current recipe in the Defang Portal. Copy the model entries from the matching example into its `config` section, keeping the other infrastructure settings you want to retain:
+
+| Cloud | Model settings |
+| --- | --- |
+| AWS Bedrock | [recipes/aws.yaml](./recipes/aws.yaml) |
+| GCP Vertex AI | [recipes/gcp.yaml](./recipes/gcp.yaml) |
+| Microsoft Foundry on Azure | [recipes/azure.yaml](./recipes/azure.yaml) |
+| Scaleway Generative APIs | [recipes/scaleway.yaml](./recipes/scaleway.yaml) |
+
+Assign the custom recipe to the stack and deploy with `defang compose up`. The base Compose file continues to use `chat-default` and `embedding-default`; the recipe controls the cloud choices. These examples require compatible CLI and deployment-engine releases.
+
+The AWS example omits the chat model's exact revision. Azure omits the chat revision while specifying an exact embedding revision separately. Scaleway defines a family key without a release suffix and maps it to a concrete model ID. GCP uses its native model names; those names can remain mutable upstream.
+
+You can also select a family directly. With the Scaleway example recipe assigned to the stack, add this non-secret setting to a local `.env` file in the sample directory:
+
+```dotenv
+CHAT_MODEL=qwen3-235b-a22b-instruct
+```
+
+Then run `defang compose up`. `CHAT_MODEL` and `EMBEDDING_MODEL` are read from `.env` when Compose loads. Defang does not use arbitrary shell environment values or `defang config set` to substitute these model names.
+
+Keep the embedding model stable once the app has stored vectors. Changing it can require regenerating those vectors, even when the dimensions match. A recipe default change preserves an existing embedding selection; request a new exact model or a distinct recipe key pinned to it when you are ready to migrate.
 
 > [!WARNING]
 > **Extended deployment time:** This sample creates a managed PostgreSQL database which may take upwards of 20 minutes to provision on first deployment. Subsequent deployments are much faster (2-5 minutes).
