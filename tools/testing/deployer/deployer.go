@@ -3,6 +3,7 @@ package deployer
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -14,7 +15,6 @@ import (
 	"regexp"
 	"strings"
 	"time"
-	"encoding/json"
 
 	"defang.io/tools/testing/detector"
 	"defang.io/tools/testing/logger"
@@ -223,8 +223,13 @@ func (d *CliDeployer) RunDeployTest(ctx context.Context, t test.TestInfo) (*test
 		return result, fmt.Errorf(result.Message)
 	}
 
-	result.TotalServices = len(services)
 	for _, svc := range services {
+		// Non-HTTP endpoints (e.g. a database's internal host:port) cannot be tested with a GET
+		if svc.Endpoint != "" && !strings.HasPrefix(svc.Endpoint, "http://") && !strings.HasPrefix(svc.Endpoint, "https://") {
+			log.Printf(" * Skipping non-HTTP endpoint %v of service %v", svc.Endpoint, svc.Service)
+			continue
+		}
+		result.TotalServices++
 		if svc.Endpoint == "" {
 			continue
 		}
