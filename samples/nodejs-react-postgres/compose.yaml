@@ -10,7 +10,8 @@ services:
         target: 3010
         published: 3010
     environment:
-      - POSTGRES_PASSWORD
+      POSTGRES_HOST: db
+      POSTGRES_PASSWORD:
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:3010/todos"]
       interval: 10s
