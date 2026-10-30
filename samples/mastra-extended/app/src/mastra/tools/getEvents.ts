@@ -2,6 +2,7 @@ import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
 
 import { getItemsByType } from "@/lib/items";
+import { itemLimit } from "./limit";
 
 const eventFilters = z.object({
   source: z.string().min(2).optional(),
@@ -9,7 +10,7 @@ const eventFilters = z.object({
   priority: z.enum(["low", "medium", "high", "critical"]).optional(),
   tag: z.string().min(2).optional(),
   query: z.string().min(2).optional(),
-  limit: z.number().int().min(1).max(10).optional(),
+  limit: itemLimit(10),
 });
 
 export const getEvents = createTool({
@@ -30,7 +31,7 @@ export const getEvents = createTool({
   ),
   execute: async (input) => {
     const { limit, ...filters } = input;
-    const items = await getItemsByType("event", limit ?? 10, filters);
+    const items = await getItemsByType("event", Number(limit ?? 10), filters);
     return items.map((item) => ({
       id: item.id,
       source: item.source,

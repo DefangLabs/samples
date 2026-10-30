@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { embedTextForSearch } from "@/lib/ai";
 import { searchItemsByEmbedding } from "@/lib/items";
+import { itemLimit } from "./limit";
 
 export const searchItems = createTool({
   id: "searchItems",
@@ -14,7 +15,7 @@ export const searchItems = createTool({
     category: z.string().min(2).optional(),
     priority: z.enum(["low", "medium", "high", "critical"]).optional(),
     source: z.string().min(2).optional(),
-    limit: z.number().int().min(1).max(5).optional(),
+    limit: itemLimit(5),
   }),
   outputSchema: z.array(
     z.object({
@@ -32,7 +33,7 @@ export const searchItems = createTool({
   execute: async (input) => {
     const embedding = await embedTextForSearch(input.query);
     const { query, itemType, limit, ...filters } = input;
-    const matches = await searchItemsByEmbedding(embedding, itemType, limit ?? 5, filters);
+    const matches = await searchItemsByEmbedding(embedding, itemType, Number(limit ?? 5), filters);
     return matches.map(({ item, score }) => ({
       id: item.id,
       itemType: item.itemType,
