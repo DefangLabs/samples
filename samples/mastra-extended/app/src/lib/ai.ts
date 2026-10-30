@@ -64,6 +64,13 @@ export function isRateLimitError(error: unknown) {
   return /rate.?limit|too many requests|429/i.test(message);
 }
 
+const STRUCTURED_MAX_ATTEMPTS = 3;
+
+function isStructuredOutputError(error: unknown) {
+  const message = error instanceof Error ? error.message : String(error ?? "");
+  return /structured output|schema|validation|invalid_type|zod/i.test(message);
+}
+
 async function withRateLimitRetry<T>(label: string, run: () => Promise<T>): Promise<T> {
   let lastError: unknown;
   for (let attempt = 1; attempt <= RETRY_MAX_ATTEMPTS; attempt += 1) {
@@ -133,13 +140,19 @@ async function runChatJson<S extends z.ZodType>(
 
   const agent = mastra.getAgent("generatorAgent");
   const prompt = `${systemPrompt}\n\n${userPrompt}`;
-  const result = await withRateLimitRetry("chat", () => agent.generate(prompt, {
-    maxSteps: 1,
-    modelSettings: { temperature },
-    structuredOutput: { schema, errorStrategy: "strict" },
-  }));
-
-  return result.object;
+  for (let attempt = 1; ; attempt += 1) {
+    try {
+      const result = await withRateLimitRetry("chat", () => agent.generate(prompt, {
+        maxSteps: 1,
+        modelSettings: { temperature },
+        structuredOutput: { schema, errorStrategy: "strict" },
+      }));
+      return result.object;
+    } catch (error) {
+      if (!isStructuredOutputError(error) || attempt === STRUCTURED_MAX_ATTEMPTS) throw error;
+      console.warn(`[chat] structured output failed validation (attempt ${attempt}/${STRUCTURED_MAX_ATTEMPTS}), retrying`);
+    }
+  }
 }
 
 // ---------------------------------------------------------------------------
