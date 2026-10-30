@@ -26,10 +26,11 @@ jobs:
         run: |
           git fetch origin main
           LAST_ANCESTOR=$(git merge-base HEAD origin/main)
-          # This BYOC-only sample exceeds the retired Playground staging quota.
+          # These BYOC-only samples exceed the retired Playground staging quota
+          # (2 GiB model services, managed Postgres/Redis).
           git diff --name-only HEAD $LAST_ANCESTOR \
             | grep '^samples/' \
-            | awk -F'/' '$2 != "self-improving" {print $1"/"$2}' \
+            | awk -F'/' '$2 != "self-improving" && $2 != "mastra-extended" {print $1"/"$2}' \
             | sort \
             | uniq \
             | while read -r sample; do
