@@ -10,7 +10,7 @@ services:
         target: 3010
         published: 3010
     environment:
-      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@db:5432/postgres
+      - POSTGRES_PASSWORD
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:3010/todos"]
       interval: 10s
