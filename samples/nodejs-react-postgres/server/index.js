@@ -12,7 +12,24 @@ const createData = `CREATE TABLE IF NOT EXISTS todo(
   description VARCHAR(255)
 )`
 
-pool.query(createData)
+// The database may not be reachable yet when the app starts, so retry
+async function initDb(retries = 30) {
+  for (let i = 0; ; i++) {
+    try {
+      await pool.query(createData)
+      return
+    } catch (error) {
+      if (i >= retries) throw error
+      console.error(`database not ready (${error.message}), retrying...`)
+      await new Promise((resolve) => setTimeout(resolve, 2000))
+    }
+  }
+}
+
+initDb().catch((error) => {
+  console.error(error)
+  process.exit(1)
+})
 
 
 //Routes
