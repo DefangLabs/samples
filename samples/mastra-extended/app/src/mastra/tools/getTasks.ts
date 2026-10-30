@@ -36,7 +36,7 @@ export const getTasks = createTool({
   ),
   execute: async (input) => {
     const { limit, ...filters } = input;
-    const items = await getItemsByType("task", limit ?? 10, filters);
+    const items = await getItemsByType("task", Number(limit ?? 10), filters);
     return items.map((item) => ({
       id: item.id,
       source: item.source,

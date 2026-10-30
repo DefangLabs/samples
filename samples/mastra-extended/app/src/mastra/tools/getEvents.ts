@@ -31,7 +31,7 @@ export const getEvents = createTool({
   ),
   execute: async (input) => {
     const { limit, ...filters } = input;
-    const items = await getItemsByType("event", limit ?? 10, filters);
+    const items = await getItemsByType("event", Number(limit ?? 10), filters);
     return items.map((item) => ({
       id: item.id,
       source: item.source,
