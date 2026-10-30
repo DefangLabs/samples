@@ -9,7 +9,7 @@ ENV REACT_APP_API_URL=""
 RUN npm run build
 
 # Run the API server, which also serves the built client
-FROM node:20-bookworm-slim
+FROM node:20-alpine
 WORKDIR /app
 COPY server/package*.json ./
 RUN npm install --omit=dev
