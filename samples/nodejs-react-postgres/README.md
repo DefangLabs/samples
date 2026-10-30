@@ -36,6 +36,8 @@ The password for the Postgres database.
 defang config set POSTGRES_PASSWORD
 ```
 
+The server connects to Postgres over SSL, as Defang managed Postgres requires. If you deploy to the Playground, where Postgres runs as a plain container, set `POSTGRES_SSL=false` on the `app` service.
+
 ## Deployment
 
 > [!NOTE]

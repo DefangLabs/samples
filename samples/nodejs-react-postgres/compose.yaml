@@ -29,6 +29,11 @@ services:
     restart: unless-stopped
     environment:
       - POSTGRES_PASSWORD
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.5"
+          memory: 512M
     ports:
       - mode: host
         target: 5432
