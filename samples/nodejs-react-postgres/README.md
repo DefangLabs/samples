@@ -4,7 +4,7 @@
 
 This sample project demonstrates how to deploy a full-stack application using React for the frontend, Node.js for the backend, and PostgreSQL for the database. 
 
-In this sample, we have set up the essential files you need to deploy in production using [Neon](https://neon.tech/) to host your database. We use a connection string to connect Neon to your code. By replacing the pre-configured connection string at .env and at the compose file to yours, you will be ready to deploy this sample with Neon.
+In production, the Node.js server also serves the built React app, so one service handles both the UI and the API. The database is a Defang managed Postgres instance.
 
 ## Prerequisites
 
@@ -30,14 +30,13 @@ For this sample, you will need to provide the following [configuration](https://
 
 > Note that if you are using the 1-click deploy option, you can set these values as secrets in your GitHub repository and the action will automatically deploy them for you.
 
-### `DATABASE_URL`
-A connection to the database, which should be in the format of `postgres://username:password@host:port/dbname`.
+### `POSTGRES_PASSWORD`
+The password for the Postgres database.
 ```bash
-defang config set DATABASE_URL
+defang config set POSTGRES_PASSWORD
 ```
 
-### `REACT_APP_API_URL`
-A URL for the React App. For this, you will need to update the `compose.yaml` file to replace `<YOUR_USERNAME>` with your username, which you can get by running `defang whoami`.
+The server connects to Postgres over SSL, as Defang managed Postgres requires. If you deploy to the Playground, where Postgres runs as a plain container, set `POSTGRES_SSL=false` on the `app` service.
 
 ## Deployment
 
