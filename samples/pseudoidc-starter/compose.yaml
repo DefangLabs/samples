@@ -1,0 +1,52 @@
+services:
+  app:
+    build:
+      context: .
+      args:
+        - NEXT_PUBLIC_URL
+    ports:
+      - target: 3000
+    depends_on:
+      db:
+        condition: service_started
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      - AUTH_SECRET
+      - EMAIL_SERVER_HOST
+      - EMAIL_SERVER_PORT
+      - EMAIL_SERVER_USER
+      - EMAIL_SERVER_PASSWORD
+      - EMAIL_FROM
+      - CONSENTKEYS_CLIENT_ID
+      - CONSENTKEYS_CLIENT_SECRET
+      - CONSENTKEYS_ISSUER_URL=https://api.pseudoidc.consentkeys.com/.well-known/openid-configuration
+      - CONSENTKEYS_USERINFO_URL=https://api.pseudoidc.consentkeys.com/userinfo
+      - NEXT_PUBLIC_URL
+    networks:
+      - private
+
+  db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+    x-defang-postgres: true
+    networks:
+      - private
+
+  migrate:
+    restart: "no"
+    build: .
+    command: npm run db:migrate
+    depends_on:
+      db:
+        condition: service_started
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+    networks:
+      - private
+
+networks:
+  private:
+    # external: true
