@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Start a customer installation handoff after an application-owned signup or entitlement event."
+    />
+    <title>Customer installation handoff</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="hero">
+        <a class="brand" href="https://defang.io" aria-label="Defang home">
+          <span class="brand-mark" aria-hidden="true">D</span>
+          <span>Defang Deploy</span>
+        </a>
+        <div class="eyebrow">Integration sample</div>
+        <h1>Hand cloud setup to your customer</h1>
+        <p class="lede">
+          This form stands in for your trusted backend after signup, payment, or
+          another entitlement event. Your server creates one repeat-safe handoff;
+          Defang hosts login, cloud trust setup, and deployment.
+        </p>
+        <div class="flow" aria-label="Installation handoff flow">
+          <span class="flow-step current"><b>1</b> Entitlement confirmed</span>
+          <span class="flow-line" aria-hidden="true"></span>
+          <span class="flow-step"><b>2</b> Customer setup</span>
+          <span class="flow-line" aria-hidden="true"></span>
+          <span class="flow-step"><b>3</b> Deploy</span>
+        </div>
+      </header>
+
+      <section class="panel" aria-labelledby="handoff-heading">
+        <div class="panel-heading">
+          <div>
+            <p class="section-label">Simulated business event</p>
+            <h2 id="handoff-heading">Continue to hosted setup</h2>
+          </div>
+          <p class="environment">Server-authenticated</p>
+        </div>
+
+        <form action="/handoff" method="post">
+          <fieldset class="form-section">
+            <legend>Customer and entitlement</legend>
+            <p class="field-help">
+              In production, take these values from your authenticated customer
+              and your own order database—not from a public form.
+            </p>
+            <div class="form-grid">
+              <label class="field full-width" for="customer-email">
+                <span>Customer email</span>
+                <input
+                  id="customer-email"
+                  name="customerEmail"
+                  type="email"
+                  autocomplete="email"
+                  placeholder="cloud-owner@example.com"
+                  required
+                />
+                <small>The customer uses this address to sign in to Defang.</small>
+              </label>
+
+              <label class="field full-width" for="external-reference">
+                <span>External order or entitlement reference</span>
+                <input
+                  id="external-reference"
+                  name="externalReference"
+                  value="order_demo_001"
+                  maxlength="256"
+                  required
+                />
+                <small>
+                  This value stays in your application. Only a one-way digest is
+                  used to derive a stable installation name.
+                </small>
+              </label>
+            </div>
+
+            <div class="form-actions">
+              <p class="request-note">
+                Submitting the same reference and details reuses the same Portal
+                installation. The response redirects to the exact URL returned by
+                Defang.
+              </p>
+              <button class="button primary" type="submit">
+                Create handoff and continue
+              </button>
+            </div>
+          </fieldset>
+        </form>
+
+        <aside class="notice" aria-label="Current API limitation">
+          <strong>Current contract:</strong> the server credential is an existing,
+          short-lived developer bearer token. Durable machine credentials,
+          callbacks, and a public status endpoint are forthcoming; do not run this
+          sample unattended until those contracts ship.
+        </aside>
+      </section>
+    </main>
+  </body>
+</html>
