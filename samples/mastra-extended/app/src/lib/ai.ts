@@ -115,32 +115,6 @@ const classificationSchema = z.object({
 // LLM communication
 // ---------------------------------------------------------------------------
 
-/** Extracts JSON from LLM output, handling markdown fences and extra text. */
-function parseJsonFromText(text: string): unknown {
-  const trimmed = text.trim();
-  const fencedMatch = trimmed.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
-  const candidate = fencedMatch?.[1]?.trim() ?? trimmed;
-
-  try {
-    return JSON.parse(candidate);
-  } catch {
-    const firstBrace = candidate.indexOf("{");
-    const lastBrace = candidate.lastIndexOf("}");
-    const firstBracket = candidate.indexOf("[");
-    const lastBracket = candidate.lastIndexOf("]");
-
-    if (firstBrace >= 0 && lastBrace > firstBrace) {
-      return JSON.parse(candidate.slice(firstBrace, lastBrace + 1));
-    }
-
-    if (firstBracket >= 0 && lastBracket > firstBracket) {
-      return JSON.parse(candidate.slice(firstBracket, lastBracket + 1));
-    }
-
-    throw new Error("Invalid JSON payload returned by model");
-  }
-}
-
 function hasLlmAccess() {
   return hasChatAccess();
 }
@@ -149,23 +123,23 @@ function useFastLocalData() {
   return process.env.LOCAL_FAST_DATA === "true";
 }
 
-async function runChat(
+async function runChatJson<S extends z.ZodType>(
   systemPrompt: string,
   userPrompt: string,
-  _temperature: number,
-  parseResponse: (text: string) => unknown,
+  schema: S,
+  temperature = 0.4,
 ) {
   if (!hasLlmAccess() || process.env.MOCK_AGENT === "true") return null;
 
   const agent = mastra.getAgent("generatorAgent");
   const prompt = `${systemPrompt}\n\n${userPrompt}`;
-  const result = await withRateLimitRetry("chat", () => agent.generate(prompt, { maxSteps: 1 }));
+  const result = await withRateLimitRetry("chat", () => agent.generate(prompt, {
+    maxSteps: 1,
+    modelSettings: { temperature },
+    structuredOutput: { schema, errorStrategy: "strict" },
+  }));
 
-  return parseResponse(result.text ?? "");
-}
-
-async function runChatJson(systemPrompt: string, userPrompt: string, temperature = 0.4) {
-  return runChat(systemPrompt, userPrompt, temperature, parseJsonFromText);
+  return result.object;
 }
 
 // ---------------------------------------------------------------------------
@@ -263,6 +237,7 @@ export async function classifyItem(item: Pick<RawItemSeed, "itemType" | "source"
       "Return 2 to 4 tags.",
       "Do not include markdown.",
     ].join("\n"),
+    classificationSchema,
     0.2,
   );
 
@@ -295,6 +270,7 @@ async function generateTasksWithLlm() {
       '{"tasks":[{"source":"Jira","title":"...","body":"...","status":"open|in progress|blocked|planned","assignee":"..."}]}',
       "Do not include markdown.",
     ].join("\n"),
+    taskBatchSchema,
     0.8,
   );
   return taskBatchSchema.parse(payload).tasks;
@@ -311,6 +287,7 @@ async function generateEventsWithLlm() {
       '{"events":[{"source":"Datadog","title":"...","body":"..."}]}',
       "Do not include markdown.",
     ].join("\n"),
+    eventBatchSchema,
     0.8,
   );
   return eventBatchSchema.parse(payload).events;
