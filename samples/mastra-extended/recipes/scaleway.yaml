@@ -1,0 +1,12 @@
+# Merge these model entries into your stack's custom recipe.
+config:
+  defang-scaleway:models:
+    chat-default:
+      - model: qwen3-235b-a22b-instruct-2507
+        role: chat
+    qwen3-235b-a22b-instruct:
+      - model: qwen3-235b-a22b-instruct-2507
+        role: chat
+    embedding-default:
+      - model: bge-multilingual-gemma2
+        role: embedding

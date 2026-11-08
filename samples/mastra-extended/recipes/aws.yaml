@@ -1,0 +1,9 @@
+# Merge these model entries into your stack's custom recipe.
+config:
+  defang-aws:models:
+    chat-default:
+      - model: us.amazon.nova-2-lite-v1
+        role: chat
+    embedding-default:
+      - model: amazon.titan-embed-text-v2:0
+        role: embedding

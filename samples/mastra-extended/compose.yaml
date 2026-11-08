@@ -107,6 +107,7 @@ services:
 
 models:
   chat:
-    model: chat-default
+    # Recipes choose a cloud model for this alias; CHAT_MODEL can select a family.
+    model: ${CHAT_MODEL:-chat-default}
   embedding:
-    model: embedding-default
+    model: ${EMBEDDING_MODEL:-embedding-default}
