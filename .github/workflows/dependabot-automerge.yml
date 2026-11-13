@@ -25,7 +25,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          safe=$(gh api --paginate --slurp "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/files?per_page=100" --jq '[.[][] | select(.filename | startswith("samples/"))] | length == 0')
+          files=$(gh api --paginate --slurp "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/files?per_page=100")
+          safe=$(jq '[.[][] | select(.filename | startswith("samples/"))] | length == 0' <<< "$files")
           echo "safe=$safe" >> "$GITHUB_OUTPUT"
 
       - name: Approve patch and minor updates
