@@ -5,11 +5,6 @@ permissions:
 
 on:
   pull_request:
-    paths:
-      - "scripts/**"
-      - "templates/**"
-      - "samples/**/compose.yaml"
-      - "samples/**/compose.yml"
   push:
     branches:
       - main
@@ -66,3 +61,16 @@ jobs:
           script: |
             const script = require('./scripts/template-manager.js')
             await script({github, context, core});
+
+  ci:
+    name: ci
+    if: always() && github.event_name == 'pull_request'
+    needs: [test, preview-workflows]
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - name: Require script tests and workflow preview
+        env:
+          TEST: ${{ needs.test.result }}
+          PREVIEW: ${{ needs.preview-workflows.result }}
+        run: test "$TEST" = success && test "$PREVIEW" = success
