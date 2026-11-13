@@ -7,7 +7,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@hono/node-server": "^1.14.4",
+    "@hono/node-server": "^2.1.6",
     "@mastra/core": "^1.51.0",
     "hono": "^4.13.18",
     "pg": "^8.22.0",
