@@ -17,10 +17,22 @@ jobs:
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
 
+      # Sample dependency updates need a human until changed samples can be
+      # tested without exposing deployment credentials to Dependabot PRs.
+      - name: Check whether sample files changed
+        id: scope
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          safe=$(gh api --paginate --slurp "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/files?per_page=100" --jq '[.[][] | select(.filename | startswith("samples/"))] | length == 0')
+          echo "safe=$safe" >> "$GITHUB_OUTPUT"
+
       - name: Approve patch and minor updates
         if: |
+          steps.scope.outputs.safe == 'true' && (
           steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
-          steps.metadata.outputs.update-type == 'version-update:semver-minor'
+          steps.metadata.outputs.update-type == 'version-update:semver-minor')
         run: gh pr review --approve "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
@@ -28,8 +40,9 @@ jobs:
 
       - name: Enable auto-merge for patch and minor updates
         if: |
+          steps.scope.outputs.safe == 'true' && (
           steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
-          steps.metadata.outputs.update-type == 'version-update:semver-minor'
+          steps.metadata.outputs.update-type == 'version-update:semver-minor')
         run: gh pr merge --auto --squash "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
