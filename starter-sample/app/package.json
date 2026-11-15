@@ -4,7 +4,7 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "express": "^4.19.2",
+    "express": "^4.22.3",
     "mongodb": "^6.8.0"
   }
 }
